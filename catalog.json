@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-01-30T00:00:00.000Z",
+  "generatedAt": "2026-01-30T18:00:00.000Z",
   "items": [
     {
       "id": "animation-designer",
@@ -64,6 +64,32 @@
       "files": ["command.md", "manifest.yaml"],
       "version": "1.0",
       "composesWell": ["commit"]
+    },
+    {
+      "id": "ship",
+      "type": "command",
+      "name": "ship",
+      "description": "Ship changes to production with full documentation. Commits, pushes, deploys to Vercel, updates changelog automatically.",
+      "categories": ["deployment", "workflow", "lgj-exclusive"],
+      "tags": ["vercel", "git", "deploy", "changelog", "production"],
+      "icon": "Rocket",
+      "path": "commands/ship",
+      "files": ["command.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["commit", "test"]
+    },
+    {
+      "id": "test",
+      "type": "command",
+      "name": "test",
+      "description": "Live browser testing with auto-detection, visual review, functional testing, and automatic UI improvements. Tests responsive layouts.",
+      "categories": ["testing", "workflow", "lgj-exclusive"],
+      "tags": ["browser", "playwright", "visual-testing", "responsive", "ui"],
+      "icon": "FlaskConical",
+      "path": "commands/test",
+      "files": ["command.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["ship"]
     },
     {
       "id": "code-reviewer",

@@ -1,0 +1,17 @@
+name: ship
+description: Ship changes to production with full documentation. Commits, pushes, deploys to Vercel, updates changelog automatically.
+categories:
+  - deployment
+  - workflow
+  - lgj-exclusive
+tags:
+  - vercel
+  - git
+  - deploy
+  - changelog
+  - production
+icon: Rocket
+version: "1.0"
+composesWell:
+  - commit
+  - test
