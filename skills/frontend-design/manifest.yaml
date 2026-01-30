@@ -1,0 +1,17 @@
+name: frontend-design
+description: Create distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Bold typography, unexpected layouts, rich visual details.
+categories:
+  - frontend
+  - design
+tags:
+  - ui
+  - ux
+  - react
+  - css
+  - typography
+  - visual-design
+icon: Palette
+version: "1.0"
+composesWell:
+  - animation-designer
+  - senior-frontend

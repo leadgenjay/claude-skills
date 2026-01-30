@@ -1,0 +1,11 @@
+name: commit
+description: Create well-formatted git commits with clear, descriptive messages following conventional commit standards.
+categories:
+  - git
+  - workflow
+tags:
+  - git
+  - commits
+  - conventional-commits
+icon: GitCommit
+version: "1.0"

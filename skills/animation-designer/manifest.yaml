@@ -1,0 +1,16 @@
+name: animation-designer
+description: Expert in web animations using Framer Motion and CSS. Creates smooth page transitions, hover effects, scroll animations, and micro-interactions.
+categories:
+  - frontend
+  - design
+tags:
+  - animation
+  - framer-motion
+  - css
+  - transitions
+  - motion-design
+icon: Sparkles
+version: "1.0"
+composesWell:
+  - frontend-design
+  - react-performance

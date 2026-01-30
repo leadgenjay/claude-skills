@@ -1,0 +1,51 @@
+name: Generate Catalog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**"
+      - "commands/**"
+      - "agents/**"
+      - "scripts/generate-catalog.js"
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install js-yaml
+
+      - name: Generate catalog
+        run: node scripts/generate-catalog.js
+
+      - name: Commit catalog.json
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add catalog.json
+          git diff --staged --quiet || git commit -m "chore: regenerate catalog.json"
+          git push
+
+      - name: Trigger revalidation
+        if: success()
+        env:
+          WEBHOOK_SECRET: ${{ secrets.SKILLS_WEBHOOK_SECRET }}
+        run: |
+          if [ -n "$WEBHOOK_SECRET" ]; then
+            curl -X POST https://web.leadgenjay.com/api/skills/revalidate \
+              -H "Content-Type: application/json" \
+              -H "x-webhook-secret: $WEBHOOK_SECRET"
+          else
+            echo "SKILLS_WEBHOOK_SECRET not set, skipping revalidation"
+          fi

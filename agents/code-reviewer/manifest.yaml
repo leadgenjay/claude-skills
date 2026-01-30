@@ -1,0 +1,15 @@
+name: code-reviewer
+description: Specialized agent for reviewing code changes. Identifies bugs, security issues, and suggests improvements with confidence scoring.
+categories:
+  - code-quality
+  - workflow
+tags:
+  - code-review
+  - security
+  - best-practices
+  - testing
+icon: Eye
+version: "1.0"
+composesWell:
+  - commit
+  - pr

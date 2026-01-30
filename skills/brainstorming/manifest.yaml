@@ -1,0 +1,12 @@
+name: brainstorming
+description: Turn ideas into fully formed designs through collaborative dialogue. Asks questions one at a time, explores alternatives, and presents designs incrementally.
+categories:
+  - planning
+  - design
+tags:
+  - ideation
+  - design-thinking
+  - requirements
+  - collaboration
+icon: Lightbulb
+version: "1.0"

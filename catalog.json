@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-01-30T00:00:00.000Z",
+  "items": [
+    {
+      "id": "animation-designer",
+      "type": "skill",
+      "name": "animation-designer",
+      "description": "Expert in web animations using Framer Motion and CSS. Creates smooth page transitions, hover effects, scroll animations, and micro-interactions.",
+      "categories": ["frontend", "design"],
+      "tags": ["animation", "framer-motion", "css", "transitions", "motion-design"],
+      "icon": "Sparkles",
+      "path": "skills/animation-designer",
+      "files": ["SKILL.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["frontend-design", "react-performance"]
+    },
+    {
+      "id": "frontend-design",
+      "type": "skill",
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Bold typography, unexpected layouts, rich visual details.",
+      "categories": ["frontend", "design"],
+      "tags": ["ui", "ux", "react", "css", "typography", "visual-design"],
+      "icon": "Palette",
+      "path": "skills/frontend-design",
+      "files": ["SKILL.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["animation-designer", "senior-frontend"]
+    },
+    {
+      "id": "brainstorming",
+      "type": "skill",
+      "name": "brainstorming",
+      "description": "Turn ideas into fully formed designs through collaborative dialogue. Asks questions one at a time, explores alternatives, and presents designs incrementally.",
+      "categories": ["planning", "design"],
+      "tags": ["ideation", "design-thinking", "requirements", "collaboration"],
+      "icon": "Lightbulb",
+      "path": "skills/brainstorming",
+      "files": ["SKILL.md", "manifest.yaml"],
+      "version": "1.0"
+    },
+    {
+      "id": "commit",
+      "type": "command",
+      "name": "commit",
+      "description": "Create well-formatted git commits with clear, descriptive messages following conventional commit standards.",
+      "categories": ["git", "workflow"],
+      "tags": ["git", "commits", "conventional-commits"],
+      "icon": "GitCommit",
+      "path": "commands/commit",
+      "files": ["command.md", "manifest.yaml"],
+      "version": "1.0"
+    },
+    {
+      "id": "pr",
+      "type": "command",
+      "name": "pr",
+      "description": "Create pull requests with well-structured descriptions. Analyzes commits and generates summaries, change lists, and testing instructions.",
+      "categories": ["git", "workflow"],
+      "tags": ["git", "github", "pull-requests", "code-review"],
+      "icon": "GitPullRequest",
+      "path": "commands/pr",
+      "files": ["command.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["commit"]
+    },
+    {
+      "id": "code-reviewer",
+      "type": "agent",
+      "name": "code-reviewer",
+      "description": "Specialized agent for reviewing code changes. Identifies bugs, security issues, and suggests improvements with confidence scoring.",
+      "categories": ["code-quality", "workflow"],
+      "tags": ["code-review", "security", "best-practices", "testing"],
+      "icon": "Eye",
+      "path": "agents/code-reviewer",
+      "files": ["agent.md", "manifest.yaml"],
+      "version": "1.0",
+      "composesWell": ["commit", "pr"]
+    }
+  ]
+}

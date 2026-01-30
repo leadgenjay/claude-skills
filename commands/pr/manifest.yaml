@@ -1,0 +1,14 @@
+name: pr
+description: Create pull requests with well-structured descriptions. Analyzes commits and generates summaries, change lists, and testing instructions.
+categories:
+  - git
+  - workflow
+tags:
+  - git
+  - github
+  - pull-requests
+  - code-review
+icon: GitPullRequest
+version: "1.0"
+composesWell:
+  - commit
