@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-04T21:15:15.218Z",
+  "generatedAt": "2026-03-04T21:28:28.152Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -560,6 +560,92 @@
       "composesWell": [
         "commit",
         "pr"
+      ]
+    },
+    {
+      "id": "illustrations",
+      "type": "component",
+      "name": "illustrations",
+      "description": "27 SVG illustration components + 30 brand logos + shared primitives for landing pages. Flat floating-UI style with Cards, Badges, N8n nodes, Bezier connectors, and more.",
+      "categories": [
+        "design",
+        "illustration",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "svg",
+        "react",
+        "illustrations",
+        "logos",
+        "brand-icons",
+        "landing-pages",
+        "components"
+      ],
+      "icon": "Image",
+      "path": "components/illustrations",
+      "files": [
+        "README.md",
+        "ai/ai-chat-interface.tsx",
+        "ai/ai-code-assistant.tsx",
+        "ai/automation-pipeline.tsx",
+        "ai/before-after.tsx",
+        "ai/workflow-diagram.tsx",
+        "analytics/ab-test-results.tsx",
+        "analytics/conversion-funnel.tsx",
+        "analytics/traffic-dashboard.tsx",
+        "backgrounds.tsx",
+        "code/browser-app-preview.tsx",
+        "code/code-terminal.tsx",
+        "code/webhook-trigger.tsx",
+        "code/workflow-canvas.tsx",
+        "community/community-feed.tsx",
+        "community/course-modules.tsx",
+        "community/leaderboard.tsx",
+        "index.tsx",
+        "lead-gen/domain-health.tsx",
+        "lead-gen/email-inbox.tsx",
+        "lead-gen/email-sequence.tsx",
+        "lead-gen/lead-database.tsx",
+        "lead-gen/verified-lead-card.tsx",
+        "logos.tsx",
+        "manifest.yaml",
+        "public/logos/aimfox.webp",
+        "public/logos/apify.webp",
+        "public/logos/apollo.webp",
+        "public/logos/claude.webp",
+        "public/logos/clay.webp",
+        "public/logos/consulti.webp",
+        "public/logos/dynadot.webp",
+        "public/logos/emailbison.webp",
+        "public/logos/ghl.webp",
+        "public/logos/gmail.webp",
+        "public/logos/hyros.webp",
+        "public/logos/instantly.webp",
+        "public/logos/make.webp",
+        "public/logos/openai.webp",
+        "public/logos/outlook.webp",
+        "public/logos/paypal.webp",
+        "public/logos/phantombuster.webp",
+        "public/logos/slack.webp",
+        "public/logos/stripe.webp",
+        "public/logos/warmy.webp",
+        "public/logos/whop.webp",
+        "public/logos/zapier.webp",
+        "public/logos/zoom.webp",
+        "sales/booked-meetings.tsx",
+        "sales/roi-dashboard.tsx",
+        "sales/sales-pipeline.tsx",
+        "shared.tsx",
+        "social-proof/review-grid.tsx",
+        "social-proof/social-proof-banner.tsx",
+        "social-proof/testimonial-card.tsx",
+        "social-proof/trust-badges.tsx"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-graphics",
+        "frontend-design",
+        "animation-designer"
       ]
     }
   ]

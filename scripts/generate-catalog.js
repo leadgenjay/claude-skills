@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Generate catalog.json from skills, commands, and agents directories
+ * Generate catalog.json from skills, commands, agents, and components directories
  *
  * This script is run by GitHub Actions on every push to regenerate
  * the catalog that powers the Skills Marketplace.
@@ -18,12 +18,14 @@ const DIRECTORIES = {
   skill: "skills",
   command: "commands",
   agent: "agents",
+  component: "components",
 };
 
 const MAIN_FILES = {
   skill: ["SKILL.md", "skill.md"],
   command: ["command.md", "COMMAND.md"],
   agent: ["agent.md", "AGENT.md"],
+  component: ["README.md", "readme.md"],
 };
 
 function findMainFile(dir, type) {
@@ -82,6 +84,24 @@ function parseManifest(dir) {
   return manifest;
 }
 
+/**
+ * Recursively list all files in a directory, returning paths relative to baseDir.
+ * Used for component type which has nested subdirectories.
+ */
+function listFilesRecursive(dir, base = "") {
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) continue;
+    const relative = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursive(path.join(dir, entry.name), relative));
+    } else {
+      files.push(relative);
+    }
+  }
+  return files;
+}
+
 function processDirectory(type) {
   const dirName = DIRECTORIES[type];
   const baseDir = path.join(ROOT_DIR, dirName);
@@ -109,10 +129,11 @@ function processDirectory(type) {
     const manifest = parseManifest(itemDir);
     const mainContent = fs.readFileSync(path.join(itemDir, mainFile), "utf8");
 
-    // Get all files in the directory
-    const files = fs
-      .readdirSync(itemDir)
-      .filter((f) => !f.startsWith("."));
+    // Get files — recursive for components, flat for others
+    const files =
+      type === "component"
+        ? listFilesRecursive(itemDir)
+        : fs.readdirSync(itemDir).filter((f) => !f.startsWith("."));
 
     const item = {
       id: entry.name,
@@ -136,7 +157,7 @@ function processDirectory(type) {
     });
 
     items.push(item);
-    console.log(`  + ${type}: ${entry.name}`);
+    console.log(`  + ${type}: ${entry.name} (${files.length} files)`);
   }
 
   return items;
@@ -149,6 +170,7 @@ function main() {
     ...processDirectory("skill"),
     ...processDirectory("command"),
     ...processDirectory("agent"),
+    ...processDirectory("component"),
   ];
 
   const catalog = {

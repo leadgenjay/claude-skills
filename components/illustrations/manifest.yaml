@@ -1,0 +1,20 @@
+name: illustrations
+description: 27 SVG illustration components + 30 brand logos + shared primitives for landing pages. Flat floating-UI style with Cards, Badges, N8n nodes, Bezier connectors, and more.
+categories:
+  - design
+  - illustration
+  - lgj-exclusive
+tags:
+  - svg
+  - react
+  - illustrations
+  - logos
+  - brand-icons
+  - landing-pages
+  - components
+icon: Image
+version: "1.0"
+composesWell:
+  - LGJ-graphics
+  - frontend-design
+  - animation-designer
