@@ -1,0 +1,20 @@
+name: motion-graphics
+description: Business-focused motion graphics for landing pages. Combines Lottie animations, Framer Motion components, and Remotion video generation for conversion-focused micro-interactions.
+categories:
+  - design
+  - animation
+  - lgj-exclusive
+tags:
+  - lottie
+  - framer-motion
+  - remotion
+  - video
+  - micro-interactions
+  - landing-pages
+icon: Film
+version: "1.0"
+composesWell:
+  - animation-designer
+  - design-motion-principles
+  - LGJ-graphics
+  - frontend-design

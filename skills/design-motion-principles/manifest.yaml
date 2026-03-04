@@ -1,0 +1,20 @@
+name: design-motion-principles
+description: Expert motion and interaction design auditor based on Emil Kowalski, Jakub Krehel, and Jhey Tompkins. Reviews UI animations, transitions, hover states against industry best practices.
+categories:
+  - design
+  - animation
+  - lgj-exclusive
+tags:
+  - motion-design
+  - animation-audit
+  - framer-motion
+  - css-animations
+  - interactions
+  - hover-states
+icon: Zap
+version: "1.0"
+composesWell:
+  - animation-designer
+  - frontend-design
+  - LGJ-graphics
+  - motion-graphics

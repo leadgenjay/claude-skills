@@ -1,0 +1,17 @@
+name: canvas-design
+description: Create beautiful visual art in PNG and PDF using design philosophy. Posters, infographics, social media graphics, and marketing collateral with original designs.
+categories:
+  - design
+  - creative
+tags:
+  - visual-design
+  - poster
+  - pdf
+  - infographic
+  - typography
+icon: PenTool
+version: "1.0"
+composesWell:
+  - brand-image-generator
+  - icon-set-creator
+  - LGJ-graphics

@@ -1,0 +1,19 @@
+name: landing-page-auditor
+description: Systematic conversion audits with scoring and prioritized recommendations. Identify conversion blockers, CTA weaknesses, copy issues, and mobile problems.
+categories:
+  - copywriting
+  - marketing
+  - lgj-exclusive
+tags:
+  - audit
+  - conversion-optimization
+  - landing-pages
+  - CRO
+  - recommendations
+icon: ClipboardCheck
+version: "1.0"
+composesWell:
+  - dan-kennedy-copywriter
+  - conversion-copywriting
+  - hero-section-designer
+  - social-proof-builder

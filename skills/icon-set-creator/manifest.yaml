@@ -1,0 +1,18 @@
+name: icon-set-creator
+description: Create cohesive icon sets for landing pages using fal.ai FLUX.1. Ensures consistent style, colors, and visual weight across all icons in a set.
+categories:
+  - design
+  - images
+  - lgj-exclusive
+tags:
+  - icons
+  - fal-ai
+  - flux
+  - image-generation
+  - landing-pages
+icon: Shapes
+version: "1.0"
+composesWell:
+  - brand-image-generator
+  - frontend-design
+  - LGJ-graphics

@@ -1,0 +1,19 @@
+name: hero-section-designer
+description: Design high-converting hero sections combining compelling visuals, Dan Kennedy copy, and clear CTAs. Above-fold optimization where 80% of conversion decisions start.
+categories:
+  - design
+  - copywriting
+  - lgj-exclusive
+tags:
+  - hero-section
+  - above-fold
+  - landing-pages
+  - CTA
+  - conversion
+icon: LayoutTemplate
+version: "1.0"
+composesWell:
+  - dan-kennedy-copywriter
+  - conversion-copywriting
+  - frontend-design
+  - LGJ-graphics

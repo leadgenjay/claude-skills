@@ -1,55 +1,455 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-01-30T18:00:00.000Z",
+  "generatedAt": "2026-03-04T21:15:15.218Z",
   "items": [
+    {
+      "id": "LGJ-graphics",
+      "type": "skill",
+      "name": "LGJ-graphics",
+      "description": "Lead Gen Jay brand illustration style system — flat SVG with floating UI elements, 30 brand logos, shared component library, Framer Motion animations, and consistent design tokens.",
+      "categories": [
+        "design",
+        "illustration",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "svg",
+        "illustration",
+        "motion-graphics",
+        "brand-style",
+        "framer-motion",
+        "logos",
+        "n8n"
+      ],
+      "icon": "Palette",
+      "path": "skills/LGJ-graphics",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "animation-designer",
+        "frontend-design",
+        "design-motion-principles",
+        "motion-graphics"
+      ]
+    },
     {
       "id": "animation-designer",
       "type": "skill",
       "name": "animation-designer",
       "description": "Expert in web animations using Framer Motion and CSS. Creates smooth page transitions, hover effects, scroll animations, and micro-interactions.",
-      "categories": ["frontend", "design"],
-      "tags": ["animation", "framer-motion", "css", "transitions", "motion-design"],
+      "categories": [
+        "frontend",
+        "design"
+      ],
+      "tags": [
+        "animation",
+        "framer-motion",
+        "css",
+        "transitions",
+        "motion-design"
+      ],
       "icon": "Sparkles",
       "path": "skills/animation-designer",
-      "files": ["SKILL.md", "manifest.yaml"],
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
       "version": "1.0",
-      "composesWell": ["frontend-design", "react-performance"]
-    },
-    {
-      "id": "frontend-design",
-      "type": "skill",
-      "name": "frontend-design",
-      "description": "Create distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Bold typography, unexpected layouts, rich visual details.",
-      "categories": ["frontend", "design"],
-      "tags": ["ui", "ux", "react", "css", "typography", "visual-design"],
-      "icon": "Palette",
-      "path": "skills/frontend-design",
-      "files": ["SKILL.md", "manifest.yaml"],
-      "version": "1.0",
-      "composesWell": ["animation-designer", "senior-frontend"]
+      "composesWell": [
+        "frontend-design",
+        "react-performance"
+      ]
     },
     {
       "id": "brainstorming",
       "type": "skill",
       "name": "brainstorming",
       "description": "Turn ideas into fully formed designs through collaborative dialogue. Asks questions one at a time, explores alternatives, and presents designs incrementally.",
-      "categories": ["planning", "design"],
-      "tags": ["ideation", "design-thinking", "requirements", "collaboration"],
+      "categories": [
+        "planning",
+        "design"
+      ],
+      "tags": [
+        "ideation",
+        "design-thinking",
+        "requirements",
+        "collaboration"
+      ],
       "icon": "Lightbulb",
       "path": "skills/brainstorming",
-      "files": ["SKILL.md", "manifest.yaml"],
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
       "version": "1.0"
+    },
+    {
+      "id": "brand-image-generator",
+      "type": "skill",
+      "name": "brand-image-generator",
+      "description": "Generate brand-consistent images using fal.ai FLUX.1. Prompt templates for hero images, feature graphics, testimonial photos, and marketing visuals.",
+      "categories": [
+        "design",
+        "images",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "fal-ai",
+        "flux",
+        "image-generation",
+        "brand-consistency",
+        "marketing"
+      ],
+      "icon": "ImagePlus",
+      "path": "skills/brand-image-generator",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "icon-set-creator",
+        "frontend-design",
+        "hero-section-designer"
+      ]
+    },
+    {
+      "id": "canvas-design",
+      "type": "skill",
+      "name": "canvas-design",
+      "description": "Create beautiful visual art in PNG and PDF using design philosophy. Posters, infographics, social media graphics, and marketing collateral with original designs.",
+      "categories": [
+        "design",
+        "creative"
+      ],
+      "tags": [
+        "visual-design",
+        "poster",
+        "pdf",
+        "infographic",
+        "typography"
+      ],
+      "icon": "PenTool",
+      "path": "skills/canvas-design",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "brand-image-generator",
+        "icon-set-creator",
+        "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "conversion-copywriting",
+      "type": "skill",
+      "name": "conversion-copywriting",
+      "description": "Write copy matched to audience awareness levels using Eugene Schwartz's framework and AIDA structure. Headlines for cold vs warm traffic, persuasion by buyer journey stage.",
+      "categories": [
+        "copywriting",
+        "marketing",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "eugene-schwartz",
+        "AIDA",
+        "audience-awareness",
+        "headlines",
+        "traffic-temperature"
+      ],
+      "icon": "Target",
+      "path": "skills/conversion-copywriting",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "dan-kennedy-copywriter",
+        "hero-section-designer",
+        "landing-page-auditor"
+      ]
+    },
+    {
+      "id": "dan-kennedy-copywriter",
+      "type": "skill",
+      "name": "dan-kennedy-copywriter",
+      "description": "Write high-converting direct response copy using Dan Kennedy's proven principles. PAS framework, urgency tactics, message-to-market matching for sales pages and emails.",
+      "categories": [
+        "copywriting",
+        "marketing",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "direct-response",
+        "sales-copy",
+        "dan-kennedy",
+        "PAS-framework",
+        "landing-pages",
+        "email-sequences"
+      ],
+      "icon": "Pen",
+      "path": "skills/dan-kennedy-copywriter",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "conversion-copywriting",
+        "hero-section-designer",
+        "social-proof-builder",
+        "landing-page-auditor"
+      ]
+    },
+    {
+      "id": "design-motion-principles",
+      "type": "skill",
+      "name": "design-motion-principles",
+      "description": "Expert motion and interaction design auditor based on Emil Kowalski, Jakub Krehel, and Jhey Tompkins. Reviews UI animations, transitions, hover states against industry best practices.",
+      "categories": [
+        "design",
+        "animation",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "motion-design",
+        "animation-audit",
+        "framer-motion",
+        "css-animations",
+        "interactions",
+        "hover-states"
+      ],
+      "icon": "Zap",
+      "path": "skills/design-motion-principles",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "animation-designer",
+        "frontend-design",
+        "LGJ-graphics",
+        "motion-graphics"
+      ]
+    },
+    {
+      "id": "frontend-design",
+      "type": "skill",
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Bold typography, unexpected layouts, rich visual details.",
+      "categories": [
+        "frontend",
+        "design"
+      ],
+      "tags": [
+        "ui",
+        "ux",
+        "react",
+        "css",
+        "typography",
+        "visual-design"
+      ],
+      "icon": "Palette",
+      "path": "skills/frontend-design",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "animation-designer",
+        "senior-frontend"
+      ]
+    },
+    {
+      "id": "hero-section-designer",
+      "type": "skill",
+      "name": "hero-section-designer",
+      "description": "Design high-converting hero sections combining compelling visuals, Dan Kennedy copy, and clear CTAs. Above-fold optimization where 80% of conversion decisions start.",
+      "categories": [
+        "design",
+        "copywriting",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "hero-section",
+        "above-fold",
+        "landing-pages",
+        "CTA",
+        "conversion"
+      ],
+      "icon": "LayoutTemplate",
+      "path": "skills/hero-section-designer",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "dan-kennedy-copywriter",
+        "conversion-copywriting",
+        "frontend-design",
+        "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "icon-set-creator",
+      "type": "skill",
+      "name": "icon-set-creator",
+      "description": "Create cohesive icon sets for landing pages using fal.ai FLUX.1. Ensures consistent style, colors, and visual weight across all icons in a set.",
+      "categories": [
+        "design",
+        "images",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "icons",
+        "fal-ai",
+        "flux",
+        "image-generation",
+        "landing-pages"
+      ],
+      "icon": "Shapes",
+      "path": "skills/icon-set-creator",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "brand-image-generator",
+        "frontend-design",
+        "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "landing-page-auditor",
+      "type": "skill",
+      "name": "landing-page-auditor",
+      "description": "Systematic conversion audits with scoring and prioritized recommendations. Identify conversion blockers, CTA weaknesses, copy issues, and mobile problems.",
+      "categories": [
+        "copywriting",
+        "marketing",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "audit",
+        "conversion-optimization",
+        "landing-pages",
+        "CRO",
+        "recommendations"
+      ],
+      "icon": "ClipboardCheck",
+      "path": "skills/landing-page-auditor",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "dan-kennedy-copywriter",
+        "conversion-copywriting",
+        "hero-section-designer",
+        "social-proof-builder"
+      ]
+    },
+    {
+      "id": "motion-graphics",
+      "type": "skill",
+      "name": "motion-graphics",
+      "description": "Business-focused motion graphics for landing pages. Combines Lottie animations, Framer Motion components, and Remotion video generation for conversion-focused micro-interactions.",
+      "categories": [
+        "design",
+        "animation",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "lottie",
+        "framer-motion",
+        "remotion",
+        "video",
+        "micro-interactions",
+        "landing-pages"
+      ],
+      "icon": "Film",
+      "path": "skills/motion-graphics",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "animation-designer",
+        "design-motion-principles",
+        "LGJ-graphics",
+        "frontend-design"
+      ]
+    },
+    {
+      "id": "social-proof-builder",
+      "type": "skill",
+      "name": "social-proof-builder",
+      "description": "Craft compelling testimonials, case studies, and trust elements that convert. Templates for social proof sections, credibility builders, and result-driven narratives.",
+      "categories": [
+        "copywriting",
+        "marketing",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "testimonials",
+        "case-studies",
+        "trust-elements",
+        "social-proof",
+        "credibility"
+      ],
+      "icon": "Award",
+      "path": "skills/social-proof-builder",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "dan-kennedy-copywriter",
+        "hero-section-designer",
+        "landing-page-auditor"
+      ]
     },
     {
       "id": "commit",
       "type": "command",
       "name": "commit",
       "description": "Create well-formatted git commits with clear, descriptive messages following conventional commit standards.",
-      "categories": ["git", "workflow"],
-      "tags": ["git", "commits", "conventional-commits"],
+      "categories": [
+        "git",
+        "workflow"
+      ],
+      "tags": [
+        "git",
+        "commits",
+        "conventional-commits"
+      ],
       "icon": "GitCommit",
       "path": "commands/commit",
-      "files": ["command.md", "manifest.yaml"],
+      "files": [
+        "command.md",
+        "manifest.yaml"
+      ],
       "version": "1.0"
     },
     {
@@ -57,52 +457,110 @@
       "type": "command",
       "name": "pr",
       "description": "Create pull requests with well-structured descriptions. Analyzes commits and generates summaries, change lists, and testing instructions.",
-      "categories": ["git", "workflow"],
-      "tags": ["git", "github", "pull-requests", "code-review"],
+      "categories": [
+        "git",
+        "workflow"
+      ],
+      "tags": [
+        "git",
+        "github",
+        "pull-requests",
+        "code-review"
+      ],
       "icon": "GitPullRequest",
       "path": "commands/pr",
-      "files": ["command.md", "manifest.yaml"],
+      "files": [
+        "command.md",
+        "manifest.yaml"
+      ],
       "version": "1.0",
-      "composesWell": ["commit"]
+      "composesWell": [
+        "commit"
+      ]
     },
     {
       "id": "ship",
       "type": "command",
       "name": "ship",
       "description": "Ship changes to production with full documentation. Commits, pushes, deploys to Vercel, updates changelog automatically.",
-      "categories": ["deployment", "workflow", "lgj-exclusive"],
-      "tags": ["vercel", "git", "deploy", "changelog", "production"],
+      "categories": [
+        "deployment",
+        "workflow",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "vercel",
+        "git",
+        "deploy",
+        "changelog",
+        "production"
+      ],
       "icon": "Rocket",
       "path": "commands/ship",
-      "files": ["command.md", "manifest.yaml"],
+      "files": [
+        "command.md",
+        "manifest.yaml"
+      ],
       "version": "1.0",
-      "composesWell": ["commit", "test"]
+      "composesWell": [
+        "commit",
+        "test"
+      ]
     },
     {
       "id": "test",
       "type": "command",
       "name": "test",
       "description": "Live browser testing with auto-detection, visual review, functional testing, and automatic UI improvements. Tests responsive layouts.",
-      "categories": ["testing", "workflow", "lgj-exclusive"],
-      "tags": ["browser", "playwright", "visual-testing", "responsive", "ui"],
+      "categories": [
+        "testing",
+        "workflow",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "browser",
+        "playwright",
+        "visual-testing",
+        "responsive",
+        "ui"
+      ],
       "icon": "FlaskConical",
       "path": "commands/test",
-      "files": ["command.md", "manifest.yaml"],
+      "files": [
+        "command.md",
+        "manifest.yaml"
+      ],
       "version": "1.0",
-      "composesWell": ["ship"]
+      "composesWell": [
+        "ship"
+      ]
     },
     {
       "id": "code-reviewer",
       "type": "agent",
       "name": "code-reviewer",
       "description": "Specialized agent for reviewing code changes. Identifies bugs, security issues, and suggests improvements with confidence scoring.",
-      "categories": ["code-quality", "workflow"],
-      "tags": ["code-review", "security", "best-practices", "testing"],
+      "categories": [
+        "code-quality",
+        "workflow"
+      ],
+      "tags": [
+        "code-review",
+        "security",
+        "best-practices",
+        "testing"
+      ],
       "icon": "Eye",
       "path": "agents/code-reviewer",
-      "files": ["agent.md", "manifest.yaml"],
+      "files": [
+        "agent.md",
+        "manifest.yaml"
+      ],
       "version": "1.0",
-      "composesWell": ["commit", "pr"]
+      "composesWell": [
+        "commit",
+        "pr"
+      ]
     }
   ]
 }

@@ -1,0 +1,20 @@
+name: dan-kennedy-copywriter
+description: Write high-converting direct response copy using Dan Kennedy's proven principles. PAS framework, urgency tactics, message-to-market matching for sales pages and emails.
+categories:
+  - copywriting
+  - marketing
+  - lgj-exclusive
+tags:
+  - direct-response
+  - sales-copy
+  - dan-kennedy
+  - PAS-framework
+  - landing-pages
+  - email-sequences
+icon: Pen
+version: "1.0"
+composesWell:
+  - conversion-copywriting
+  - hero-section-designer
+  - social-proof-builder
+  - landing-page-auditor

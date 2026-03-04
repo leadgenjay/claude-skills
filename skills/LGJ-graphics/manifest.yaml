@@ -1,0 +1,21 @@
+name: LGJ-graphics
+description: Lead Gen Jay brand illustration style system — flat SVG with floating UI elements, 30 brand logos, shared component library, Framer Motion animations, and consistent design tokens.
+categories:
+  - design
+  - illustration
+  - lgj-exclusive
+tags:
+  - svg
+  - illustration
+  - motion-graphics
+  - brand-style
+  - framer-motion
+  - logos
+  - n8n
+icon: Palette
+version: "1.0"
+composesWell:
+  - animation-designer
+  - frontend-design
+  - design-motion-principles
+  - motion-graphics
