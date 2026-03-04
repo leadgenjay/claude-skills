@@ -25,11 +25,19 @@ const meetings = [
 const slotLabels = ["9:00", "11:00", "2:00", "4:00"];
 
 export function BookedMeetings({ className }: BookedMeetingsProps) {
-  const calX = 18;
+  const calX = 14;
   const calY = 62;
-  const colWidth = 64;
+  const colWidth = 54;
   const rowHeight = 48;
   const headerH = 24;
+
+  // Main card: x=8, width=302 → right edge at 310, leaving room for sidebar
+  const cardX = 8;
+  const cardWidth = 302;
+
+  // MTD sidebar: x=318, width=74 → right edge at 392 (8px from viewBox edge)
+  const sideX = 318;
+  const sideCx = sideX + 37; // center x of sidebar card
 
   return (
     <svg
@@ -61,11 +69,11 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
       </g>
 
       {/* Main card */}
-      <Card x={10} y={10} width={340} height={276} rx={10} shadow="lg">
+      <Card x={cardX} y={10} width={cardWidth} height={276} rx={10} shadow="lg">
 
         {/* Card header */}
         <text
-          x={24}
+          x={22}
           y={34}
           fill={colors.slate900}
           fontSize={13}
@@ -77,7 +85,7 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
 
         {/* Month label */}
         <text
-          x={24}
+          x={22}
           y={50}
           fill={colors.slate400}
           fontSize={9.5}
@@ -87,8 +95,8 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
         </text>
 
         {/* Nav arrows mock */}
-        <text x={296} y={34} fill={colors.slate400} fontSize={14} fontFamily="Inter, system-ui, sans-serif">&#8249;</text>
-        <text x={316} y={34} fill={colors.slate700} fontSize={14} fontFamily="Inter, system-ui, sans-serif">&#8250;</text>
+        <text x={262} y={34} fill={colors.slate400} fontSize={14} fontFamily="Inter, system-ui, sans-serif">&#8249;</text>
+        <text x={282} y={34} fill={colors.slate700} fontSize={14} fontFamily="Inter, system-ui, sans-serif">&#8250;</text>
 
         {/* Time labels column */}
         {slotLabels.map((label, i) => (
@@ -106,7 +114,7 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
 
         {/* Day columns */}
         {days.map((day, di) => {
-          const colX = calX + 36 + di * colWidth;
+          const colX = calX + 34 + di * colWidth;
           const isToday = di === 2;
 
           return (
@@ -180,7 +188,7 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
         {slotLabels.map((_, si) => (
           <Divider
             key={si}
-            x={calX + 36}
+            x={calX + 34}
             y={calY + headerH + si * rowHeight}
             width={days.length * colWidth - 4}
           />
@@ -188,7 +196,7 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
 
         {/* Meeting blocks */}
         {meetings.map((meeting) => {
-          const colX = calX + 36 + meeting.day * colWidth + 2;
+          const colX = calX + 34 + meeting.day * colWidth + 2;
           const blockY = calY + headerH + meeting.slot * rowHeight + 3;
           return (
             <g key={`${meeting.day}-${meeting.slot}`}>
@@ -210,27 +218,27 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
                 fill={meeting.color}
               />
               <AvatarDot
-                cx={colX + 14}
+                cx={colX + 12}
                 cy={blockY + (rowHeight - 8) / 2}
-                r={8}
+                r={7}
                 initials={meeting.initials}
                 color={meeting.color}
               />
               <text
-                x={colX + 26}
+                x={colX + 22}
                 y={blockY + 14}
                 fill={colors.slate900}
-                fontSize={8}
+                fontSize={7.5}
                 fontWeight="600"
                 fontFamily="Inter, system-ui, sans-serif"
               >
                 {meeting.name}
               </text>
               <text
-                x={colX + 26}
+                x={colX + 22}
                 y={blockY + 25}
                 fill={colors.slate500}
-                fontSize={7.5}
+                fontSize={7}
                 fontFamily="Inter, system-ui, sans-serif"
               >
                 {meeting.time}
@@ -240,73 +248,63 @@ export function BookedMeetings({ className }: BookedMeetingsProps) {
         })}
       </Card>
 
-      {/* Floating badges */}
-      <Badge x={322} y={24} label="3 new this week" color={colors.pink} fontSize={9} shadow="md" />
+      {/* Floating badge */}
+      <Badge x={230} y={24} label="3 new this week" color={colors.pink} fontSize={9} shadow="md" />
 
-      {/* Stats mini card */}
-      <Card x={356} y={90} width={36} height={110} rx={8} shadow="sm">
+      {/* MTD stats sidebar card — fully within viewBox (318 to 392) */}
+      <Card x={sideX} y={90} width={74} height={116} rx={8} shadow="sm">
         <text
-          x={374}
-          y={108}
+          x={sideCx}
+          y={110}
           textAnchor="middle"
           fill={colors.slate400}
-          fontSize={7}
+          fontSize={7.5}
           fontFamily="Inter, system-ui, sans-serif"
         >
           MTD
         </text>
         <text
-          x={374}
-          y={124}
+          x={sideCx}
+          y={128}
           textAnchor="middle"
           fill={colors.slate900}
-          fontSize={13}
+          fontSize={14}
           fontWeight="700"
           fontFamily="Inter, system-ui, sans-serif"
         >
           14
         </text>
         <text
-          x={374}
-          y={136}
+          x={sideCx}
+          y={141}
           textAnchor="middle"
           fill={colors.slate400}
-          fontSize={7}
+          fontSize={7.5}
           fontFamily="Inter, system-ui, sans-serif"
         >
           mtgs
         </text>
-        <line x1={360} y1={142} x2={390} y2={142} stroke={colors.slate200} strokeWidth={1} />
+        <line x1={sideX + 8} y1={148} x2={sideX + 66} y2={148} stroke={colors.slate200} strokeWidth={1} />
         <text
-          x={374}
-          y={156}
+          x={sideCx}
+          y={162}
           textAnchor="middle"
           fill={colors.emerald}
-          fontSize={9}
+          fontSize={9.5}
           fontWeight="700"
           fontFamily="Inter, system-ui, sans-serif"
         >
           +28%
         </text>
         <text
-          x={374}
-          y={168}
+          x={sideCx}
+          y={175}
           textAnchor="middle"
           fill={colors.slate400}
-          fontSize={7}
+          fontSize={7.5}
           fontFamily="Inter, system-ui, sans-serif"
         >
-          vs last
-        </text>
-        <text
-          x={374}
-          y={178}
-          textAnchor="middle"
-          fill={colors.slate400}
-          fontSize={7}
-          fontFamily="Inter, system-ui, sans-serif"
-        >
-          month
+          vs last mo
         </text>
       </Card>
     </svg>

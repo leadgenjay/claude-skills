@@ -11,6 +11,7 @@ const stages = [
     width: 300,
     fill: colors.slate700,
     textFill: colors.white,
+    dotColor: colors.slate400,
   },
   {
     label: "Leads",
@@ -18,6 +19,7 @@ const stages = [
     width: 220,
     fill: colors.blue,
     textFill: colors.white,
+    dotColor: colors.blue,
   },
   {
     label: "Calls",
@@ -25,6 +27,7 @@ const stages = [
     width: 150,
     fill: colors.pink,
     textFill: colors.white,
+    dotColor: colors.pink,
   },
   {
     label: "Clients",
@@ -32,16 +35,26 @@ const stages = [
     width: 96,
     fill: colors.emerald,
     textFill: colors.white,
+    dotColor: colors.emerald,
   },
 ];
 
-const dropoffs = ["28.5% →", "16.0% →", "28.1% →"];
+const dropoffs = ["28.5%", "16.0%", "28.1%"];
 
 export function ConversionFunnel({ className }: ConversionFunnelProps) {
   const centerX = 200;
   const stageH = 40;
   const gap = 10;
   const startY = 28;
+
+  // Badge geometry — centred at x=200
+  const badgeLabel = "3.2% Overall Conversion";
+  const badgeFontSize = 10;
+  const badgePaddingX = 10;
+  const badgeH = 22;
+  const badgeW = badgeLabel.length * (badgeFontSize * 0.6) + badgePaddingX * 2;
+  const badgeX = centerX - badgeW / 2;
+  const badgeY = 260;
 
   return (
     <svg
@@ -83,9 +96,13 @@ export function ConversionFunnel({ className }: ConversionFunnelProps) {
             ? `M${x},${y} L${x + stage.width},${y} L${x + stage.width - taper / 2},${y + stageH} L${x + taper / 2},${y + stageH} Z`
             : `M${x},${y} L${x + stage.width},${y} L${x + stage.width},${y + stageH} L${x},${y + stageH} Z`;
 
+        // Conversion rate label x-position: just right of the narrower next bar
+        const labelX = centerX + (stages[i + 1]?.width ?? stage.width) / 2 + 10;
+        const labelMidY = y + stageH + gap / 2 + 3;
+
         return (
           <g key={stage.label}>
-            {/* Shadow layer — path does not accept rx, use g filter */}
+            {/* Shadow layer */}
             <g filter="url(#shadow-sm)">
               <path d={trapezoid} fill={stage.fill} />
             </g>
@@ -116,32 +133,43 @@ export function ConversionFunnel({ className }: ConversionFunnelProps) {
               {stage.value}
             </text>
 
-            {/* Drop-off percentage between stages */}
+            {/* Connector + drop-off between stages */}
             {i < stages.length - 1 && (
               <g>
-                {/* Arrow */}
+                {/* Connector stem — taller, darker, wider */}
                 <line
                   x1={centerX}
                   y1={y + stageH}
                   x2={centerX}
-                  y2={y + stageH + gap - 2}
-                  stroke={colors.slate400}
-                  strokeWidth="1.5"
+                  y2={y + stageH + gap - 3}
+                  stroke={colors.slate500}
+                  strokeWidth="2"
                 />
+                {/* Arrowhead */}
                 <polygon
-                  points={`${centerX - 4},${y + stageH + gap - 4} ${centerX + 4},${y + stageH + gap - 4} ${centerX},${y + stageH + gap + 2}`}
-                  fill={colors.slate400}
+                  points={`${centerX - 5},${y + stageH + gap - 5} ${centerX + 5},${y + stageH + gap - 5} ${centerX},${y + stageH + gap + 2}`}
+                  fill={colors.slate500}
                 />
-                {/* Drop-off label — right side */}
+
+                {/* Colored dot indicator on right side */}
+                <circle
+                  cx={labelX + 3}
+                  cy={labelMidY}
+                  r={3.5}
+                  fill={stages[i + 1].dotColor}
+                  opacity="0.85"
+                />
+
+                {/* Drop-off label */}
                 <text
-                  x={centerX + stages[i + 1].width / 2 + 14}
-                  y={y + stageH + gap / 2 + 4}
+                  x={labelX + 11}
+                  y={labelMidY + 3.5}
                   fontSize="9"
                   fontFamily="Inter, system-ui, sans-serif"
-                  fill={colors.slate400}
+                  fill={colors.slate500}
                   fontWeight="600"
                 >
-                  {dropoffs[i]}
+                  {dropoffs[i]} →
                 </text>
               </g>
             )}
@@ -149,15 +177,47 @@ export function ConversionFunnel({ className }: ConversionFunnelProps) {
         );
       })}
 
+      {/* Glow circle behind the badge */}
+      <circle
+        cx={centerX}
+        cy={badgeY + badgeH / 2}
+        r={badgeW * 0.55}
+        fill={colors.emerald}
+        opacity="0.08"
+      />
+
       {/* 3.2% Overall conversion badge */}
       <Badge
-        x={134}
-        y={258}
-        label="3.2% Overall Conversion"
+        x={badgeX}
+        y={badgeY}
+        label={badgeLabel}
         color={colors.emerald}
         shadow="md"
-        fontSize={10}
+        fontSize={badgeFontSize}
       />
+
+      {/* Upward trend arrow to the right of the badge */}
+      <g transform={`translate(${badgeX + badgeW + 6}, ${badgeY + badgeH / 2 - 5})`}>
+        {/* Shaft */}
+        <line
+          x1={4}
+          y1={9}
+          x2={4}
+          y2={2}
+          stroke={colors.emerald}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        {/* Arrowhead pointing up */}
+        <polyline
+          points="1,5 4,1 7,5"
+          fill="none"
+          stroke={colors.emerald}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
     </svg>
   );
 }

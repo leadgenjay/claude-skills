@@ -4,7 +4,6 @@ import {
   Badge,
   AvatarDot,
   StarRating,
-  TextLine,
   Divider,
   colors,
   getAvatarColor,
@@ -19,24 +18,24 @@ const reviews = [
     initials: "SR",
     name: "Sarah R.",
     rating: 5,
-    line1: 80,
-    line2: 60,
+    quoteLine1: "Best lead gen service we've",
+    quoteLine2: "used. Results in week one!",
     highlight: true,
   },
   {
     initials: "MK",
     name: "Mike K.",
     rating: 4,
-    line1: 70,
-    line2: 50,
+    quoteLine1: "Great leads, solid support.",
+    quoteLine2: "Would recommend.",
     highlight: false,
   },
   {
     initials: "JL",
     name: "Jane L.",
     rating: 5,
-    line1: 75,
-    line2: 55,
+    quoteLine1: "Transformed our outreach",
+    quoteLine2: "completely. Amazing!",
     highlight: false,
   },
 ];
@@ -133,9 +132,26 @@ export function ReviewGrid({ className }: ReviewGridProps) {
             <Divider x={cx + 10} y={cy + 46} width={cardWidth - 20} />
 
             {/* Quote lines */}
-            <TextLine x={cx + 10} y={cy + 56} width={r.line1} height={7} color={colors.slate200} />
-            <TextLine x={cx + 10} y={cy + 69} width={r.line2} height={7} color={colors.slate200} />
-            <TextLine x={cx + 10} y={cy + 82} width={r.line1 - 15} height={7} color={colors.slate200} />
+            <text
+              x={cx + 10}
+              y={cy + 62}
+              fontSize="8"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate500}
+              fontStyle="italic"
+            >
+              {r.quoteLine1}
+            </text>
+            <text
+              x={cx + 10}
+              y={cy + 74}
+              fontSize="8"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate500}
+              fontStyle="italic"
+            >
+              {r.quoteLine2}
+            </text>
 
             {/* Rating pill */}
             <rect

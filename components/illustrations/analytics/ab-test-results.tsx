@@ -146,7 +146,7 @@ export function ABTestResults({ className }: ABTestResultsProps) {
       {/* ── Variant B card — winner ── */}
       {/* Green border glow */}
       <rect
-        x={230}
+        x={228}
         y={cardY - 2}
         width={cardW + 4}
         height={cardH + 4}
@@ -156,13 +156,13 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         strokeWidth="2"
         opacity="0.4"
       />
-      <Card x={232} y={cardY} width={cardW} height={cardH} rx={12} shadow="lg" />
+      <Card x={230} y={cardY} width={cardW} height={cardH} rx={12} shadow="lg" />
 
       {/* B label chip */}
-      <rect x={248} y={cardY + 14} width={28} height={18} rx={9} fill={colors.blue} opacity="0.15" />
+      <rect x={246} y={cardY + 12} width={28} height={18} rx={9} fill={colors.blue} opacity="0.15" />
       <text
-        x={262}
-        y={cardY + 27}
+        x={260}
+        y={cardY + 25}
         textAnchor="middle"
         fontSize="10"
         fontWeight="800"
@@ -172,9 +172,10 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         B
       </text>
 
+      {/* "Variant B" label — full width, no badge competing on same row */}
       <text
-        x={282}
-        y={cardY + 27}
+        x={280}
+        y={cardY + 25}
         fontSize="11"
         fontWeight="600"
         fontFamily="Inter, system-ui, sans-serif"
@@ -183,10 +184,10 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         Variant B
       </text>
 
-      {/* Winner badge */}
+      {/* Winner badge — on its own row below the label */}
       <Badge
-        x={298}
-        y={cardY + 10}
+        x={246}
+        y={cardY + 33}
         label="Winner"
         color={colors.emerald}
         shadow="sm"
@@ -196,7 +197,7 @@ export function ABTestResults({ className }: ABTestResultsProps) {
       {/* Big conversion rate */}
       <text
         x={306}
-        y={cardY + 82}
+        y={cardY + 88}
         textAnchor="middle"
         fontSize="36"
         fontWeight="800"
@@ -207,7 +208,7 @@ export function ABTestResults({ className }: ABTestResultsProps) {
       </text>
       <text
         x={306}
-        y={cardY + 98}
+        y={cardY + 104}
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
@@ -217,12 +218,12 @@ export function ABTestResults({ className }: ABTestResultsProps) {
       </text>
 
       {/* Divider */}
-      <line x1={248} y1={cardY + 110} x2={364} y2={cardY + 110} stroke={colors.slate200} strokeWidth="1" />
+      <line x1={246} y1={cardY + 116} x2={366} y2={cardY + 116} stroke={colors.slate200} strokeWidth="1" />
 
       {/* Sample size */}
       <text
-        x={248}
-        y={cardY + 128}
+        x={246}
+        y={cardY + 132}
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
         fill={colors.slate400}
@@ -230,8 +231,8 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         Visitors
       </text>
       <text
-        x={248}
-        y={cardY + 142}
+        x={246}
+        y={cardY + 146}
         fontSize="13"
         fontWeight="700"
         fontFamily="Inter, system-ui, sans-serif"
@@ -242,8 +243,8 @@ export function ABTestResults({ className }: ABTestResultsProps) {
 
       {/* CI */}
       <text
-        x={312}
-        y={cardY + 128}
+        x={310}
+        y={cardY + 132}
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
         fill={colors.slate400}
@@ -251,8 +252,8 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         CI Range
       </text>
       <text
-        x={312}
-        y={cardY + 142}
+        x={310}
+        y={cardY + 146}
         fontSize="10"
         fontWeight="600"
         fontFamily="Inter, system-ui, sans-serif"
@@ -261,10 +262,10 @@ export function ABTestResults({ className }: ABTestResultsProps) {
         4.2–5.4%
       </text>
 
-      {/* +50% Improvement badge on winner */}
+      {/* +50% Improvement badge — centered in card, clear of card bottom */}
       <Badge
-        x={240}
-        y={cardY + 155}
+        x={238}
+        y={cardY + 160}
         label="+50% Improvement"
         color={colors.pink}
         shadow="sm"

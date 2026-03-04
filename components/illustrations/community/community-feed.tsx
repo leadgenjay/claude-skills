@@ -4,7 +4,6 @@ import {
   Badge,
   AvatarDot,
   Divider,
-  TextLine,
   StatusDot,
   colors,
   getAvatarColor,
@@ -15,9 +14,27 @@ interface CommunityFeedProps {
 }
 
 const posts = [
-  { initials: "AR", name: "Alex R.", time: "2m ago", w1: 200, w2: 150 },
-  { initials: "SK", name: "Sara K.", time: "8m ago", w1: 185, w2: 130 },
-  { initials: "DM", name: "Dan M.", time: "15m ago", w1: 195, w2: 0 },
+  {
+    initials: "AR",
+    name: "Alex R.",
+    time: "2m ago",
+    line1: "Just booked 3 meetings from yesterday's cold email batch!",
+    line2: "The AI personalization is incredible.",
+  },
+  {
+    initials: "SK",
+    name: "Sara K.",
+    time: "8m ago",
+    line1: "Week 2 update: 47% open rate on my new sequence.",
+    line2: "Following the template from Module 3.",
+  },
+  {
+    initials: "DM",
+    name: "Dan M.",
+    time: "15m ago",
+    line1: "Anyone else seeing huge improvements with the new",
+    line2: "domain warmup strategy?",
+  },
 ];
 
 const hearts = [24, 11, 7];
@@ -128,10 +145,24 @@ export function CommunityFeed({ className }: CommunityFeedProps) {
             </text>
 
             {/* Post text lines */}
-            <TextLine x={58} y={baseY + 28} width={post.w1} height={7} color={colors.slate200} />
-            {post.w2 > 0 && (
-              <TextLine x={58} y={baseY + 40} width={post.w2} height={7} color={colors.slate200} />
-            )}
+            <text
+              x={58}
+              y={baseY + 30}
+              fontSize="8"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate500}
+            >
+              {post.line1}
+            </text>
+            <text
+              x={58}
+              y={baseY + 41}
+              fontSize="8"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate500}
+            >
+              {post.line2}
+            </text>
 
             {/* Engagement row */}
             {/* Heart icon */}

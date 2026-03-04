@@ -2,6 +2,7 @@ import {
   ShadowDefs,
   Card,
   Badge,
+  OutlineBadge,
   AvatarDot,
   StarRating,
   colors,
@@ -47,7 +48,7 @@ export function TestimonialCard({ className }: TestimonialCardProps) {
         fontSize="72"
         fontFamily="Georgia, serif"
         fill={colors.pink}
-        opacity="0.12"
+        opacity="0.18"
         fontWeight="700"
       >
         &ldquo;
@@ -58,6 +59,17 @@ export function TestimonialCard({ className }: TestimonialCardProps) {
 
       {/* Star rating */}
       <StarRating x={56} y={68} rating={5} size={12} />
+      {/* Rating number next to stars */}
+      <text
+        x="138"
+        y="74"
+        fontSize="10"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.amber}
+        fontWeight="700"
+      >
+        5.0
+      </text>
 
       {/* Quote text — line 1 */}
       <text
@@ -114,6 +126,43 @@ export function TestimonialCard({ className }: TestimonialCardProps) {
         fill={colors.slate400}
       >
         Henderson Roofing
+      </text>
+
+      {/* Industry badge next to company name */}
+      <OutlineBadge
+        x={196}
+        y={162}
+        label="Roofing"
+        color={colors.blue}
+        fontSize={9}
+      />
+
+      {/* Results metric — upward arrow + stat, right-aligned */}
+      <text
+        x="248"
+        y="157"
+        fontSize="9"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.slate400}
+        fontWeight="500"
+      >
+        Results
+      </text>
+      {/* Up arrow */}
+      <path
+        d="M248 167 L251 162 L254 167"
+        fill={colors.emerald}
+        stroke="none"
+      />
+      <text
+        x="258"
+        y="168"
+        fontSize="10"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.emerald}
+        fontWeight="700"
+      >
+        15 mtgs/mo
       </text>
 
       {/* Verified Customer badge — overlapping card edge */}

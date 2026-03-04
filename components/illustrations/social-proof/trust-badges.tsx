@@ -28,7 +28,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       {/* Section label */}
       <text
         x="200"
-        y="44"
+        y="38"
         textAnchor="middle"
         fontSize="12"
         fontWeight="600"
@@ -40,14 +40,27 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
 
       {/* ── Badge 1: Trustpilot ── */}
-      <Card x={18} y={60} width={84} height={110} rx={10} shadow="md" />
+      <Card x={18} y={52} width={84} height={120} rx={10} shadow="md" />
       {/* Green Trustpilot star background strip */}
-      <rect x="18" y="60" width="84" height="36" rx="10" fill={colors.emerald} opacity="0.1" />
-      <rect x="18" y="84" width="84" height="12" fill={colors.emerald} opacity="0.1" />
-      <StarRating x={24} y={80} rating={5} size={11} />
+      <rect x="18" y="52" width="84" height="36" rx="10" fill={colors.emerald} opacity="0.1" />
+      <rect x="18" y="80" width="84" height="8" fill={colors.emerald} opacity="0.1" />
+      {/* Trustpilot TP logo */}
+      <rect x="44" y="57" width="32" height="16" rx="3" fill={colors.emerald} opacity="0.2" />
       <text
         x="60"
-        y="118"
+        y="68"
+        textAnchor="middle"
+        fontSize="9"
+        fontWeight="800"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.emerald}
+      >
+        TP
+      </text>
+      <StarRating x={24} y={76} rating={5} size={11} />
+      <text
+        x="60"
+        y="114"
         textAnchor="middle"
         fontSize="11"
         fontWeight="700"
@@ -58,7 +71,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="60"
-        y="133"
+        y="129"
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
@@ -66,37 +79,24 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       >
         Trustpilot
       </text>
-      {/* Trustpilot TP logo */}
-      <rect x="44" y="64" width="32" height="16" rx="3" fill={colors.emerald} opacity="0.2" />
-      <text
-        x="60"
-        y="75"
-        textAnchor="middle"
-        fontSize="9"
-        fontWeight="800"
-        fontFamily="Inter, system-ui, sans-serif"
-        fill={colors.emerald}
-      >
-        TP
-      </text>
 
       {/* ── Badge 2: Verified Business ── */}
-      <Card x={114} y={60} width={84} height={110} rx={10} shadow="md" />
+      <Card x={114} y={52} width={84} height={120} rx={10} shadow="md" />
       {/* Shield icon — drawn inline */}
       <path
-        d="M156 70 l18 0 l0 22 a18 18 0 0 1-18 12 a18 18 0 0 1-18-12 l0-22 z"
+        d="M156 64 l18 0 l0 22 a18 18 0 0 1-18 12 a18 18 0 0 1-18-12 l0-22 z"
         fill={colors.blue}
         opacity="0.12"
       />
       <path
-        d="M156 72 l14 0 l0 18 a14 14 0 0 1-14 10 a14 14 0 0 1-14-10 l0-18 z"
+        d="M156 66 l14 0 l0 18 a14 14 0 0 1-14 10 a14 14 0 0 1-14-10 l0-18 z"
         fill="none"
         stroke={colors.blue}
         strokeWidth="1.5"
       />
       {/* Check inside shield */}
       <path
-        d="M150 81 l4 4 7-8"
+        d="M150 75 l4 4 7-8"
         fill="none"
         stroke={colors.blue}
         strokeWidth="2"
@@ -105,7 +105,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       />
       <text
         x="156"
-        y="118"
+        y="114"
         textAnchor="middle"
         fontSize="10"
         fontWeight="700"
@@ -116,7 +116,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="156"
-        y="132"
+        y="129"
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
@@ -126,13 +126,13 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
 
       {/* ── Badge 3: 14-Day Guarantee ── */}
-      <Card x={210} y={60} width={84} height={110} rx={10} shadow="md" />
+      <Card x={210} y={52} width={84} height={120} rx={10} shadow="md" />
       {/* Circular guarantee badge */}
-      <circle cx="252" cy="88" r="20" fill={colors.pink} opacity="0.1" />
-      <circle cx="252" cy="88" r="20" fill="none" stroke={colors.pink} strokeWidth="1.5" strokeDasharray="3 2" />
+      <circle cx="252" cy="82" r="20" fill={colors.pink} opacity="0.1" />
+      <circle cx="252" cy="82" r="20" fill="none" stroke={colors.pink} strokeWidth="1.5" strokeDasharray="3 2" />
       <text
         x="252"
-        y="85"
+        y="79"
         textAnchor="middle"
         fontSize="10"
         fontWeight="800"
@@ -143,7 +143,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="252"
-        y="96"
+        y="90"
         textAnchor="middle"
         fontSize="7"
         fontWeight="600"
@@ -154,7 +154,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="252"
-        y="118"
+        y="114"
         textAnchor="middle"
         fontSize="10"
         fontWeight="700"
@@ -165,7 +165,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="252"
-        y="132"
+        y="129"
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
@@ -175,14 +175,14 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
 
       {/* ── Badge 4: SSL Security ── */}
-      <Card x={306} y={60} width={76} height={110} rx={10} shadow="md" />
-      {/* Lock icon centered */}
-      <LockIcon x={332} y={66} size={28} color={colors.emerald} />
+      <Card x={306} y={52} width={76} height={120} rx={10} shadow="md" />
       {/* Green glow behind lock */}
-      <circle cx="346" cy="84" r="18" fill={colors.emerald} opacity="0.08" />
+      <circle cx="346" cy="78" r="18" fill={colors.emerald} opacity="0.08" />
+      {/* Lock icon centered */}
+      <LockIcon x={332} y={60} size={28} color={colors.emerald} />
       <text
         x="344"
-        y="118"
+        y="114"
         textAnchor="middle"
         fontSize="10"
         fontWeight="700"
@@ -193,7 +193,7 @@ export function TrustBadges({ className }: TrustBadgesProps) {
       </text>
       <text
         x="344"
-        y="132"
+        y="129"
         textAnchor="middle"
         fontSize="9"
         fontFamily="Inter, system-ui, sans-serif"
@@ -202,49 +202,64 @@ export function TrustBadges({ className }: TrustBadgesProps) {
         SSL Secure
       </text>
 
-      {/* Bottom trusted-by line */}
+      {/* Thin divider between badges and trusted-by section */}
+      <line
+        x1="40"
+        y1="192"
+        x2="360"
+        y2="192"
+        stroke={colors.slate400}
+        strokeWidth="0.75"
+        opacity="0.3"
+      />
+
+      {/* Stacked avatar dots (tighter overlap: spacing 14 instead of 18) */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <circle
+          key={i}
+          cx={147 + i * 14}
+          cy={223}
+          r={9}
+          fill={[colors.pink, colors.blue, colors.emerald, colors.amber, colors.blue][i]}
+          opacity="0.75"
+          stroke={colors.white}
+          strokeWidth="2"
+        />
+      ))}
+
+      {/* "+2,395 more" text aligned right of avatars */}
+      <text
+        x="215"
+        y="227"
+        fontSize="10"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.slate400}
+      >
+        +2,395 more
+      </text>
+
+      {/* "Trusted by 2,400+ businesses" pill container */}
+      <rect
+        x="90"
+        y="248"
+        width="220"
+        height="30"
+        rx="15"
+        fill={colors.white}
+        stroke={colors.slate400}
+        strokeWidth="0.75"
+        opacity="0.6"
+      />
       <text
         x="200"
-        y="202"
+        y="268"
         textAnchor="middle"
         fontSize="11"
         fontFamily="Inter, system-ui, sans-serif"
         fill={colors.slate400}
       >
         Trusted by{" "}
-      </text>
-      <text
-        x="248"
-        y="202"
-        fontSize="11"
-        fontWeight="700"
-        fontFamily="Inter, system-ui, sans-serif"
-        fill={colors.slate700}
-      >
-        2,400+ businesses
-      </text>
-
-      {/* Row of tiny avatar dots for social proof */}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <circle
-          key={i}
-          cx={155 + i * 18}
-          cy={220}
-          r={8}
-          fill={[colors.pink, colors.blue, colors.emerald, colors.amber, colors.blue][i]}
-          opacity="0.7"
-          stroke={colors.white}
-          strokeWidth="1.5"
-        />
-      ))}
-      <text
-        x="248"
-        y="224"
-        fontSize="10"
-        fontFamily="Inter, system-ui, sans-serif"
-        fill={colors.slate400}
-      >
-        +2,395 more
+        <tspan fontWeight="700" fill={colors.slate700}>2,400+ businesses</tspan>
       </text>
     </svg>
   );

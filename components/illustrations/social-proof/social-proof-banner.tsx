@@ -1,8 +1,47 @@
-import { ShadowDefs, colors } from "../shared";
+import { ShadowDefs, Card, Badge, StarRating, colors } from "../shared";
 
 interface SocialProofBannerProps {
   className?: string;
 }
+
+// ── Layout constants ────────────────────────────────────────────
+const CARD_X = 22;
+const CARD_Y = 42;
+const CARD_W = 356;
+const CARD_H = 216;
+
+// Header strip inside card
+const HEADER_H = 44;
+const HEADER_BOTTOM = CARD_Y + HEADER_H;
+
+// 5 stat columns — evenly spaced inside card
+const STAT_COUNT = 5;
+const STAT_COL_W = CARD_W / STAT_COUNT; // 71.2 each
+function statCX(i: number): number {
+  return CARD_X + STAT_COL_W * i + STAT_COL_W / 2;
+}
+
+// Rows inside stat area
+const STAT_AREA_TOP = HEADER_BOTTOM; // y=86
+const STAT_AREA_H = CARD_H - HEADER_H; // 172
+const ICON_CY = STAT_AREA_TOP + STAT_AREA_H * 0.32; // ~141
+const VALUE_Y = STAT_AREA_TOP + STAT_AREA_H * 0.62; // ~173
+const LABEL_Y = STAT_AREA_TOP + STAT_AREA_H * 0.82; // ~197
+
+const DIVIDER_Y = CARD_Y + HEADER_H;
+
+const stats: {
+  value: string;
+  label: string;
+  iconColor: string;
+  iconSymbol: string;
+}[] = [
+  { value: "#1",        label: "Agency",      iconColor: colors.pink,    iconSymbol: "★" },
+  { value: "2,400+",    label: "Clients",     iconColor: colors.blue,    iconSymbol: "◆" },
+  { value: "Since '19", label: "Established", iconColor: colors.emerald, iconSymbol: "◉" },
+  { value: "4.9",       label: "Rating",      iconColor: colors.amber,   iconSymbol: "★" },
+  { value: "12M+",      label: "Emails Sent", iconColor: colors.pink,    iconSymbol: "▶" },
+];
 
 export function SocialProofBanner({ className }: SocialProofBannerProps) {
   return (
@@ -12,153 +51,166 @@ export function SocialProofBanner({ className }: SocialProofBannerProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       role="img"
-      aria-label="Social proof stat pills: 2400+ clients, 4.9 stars, since 2019, 12M+ emails sent"
+      aria-label="Social proof bar: #1 Agency, 2400+ Clients, Since 2019, 4.9 Rating, 12M+ Emails Sent"
     >
       <ShadowDefs />
 
-      {/* Dot grid background */}
-      {Array.from({ length: 12 }, (_, row) =>
-        Array.from({ length: 20 }, (_, col) => (
+      {/* Subtle dot-grid background */}
+      {Array.from({ length: 8 }, (_, row) =>
+        Array.from({ length: 14 }, (_, col) => (
           <circle
             key={`${row}-${col}`}
-            cx={10 + col * 20}
-            cy={10 + row * 26}
-            r={1.5}
+            cx={16 + col * 27}
+            cy={16 + row * 38}
+            r={1.2}
             fill={colors.slate300}
-            opacity="0.5"
+            opacity="0.35"
           />
         ))
       )}
 
-      {/* ── Pill 1: 2,400+ Clients (largest, centre-ish, slight tilt left) ── */}
-      <g filter="url(#shadow-lg)" transform="rotate(-4, 200, 120)">
-        <rect x="80" y="88" width="172" height="48" rx="24" fill={colors.pink} />
-        <text
-          x="166"
-          y="106"
-          textAnchor="middle"
-          fontSize="11"
-          fontWeight="600"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill="rgba(255,255,255,0.75)"
-          letterSpacing="0.5"
-        >
-          CLIENTS
-        </text>
-        <text
-          x="166"
-          y="125"
-          textAnchor="middle"
-          fontSize="22"
-          fontWeight="800"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill={colors.white}
-        >
-          2,400+
-        </text>
-      </g>
+      {/* ── Main card wrapper ── */}
+      <Card x={CARD_X} y={CARD_Y} width={CARD_W} height={CARD_H} rx={12} shadow="lg" />
 
-      {/* ── Pill 2: 4.9 Stars (top-right, tilted right) ── */}
-      <g filter="url(#shadow-md)" transform="rotate(5, 300, 80)">
-        <rect x="248" y="54" width="108" height="38" rx="19" fill={colors.amber} />
-        <text
-          x="302"
-          y="70"
-          textAnchor="middle"
-          fontSize="9"
-          fontWeight="600"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill="rgba(255,255,255,0.8)"
-          letterSpacing="0.5"
-        >
-          RATING
-        </text>
-        <text
-          x="302"
-          y="85"
-          textAnchor="middle"
-          fontSize="16"
-          fontWeight="800"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill={colors.white}
-        >
-          ★ 4.9
-        </text>
-      </g>
+      {/* ── Header strip ── */}
+      {/* Soft slate-100 fill */}
+      <rect
+        x={CARD_X + 1}
+        y={CARD_Y + 1}
+        width={CARD_W - 2}
+        height={HEADER_H - 1}
+        rx={11}
+        fill={colors.slate100}
+      />
+      {/* Clip bottom corners of header fill so it sits flush above divider */}
+      <rect
+        x={CARD_X + 1}
+        y={CARD_Y + HEADER_H - 12}
+        width={CARD_W - 2}
+        height={12}
+        fill={colors.slate100}
+      />
 
-      {/* ── Pill 3: Since 2019 (bottom-left, tilted slightly left) ── */}
-      <g filter="url(#shadow-md)" transform="rotate(-3, 110, 210)">
-        <rect x="44" y="192" width="120" height="38" rx="19" fill={colors.blue} />
-        <text
-          x="104"
-          y="208"
-          textAnchor="middle"
-          fontSize="9"
-          fontWeight="600"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill="rgba(255,255,255,0.8)"
-          letterSpacing="0.5"
-        >
-          ESTABLISHED
-        </text>
-        <text
-          x="104"
-          y="223"
-          textAnchor="middle"
-          fontSize="16"
-          fontWeight="800"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill={colors.white}
-        >
-          Since 2019
-        </text>
-      </g>
+      {/* Header content: pink accent dot + "Lead Gen Jay" wordmark + "#1 Rated Agency" badge */}
+      <circle cx={CARD_X + 20} cy={CARD_Y + HEADER_H / 2} r={5} fill={colors.pink} />
+      <text
+        x={CARD_X + 32}
+        y={CARD_Y + HEADER_H / 2 + 4.5}
+        fontSize="12"
+        fontWeight="700"
+        fontFamily="Inter, system-ui, sans-serif"
+        fill={colors.slate900}
+      >
+        Lead Gen Jay
+      </text>
 
-      {/* ── Pill 4: 12M+ Emails Sent (bottom-right, tilted right) ── */}
-      <g filter="url(#shadow-md)" transform="rotate(4, 300, 216)">
-        <rect x="226" y="196" width="140" height="40" rx="20" fill={colors.emerald} />
-        <text
-          x="296"
-          y="213"
-          textAnchor="middle"
-          fontSize="9"
-          fontWeight="600"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill="rgba(255,255,255,0.8)"
-          letterSpacing="0.5"
-        >
-          EMAILS SENT
-        </text>
-        <text
-          x="296"
-          y="229"
-          textAnchor="middle"
-          fontSize="16"
-          fontWeight="800"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill={colors.white}
-        >
-          12M+
-        </text>
-      </g>
+      {/* Badge: #1 Rated */}
+      <Badge
+        x={CARD_X + CARD_W - 110}
+        y={CARD_Y + HEADER_H / 2 - 11}
+        label="✦  #1 Rated Agency"
+        color={colors.pink}
+        textColor={colors.white}
+        fontSize={9.5}
+        shadow="sm"
+      />
 
-      {/* ── Pill 5: small accent pill top-left ── */}
-      <g filter="url(#shadow-sm)" transform="rotate(-6, 70, 68)">
-        <rect x="30" y="54" width="86" height="30" rx="15" fill={colors.white} stroke={colors.slate200} strokeWidth="1" />
-        <circle cx="48" cy="69" r="6" fill={colors.pink} opacity="0.2" />
-        <circle cx="48" cy="69" r="3" fill={colors.pink} />
-        <text
-          x="94"
-          y="73"
-          textAnchor="middle"
-          fontSize="10"
-          fontWeight="700"
-          fontFamily="Inter, system-ui, sans-serif"
-          fill={colors.slate700}
-        >
-          #1 Agency
-        </text>
-      </g>
+      {/* ── Divider ── */}
+      <line
+        x1={CARD_X + 1}
+        y1={DIVIDER_Y}
+        x2={CARD_X + CARD_W - 1}
+        y2={DIVIDER_Y}
+        stroke={colors.slate200}
+        strokeWidth="1"
+      />
+
+      {/* ── 5 stat columns ── */}
+      {stats.map((stat, i) => {
+        const cx = statCX(i);
+
+        // Vertical separator between columns (skip after last)
+        const sepX = CARD_X + STAT_COL_W * (i + 1);
+        const showSep = i < STAT_COUNT - 1;
+
+        return (
+          <g key={stat.label}>
+            {/* Column separator */}
+            {showSep && (
+              <line
+                x1={sepX}
+                y1={STAT_AREA_TOP + 16}
+                x2={sepX}
+                y2={CARD_Y + CARD_H - 16}
+                stroke={colors.slate200}
+                strokeWidth="1"
+              />
+            )}
+
+            {/* Icon circle */}
+            <circle cx={cx} cy={ICON_CY} r={18} fill={stat.iconColor} opacity="0.12" />
+            <circle cx={cx} cy={ICON_CY} r={11} fill={stat.iconColor} opacity="0.22" />
+
+            {/* Icon glyph — rating column gets star SVG, others get text glyph */}
+            {i === 3 ? (
+              // Star rating column: draw 5 small stars centered
+              <g transform={`translate(${cx - 30}, ${ICON_CY - 7})`}>
+                <StarRating x={6} y={7} rating={5} maxStars={5} size={9} />
+              </g>
+            ) : (
+              <text
+                x={cx}
+                y={ICON_CY + 5}
+                textAnchor="middle"
+                fontSize="13"
+                fontFamily="Inter, system-ui, sans-serif"
+                fill={stat.iconColor}
+                fontWeight="700"
+              >
+                {stat.iconSymbol}
+              </text>
+            )}
+
+            {/* Stat value */}
+            <text
+              x={cx}
+              y={VALUE_Y}
+              textAnchor="middle"
+              fontSize={stat.value.length > 5 ? "13" : "15"}
+              fontWeight="800"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate900}
+            >
+              {stat.value}
+            </text>
+
+            {/* Stat label */}
+            <text
+              x={cx}
+              y={LABEL_Y}
+              textAnchor="middle"
+              fontSize="9"
+              fontWeight="500"
+              fontFamily="Inter, system-ui, sans-serif"
+              fill={colors.slate500}
+              letterSpacing="0.3"
+            >
+              {stat.label.toUpperCase()}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* ── Bottom trust strip (thin pink accent line at card bottom) ── */}
+      <rect
+        x={CARD_X + 1}
+        y={CARD_Y + CARD_H - 4}
+        width={CARD_W - 2}
+        height={3}
+        rx={2}
+        fill={colors.pink}
+        opacity="0.18"
+      />
     </svg>
   );
 }

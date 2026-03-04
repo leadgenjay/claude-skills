@@ -2,11 +2,7 @@ import {
   ShadowDefs,
   Card,
   Badge,
-  StatusDot,
   CheckIcon,
-  TextLine,
-  Divider,
-  OutlineBadge,
   colors,
 } from "../shared";
 
@@ -63,31 +59,25 @@ export function BeforeAfter({ className }: BeforeAfterProps) {
       </text>
       <Badge x={110} y={19} label="Manual" color="#dc2626" fontSize={9} />
 
-      {/* Cluttered content — scattered text lines with varying offsets */}
-      <TextLine x={26} y={58} width={88} height={7} color={colors.slate300} />
-      <TextLine x={40} y={70} width={112} height={7} color={colors.slate300} />
-      <TextLine x={22} y={82} width={64} height={7} color={colors.slate300} />
-      <TextLine x={52} y={94} width={96} height={7} color={colors.slate300} />
-      <TextLine x={30} y={106} width={80} height={7} color={colors.slate300} />
-      <TextLine x={18} y={118} width={120} height={7} color={colors.slate300} />
+      {/* Row 1 */}
+      <XIcon x={22} y={54} size={10} />
+      <text x={37} y={62} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Find leads manually</text>
+      <text x={183} y={62} textAnchor="end" fill={colors.slate500} fontSize="8" fontFamily="Inter, system-ui, sans-serif">~20/day</text>
 
-      {/* X marks — manual errors */}
-      <XIcon x={22} y={56} size={10} />
-      <XIcon x={22} y={80} size={10} />
-      <XIcon x={22} y={104} size={10} />
-      <XIcon x={22} y={128} size={10} />
+      {/* Row 2 */}
+      <XIcon x={22} y={76} size={10} />
+      <text x={37} y={84} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Write emails one by one</text>
+      <text x={183} y={84} textAnchor="end" fill={colors.slate500} fontSize="8" fontFamily="Inter, system-ui, sans-serif">~10/day</text>
 
-      <Divider x={22} y={140} width={154} />
+      {/* Row 3 */}
+      <XIcon x={22} y={98} size={10} />
+      <text x={37} y={106} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Track in spreadsheet</text>
+      <text x={183} y={106} textAnchor="end" fill={colors.slate500} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Error-prone</text>
 
-      {/* Red status dots — failures */}
-      <StatusDot cx={30} cy={154} r={4} status="error" />
-      <TextLine x={40} y={150} width={80} height={7} color={colors.slate200} />
-      <StatusDot cx={30} cy={170} r={4} status="error" />
-      <TextLine x={40} y={166} width={100} height={7} color={colors.slate200} />
-      <StatusDot cx={30} cy={186} r={4} status="warning" />
-      <TextLine x={40} y={182} width={70} height={7} color={colors.slate200} />
-      <StatusDot cx={30} cy={202} r={4} status="error" />
-      <TextLine x={40} y={198} width={90} height={7} color={colors.slate200} />
+      {/* Row 4 */}
+      <XIcon x={22} y={120} size={10} />
+      <text x={37} y={128} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Follow up manually</text>
+      <text x={183} y={128} textAnchor="end" fill={colors.slate500} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Often forgotten</text>
 
       {/* Time label */}
       <rect x={22} y={216} width={70} height={20} rx="5" fill="#fee2e2" />
@@ -135,33 +125,25 @@ export function BeforeAfter({ className }: BeforeAfterProps) {
       </text>
       <Badge x={316} y={19} label="Auto" color={colors.emerald} fontSize={9} />
 
-      {/* Clean, aligned content */}
-      <TextLine x={240} y={58} width={130} height={7} color={colors.slate200} />
-      <TextLine x={240} y={72} width={110} height={7} color={colors.slate200} />
-      <TextLine x={240} y={86} width={120} height={7} color={colors.slate200} />
-      <TextLine x={240} y={100} width={100} height={7} color={colors.slate200} />
-      <TextLine x={240} y={114} width={125} height={7} color={colors.slate200} />
-      <TextLine x={240} y={128} width={95} height={7} color={colors.slate200} />
-
-      {/* Check marks */}
+      {/* Row 1 */}
       <CheckIcon x={226} y={54} size={10} color={colors.emerald} />
-      <CheckIcon x={226} y={68} size={10} color={colors.emerald} />
-      <CheckIcon x={226} y={82} size={10} color={colors.emerald} />
-      <CheckIcon x={226} y={96} size={10} color={colors.emerald} />
-      <CheckIcon x={226} y={110} size={10} color={colors.emerald} />
-      <CheckIcon x={226} y={124} size={10} color={colors.emerald} />
+      <text x={241} y={62} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">AI finds verified leads</text>
+      <text x={383} y={62} textAnchor="end" fill={colors.emerald} fontSize="8" fontWeight="600" fontFamily="Inter, system-ui, sans-serif">500+/day</text>
 
-      <Divider x={222} y={140} width={154} />
+      {/* Row 2 */}
+      <CheckIcon x={226} y={76} size={10} color={colors.emerald} />
+      <text x={241} y={84} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Personalized at scale</text>
+      <text x={383} y={84} textAnchor="end" fill={colors.emerald} fontSize="8" fontWeight="600" fontFamily="Inter, system-ui, sans-serif">1000+/day</text>
 
-      {/* Green status dots */}
-      <StatusDot cx={230} cy={154} r={4} status="success" />
-      <TextLine x={240} y={150} width={80} height={7} color={colors.slate200} />
-      <StatusDot cx={230} cy={170} r={4} status="success" />
-      <TextLine x={240} y={166} width={100} height={7} color={colors.slate200} />
-      <StatusDot cx={230} cy={186} r={4} status="success" />
-      <TextLine x={240} y={182} width={70} height={7} color={colors.slate200} />
-      <StatusDot cx={230} cy={202} r={4} status="success" />
-      <TextLine x={240} y={198} width={90} height={7} color={colors.slate200} />
+      {/* Row 3 */}
+      <CheckIcon x={226} y={98} size={10} color={colors.emerald} />
+      <text x={241} y={106} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">CRM auto-updated</text>
+      <text x={383} y={106} textAnchor="end" fill={colors.emerald} fontSize="8" fontWeight="600" fontFamily="Inter, system-ui, sans-serif">Real-time</text>
+
+      {/* Row 4 */}
+      <CheckIcon x={226} y={120} size={10} color={colors.emerald} />
+      <text x={241} y={128} fill={colors.slate700} fontSize="8" fontFamily="Inter, system-ui, sans-serif">Smart sequences</text>
+      <text x={383} y={128} textAnchor="end" fill={colors.emerald} fontSize="8" fontWeight="600" fontFamily="Inter, system-ui, sans-serif">100% follow-up</text>
 
       {/* Time label */}
       <rect x={222} y={216} width={80} height={20} rx="5" fill="#d1fae5" />

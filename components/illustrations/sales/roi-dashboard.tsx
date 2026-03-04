@@ -216,7 +216,7 @@ export function ROIDashboard({ className }: ROIDashboardProps) {
       </Card>
 
       {/* Floating summary badge */}
-      <Badge x={316} y={18} label="↑ All metrics up" color={colors.emerald} fontSize={9} shadow="md" />
+      <Badge x={282} y={18} label="↑ All metrics up" color={colors.emerald} fontSize={9} shadow="md" />
     </svg>
   );
 }
