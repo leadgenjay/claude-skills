@@ -1,0 +1,18 @@
+name: LGJ-n8n-workflow-patterns
+description: Proven n8n workflow architectural patterns — webhook processing, HTTP API integration, database operations, AI agent workflows, scheduled tasks, retry configuration, and common gotchas.
+categories:
+  - n8n
+  - architecture
+  - lgj-exclusive
+tags:
+  - n8n
+  - workflow-patterns
+  - architecture
+  - best-practices
+icon: GitBranch
+version: "2.0"
+composesWell:
+  - LGJ-n8n-mcp-tools-expert
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-code-javascript
+  - LGJ-n8n-validation-expert

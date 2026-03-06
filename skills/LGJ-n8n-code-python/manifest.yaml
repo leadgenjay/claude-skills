@@ -1,0 +1,17 @@
+name: LGJ-n8n-code-python
+description: Write Python code in n8n Code nodes — _input/_json/_node syntax, standard library only, n8n v2 breaking changes, and Python-specific limitations.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - python
+  - code-node
+  - workflow-automation
+icon: Code
+version: "2.0"
+composesWell:
+  - LGJ-n8n-code-javascript
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-workflow-patterns

@@ -1,0 +1,17 @@
+name: LGJ-n8n-mcp-tools-expert
+description: Expert guide for n8n-mcp MCP tools — node search, workflow management, partial updates, validation, template discovery, and known caveats.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - mcp
+  - workflow-management
+  - api
+icon: Wrench
+version: "2.0"
+composesWell:
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-validation-expert
+  - LGJ-n8n-workflow-patterns

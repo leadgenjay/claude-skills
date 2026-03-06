@@ -1,0 +1,17 @@
+name: LGJ-n8n-expression-syntax
+description: Validate n8n expression syntax and fix common errors — {{}} patterns, $json/$node variables, webhook data access, and expression troubleshooting.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - expressions
+  - syntax
+  - workflow-automation
+icon: Braces
+version: "1.0"
+composesWell:
+  - LGJ-n8n-code-javascript
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-validation-expert

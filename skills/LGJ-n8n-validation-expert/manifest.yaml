@@ -1,0 +1,17 @@
+name: LGJ-n8n-validation-expert
+description: Interpret and resolve n8n validation errors — error catalog, Think Tool API rejections, false positives, auto-sanitization, and progressive validation patterns.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - validation
+  - error-handling
+  - debugging
+icon: CheckCircle
+version: "2.0"
+composesWell:
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-mcp-tools-expert
+  - LGJ-n8n-expression-syntax

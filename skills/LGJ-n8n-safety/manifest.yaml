@@ -1,0 +1,16 @@
+name: LGJ-n8n-safety
+description: Safety protocols for n8n workflow modifications — confirmation workflows, pre-operation checklists, execution retention, GHL OAuth workarounds, and error handler best practices.
+categories:
+  - n8n
+  - operations
+  - lgj-exclusive
+tags:
+  - n8n
+  - safety
+  - operations
+  - guardrails
+icon: Shield
+version: "2.0"
+composesWell:
+  - LGJ-n8n-mcp-tools-expert
+  - LGJ-n8n-validation-expert

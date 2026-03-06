@@ -1,0 +1,18 @@
+name: LGJ-n8n-code-javascript
+description: Write JavaScript code in n8n Code nodes — $input/$json/$node syntax, HTTP requests with $helpers, DateTime/Luxon, Code node modes, n8n v2 breaking changes, and error patterns.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - javascript
+  - code-node
+  - workflow-automation
+icon: Code
+version: "2.0"
+composesWell:
+  - LGJ-n8n-expression-syntax
+  - LGJ-n8n-node-configuration
+  - LGJ-n8n-workflow-patterns
+  - LGJ-n8n-validation-expert

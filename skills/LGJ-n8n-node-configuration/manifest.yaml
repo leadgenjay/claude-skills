@@ -1,0 +1,18 @@
+name: LGJ-n8n-node-configuration
+description: Operation-aware node configuration — property dependencies, required fields, critical node gotchas (Think Tool, Wait, Data Table, PostgreSQL), and n8n v2 migration guide.
+categories:
+  - n8n
+  - development
+  - lgj-exclusive
+tags:
+  - n8n
+  - node-config
+  - dependencies
+  - gotchas
+  - migration
+icon: Settings
+version: "2.0"
+composesWell:
+  - LGJ-n8n-mcp-tools-expert
+  - LGJ-n8n-validation-expert
+  - LGJ-n8n-expression-syntax
