@@ -1,0 +1,7 @@
+name: heatmap-analyzer
+description: Analyze PostHog heatmap data, session recordings, scroll depth, rage clicks, and funnel metrics. Generates structured reports with PIE-scored AB test hypotheses.
+categories: [lgj-exclusive, analytics, conversion]
+tags: [posthog, heatmaps, conversion, ab-testing, analytics, cro]
+icon: Flame
+version: "1.0"
+composesWell: [ab-test-designer, landing-page-auditor]
