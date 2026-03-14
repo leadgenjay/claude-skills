@@ -1,0 +1,10 @@
+name: OpenClaw Setup Wizard
+description: "Walk through complete OpenClaw installation — prerequisites, install, onboarding wizard, model auth, gateway startup, daemon setup, and verification."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, setup, install, gateway, daemon, models, onboarding]
+icon: Download
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-troubleshooting
+  - LGJ-openclaw-mcp-server-setup

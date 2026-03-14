@@ -1,0 +1,15 @@
+name: OpenClaw Mastery Pack
+description: "Complete OpenClaw skill stack — 8 skills covering setup, Google/Slack integration, security hardening, cron automation, MCP servers, troubleshooting, and custom skill building."
+categories: [openclaw, lgj-exclusive, bundle]
+tags: [openclaw, mastery-pack, setup, google, slack, security, cron, mcp]
+icon: Package
+version: "1.0"
+bundledItems:
+  - LGJ-openclaw-setup-wizard
+  - LGJ-openclaw-google-integration
+  - LGJ-openclaw-slack-integration
+  - LGJ-openclaw-security-auditor
+  - LGJ-openclaw-cron-automation
+  - LGJ-openclaw-mcp-server-setup
+  - LGJ-openclaw-troubleshooting
+  - LGJ-openclaw-skill-builder

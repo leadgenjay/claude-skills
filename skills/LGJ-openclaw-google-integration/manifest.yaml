@@ -1,0 +1,10 @@
+name: OpenClaw Google Integration
+description: "Complete Google Cloud setup for OpenClaw — create GCP project, enable APIs, configure OAuth, authenticate with gog CLI, and use Gmail, Calendar, Drive."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, google, gcp, oauth, gmail, calendar, drive, gog, service-account]
+icon: Cloud
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-cron-automation
+  - LGJ-openclaw-security-auditor

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-14T17:46:05.483Z",
+  "generatedAt": "2026-03-14T18:05:49.927Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -291,6 +291,299 @@
         "LGJ-n8n-code-javascript",
         "LGJ-n8n-validation-expert"
       ]
+    },
+    {
+      "id": "LGJ-openclaw-cron-automation",
+      "type": "skill",
+      "name": "OpenClaw Cron Automation",
+      "description": "Set up OpenClaw cron jobs — expression syntax, YAML templates for email checks, calendar previews, ad reports, and overnight work sessions.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "cron",
+        "automation",
+        "scheduling",
+        "yaml",
+        "templates",
+        "deduplication"
+      ],
+      "icon": "Clock",
+      "path": "skills/LGJ-openclaw-cron-automation",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-google-integration",
+        "LGJ-openclaw-slack-integration"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-google-integration",
+      "type": "skill",
+      "name": "OpenClaw Google Integration",
+      "description": "Complete Google Cloud setup for OpenClaw — create GCP project, enable APIs, configure OAuth, authenticate with gog CLI, and use Gmail, Calendar, Drive.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "google",
+        "gcp",
+        "oauth",
+        "gmail",
+        "calendar",
+        "drive",
+        "gog",
+        "service-account"
+      ],
+      "icon": "Cloud",
+      "path": "skills/LGJ-openclaw-google-integration",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-cron-automation",
+        "LGJ-openclaw-security-auditor"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-mastery-pack",
+      "type": "skill",
+      "name": "OpenClaw Mastery Pack",
+      "description": "Complete OpenClaw skill stack — 8 skills covering setup, Google/Slack integration, security hardening, cron automation, MCP servers, troubleshooting, and custom skill building.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive",
+        "bundle"
+      ],
+      "tags": [
+        "openclaw",
+        "mastery-pack",
+        "setup",
+        "google",
+        "slack",
+        "security",
+        "cron",
+        "mcp"
+      ],
+      "icon": "Package",
+      "path": "skills/LGJ-openclaw-mastery-pack",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "bundledItems": [
+        "LGJ-openclaw-setup-wizard",
+        "LGJ-openclaw-google-integration",
+        "LGJ-openclaw-slack-integration",
+        "LGJ-openclaw-security-auditor",
+        "LGJ-openclaw-cron-automation",
+        "LGJ-openclaw-mcp-server-setup",
+        "LGJ-openclaw-troubleshooting",
+        "LGJ-openclaw-skill-builder"
+      ]
+    },
+    {
+      "id": "LGJ-openclaw-mcp-server-setup",
+      "type": "skill",
+      "name": "OpenClaw MCP Server Setup",
+      "description": "Install and configure MCP integrations — GitHub, Supabase, Vercel, n8n, Stripe, Apify, Instantly, GoHighLevel, Google Ads, Meta Ads, Hyros, fal.ai, Notion, Obsidian, and NotebookLM.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "mcp",
+        "integrations",
+        "github",
+        "supabase",
+        "vercel",
+        "n8n",
+        "stripe",
+        "fal-ai"
+      ],
+      "icon": "Puzzle",
+      "path": "skills/LGJ-openclaw-mcp-server-setup",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-security-auditor",
+        "LGJ-openclaw-setup-wizard"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-security-auditor",
+      "type": "skill",
+      "name": "OpenClaw Security Auditor",
+      "description": "Audit and harden your OpenClaw installation — OWASP Top 10 for LLM agents, secret scanning, permission sandboxing, MCP server safety, and a 21-item hardening checklist.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "security",
+        "owasp",
+        "secrets",
+        "permissions",
+        "sandbox",
+        "audit",
+        "hardening"
+      ],
+      "icon": "Shield",
+      "path": "skills/LGJ-openclaw-security-auditor",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-setup-wizard",
+        "LGJ-openclaw-mcp-server-setup"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-setup-wizard",
+      "type": "skill",
+      "name": "OpenClaw Setup Wizard",
+      "description": "Walk through complete OpenClaw installation — prerequisites, install, onboarding wizard, model auth, gateway startup, daemon setup, and verification.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "setup",
+        "install",
+        "gateway",
+        "daemon",
+        "models",
+        "onboarding"
+      ],
+      "icon": "Download",
+      "path": "skills/LGJ-openclaw-setup-wizard",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-troubleshooting",
+        "LGJ-openclaw-mcp-server-setup"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-skill-builder",
+      "type": "skill",
+      "name": "OpenClaw Skill Builder",
+      "description": "Create custom OpenClaw skills and automations — skill anatomy, workspace files, memory patterns, SOP creation, and config customization. The meta-skill for extending your agent.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "skills",
+        "workspace",
+        "memory",
+        "sop",
+        "config",
+        "custom",
+        "agents-md"
+      ],
+      "icon": "Blocks",
+      "path": "skills/LGJ-openclaw-skill-builder",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-cron-automation",
+        "LGJ-openclaw-setup-wizard"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-slack-integration",
+      "type": "skill",
+      "name": "OpenClaw Slack Integration",
+      "description": "Create a Slack app for OpenClaw — bot/user token scopes, Socket Mode events, @mentions, DMs, slash commands, and cron job posting.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "slack",
+        "bot",
+        "socket-mode",
+        "events",
+        "mentions",
+        "slash-commands"
+      ],
+      "icon": "MessageSquare",
+      "path": "skills/LGJ-openclaw-slack-integration",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-cron-automation",
+        "LGJ-openclaw-security-auditor"
+      ],
+      "hidden": true
+    },
+    {
+      "id": "LGJ-openclaw-troubleshooting",
+      "type": "skill",
+      "name": "OpenClaw Troubleshooting",
+      "description": "Diagnose and fix common OpenClaw issues — gateway failures, model auth errors, iMessage problems, cron not running, Slack disconnects, and systematic debugging.",
+      "categories": [
+        "openclaw",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "openclaw",
+        "troubleshooting",
+        "debugging",
+        "errors",
+        "gateway",
+        "imessage",
+        "diagnosis"
+      ],
+      "icon": "Wrench",
+      "path": "skills/LGJ-openclaw-troubleshooting",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-openclaw-setup-wizard",
+        "LGJ-openclaw-google-integration"
+      ],
+      "hidden": true
     },
     {
       "id": "animation-designer",

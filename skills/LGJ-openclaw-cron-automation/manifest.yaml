@@ -1,0 +1,10 @@
+name: OpenClaw Cron Automation
+description: "Set up OpenClaw cron jobs — expression syntax, YAML templates for email checks, calendar previews, ad reports, and overnight work sessions."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, cron, automation, scheduling, yaml, templates, deduplication]
+icon: Clock
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-google-integration
+  - LGJ-openclaw-slack-integration

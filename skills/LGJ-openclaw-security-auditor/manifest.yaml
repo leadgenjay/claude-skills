@@ -1,0 +1,10 @@
+name: OpenClaw Security Auditor
+description: "Audit and harden your OpenClaw installation — OWASP Top 10 for LLM agents, secret scanning, permission sandboxing, MCP server safety, and a 21-item hardening checklist."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, security, owasp, secrets, permissions, sandbox, audit, hardening]
+icon: Shield
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-setup-wizard
+  - LGJ-openclaw-mcp-server-setup

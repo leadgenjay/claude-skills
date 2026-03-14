@@ -1,0 +1,10 @@
+name: OpenClaw Troubleshooting
+description: "Diagnose and fix common OpenClaw issues — gateway failures, model auth errors, iMessage problems, cron not running, Slack disconnects, and systematic debugging."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, troubleshooting, debugging, errors, gateway, imessage, diagnosis]
+icon: Wrench
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-setup-wizard
+  - LGJ-openclaw-google-integration

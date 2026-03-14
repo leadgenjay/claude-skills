@@ -1,0 +1,10 @@
+name: OpenClaw Skill Builder
+description: "Create custom OpenClaw skills and automations — skill anatomy, workspace files, memory patterns, SOP creation, and config customization. The meta-skill for extending your agent."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, skills, workspace, memory, sop, config, custom, agents-md]
+icon: Blocks
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-cron-automation
+  - LGJ-openclaw-setup-wizard

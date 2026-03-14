@@ -1,0 +1,10 @@
+name: OpenClaw MCP Server Setup
+description: "Install and configure MCP integrations — GitHub, Supabase, Vercel, n8n, Stripe, Apify, Instantly, GoHighLevel, Google Ads, Meta Ads, Hyros, fal.ai, Notion, Obsidian, and NotebookLM."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, mcp, integrations, github, supabase, vercel, n8n, stripe, fal-ai]
+icon: Puzzle
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-security-auditor
+  - LGJ-openclaw-setup-wizard

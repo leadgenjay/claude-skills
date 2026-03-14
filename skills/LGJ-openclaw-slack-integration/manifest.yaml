@@ -1,0 +1,10 @@
+name: OpenClaw Slack Integration
+description: "Create a Slack app for OpenClaw — bot/user token scopes, Socket Mode events, @mentions, DMs, slash commands, and cron job posting."
+categories: [openclaw, lgj-exclusive]
+tags: [openclaw, slack, bot, socket-mode, events, mentions, slash-commands]
+icon: MessageSquare
+version: "1.0"
+hidden: true
+composesWell:
+  - LGJ-openclaw-cron-automation
+  - LGJ-openclaw-security-auditor
