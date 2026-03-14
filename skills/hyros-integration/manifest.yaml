@@ -1,0 +1,18 @@
+name: hyros-integration
+description: Add Hyros conversion tracking to opt-in forms, checkout pages, and landing pages. Server-side lead tracking via API, client-side checkout intent, and Whop purchase integration.
+categories:
+  - marketing
+  - tracking
+  - lgj-exclusive
+tags:
+  - hyros
+  - attribution
+  - conversion-tracking
+  - analytics
+  - lead-tracking
+icon: Target
+version: "1.0"
+composesWell:
+  - landing-page-auditor
+  - dan-kennedy-copywriter
+  - hero-section-designer
