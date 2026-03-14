@@ -1,0 +1,18 @@
+name: google-tracking
+description: Configure Google tracking (GTM, GA4, tag scanning) and the full tracking infrastructure for Lead Gen Jay pages.
+categories:
+  - marketing
+  - tracking
+  - lgj-exclusive
+tags:
+  - google-analytics
+  - google-tag-manager
+  - GTM
+  - GA4
+  - tracking
+  - attribution
+icon: BarChart3
+version: "1.0"
+composesWell:
+  - hyros-integration
+  - landing-page-auditor
