@@ -10,6 +10,9 @@ on:
       - "scripts/generate-catalog.js"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
