@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-04T21:28:28.152Z",
+  "generatedAt": "2026-03-14T17:46:05.483Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -33,6 +33,263 @@
         "frontend-design",
         "design-motion-principles",
         "motion-graphics"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-code-javascript",
+      "type": "skill",
+      "name": "LGJ-n8n-code-javascript",
+      "description": "Write JavaScript code in n8n Code nodes — $input/$json/$node syntax, HTTP requests with $helpers, DateTime/Luxon, Code node modes, n8n v2 breaking changes, and error patterns.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "javascript",
+        "code-node",
+        "workflow-automation"
+      ],
+      "icon": "Code",
+      "path": "skills/LGJ-n8n-code-javascript",
+      "files": [
+        "BUILTIN_FUNCTIONS.md",
+        "COMMON_PATTERNS.md",
+        "DATA_ACCESS.md",
+        "ERROR_PATTERNS.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-expression-syntax",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-workflow-patterns",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-code-python",
+      "type": "skill",
+      "name": "LGJ-n8n-code-python",
+      "description": "Write Python code in n8n Code nodes — _input/_json/_node syntax, standard library only, n8n v2 breaking changes, and Python-specific limitations.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "python",
+        "code-node",
+        "workflow-automation"
+      ],
+      "icon": "Code",
+      "path": "skills/LGJ-n8n-code-python",
+      "files": [
+        "COMMON_PATTERNS.md",
+        "DATA_ACCESS.md",
+        "ERROR_PATTERNS.md",
+        "SKILL.md",
+        "STANDARD_LIBRARY.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-workflow-patterns"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-expression-syntax",
+      "type": "skill",
+      "name": "LGJ-n8n-expression-syntax",
+      "description": "Validate n8n expression syntax and fix common errors — {{}} patterns, $json/$node variables, webhook data access, and expression troubleshooting.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "expressions",
+        "syntax",
+        "workflow-automation"
+      ],
+      "icon": "Braces",
+      "path": "skills/LGJ-n8n-expression-syntax",
+      "files": [
+        "COMMON_MISTAKES.md",
+        "EXAMPLES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-mcp-tools-expert",
+      "type": "skill",
+      "name": "LGJ-n8n-mcp-tools-expert",
+      "description": "Expert guide for n8n-mcp MCP tools — node search, workflow management, partial updates, validation, template discovery, and known caveats.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "mcp",
+        "workflow-management",
+        "api"
+      ],
+      "icon": "Wrench",
+      "path": "skills/LGJ-n8n-mcp-tools-expert",
+      "files": [
+        "SEARCH_GUIDE.md",
+        "SKILL.md",
+        "VALIDATION_GUIDE.md",
+        "WORKFLOW_GUIDE.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-validation-expert",
+        "LGJ-n8n-workflow-patterns"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-node-configuration",
+      "type": "skill",
+      "name": "LGJ-n8n-node-configuration",
+      "description": "Operation-aware node configuration — property dependencies, required fields, critical node gotchas (Think Tool, Wait, Data Table, PostgreSQL), and n8n v2 migration guide.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "node-config",
+        "dependencies",
+        "gotchas",
+        "migration"
+      ],
+      "icon": "Settings",
+      "path": "skills/LGJ-n8n-node-configuration",
+      "files": [
+        "DEPENDENCIES.md",
+        "OPERATION_PATTERNS.md",
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-validation-expert",
+        "LGJ-n8n-expression-syntax"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-safety",
+      "type": "skill",
+      "name": "LGJ-n8n-safety",
+      "description": "Safety protocols for n8n workflow modifications — confirmation workflows, pre-operation checklists, execution retention, GHL OAuth workarounds, and error handler best practices.",
+      "categories": [
+        "n8n",
+        "operations",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "safety",
+        "operations",
+        "guardrails"
+      ],
+      "icon": "Shield",
+      "path": "skills/LGJ-n8n-safety",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-validation-expert",
+      "type": "skill",
+      "name": "LGJ-n8n-validation-expert",
+      "description": "Interpret and resolve n8n validation errors — error catalog, Think Tool API rejections, false positives, auto-sanitization, and progressive validation patterns.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "validation",
+        "error-handling",
+        "debugging"
+      ],
+      "icon": "CheckCircle",
+      "path": "skills/LGJ-n8n-validation-expert",
+      "files": [
+        "ERROR_CATALOG.md",
+        "FALSE_POSITIVES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-expression-syntax"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-workflow-patterns",
+      "type": "skill",
+      "name": "LGJ-n8n-workflow-patterns",
+      "description": "Proven n8n workflow architectural patterns — webhook processing, HTTP API integration, database operations, AI agent workflows, scheduled tasks, retry configuration, and common gotchas.",
+      "categories": [
+        "n8n",
+        "architecture",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "workflow-patterns",
+        "architecture",
+        "best-practices"
+      ],
+      "icon": "GitBranch",
+      "path": "skills/LGJ-n8n-workflow-patterns",
+      "files": [
+        "SKILL.md",
+        "ai_agent_workflow.md",
+        "database_operations.md",
+        "http_api_integration.md",
+        "manifest.yaml",
+        "scheduled_tasks.md",
+        "webhook_processing.md"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-validation-expert"
       ]
     },
     {
@@ -273,6 +530,36 @@
       ]
     },
     {
+      "id": "google-tracking",
+      "type": "skill",
+      "name": "google-tracking",
+      "description": "Configure Google tracking (GTM, GA4, tag scanning) and the full tracking infrastructure for Lead Gen Jay pages.",
+      "categories": [
+        "marketing",
+        "tracking",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "google-analytics",
+        "google-tag-manager",
+        "GTM",
+        "GA4",
+        "tracking",
+        "attribution"
+      ],
+      "icon": "BarChart3",
+      "path": "skills/google-tracking",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "hyros-integration",
+        "landing-page-auditor"
+      ]
+    },
+    {
       "id": "hero-section-designer",
       "type": "skill",
       "name": "hero-section-designer",
@@ -302,6 +589,36 @@
         "conversion-copywriting",
         "frontend-design",
         "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "hyros-integration",
+      "type": "skill",
+      "name": "hyros-integration",
+      "description": "Add Hyros conversion tracking to opt-in forms, checkout pages, and landing pages. Server-side lead tracking via API, client-side checkout intent, and Whop purchase integration.",
+      "categories": [
+        "marketing",
+        "tracking",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "hyros",
+        "attribution",
+        "conversion-tracking",
+        "analytics",
+        "lead-tracking"
+      ],
+      "icon": "Target",
+      "path": "skills/hyros-integration",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "landing-page-auditor",
+        "dan-kennedy-copywriter",
+        "hero-section-designer"
       ]
     },
     {
