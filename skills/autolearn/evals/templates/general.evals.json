@@ -1,0 +1,30 @@
+{
+  "skill_name": "REPLACE_WITH_SKILL_NAME",
+  "domain": "general",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "REPLACE: A realistic user prompt that exercises the skill's primary workflow end-to-end",
+      "expected_output": "REPLACE: Description of what a correct, complete output looks like",
+      "assertions": [
+        {"text": "Output follows the workflow steps defined in the skill in correct order", "type": "structural"},
+        {"text": "All required sections or components specified by the skill are present", "type": "structural"},
+        {"text": "Output directly addresses the specific request in the prompt", "type": "content"},
+        {"text": "No banned AI words are used (delve, tapestry, realm, leverage, etc.)", "type": "quality", "deterministic": true},
+        {"text": "Output is actionable and specific — contains concrete details, not vague generalities", "type": "quality"}
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "REPLACE: A second prompt testing a different use case or edge case of the skill",
+      "expected_output": "REPLACE: Description of expected output for this case",
+      "assertions": [
+        {"text": "Output handles the edge case correctly without breaking the workflow", "type": "structural"},
+        {"text": "All constraints from the skill are respected", "type": "content"},
+        {"text": "Output format matches what the skill specifies", "type": "structural"},
+        {"text": "No placeholder text or TODO markers remain in the output", "type": "quality", "deterministic": true},
+        {"text": "Output length is appropriate for the request (not padded, not truncated)", "type": "quality"}
+      ]
+    }
+  ]
+}

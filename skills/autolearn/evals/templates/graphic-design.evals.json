@@ -1,0 +1,40 @@
+{
+  "skill_name": "REPLACE_WITH_SKILL_NAME",
+  "domain": "graphic-design",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "REPLACE: A design brief with target dimensions, platform (Instagram/web/ad), brand colors, purpose, and content requirements",
+      "expected_output": "REPLACE: Description of ideal design output (SVG, React component, HTML+CSS, etc.)",
+      "assertions": [
+        {"text": "Output dimensions match the spec (e.g., 1080x1350 for Instagram, 1920x1080 for web)", "type": "structural", "deterministic": true},
+        {"text": "Brand accent color #ED0D51 is present in the code", "type": "visual", "deterministic": true},
+        {"text": "Background color matches spec (#0D0D0D for dark/Instagram, #FFFFFF for light/web)", "type": "visual", "deterministic": true},
+        {"text": "Headline font-family declaration includes Big Shoulders or specified brand font", "type": "visual", "deterministic": true},
+        {"text": "Body font-family declaration includes Manrope or specified brand font", "type": "visual", "deterministic": true},
+        {"text": "Headline text size is 48px or larger (or equivalent Tailwind class text-5xl+)", "type": "visual", "deterministic": true},
+        {"text": "Padding or margin of 40-80px (or equivalent Tailwind p-10 to p-20) on content container", "type": "visual", "deterministic": true},
+        {"text": "No more than 15 words per individual slide, card, or content block", "type": "structural", "deterministic": true},
+        {"text": "No AI-slop visual patterns (generic blob people, unnecessary 3-column grids, purple/blue gradients, stock photo placeholders)", "type": "quality"},
+        {"text": "All visual elements are contained within the canvas with proper margins — nothing overflows or clips", "type": "visual"}
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "REPLACE: A second design brief for a different platform or format to test versatility",
+      "expected_output": "REPLACE: Description of expected design output",
+      "assertions": [
+        {"text": "Output dimensions match the target platform spec", "type": "structural", "deterministic": true},
+        {"text": "Brand colors are used consistently (accent for emphasis only, not dominant)", "type": "visual"},
+        {"text": "Typography hierarchy is clear — headline visually distinct from body text", "type": "visual"},
+        {"text": "Layout has clear visual hierarchy guiding the eye from top to bottom", "type": "visual"},
+        {"text": "Text is legible at the target platform's viewing size", "type": "visual"},
+        {"text": "Whitespace is used intentionally — not cramped, not empty", "type": "visual"},
+        {"text": "Code output is valid and renderable (no syntax errors, unclosed tags, or broken references)", "type": "structural", "deterministic": true},
+        {"text": "Color contrast ratio between text and background meets WCAG AA (4.5:1 minimum)", "type": "visual"},
+        {"text": "The design communicates its message without requiring additional explanation", "type": "quality"},
+        {"text": "Responsive considerations are addressed if the output is web-based", "type": "structural"}
+      ]
+    }
+  ]
+}

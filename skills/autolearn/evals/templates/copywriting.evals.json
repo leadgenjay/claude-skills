@@ -1,0 +1,40 @@
+{
+  "skill_name": "REPLACE_WITH_SKILL_NAME",
+  "domain": "copywriting",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "REPLACE: A copy brief with target audience, offer, medium (email/ad/landing page), word count range, and any specific constraints",
+      "expected_output": "REPLACE: Description of ideal copy output including framework, tone, and structure",
+      "assertions": [
+        {"text": "Copy uses the specified framework (PAS, AIDA, or Proof Stack) with clear section transitions", "type": "structural"},
+        {"text": "Headline is under 12 words and leads with a benefit, curiosity gap, or pain point", "type": "structural", "deterministic": true},
+        {"text": "Body copy contains no banned AI words (delve, tapestry, realm, landscape, ever-evolving, cutting-edge, robust, transformative, pivotal, vibrant, crucial, compelling, seamless, groundbreaking, leverage, harness, embark, navigate, unveil, facilitate, synergy, game-changer, unlock, unleash, elevate, utilize, endeavour, multifaceted)", "type": "quality", "deterministic": true},
+        {"text": "At least one specific number, stat, or data point appears in the first 50 words", "type": "content", "deterministic": true},
+        {"text": "CTA is present, uses an action verb, and matches the funnel stage (ToF=engage, MoF=learn, BoF=buy)", "type": "structural"},
+        {"text": "Copy addresses the reader directly using 'you' or 'your', not 'we' or 'our' in the body", "type": "quality", "deterministic": true},
+        {"text": "No em dashes (U+2014 '—') are used anywhere — hyphens (-) or en dashes (–) only", "type": "quality", "deterministic": true},
+        {"text": "Total word count is within the specified range for the copy type", "type": "structural", "deterministic": true},
+        {"text": "Risk reversal, guarantee, or objection handling is present", "type": "content"},
+        {"text": "Urgency or scarcity element is genuine and specific (deadline, limited spots, real constraint) — not fabricated hype", "type": "quality"}
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "REPLACE: A second copy brief for a different medium or funnel stage to test versatility",
+      "expected_output": "REPLACE: Description of expected output",
+      "assertions": [
+        {"text": "Copy uses the correct framework for the specified funnel stage", "type": "structural"},
+        {"text": "Headline creates curiosity or highlights a specific pain point", "type": "content"},
+        {"text": "No banned AI words or phrases are used", "type": "quality", "deterministic": true},
+        {"text": "Opening line hooks attention within the first 10 words", "type": "quality"},
+        {"text": "CTA is clear, single, and action-oriented", "type": "structural"},
+        {"text": "Copy tone matches the specified audience (casual/professional/urgent)", "type": "quality"},
+        {"text": "No em dashes used", "type": "quality", "deterministic": true},
+        {"text": "Specific proof elements (testimonials, stats, case studies) are included", "type": "content"},
+        {"text": "The copy creates a logical flow from problem to solution to action", "type": "structural"},
+        {"text": "No filler sentences that could be removed without losing meaning", "type": "quality"}
+      ]
+    }
+  ]
+}
