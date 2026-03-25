@@ -1,0 +1,19 @@
+id: handoff
+type: skill
+name: Session Handoff
+description: Create structured YAML handoffs that preserve session context across /clear or compaction. Saves goal, progress, decisions, files, and next steps so Claude resumes seamlessly.
+version: "1.0"
+icon: bookmark
+categories:
+  - productivity
+  - developer-tools
+tags:
+  - context
+  - handoff
+  - session
+  - compaction
+  - workflow
+  - memory
+files:
+  - SKILL.md
+  - manifest.yaml
