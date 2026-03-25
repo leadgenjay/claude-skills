@@ -1,0 +1,86 @@
+{
+  "skill": "content-research",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": "competitors-mode",
+      "name": "Manage Competitor List",
+      "prompt": "Manage competitors — list my saved creators and recommend 5 new YouTube creators in the cold email niche to follow",
+      "expected_mode": "competitors",
+      "assertions": [
+        "Queries saved_creators table from Supabase",
+        "Displays existing competitors in a table with handle, platform, last scraped date",
+        "Uses WebSearch to find cold email YouTube creators",
+        "Recommends at least 5 creators with handles and subscriber counts",
+        "Offers to add selected creators to saved_creators",
+        "Does NOT auto-add without user confirmation"
+      ]
+    },
+    {
+      "id": "scrape-mode",
+      "name": "Scrape Competitor Content",
+      "prompt": "Scrape my competitors — pull the latest content from all saved creators",
+      "expected_mode": "scrape",
+      "assertions": [
+        "Loads saved_creators list first",
+        "Displays creator list and asks for confirmation before scraping",
+        "Triggers scrape via /api/ideas/scrape endpoint",
+        "Monitors scrape_jobs for completion status",
+        "Extracts hooks from new scraped_ideas after scrape completes",
+        "Each hook includes: spoken_hook, hook_framework, hook_structure, content_type, visual_format",
+        "Presents summary table of top hooks found",
+        "Reports Apify cost estimate"
+      ]
+    },
+    {
+      "id": "analyze-mode",
+      "name": "Analyze Competitor Content",
+      "prompt": "Analyze my competitors — show me an outlier report and the top hooks to steal",
+      "expected_mode": "analyze",
+      "assertions": [
+        "Queries scraped_ideas from last 90 days",
+        "Calculates outlier score as views / account average views",
+        "Ranks top 20 videos by outlier score",
+        "Each outlier includes: creator, title, views, outlier score, hook, content type",
+        "Extracts top 10 hook frameworks from outlier videos",
+        "Each hook framework uses X/Y/Z/W placeholders for mad-lib adaptation",
+        "Includes MAKE IT / MAYBE / SKIP decision for each idea",
+        "Offers to append new hook frameworks to hooks-database.json",
+        "Offers to chain selected ideas to /short-form-script"
+      ]
+    },
+    {
+      "id": "trending-mode",
+      "name": "Daily Trend Research",
+      "prompt": "Find trending topics in the cold email and AI automation space for today",
+      "expected_mode": "trending",
+      "assertions": [
+        "Checks docs/research-logs/ for recent logs to avoid repeats",
+        "Uses viral archetypes to generate keyword matrix",
+        "Searches at least 3 of 4 sources: Twitter, Reddit, YouTube, News",
+        "Scores each result on TAM, Demo-ability, Hook Potential, Timeliness, Uniqueness",
+        "Each score uses 1-5 scale with weighted total",
+        "Applies decision threshold: >= 4.0 MAKE IT, 3.0-3.9 MAYBE, < 3.0 SKIP",
+        "Presents top 10 results in ranked table",
+        "Each result includes: topic, score, hook angle, suggested format, decision",
+        "Saves research log to docs/research-logs/YYYY-MM-DD.md",
+        "Does NOT duplicate topics from recent research logs"
+      ]
+    },
+    {
+      "id": "quick-mode",
+      "name": "Quick Topic Research",
+      "prompt": "Find video ideas about AI cold email tools",
+      "expected_mode": "quick",
+      "assertions": [
+        "Runs parallel queries: scraped_ideas, content_ideas, WebSearch",
+        "Filters scraped_ideas by relevance_score >= 7",
+        "Synthesizes 5-10 unique ideas from combined sources",
+        "Each idea includes: topic angle, hook, suggested format, why it works",
+        "Presents numbered list for user selection",
+        "Offers to chain selected idea to /short-form-script",
+        "Completes in under 30 seconds (no heavy scraping)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+id: short-form-script
+type: skill
+name: "Short-Form Script"
+description: "Script Instagram Reels and TikTok talking-head videos (15-90s). Generates 6 hook options from a 100-hook database, writes teleprompter-ready scripts with production briefs, duration scaling, and voice enforcement checks."
+categories:
+  - lgj-exclusive
+  - content
+tags:
+  - scriptwriting
+  - reels
+  - tiktok
+  - hooks
+  - talking-head
+  - short-form
+  - teleprompter
+icon: Clapperboard
+path: skills/short-form-script
+files:
+  - SKILL.md
+  - references/frameworks.md
+  - references/hooks-database.json
+  - evals/evals.json
+version: "1.0"
+composesWell:
+  - content-research

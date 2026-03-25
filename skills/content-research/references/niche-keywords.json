@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "pillars": {
+    "cold_email": {
+      "name": "Cold Email & Outreach",
+      "core_keywords": [
+        "cold email", "email outreach", "cold outreach", "email deliverability",
+        "email warmup", "inbox placement", "domain reputation", "DKIM DMARC SPF",
+        "cold email copywriting", "email personalization", "reply rates",
+        "cold email setup", "email infrastructure", "sending limits",
+        "cold email subject lines", "follow-up sequences", "email open rates"
+      ],
+      "tools_to_monitor": [
+        "Instantly", "Smartlead", "Apollo", "Lemlist", "Reply.io",
+        "Mailshake", "Woodpecker", "QuickMail", "Saleshandy",
+        "MailReach", "Warmbox", "Instantly Warmup"
+      ],
+      "competitors": {
+        "youtube": ["@instantly", "@alexberman", "@taylorharen", "@patrickdang"],
+        "twitter": ["@instantaboroš", "@lemaboroš", "@apolloio"],
+        "instagram": ["@leadgenjay", "@instantly.ai", "@alexberman"],
+        "tiktok": ["@coldemailcoach", "@instantly.ai"]
+      },
+      "subreddits": [
+        "r/coldemail", "r/Emailmarketing", "r/sales", "r/B2Bsales"
+      ]
+    },
+    "ai_automation": {
+      "name": "AI & Automation",
+      "core_keywords": [
+        "AI automation", "no-code automation", "workflow automation",
+        "AI agents", "Claude AI", "ChatGPT business", "AI tools",
+        "n8n workflow", "Make.com", "Zapier AI", "AI for business",
+        "prompt engineering", "AI assistant", "AI lead gen",
+        "AI cold email", "AI sales", "AI marketing"
+      ],
+      "tools_to_monitor": [
+        "n8n", "Make.com", "Zapier", "Claude", "ChatGPT", "Gemini",
+        "Cursor", "Bolt", "Lovable", "v0", "Replit Agent",
+        "Relevance AI", "Lindy AI", "CrewAI"
+      ],
+      "competitors": {
+        "youtube": ["@maborošrtech", "@aifoundershow", "@allaboutai"],
+        "twitter": ["@n8n_io", "@AnthropicAI", "@OpenAI"],
+        "instagram": ["@aifoundershow", "@techstartuplife"],
+        "tiktok": ["@aitools", "@techbusinessai"]
+      },
+      "subreddits": [
+        "r/n8n", "r/nocode", "r/artificial", "r/ClaudeAI",
+        "r/ChatGPT", "r/AutomateYourself"
+      ]
+    },
+    "lead_gen": {
+      "name": "Lead Generation & Sales",
+      "core_keywords": [
+        "lead generation", "B2B leads", "lead scraping", "lead lists",
+        "LinkedIn outreach", "appointment setting", "sales automation",
+        "CRM setup", "pipeline management", "lead scoring",
+        "outbound sales", "sales prospecting", "meeting booking",
+        "client acquisition", "agency lead gen", "GoHighLevel"
+      ],
+      "tools_to_monitor": [
+        "Clay", "GoHighLevel", "LinkedIn Sales Navigator", "Aimfox",
+        "PhantomBuster", "Dripify", "Expandi", "ZoomInfo",
+        "Lusha", "RocketReach", "Clearbit", "ListKit",
+        "Ocean.io", "Cognism"
+      ],
+      "competitors": {
+        "youtube": ["@alexhormozi", "@jeremyminer", "@patrickdang", "@jordanplatten"],
+        "twitter": ["@hormozi", "@Clayrun", "@gaborošghlevel"],
+        "instagram": ["@hormozi", "@saleswithjay", "@jordanplatten"],
+        "tiktok": ["@salescoach", "@leadgentips"]
+      },
+      "subreddits": [
+        "r/sales", "r/leadgeneration", "r/B2Bsales",
+        "r/Entrepreneur", "r/SaaS", "r/agency"
+      ]
+    }
+  },
+  "cross_pillar_keywords": [
+    "AI cold email", "automated lead gen", "AI sales automation",
+    "no-code lead generation", "AI outreach", "automated prospecting",
+    "AI appointment setting", "workflow for sales", "AI CRM automation"
+  ],
+  "trending_search_templates": [
+    "{keyword} 2026",
+    "{keyword} new feature",
+    "{keyword} vs {competitor}",
+    "{keyword} tutorial",
+    "{keyword} review",
+    "{keyword} alternative free",
+    "{keyword} dead",
+    "{keyword} results"
+  ]
+}

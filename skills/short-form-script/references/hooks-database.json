@@ -1,0 +1,1972 @@
+[
+  {
+    "id": 1,
+    "spoken_hook": "Claude Cote is ruining my life. For the last, like, two weeks, Ive basically havent been able to sleep.",
+    "framework": "X is ruining my Y. For the last, like, Z, Ive basically havent been able to W.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code is Ruining My Life",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 1171421,
+    "niche": "Sleep Problems",
+    "content_type": "Hot Take",
+    "duration": 29.0,
+    "tags": [
+      "sleep-problems"
+    ]
+  },
+  {
+    "id": 2,
+    "spoken_hook": "Put me on, bro, put me on. Fine. First, head over to developers.facebook and just create an account.",
+    "framework": "Put me on, X, put me on. Fine. First, head over to Y and just Z.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code + Meta Ads = Unlimited Ads",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 1031283,
+    "niche": "Meta Ads Optimization",
+    "content_type": "Tutorial",
+    "duration": 31.0,
+    "tags": [
+      "meta-ads-optimization"
+    ]
+  },
+  {
+    "id": 3,
+    "spoken_hook": "Animators dead, editors dead, producers dead.",
+    "framework": "X dead, Y dead, Z dead.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code is Replacing Industries",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 485527,
+    "niche": "AI in Advertising",
+    "content_type": "Tutorial",
+    "duration": 21.0,
+    "tags": [
+      "ai-in-advertising"
+    ]
+  },
+  {
+    "id": 4,
+    "spoken_hook": "how to get infinite leads using cloud code. I shouldnt be telling you all this. This is insane.",
+    "framework": "I just found a way to [outcome] using [tool]",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Talking Head + Screen Recording"
+    },
+    "text_hook": "Claude Code = Infinite Lead Gen",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 478662,
+    "niche": "lead generation",
+    "content_type": "Tutorial",
+    "duration": 22.4,
+    "tags": [
+      "lead-generation"
+    ]
+  },
+  {
+    "id": 5,
+    "spoken_hook": "I wouldn\u2019t sign any long term leases",
+    "framework": "X wouldn\u2019t sign any Y Z",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Based on everything you know about me will AI replace my job in the next 12 months? Ive completed my analysis. Based on current AI growth trajectories, you will likely be replaced within 6-8 months. On a positive note, you will have significantly more free time to explore new hobbies. I would not recommend signing any long-term leases.",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 478567,
+    "niche": "Leases and Rentals",
+    "content_type": "Hot Take",
+    "duration": 4.0,
+    "tags": [
+      "leases-and-rentals"
+    ]
+  },
+  {
+    "id": 6,
+    "spoken_hook": "I just replaced an entire marketing team using Claude Code and heres how.",
+    "framework": "I just replaced an entire X using Y and heres how.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Replacing a Marketing Team with Claude Coze",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 449272,
+    "niche": "Marketing Automation",
+    "content_type": "Tutorial",
+    "duration": 43.0,
+    "tags": [
+      "marketing-automation"
+    ]
+  },
+  {
+    "id": 7,
+    "spoken_hook": "Claude Code is ruining my life. For the last like two weeks, Ive basically havent been able to sleep.",
+    "framework": "X is ruining my Y. For the last like Z, Ive basically havent been able to W.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code is Ruining My Life",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 388410,
+    "niche": "Sleep Problems",
+    "content_type": "Rant",
+    "duration": 28.5,
+    "tags": [
+      "sleep-problems"
+    ]
+  },
+  {
+    "id": 8,
+    "spoken_hook": "With, with, with, with, with, with, with, just one touch I can",
+    "framework": "With, with, with, with, with, with, with, just one touch I can",
+    "structure": "Curiosity Gap",
+    "visual_hook": {
+      "format": "Vertical Selfie/Screen Demo"
+    },
+    "text_hook": "Gemini 3 + Cursor + n8n = unlimited possibilities",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 346432,
+    "niche": "AI Automation",
+    "content_type": "Demo",
+    "duration": 5.9,
+    "tags": [
+      "ai-automation"
+    ]
+  },
+  {
+    "id": 9,
+    "spoken_hook": "I have trained Claude Code to swipe on Tinder for me. Watch this.",
+    "framework": "I have trained X to Y for me. Watch this.",
+    "structure": "Experimentation",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code x Tinder = Unlimited Dates \ud83d\ude2d",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 280400,
+    "niche": "Tinder Automation",
+    "content_type": "Tutorial",
+    "duration": 23.0,
+    "tags": [
+      "tinder-automation"
+    ]
+  },
+  {
+    "id": 10,
+    "spoken_hook": "Claude Code is like prime Fortnite for guys in their 20s.",
+    "framework": "X is like prime Y for guys in their Z.",
+    "structure": "Comparison",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code = Prime Fortnite",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 204937,
+    "niche": "Gaming Culture",
+    "content_type": "Hot Take",
+    "duration": 13.2,
+    "tags": [
+      "gaming-culture"
+    ]
+  },
+  {
+    "id": 11,
+    "spoken_hook": "Claude Code just killed editing agencies. You can now edit videos programmatically inside of Claude Code.",
+    "framework": "X just killed Y. You can now Z inside of X.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Create Videos in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 198015,
+    "niche": "Video Editing Automation",
+    "content_type": "Tutorial",
+    "duration": 24.0,
+    "tags": [
+      "video-editing-automation"
+    ]
+  },
+  {
+    "id": 12,
+    "spoken_hook": "If you want to create videos just like this in Claude code, then watch this.",
+    "framework": "If you want to X just like Y in Z, then W.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Screen Demo"
+    },
+    "text_hook": "Create Videos in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 183374,
+    "niche": "Video creation",
+    "content_type": "Tutorial",
+    "duration": 19.0,
+    "tags": [
+      "video-creation"
+    ]
+  },
+  {
+    "id": 13,
+    "spoken_hook": "Links to Acoustic Music are below.",
+    "framework": "X to Y are Z.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Screen Demo"
+    },
+    "text_hook": "None",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 171639,
+    "niche": "Acoustic Music",
+    "content_type": "Tutorial",
+    "duration": 37.0,
+    "tags": [
+      "acoustic-music"
+    ]
+  },
+  {
+    "id": 14,
+    "spoken_hook": "Heres how to connect Claude code to go high level in less than 30 seconds.",
+    "framework": "Heres how to connect X to Y in less than Z seconds.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Connect GoHighLevel to Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 153326,
+    "niche": "Connecting Claude Code",
+    "content_type": "Tutorial",
+    "duration": 28.0,
+    "tags": [
+      "connecting-claude-code"
+    ]
+  },
+  {
+    "id": 15,
+    "spoken_hook": "Im gonna teach you how to use Claude code so you never run out of content ideas.",
+    "framework": "Im gonna teach you how to use X so you never run out of Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to use Claude Code to Create Unlimited Content",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 147640,
+    "niche": "Content Creation",
+    "content_type": "Tutorial",
+    "duration": 37.0,
+    "tags": [
+      "content-creation"
+    ]
+  },
+  {
+    "id": 16,
+    "spoken_hook": "Claude Code is ruining my life. My daily workflow looks like, prompt Claude, go back to doomscrolling.",
+    "framework": "X is ruining my Y. My daily workflow looks like, prompt Z, go back to W.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code is Runing my Life",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 144292,
+    "niche": "Screen Time",
+    "content_type": "Hot Take",
+    "duration": 10.0,
+    "tags": [
+      "screen-time"
+    ]
+  },
+  {
+    "id": 17,
+    "spoken_hook": "Claude Code can now get you hundreds of leads from one single prompt. Watch this.",
+    "framework": "X can now get you Y from one single Z. Watch this.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Get Leads with Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 130327,
+    "niche": "Lead Generation",
+    "content_type": "Tutorial",
+    "duration": 26.0,
+    "tags": [
+      "lead-generation"
+    ]
+  },
+  {
+    "id": 18,
+    "spoken_hook": "Bro, learn Claude Code. Youre going to get dusted if you dont learn this shit.",
+    "framework": "Bro, learn X. Youre going to get Y if you dont learn this Z.",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Learn Claude Code or Get Left Behind Your Choice",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 96930,
+    "niche": "Claude Code",
+    "content_type": "Hot Take",
+    "duration": 16.0,
+    "tags": [
+      "claude-code"
+    ]
+  },
+  {
+    "id": 19,
+    "spoken_hook": "Im gonna show you how to build your first AI agent that manage all your daily tasks in the next 60 seconds.",
+    "framework": "Im gonna show you how to build your first X that Y in the next Z seconds.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Screen Demo"
+    },
+    "text_hook": "HOW TO BUILD YOUR FIRST A.I. ALL OF YOUR",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 88794,
+    "niche": "AI agent creation",
+    "content_type": "Tutorial",
+    "duration": 46.0,
+    "tags": [
+      "ai-agent-creation"
+    ]
+  },
+  {
+    "id": 20,
+    "spoken_hook": "Claude Code can now create animated videos for you all from a single prompt.",
+    "framework": "X can now create Y for you all from a single Z.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Create Videos in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 80658,
+    "niche": "Animated Video Creation",
+    "content_type": "Tutorial",
+    "duration": 23.0,
+    "tags": [
+      "animated-video-creation"
+    ]
+  },
+  {
+    "id": 21,
+    "spoken_hook": "This guy just built an entire video game using Claude in less than 20 minutes.",
+    "framework": "This X just built an entire Y using Z in less than W minutes.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Screen Demo"
+    },
+    "text_hook": "this guy just built an entire video game using Claude",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 75376,
+    "niche": "AI Game Development",
+    "content_type": "Demo",
+    "duration": 19.0,
+    "tags": [
+      "ai-game-development"
+    ]
+  },
+  {
+    "id": 22,
+    "spoken_hook": "Bro, someone just released over a thousand Claude Code templates, 6,000 nano banana prompts, and a ton of Claude Code skills.",
+    "framework": "X, Y just released over a thousand Z, W, and a ton of X.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Someone Leaked 1000+ Claude Code Templates",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 67656,
+    "niche": "Claude Code templates",
+    "content_type": "News",
+    "duration": 14.0,
+    "tags": [
+      "claude-code-templates"
+    ]
+  },
+  {
+    "id": 23,
+    "spoken_hook": "This is the number one Claude skill that you need. And if you dont have this, then youre cooked.",
+    "framework": "This is the number one X skill that you need. And if you dont have Y, then youre Z.",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "#1 Claude Skill You Need",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 65300,
+    "niche": "Claude skills",
+    "content_type": "Tutorial",
+    "duration": 23.0,
+    "tags": [
+      "claude-skills"
+    ]
+  },
+  {
+    "id": 24,
+    "spoken_hook": "You can build entire teams of people with Cloud Code. Marketing teams, customer support teams, fucking sales teams, you can build anything, bro.",
+    "framework": "You can build entire teams of people with X. Y teams, Z teams, fucking W teams, you can build anything, bro.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "I replaced my entire marketing team with Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 64909,
+    "niche": "Cloud Code",
+    "content_type": "Tutorial",
+    "duration": 28.0,
+    "tags": [
+      "cloud-code"
+    ]
+  },
+  {
+    "id": 25,
+    "spoken_hook": "This is the only Claude skill youll ever need and its the Claude skill creator.",
+    "framework": "This is the only X skill youll ever need and its the X skill Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "The #1 Claude Skill for Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 64312,
+    "niche": "Claude skill creation",
+    "content_type": "Tutorial",
+    "duration": 24.0,
+    "tags": [
+      "claude-skill-creation"
+    ]
+  },
+  {
+    "id": 26,
+    "spoken_hook": "If your front end design looks like this AI slop bullshit, let me show you how to fix it.",
+    "framework": "If your X looks like this Y, let me show you how to Z.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie, then Screen Demo"
+    },
+    "text_hook": "Claude Cookbook = No AI Slop",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 60402,
+    "niche": "Front End Design",
+    "content_type": "Tutorial",
+    "duration": 15.9,
+    "tags": [
+      "front-end-design"
+    ]
+  },
+  {
+    "id": 27,
+    "spoken_hook": "Someone just leaked over a hundred Claude skills that you can steal, and Im not going to lie, these skills are extremely valuable.",
+    "framework": "Someone just leaked over a hundred X skills that you can Y, and Im not going to lie, these skills are extremely Z.",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "100+ Claude Skills Leaked",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 58707,
+    "niche": "Claude skills",
+    "content_type": "News",
+    "duration": 20.0,
+    "tags": [
+      "claude-skills"
+    ]
+  },
+  {
+    "id": 28,
+    "spoken_hook": "Im gonna show you how to make perfect images every time using Claude code.",
+    "framework": "Im gonna show you how to make X every time using Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to make Images/Ads in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 57520,
+    "niche": "Image Creation",
+    "content_type": "Tutorial",
+    "duration": 41.0,
+    "tags": [
+      "image-creation"
+    ]
+  },
+  {
+    "id": 29,
+    "spoken_hook": "Im going to teach you how to make hundreds of ads using Claude code in less than 30 seconds.",
+    "framework": "Im going to teach you how to make X using Y in less than Z seconds.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "how to make 100s of ads in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 55570,
+    "niche": "Creating Ads with Claude",
+    "content_type": "Tutorial",
+    "duration": 29.0,
+    "tags": [
+      "creating-ads-with-claude"
+    ]
+  },
+  {
+    "id": 30,
+    "spoken_hook": "Im going to show you how to make perfect images every time using Claude code.",
+    "framework": "Im going to show you how to make X every time using Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to make Images/Ads in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 54947,
+    "niche": "Image Creation",
+    "content_type": "Tutorial",
+    "duration": 41.0,
+    "tags": [
+      "image-creation"
+    ]
+  },
+  {
+    "id": 31,
+    "spoken_hook": "I built an entire content team inside of Cloud Code.",
+    "framework": "I built an entire X team inside of Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to Build a Content Team in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 52414,
+    "niche": "Content Team Building",
+    "content_type": "Tutorial",
+    "duration": 42.0,
+    "tags": [
+      "content-team-building"
+    ]
+  },
+  {
+    "id": 32,
+    "spoken_hook": "Bro, Claude MCP is actually insane. Look at this.",
+    "framework": "X, Y is actually insane. Look at Z.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude MCP is Insane",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 51597,
+    "niche": "AI CRM Creation",
+    "content_type": "Demo",
+    "duration": 17.0,
+    "tags": [
+      "ai-crm-creation"
+    ]
+  },
+  {
+    "id": 33,
+    "spoken_hook": "Comment FREE and I\u2019ll send it to you",
+    "framework": "Comment X and I\u2019ll send it to Y",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "I am obsessed with this new Claude Code course - I just became an expert in less than an hour and now Im building crazy stuff",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 45303,
+    "niche": "AI tools",
+    "content_type": "Demo",
+    "duration": 9.0,
+    "tags": [
+      "ai-tools"
+    ]
+  },
+  {
+    "id": 34,
+    "spoken_hook": "Bro, Claude MCP is insane. I just built an entire TikTok data system in less than 10 minutes.",
+    "framework": "X, Y is Z. I just built an entire W in less than A minutes.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude MCP is INSANE",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 44566,
+    "niche": "Claude MCP",
+    "content_type": "Tutorial",
+    "duration": 38.0,
+    "tags": [
+      "claude-mcp"
+    ]
+  },
+  {
+    "id": 35,
+    "spoken_hook": "You are using Claude wrong. What youre probably doing is just making a new chat every time and typing it in Claude.",
+    "framework": "You are using X wrong. What youre probably doing is just Y every time and Z in W.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Youre using Claude wrong. Do this instead",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 43583,
+    "niche": "Claude usage tips",
+    "content_type": "Tutorial",
+    "duration": 49.0,
+    "tags": [
+      "claude-usage-tips"
+    ]
+  },
+  {
+    "id": 36,
+    "spoken_hook": "Put me on bro, put me on, fine. And look, this literally pumps out perfect thumbnails.",
+    "framework": "Put me on X, put me on Y, fine. And look, this literally pumps out Z.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code + Nano Banana 2 = Unlimited Viral Thumbnails",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 43261,
+    "niche": "Thumbnail Creation",
+    "content_type": "Tutorial",
+    "duration": 33.0,
+    "tags": [
+      "thumbnail-creation"
+    ]
+  },
+  {
+    "id": 37,
+    "spoken_hook": "Did you know that you can connect Cloud Code to your Go High Level account into your Meta Ads account?",
+    "framework": "Did you know that you can connect X to your Y into your Z?",
+    "structure": "Question",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code + Meta Ads + GoHighLevel = Automated AI Ad System",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 41749,
+    "niche": "Cloud Code and Meta Ads",
+    "content_type": "Tutorial",
+    "duration": 35.0,
+    "tags": [
+      "cloud-code-and-meta-ads"
+    ]
+  },
+  {
+    "id": 38,
+    "spoken_hook": "Claude is literally giving away free money and heres how to find it.",
+    "framework": "X is literally giving away Y and heres how to Z.",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Giving Out Free Money",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 40084,
+    "niche": "Free Claude Usage",
+    "content_type": "Tutorial",
+    "duration": 19.0,
+    "tags": [
+      "free-claude-usage"
+    ]
+  },
+  {
+    "id": 39,
+    "spoken_hook": "This is insane. So, ChatGPT can now build you fully custom websites in less than two minutes.",
+    "framework": "This is X. So, Y can now Z in less than W.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "INSANE \ud83e\udd2f ChatGPT can now build you custom websites",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 40056,
+    "niche": "ChatGPT website building",
+    "content_type": "Tutorial",
+    "duration": 29.0,
+    "tags": [
+      "chatgpt-website-building"
+    ]
+  },
+  {
+    "id": 40,
+    "spoken_hook": "This is how to stop ChatGBT from glazing you in less than 30 seconds.",
+    "framework": "This is how to stop X from Y in less than Z seconds.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to Stop ChatGPT from Glazing You",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 39653,
+    "niche": "ChatGPT customization",
+    "content_type": "Tutorial",
+    "duration": 29.0,
+    "tags": [
+      "chatgpt-customization"
+    ]
+  },
+  {
+    "id": 41,
+    "spoken_hook": "Clawbot, OpenClaw is a scam and this is why.",
+    "framework": "X, Y is a Z and this is why.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Clawdbot/OpenClaw is a SCAM",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 36663,
+    "niche": "AI technology scam",
+    "content_type": "Hot Take",
+    "duration": 63.0,
+    "tags": [
+      "ai-technology-scam"
+    ]
+  },
+  {
+    "id": 42,
+    "spoken_hook": "Im gonna show you how to launch ads directly from Cloud Code. Watch this.",
+    "framework": "Im gonna show you how to X directly from Y. Watch this.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to Launch Ads from Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 34349,
+    "niche": "Launching Ads",
+    "content_type": "Tutorial",
+    "duration": 31.0,
+    "tags": [
+      "launching-ads"
+    ]
+  },
+  {
+    "id": 43,
+    "spoken_hook": "make simple high converting ads just like this one directly in Claude code",
+    "framework": "make simple X just like this Y directly in Z",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Screen Demo"
+    },
+    "text_hook": "Make Ads in Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 34063,
+    "niche": "High Converting Ads",
+    "content_type": "Tutorial",
+    "duration": 25.0,
+    "tags": [
+      "high-converting-ads"
+    ]
+  },
+  {
+    "id": 44,
+    "spoken_hook": "Claude Codes new swarm mode is absolutely insane for marketing. Watch this.",
+    "framework": "Xs new Y is absolutely Z for W. Watch this.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code Swarm Mode is Insane",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 33471,
+    "niche": "Claude Code Swarm Mode",
+    "content_type": "Demo",
+    "duration": 35.8,
+    "tags": [
+      "claude-code-swarm-mode"
+    ]
+  },
+  {
+    "id": 45,
+    "spoken_hook": "You can create a content factory using Claude code and air table. Watch this.",
+    "framework": "You can create a X using Y and Z. Watch this.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code x Airtable = Content Factory",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 33308,
+    "niche": "Content Creation Process",
+    "content_type": "Tutorial",
+    "duration": 39.0,
+    "tags": [
+      "content-creation-process"
+    ]
+  },
+  {
+    "id": 46,
+    "spoken_hook": "Oh, learn Claude Code. Youre going to get dusted if you dont learn this shit.",
+    "framework": "Oh, learn X. Youre going to get Y if you dont learn this Z.",
+    "structure": "FOMO",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Learn Claude Code or Get Left Behind Your Choice, OH, LEARN CLAUDE CODE, GET DUSTED IF",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 33165,
+    "niche": "Claude Code",
+    "content_type": "Hot Take",
+    "duration": 16.1,
+    "tags": [
+      "claude-code"
+    ]
+  },
+  {
+    "id": 47,
+    "spoken_hook": "You might not know this, but you can actually create image ads inside of Claude Code.",
+    "framework": "You might not know this, but you can actually create X inside of Y.",
+    "structure": "Curiosity Gap",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Did you know you can create ads with Claude Code?",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 32400,
+    "niche": "Claude Code Ads",
+    "content_type": "Tutorial",
+    "duration": 28.0,
+    "tags": [
+      "claude-code-ads"
+    ]
+  },
+  {
+    "id": 48,
+    "spoken_hook": "These are my top three GitHub repos to use with Claude Code.",
+    "framework": "These are my top X GitHub repos to use with Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Top 3 Git Repos for Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 31860,
+    "niche": "GitHub Repositories",
+    "content_type": "Tutorial",
+    "duration": 28.0,
+    "tags": [
+      "github-repositories"
+    ]
+  },
+  {
+    "id": 49,
+    "spoken_hook": "Please stop using ChazGBT, that shit is garbage. Use Gemini 3 instead, heres how to find it.",
+    "framework": "Please stop using X, that shit is Y. Use Z instead, heres how to find it.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Gemini 3 > ChatGPT",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 31783,
+    "niche": "AI Tools",
+    "content_type": "Tutorial",
+    "duration": 12.0,
+    "tags": [
+      "ai-tools"
+    ]
+  },
+  {
+    "id": 50,
+    "spoken_hook": "I just stole all of my competitors winning ads using Claude code.",
+    "framework": "I just stole all of my competitors X using Y.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Steal 500+ Winning Ads Using Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 30162,
+    "niche": "Scraping Ads",
+    "content_type": "Tutorial",
+    "duration": 28.0,
+    "tags": [
+      "scraping-ads"
+    ]
+  },
+  {
+    "id": 51,
+    "spoken_hook": "Put me on bro, put me on. Fine. Ive literally just generated hundreds of leads in my area.",
+    "framework": "Put me on X, put me on Y. Fine. Ive literally just generated Z leads in my area.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude Code + Apify = Unlimited Leads",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 26595,
+    "niche": "Lead Generation",
+    "content_type": "Tutorial",
+    "duration": 25.0,
+    "tags": [
+      "lead-generation"
+    ]
+  },
+  {
+    "id": 52,
+    "spoken_hook": "If you dont ever wanna work again, just simply set up Claude MCP.",
+    "framework": "If you dont ever wanna X again, just simply set up Y.",
+    "structure": "Raw Shock",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Claude MCP Will Replace Your Job",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 26354,
+    "niche": "Claude MCP Automation",
+    "content_type": "Tutorial",
+    "duration": 41.0,
+    "tags": [
+      "claude-mcp-automation"
+    ]
+  },
+  {
+    "id": 53,
+    "spoken_hook": "I just posted this video using Claude Code. Heres how.",
+    "framework": "I just X this Y using Z. Heres how.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Post Content to 6 Social Media Platforms with Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 23808,
+    "niche": "Social Media Automation",
+    "content_type": "Tutorial",
+    "duration": 22.0,
+    "tags": [
+      "social-media-automation"
+    ]
+  },
+  {
+    "id": 54,
+    "spoken_hook": "You can now use Claude Code to create hundreds of static ads in less than 30 seconds, just like this dog walking ad that I created.",
+    "framework": "You can now use X to create hundreds of Y in less than Z seconds, just like this W that I created.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to Create Ads with Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 23107,
+    "niche": "Claude Code Ads",
+    "content_type": "Tutorial",
+    "duration": 23.0,
+    "tags": [
+      "claude-code-ads"
+    ]
+  },
+  {
+    "id": 55,
+    "spoken_hook": "Im gonna show you how to build your own content team using Cloud Code, watch this.",
+    "framework": "Im gonna show you how to [BRACKETS] using [BRACKETS].",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Talking Head"
+    },
+    "text_hook": "",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 22749,
+    "niche": "Content Creation",
+    "content_type": "Hot Take",
+    "duration": 0.0,
+    "tags": [
+      "content-creation"
+    ]
+  },
+  {
+    "id": 56,
+    "spoken_hook": "This is how I use Claude to talk to my leads and book appointments for me.",
+    "framework": "This is how I use X to Y and Z for me.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Talk to Leads & Book Appointments with Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 22694,
+    "niche": "Automating Lead Responses",
+    "content_type": "Demo",
+    "duration": 37.0,
+    "tags": [
+      "automating-lead-responses"
+    ]
+  },
+  {
+    "id": 57,
+    "spoken_hook": "Im gonna teach you how to set up Claude Code in less than 30 seconds.",
+    "framework": "Im gonna teach you how to set up X in less than Y seconds.",
+    "structure": "Educational",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "How to Set Up Claude Code in 30 Seconds",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 22431,
+    "niche": "Claude Code Setup",
+    "content_type": "Tutorial",
+    "duration": 29.0,
+    "tags": [
+      "claude-code-setup"
+    ]
+  },
+  {
+    "id": 58,
+    "spoken_hook": "API is like asking a woman what she wants to eat. Youll get one bullshit response.",
+    "framework": "X is like asking Y what Z wants to A. Youll get one B response.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Before MCP, After MCP, Unique API, Unified API, Model Context Protocol (MCP)",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 21877,
+    "niche": "API vs MCP",
+    "content_type": "Hot Take",
+    "duration": 26.0,
+    "tags": [
+      "api-vs-mcp"
+    ]
+  },
+  {
+    "id": 59,
+    "spoken_hook": "How do you scrape Instagram? Im about to put you on some serious game.",
+    "framework": "How do you scrape X? Im about to put you on some serious Y.",
+    "structure": "Question",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "And how do u scrap insta ? I am already doing ur academy - but that is an open question ;-)",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 17958,
+    "niche": "Data Scraping",
+    "content_type": "Tutorial",
+    "duration": 55.0,
+    "tags": [
+      "data-scraping"
+    ]
+  },
+  {
+    "id": 60,
+    "spoken_hook": "N8n is dead. Currently recording a full N8n course breakdown for my community members right now, and Im going through this and Im just realizing how stupid this is.",
+    "framework": "X is dead. Currently recording a full Y breakdown for my Z members right now, and Im going through this and Im just realizing how W this is.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "N8n is Officially Dead",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 17931,
+    "niche": "N8n and Cloud Code",
+    "content_type": "Hot Take",
+    "duration": 28.0,
+    "tags": [
+      "n8n-and-cloud-code"
+    ]
+  },
+  {
+    "id": 61,
+    "spoken_hook": "AI Tools You Didnt Know Exists Part 6-7. Today we are talking about Apify.",
+    "framework": "AI Tools You Didnt Know Exists Part X-Y. Today we are talking about Y.",
+    "structure": "Curiosity Gap",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "AI Tools You Didnt Know Existed Part 6 7",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 16605,
+    "niche": "Data Scraping",
+    "content_type": "Tutorial",
+    "duration": 27.0,
+    "tags": [
+      "data-scraping"
+    ]
+  },
+  {
+    "id": 62,
+    "spoken_hook": "Everyones talking about how you can send DMs using cloud code, but nobodys showing you how.",
+    "framework": "Xs talking about how you can Y using Z, but nobodys showing you how.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Send DMs Using Claude Code",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 15881,
+    "niche": "Cloud Code DMs",
+    "content_type": "Tutorial",
+    "duration": 30.0,
+    "tags": [
+      "cloud-code-dms"
+    ]
+  },
+  {
+    "id": 63,
+    "spoken_hook": "Stop with this ClaudeBot shit. So many of you have been DMing me asking about ClaudeBot.",
+    "framework": "Stop with this X shit. So many of you have been DMing me asking about Y.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "STOP USING CLAWDBOT, STOP WITH THIS, CLAWDBOT SHIT., SO MANY OF",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 15221,
+    "niche": "ClaudeBot usage",
+    "content_type": "Hot Take",
+    "duration": 30.0,
+    "tags": [
+      "claudebot-usage"
+    ]
+  },
+  {
+    "id": 64,
+    "spoken_hook": "This is good, this is better, and this is best.",
+    "framework": "This is X, this is Y, and this is Z.",
+    "structure": "Comparison",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "What AI Tools Should I Use?",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 14259,
+    "niche": "AI education",
+    "content_type": "Tutorial",
+    "duration": 12.0,
+    "tags": [
+      "ai-education"
+    ]
+  },
+  {
+    "id": 65,
+    "spoken_hook": "ClaudeBot is extremely overrated and this is why. The only reason youre seeing this all over your feed right now is not because its really good, its because its a weapon for virality.",
+    "framework": "X is extremely overrated and this is why. The only reason youre seeing Y all over your feed right now is not because its really good, its because its a weapon for Z.",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "format": "Vertical Selfie"
+    },
+    "text_hook": "Clawdbot/MoltBot/OpenClaw is OVERRATED",
+    "audio_hook": "Music only",
+    "source": "Noe",
+    "views": 13964,
+    "niche": "ClaudeBot criticism",
+    "content_type": "Hot Take",
+    "duration": 40.0,
+    "tags": [
+      "claudebot-criticism"
+    ]
+  },
+  {
+    "id": 66,
+    "spoken_hook": "Do you want to research a disease? Do you want to write a book? Do you want to build an AI-powered robot? Chances are you want to change the world, but might not have the support to do so. Introducing RISE, an initiative that supports brilliant 15-17 year olds worldwide.",
+    "framework": "Do you want to [X]? Do you want to [Y]? Do you want to [Z]? Chances are you want to [bigger goal], but might not have [obstacle]. Introducing [solution], [description]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Subject in B-Roll",
+      "movement": "B-Roll - Quick Cuts",
+      "layout": "Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 108111634,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 67,
+    "spoken_hook": "Check this out. These are called life-size floor plans. You can literally walk through your exact home design before you build it. And I think this is the future of how people are gonna build their homes.",
+    "framework": "Check this out. These are called [X innovation]. You can literally [Y capability]. And I think this is the future of how people are gonna [Z activity]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - Quick Zoom,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Split screen A-roll + B-roll"
+    },
+    "text_hook": "[X subject] does [Y thing]",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 14478870,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 68,
+    "spoken_hook": "These are called Lifesize Floor Plans. You can literally walk through your home design before you build it. And I think, this is the future of how people are going to build their homes.",
+    "framework": "These are called [X]. You can literally do [Y non-obvious thing]. This is the future of how [Z people] will do [Y thing]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Non-person B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll w/ A-roll overlaid,Split screen A-roll + B-roll"
+    },
+    "text_hook": "Future of [X thing]",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 14400000,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 69,
+    "spoken_hook": "The smart kid peeks at your desk and cant stand you outscored him, so he begs you to tell him how. You tell him that you took your notes and turned them into an AI podcast a week before the exam.",
+    "framework": "The [X person] [Y discovers] and cant stand [Z achievement], so [reaction]. You tell them that [secret method]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator in B-Roll,Subject in B-Roll",
+      "movement": "B-Roll - Quick Cuts",
+      "layout": "Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 10638531,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 70,
+    "spoken_hook": "I have a question for you. Which one is the real me? Is it me, or is it me? Heres how I made her.",
+    "framework": "I have a question for you. Which one is the real [X]? Is it [Y], or is it [Y]? Heres how I made [Z]",
+    "structure": "Experimentation",
+    "visual_hook": {
+      "graphic": "Creator A-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Full screen A-roll (in world)"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 9662976,
+    "niche": "Content Marketing",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 71,
+    "spoken_hook": "This company 3D printed an entire neighborhood. All those houses were printed with those giant machines. But get this, because theyre printed, people can design wild looking homes that are actually affordable to build.",
+    "framework": "This company [X method] an entire [Y project scale]. [Z how its done]. But get this, because theyre [X], people can [unexpected benefit]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - Quick Zoom,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Split screen A-roll + B-roll"
+    },
+    "text_hook": "[X subject] does [Y thing]",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 7942673,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 72,
+    "spoken_hook": "Apple just dropped the iPhone 16 with something we didnt expect, but before you order, lets take a look.",
+    "framework": "[X company] just dropped the [Y product] with something we didnt expect, but before you [Z action], lets take a look.",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "[X shocking thing]",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 7429841,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 73,
+    "spoken_hook": "This is Faye. Shes eight years old, and she just built this entire Harry Potter website in like 45 minutes. She doesnt even know how to code. All she did was type English into this new coding tool, Cursor.",
+    "framework": "This is [X person]. Shes [Y age] years old, and she just built this entire [Z project] in like [time]. She doesnt even know how to [expected skill]. All she did was [simple action] into this new [tool]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - Crash Zoom,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Split screen A-roll + B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 7313783,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 74,
+    "spoken_hook": "Samsung just announced the Galaxy S25 Ultra which has some pretty insane AI features we havent seen on any other phone.",
+    "framework": "[X company] just announced the [Y product] which has some pretty insane [Z features] we havent seen on any other phone.",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 6033837,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 75,
+    "spoken_hook": "Something crazy is happening with Stanley Cups. You ever seen one of these? Stanley Cup, racking up 6.7 billion views. This 40 ounce Stanley quencher has become the Louis Vuitton of drinkware.",
+    "framework": "Something crazy is happening with [X product]. You ever seen one of these? [X], racking up [Y metric]. This [Z description] has become the [luxury brand] of [category]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - Crash Zoom,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll,Split screen A-roll + B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 5748033,
+    "niche": "Content Marketing",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 76,
+    "spoken_hook": "Stop designing custom icons. So, designers often feel pressured to design everything custom in their products, including icons. But this isnt great practice, so I recommend these three libraries to save you a bunch of time.",
+    "framework": "Stop [X common practice]. So, [Y professionals] often feel pressured to [Z expectation]. But this isnt great practice, so I recommend these [number] [solutions] to save you a bunch of time",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "[X shocking thing]",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 4296328,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 77,
+    "spoken_hook": "These three brothers made billions just by copying ideas, and they never went to jail, and youll see why.",
+    "framework": "These [X people] made [Y amount] just by [Z controversial method], and they never [consequence], and youll see why",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 4059673,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 78,
+    "spoken_hook": "Are you buying the product or are you buying the brand?",
+    "framework": "Are you buying the [X] or are you buying the [Y]?",
+    "structure": "Question",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Image Screenshots,Subject in B-Roll",
+      "movement": "A-Roll - None,B-roll - Text Overlays",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 3840154,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 79,
+    "spoken_hook": "If you create any kind of content for brands then youre going to want to hear about this new feature from Adobe.",
+    "framework": "If you create any kind of [X work] for [Y clients] then youre going to want to hear about this new feature from [Z company]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 3726341,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 80,
+    "spoken_hook": "Stop designing are-you-sure modals. This is one of the most common UI components, but designers often get this wrong. So in less than 30 seconds, Im going to show you how to design a better confirmation modal.",
+    "framework": "Stop designing [X element]. This is one of the most common [Y components], but [Z professionals] often get this wrong. So in less than [time], Im going to show you how to [better approach]",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "[X shocking thing]",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 3544820,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 81,
+    "spoken_hook": "Check this out, this company built an AI headset that lets you control your dreams. Imagine Inception, but in real life, whenever you want. And they do this by activating lucid dreams. Its insane.",
+    "framework": "Check this out, this company built [X product] that lets you [Y capability]. Imagine [Z pop culture reference], but in real life, whenever you want. And they do this by [method]. Its insane",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Arrow/Highlights,Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - Crash Zoom,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Split screen A-roll + B-roll"
+    },
+    "text_hook": "[X subject] does [Y thing]",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 3242375,
+    "niche": "Tech",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 82,
+    "spoken_hook": "Just a few days ago, we used AI to launch a swimsuit company to see if we could go from zero to 50,000 in revenue in just 120 days.",
+    "framework": "Just a few days ago, we used AI to launch [X business] to see if we could go from zero to [Y revenue] in just [Z time]",
+    "structure": "Experimentation",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 3200000,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 83,
+    "spoken_hook": "Stop using your brand color as your primary color.",
+    "framework": "Stop using your [X] as your [Y]",
+    "structure": "Contrarian",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "[X shocking thing]",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 3007711,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 84,
+    "spoken_hook": "How do we get the same character to show up in all of our AI videos?",
+    "framework": "How do we get [X consistency challenge] in all of our [Y content]?",
+    "structure": "Question",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "None",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 2905191,
+    "niche": "Tech",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 85,
+    "spoken_hook": "I just flew 36 hours to attend the biggest marketing event called Inbound by Hubspot",
+    "framework": "I just flew [X time] to attend the biggest [Y event] called [Z name] by [company]",
+    "structure": "Experimentation",
+    "visual_hook": {
+      "graphic": "Creator in B-Roll",
+      "movement": "B-Roll - Quick Cuts",
+      "layout": "Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 2700000,
+    "niche": "Content Marketing",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 86,
+    "spoken_hook": "So when you open a restaurant, the first person that knocks on your door will not be a customer. Itll be someone from Coca-Cola and they will be offering you a free fridge. But is it a free fridge?",
+    "framework": "So when you open a [X business], the first person that knocks on your door will not be a [Y expected person]. Itll be someone from [Z company] and they will be offering you [deal]. But is it [good]?",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Non-person B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in world),Full screen A-roll (partial graphic overlay),Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 2514861,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 87,
+    "spoken_hook": "Look, Adobe just released their new AI video model which turns your photos into full-blown ads in just a few clicks.",
+    "framework": "Look, [X company] just released their new [Y product] which turns your [Z input] into [output] in just a few clicks",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "None",
+    "audio_hook": "Music + SFX",
+    "source": "Kallaway",
+    "views": 2072524,
+    "niche": "Tech",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 88,
+    "spoken_hook": "This video got over 200 million views and 1.4 million likes, all because of this tiny detail",
+    "framework": "This video got over [X numbers], all because of this tiny [Y]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Example Videos",
+      "movement": "B-roll - Text Overlays",
+      "layout": "Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 1800410,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 89,
+    "spoken_hook": "Over the last 10 years, the default look of 90% of homes, apartments, and retail was what Ill call the Apple Store aesthetic.",
+    "framework": "Over the last [X time], the default look of [Y percentage] of [Z places] was what Ill call the [brand] aesthetic",
+    "structure": "Comparison",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Image Screenshots",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (partial graphic overlay)"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1609242,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 90,
+    "spoken_hook": "Today, I spoke to the head of TikTok again and these are more of the latest tips to help you grow in 2024.",
+    "framework": "Today, I spoke to the head of [X platform] again and these are more of the latest tips to help you grow in [Y year]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Non-person B-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "[X subject] does [Y thing]",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1600000,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 91,
+    "spoken_hook": "Is it possible for a broke college student to make $100,000 a month?",
+    "framework": "Is it possible for a [X person] to [Y achievement]?",
+    "structure": "Question",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Creator in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen A-roll (in world),Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 1592340,
+    "niche": "Content Marketing",
+    "content_type": "Hot Take",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 92,
+    "spoken_hook": "So another AI company that you should be aware of is RunwayML. Think of it like Adobe except for beginners.",
+    "framework": "So another AI company that you should be aware of is [X company]. Think of it like [Y known brand] except for [Z audience]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Subject in B-Roll",
+      "movement": "B-Roll - None",
+      "layout": "Full screen B-roll"
+    },
+    "text_hook": "None",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 1400000,
+    "niche": "Tech",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "tech"
+    ]
+  },
+  {
+    "id": 93,
+    "spoken_hook": "This coffee brand sold out six months of inventory in just 28 minutes.",
+    "framework": "This [X type] brand sold out [Y amount] of inventory in just [Z time]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1386527,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 94,
+    "spoken_hook": "Three content trends that are performing in ads from film supply.",
+    "framework": "[X number] content trends that are performing in [Y] from [Z source]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts,B-roll - Text Overlays",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1325682,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 95,
+    "spoken_hook": "Why do big brands like Apple, Nike, Disney and McDonalds spend upwards of 7% of their top-line revenue on marketing?",
+    "framework": "Why do big brands like [X companies] spend upwards of [Y percentage] of their top-line revenue on [Z activity]?",
+    "structure": "Question",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts,B-Roll - Swipe Transitions",
+      "layout": "Full screen A-roll (in studio),Full screen B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 1300000,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 96,
+    "spoken_hook": "This is 2Jeys $30 million content strategy.",
+    "framework": "This is [X companys] $[Y amount] [Z strategy]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1193651,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 97,
+    "spoken_hook": "This clothing brand, Trico, is making millions off of TikTok.",
+    "framework": "This [X brand type], [Y name], is making millions off of [Z platform]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-roll - Text Overlays",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "SFX only",
+    "source": "Kallaway",
+    "views": 1121785,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 98,
+    "spoken_hook": "This girl sold over $100,000 of matcha in under 45 minutes.",
+    "framework": "This [X person] sold over $[Y amount] of [Z product] in under [time]",
+    "structure": "Secret Reveal",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Image Screenshots,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 1030616,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 99,
+    "spoken_hook": "This is the exact same video, but the second time it was posted, it got 21.4x more views",
+    "framework": "This is the exact same [X thing]. But the second time/one it got [Yx better result]",
+    "structure": "Comparison",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Example Videos",
+      "movement": "A-Roll - None,B-Roll - None",
+      "layout": "Split screen A-roll + B-roll"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "Music only",
+    "source": "Kallaway",
+    "views": 1000000,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  },
+  {
+    "id": 100,
+    "spoken_hook": "Is this the best auto marketing reveal of all time? Lets talk about Slate.",
+    "framework": "Is this the best [X category] of all time? Lets talk about [Y]",
+    "structure": "Question",
+    "visual_hook": {
+      "graphic": "Creator A-Roll,Subject in B-Roll",
+      "movement": "A-Roll - None,B-Roll - Quick Cuts,B-roll - Text Overlays",
+      "layout": "Full screen B-roll w/ A-roll overlaid"
+    },
+    "text_hook": "Captions (repeat of spoken)",
+    "audio_hook": "No audio",
+    "source": "Kallaway",
+    "views": 993488,
+    "niche": "Content Marketing",
+    "content_type": "Tutorial",
+    "duration": 0,
+    "tags": [
+      "content-marketing"
+    ]
+  }
+]

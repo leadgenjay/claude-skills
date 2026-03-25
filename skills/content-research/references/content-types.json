@@ -1,0 +1,142 @@
+{
+  "version": "1.0.0",
+  "content_types": [
+    {
+      "id": "demo",
+      "name": "Demo",
+      "description": "Showing a tool, feature, or product in action",
+      "signal_words": ["demo", "walkthrough", "showing you", "check this out", "look at this", "let me show", "watch this"]
+    },
+    {
+      "id": "tutorial",
+      "name": "Tutorial",
+      "description": "Step-by-step teaching content the viewer can follow along with",
+      "signal_words": ["how to", "step by step", "tutorial", "guide", "here's how", "do this", "follow along"]
+    },
+    {
+      "id": "hot-take",
+      "name": "Hot Take",
+      "description": "Controversial opinion or contrarian perspective to spark debate",
+      "signal_words": ["unpopular opinion", "hot take", "nobody talks about", "controversial", "I disagree", "wrong about", "myth"]
+    },
+    {
+      "id": "news",
+      "name": "News / Reaction",
+      "description": "Reacting to or reporting on industry news, launches, or updates",
+      "signal_words": ["just announced", "breaking", "just dropped", "new update", "just released", "did you see", "huge news"]
+    },
+    {
+      "id": "comparison",
+      "name": "Comparison",
+      "description": "Comparing two or more tools, strategies, or approaches",
+      "signal_words": ["vs", "versus", "compared to", "better than", "which is better", "old way new way", "before after"]
+    },
+    {
+      "id": "story",
+      "name": "Story / Case Study",
+      "description": "Personal experience, client result, or narrative-driven content",
+      "signal_words": ["story time", "what happened", "case study", "client result", "how I", "I tried", "my experience"]
+    },
+    {
+      "id": "cta",
+      "name": "CTA / Offer",
+      "description": "Direct call-to-action content promoting a service, lead magnet, or offer",
+      "signal_words": ["DM me", "link in bio", "free guide", "limited spots", "download", "sign up", "comment below"]
+    }
+  ],
+  "visual_formats": [
+    {
+      "id": "talking-head",
+      "name": "Talking Head",
+      "description": "Speaker on camera delivering content directly to viewer",
+      "best_for": ["hot-take", "story", "cta"]
+    },
+    {
+      "id": "screen-recording",
+      "name": "Screen Recording",
+      "description": "Screen capture showing software, dashboards, or workflows",
+      "best_for": ["demo", "tutorial", "comparison"]
+    },
+    {
+      "id": "split-screen",
+      "name": "Split Screen",
+      "description": "Speaker in corner with screen recording or B-roll filling the rest",
+      "best_for": ["tutorial", "demo", "news"]
+    },
+    {
+      "id": "b-roll",
+      "name": "B-Roll / Faceless",
+      "description": "Stock footage or cinematic B-roll with voiceover — no face on camera",
+      "best_for": ["story", "news", "hot-take"]
+    },
+    {
+      "id": "text-only",
+      "name": "Text Only / Kinetic",
+      "description": "Animated text on screen with music — no speaker or screen recording",
+      "best_for": ["cta", "hot-take", "news"]
+    },
+    {
+      "id": "mixed",
+      "name": "Mixed",
+      "description": "Combination of talking head, screen recording, and B-roll in one video",
+      "best_for": ["tutorial", "comparison", "story"]
+    },
+    {
+      "id": "product-demo",
+      "name": "Product Demo",
+      "description": "Focused product walkthrough showing specific features and results",
+      "best_for": ["demo", "comparison", "cta"]
+    }
+  ],
+  "hook_structures": [
+    {
+      "id": "secret-reveal",
+      "name": "Secret Reveal",
+      "description": "Promises insider knowledge the viewer doesn't have yet",
+      "pattern": "The [secret/trick/hack] that [authority figures] use to [result]",
+      "example": "The cold email trick that got me 47 meetings in 30 days"
+    },
+    {
+      "id": "educational",
+      "name": "Educational",
+      "description": "Teaches something specific and actionable upfront",
+      "pattern": "How to [achieve result] in [timeframe] without [common pain]",
+      "example": "How to set up cold email in 15 minutes without buying domains"
+    },
+    {
+      "id": "contrarian",
+      "name": "Contrarian",
+      "description": "Goes against what everyone believes to be true",
+      "pattern": "[Common belief] is wrong. Here's what [works/is true] instead",
+      "example": "Personalization in cold email is a waste of time. Here's why"
+    },
+    {
+      "id": "question",
+      "name": "Question",
+      "description": "Opens with a question that triggers curiosity",
+      "pattern": "Why are [group] still [doing wrong thing] when [better way] exists?",
+      "example": "Why are agencies still manually finding leads when AI does it for free?"
+    },
+    {
+      "id": "raw-shock",
+      "name": "Raw Shock",
+      "description": "Opens with a surprising number, result, or statement",
+      "pattern": "[Shocking number/result] — and I did it with [simple method]",
+      "example": "$47,000 in one month from cold email alone"
+    },
+    {
+      "id": "experimentation",
+      "name": "Experimentation",
+      "description": "Shows a test or experiment with real results",
+      "pattern": "I [tested/tried] [X] for [timeframe]. Here's what happened",
+      "example": "I sent 10,000 cold emails in 7 days. Here's what happened"
+    },
+    {
+      "id": "comparison",
+      "name": "Comparison",
+      "description": "Pits two things against each other for a clear winner",
+      "pattern": "[Option A] vs [Option B] — which one [wins/converts/works] better?",
+      "example": "Instantly vs Smartlead — which sends better cold emails in 2026?"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+id: content-research
+type: skill
+name: "Content Research"
+description: "Find unlimited short-form video ideas through competitor tracking, scraping, outlier analysis, trending topics, and quick research. 5 modes: manage competitors, scrape content, analyze what's working, discover trends, and fast topic research with scoring."
+categories:
+  - lgj-exclusive
+  - content
+tags:
+  - content-research
+  - video-ideas
+  - competitor-analysis
+  - trending-topics
+  - scraping
+  - hooks
+  - short-form
+icon: Radar
+path: skills/content-research
+files:
+  - SKILL.md
+  - references/viral-archetypes.json
+  - references/content-types.json
+  - references/niche-keywords.json
+  - evals/evals.json
+version: "1.0"
+composesWell:
+  - short-form-script

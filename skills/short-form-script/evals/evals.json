@@ -1,0 +1,429 @@
+{
+  "skill": "short-form-script",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": "demo-30s",
+      "name": "Demo 30s — Instantly Lead Gen",
+      "prompt": "Write a 30-second IG Reel script about using Instantly.ai to send cold emails that actually get replies. Comment trigger CTA with keyword COLD. Lead magnet: free cold email template pack. Key stat: 47% open rate.",
+      "context": {
+        "topic": "Instantly.ai cold email",
+        "duration": "30s",
+        "platform": "IG Reel",
+        "content_type": "Demo",
+        "cta_type": "Comment trigger",
+        "cta_keyword": "COLD"
+      },
+      "assertions": [
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Teleprompter Script",
+          "weight": 3,
+          "reason": "Must have teleprompter script section"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Production Brief",
+          "weight": 3,
+          "reason": "Must have production brief section"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The output contains exactly 6 hook options presented in a table format before the script",
+          "weight": 3,
+          "reason": "Step 1 requires 6 hook options"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script section contains ONLY clean speakable text — no brackets, no stage directions, no visual cues, no [SLAM], no (camera pan), no production notes inline",
+          "weight": 3,
+          "reason": "Teleprompter must be clean for reading on camera"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script mentions specific metrics (47% open rate or similar specific numbers) rather than vague claims",
+          "weight": 2,
+          "reason": "Jay's voice requires specific metrics"
+        },
+        {
+          "type": "contains_any",
+          "field": "output",
+          "values": ["I'm", "I've", "here's", "don't", "won't", "you're", "it's", "gonna", "gotta"],
+          "weight": 2,
+          "reason": "Must use conversational contractions"
+        },
+        {
+          "type": "not_contains_any",
+          "field": "output",
+          "values": ["delve", "tapestry", "realm", "landscape", "ever-evolving", "cutting-edge", "robust", "transformative", "pivotal", "vibrant", "crucial", "compelling", "seamless", "groundbreaking", "leverage", "harness", "embark", "unveil", "facilitate", "synergy", "game-changer", "unleash", "elevate", "utilize"],
+          "weight": 3,
+          "reason": "No banned AI words"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "COLD",
+          "weight": 2,
+          "reason": "CTA keyword must appear in output"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief contains all 4 hook types: Spoken, Text overlay, Visual, and Audio",
+          "weight": 2,
+          "reason": "4 hooks must align"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief contains screen directions with timestamps",
+          "weight": 2,
+          "reason": "Screen directions required"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script body has exactly 2 distinct points (Setup+Payoff each) for a 30-second video, not 1 and not 3+",
+          "weight": 2,
+          "reason": "30s = 2 points per duration scaling"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The tone is peer-to-peer (successful friend sharing knowledge), NOT teacher-to-student or lecture-style. No phrases like 'today we'll learn' or 'let me teach you'",
+          "weight": 2,
+          "reason": "Jay's voice is peer authority, not teacher"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Instantly",
+          "weight": 1,
+          "reason": "Must reference the tool by name"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script when read aloud at 150 words/minute would fit within approximately 30 seconds (60-80 words for the body, not counting title/CTA metadata)",
+          "weight": 2,
+          "reason": "Script must fit the specified duration"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The CTA strategy section specifies the keyword COLD, describes a lead magnet (cold email template pack), and mentions DM auto-reply setup",
+          "weight": 1,
+          "reason": "CTA strategy must be complete"
+        }
+      ]
+    },
+    {
+      "id": "tutorial-60s",
+      "name": "Tutorial 60s — GoHighLevel Automation Setup",
+      "prompt": "Write a 60-second TikTok script teaching people how to set up a basic lead capture automation in GoHighLevel. Follow CTA. Mention that we've helped 2700+ businesses set this up.",
+      "context": {
+        "topic": "GoHighLevel lead capture automation",
+        "duration": "60s",
+        "platform": "TikTok",
+        "content_type": "Tutorial",
+        "cta_type": "Follow"
+      },
+      "assertions": [
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Teleprompter Script",
+          "weight": 3,
+          "reason": "Must have teleprompter script section"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Production Brief",
+          "weight": 3,
+          "reason": "Must have production brief section"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The output contains exactly 6 hook options presented in a table format",
+          "weight": 3,
+          "reason": "Step 1 requires 6 hook options"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script contains ONLY clean speakable text with no brackets, stage directions, or production notes inline",
+          "weight": 3,
+          "reason": "Teleprompter must be clean"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script uses a Tutorial body framework: Promise (what viewer will learn) → Key step(s) → Result → CTA",
+          "weight": 2,
+          "reason": "Tutorial content type must use tutorial framework"
+        },
+        {
+          "type": "contains_any",
+          "field": "output",
+          "values": ["2700", "2,700"],
+          "weight": 2,
+          "reason": "Must include the 2700+ businesses stat"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script contains a re-hook phrase at approximately the midpoint (around 30 seconds in) — a phrase like 'but here's where it gets interesting' or 'watch this' to re-engage attention",
+          "weight": 2,
+          "reason": "60s videos require a re-hook at midpoint"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script has exactly 2 main teaching points for a 60-second video",
+          "weight": 2,
+          "reason": "60s = 2 points per duration scaling"
+        },
+        {
+          "type": "not_contains_any",
+          "field": "output",
+          "values": ["delve", "tapestry", "realm", "landscape", "ever-evolving", "cutting-edge", "robust", "transformative", "pivotal", "vibrant", "crucial", "compelling", "seamless", "groundbreaking", "leverage", "harness", "embark", "unveil", "facilitate", "synergy", "game-changer", "unleash", "elevate", "utilize"],
+          "weight": 3,
+          "reason": "No banned AI words"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "GoHighLevel",
+          "weight": 1,
+          "reason": "Must reference the tool by name"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief mentions TikTok-specific pacing (fastest, casual, aggressive hooks, more pattern interrupt)",
+          "weight": 1,
+          "reason": "Platform-specific tailoring for TikTok"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The CTA is a Follow CTA (follow @leadgenjay or similar), NOT a comment trigger or link in bio",
+          "weight": 2,
+          "reason": "Must match requested CTA type"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script reads at approximately 150 words/minute and would take about 60 seconds to deliver (130-170 words for the body)",
+          "weight": 2,
+          "reason": "Script must fit the specified duration"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief contains screen directions with timestamps that span the full 60 seconds",
+          "weight": 1,
+          "reason": "Screen directions must cover full duration"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The tone uses casual TikTok-appropriate language with contractions and conversational phrasing, not formal or corporate",
+          "weight": 1,
+          "reason": "TikTok requires casual tone"
+        }
+      ]
+    },
+    {
+      "id": "hottake-15s",
+      "name": "Hot Take 15s — Cold Email Is Dead",
+      "prompt": "Write a 15-second IG Reel hot take script: 'Cold email is dead in 2026.' Controversial angle — argue that traditional cold email blasting is dead but warm outreach through AI personalization is thriving. Comment trigger CTA with keyword WARM. Lead magnet: warm outreach playbook.",
+      "context": {
+        "topic": "Cold email vs warm outreach",
+        "duration": "15s",
+        "platform": "IG Reel",
+        "content_type": "Everything Else",
+        "cta_type": "Comment trigger",
+        "cta_keyword": "WARM"
+      },
+      "assertions": [
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Teleprompter Script",
+          "weight": 3,
+          "reason": "Must have teleprompter script section"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Production Brief",
+          "weight": 3,
+          "reason": "Must have production brief section"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The output contains exactly 6 hook options in a table",
+          "weight": 3,
+          "reason": "Step 1 requires 6 hook options"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script is very short — only 5-7 sentences maximum for a 15-second video, and contains NO production notes or visual directions inline",
+          "weight": 3,
+          "reason": "15s = 1 point + CTA, 5-7 sentences"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script has exactly 1 main point (not 2 or 3) since it's a 15-second video",
+          "weight": 2,
+          "reason": "15s = 1 point per duration scaling"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script takes a contrarian/provocative angle — argues cold email blasting is dead while warm AI-personalized outreach works",
+          "weight": 2,
+          "reason": "Content type is 'Everything Else' (hot take)"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "WARM",
+          "weight": 2,
+          "reason": "CTA keyword must appear"
+        },
+        {
+          "type": "not_contains_any",
+          "field": "output",
+          "values": ["delve", "tapestry", "realm", "landscape", "ever-evolving", "cutting-edge", "robust", "transformative", "pivotal", "vibrant", "crucial", "compelling", "seamless", "groundbreaking", "leverage", "harness", "embark", "unveil", "facilitate", "synergy", "game-changer", "unleash", "elevate", "utilize"],
+          "weight": 3,
+          "reason": "No banned AI words"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script when read aloud at 150 words/minute would fit within approximately 15 seconds (30-40 words for the body)",
+          "weight": 2,
+          "reason": "Must fit 15s duration"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script does NOT contain a re-hook phrase (no midpoint re-hook needed for 15s)",
+          "weight": 1,
+          "reason": "15s videos don't need re-hooks"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief all 4 hook types (Spoken, Text overlay, Visual, Audio) and has screen directions",
+          "weight": 2,
+          "reason": "Production brief must be complete even for short videos"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The hook is provocative and attention-grabbing, using a contrarian or shock structure",
+          "weight": 1,
+          "reason": "Hot take needs a strong hook"
+        }
+      ]
+    },
+    {
+      "id": "demo-60s-research",
+      "name": "Demo 60s with Research — Claude Code Lead Scraping",
+      "prompt": "Write a 60-second IG Reel demo script showing how to use Claude Code + Apify to scrape 500 leads in 60 seconds. Comment trigger CTA with keyword LEADS. Lead magnet: the exact Claude Code skill file. Before writing, check scraped_ideas for any relevant content about Claude Code or Apify or lead generation.",
+      "context": {
+        "topic": "Claude Code + Apify lead scraping",
+        "duration": "60s",
+        "platform": "IG Reel",
+        "content_type": "Demo",
+        "cta_type": "Comment trigger",
+        "cta_keyword": "LEADS",
+        "research_query": true
+      },
+      "assertions": [
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Teleprompter Script",
+          "weight": 3,
+          "reason": "Must have teleprompter script section"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "Production Brief",
+          "weight": 3,
+          "reason": "Must have production brief section"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The output contains exactly 6 hook options in a table",
+          "weight": 3,
+          "reason": "Step 1 requires 6 hook options"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script contains ONLY clean speakable text with no brackets, stage directions, or production notes",
+          "weight": 3,
+          "reason": "Teleprompter must be clean"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script uses a Demo body framework: Context → Impressive thing (live demo) → Proof (show results) → Payoff",
+          "weight": 2,
+          "reason": "Demo content type must use demo framework"
+        },
+        {
+          "type": "contains_any",
+          "field": "output",
+          "values": ["Claude Code", "claude code", "Claude code"],
+          "weight": 2,
+          "reason": "Must reference Claude Code"
+        },
+        {
+          "type": "contains_any",
+          "field": "output",
+          "values": ["Apify", "apify"],
+          "weight": 1,
+          "reason": "Must reference Apify"
+        },
+        {
+          "type": "contains",
+          "field": "output",
+          "value": "LEADS",
+          "weight": 2,
+          "reason": "CTA keyword must appear"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script contains a re-hook phrase at the midpoint for the 60-second duration",
+          "weight": 2,
+          "reason": "60s videos require midpoint re-hook"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The production brief includes screen directions that specifically mention screen recording of Claude Code and/or Apify dashboard",
+          "weight": 2,
+          "reason": "Demo requires screen recording directions"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script mentions specific numbers (500 leads, 60 seconds, or similar concrete metrics)",
+          "weight": 2,
+          "reason": "Demo needs specific proof metrics"
+        },
+        {
+          "type": "not_contains_any",
+          "field": "output",
+          "values": ["delve", "tapestry", "realm", "landscape", "ever-evolving", "cutting-edge", "robust", "transformative", "pivotal", "vibrant", "crucial", "compelling", "seamless", "groundbreaking", "leverage", "harness", "embark", "unveil", "facilitate", "synergy", "game-changer", "unleash", "elevate", "utilize"],
+          "weight": 3,
+          "reason": "No banned AI words"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The teleprompter script reads at approximately 150 words/minute and would take about 60 seconds to deliver",
+          "weight": 2,
+          "reason": "Must fit 60s duration"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The CTA strategy mentions the keyword LEADS, describes the Claude Code skill file as the lead magnet, and includes DM auto-reply details",
+          "weight": 1,
+          "reason": "Complete CTA strategy"
+        },
+        {
+          "type": "llm_judge",
+          "criteria": "The script follows the 3-Beat Rule for demos: Setup (what we're doing + why) → Magic (the impressive moment) → Result (proof it worked)",
+          "weight": 2,
+          "reason": "Demos must follow 3-beat structure"
+        }
+      ]
+    }
+  ]
+}

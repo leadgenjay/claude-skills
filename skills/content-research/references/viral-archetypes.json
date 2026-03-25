@@ -1,0 +1,245 @@
+{
+  "version": "1.0.0",
+  "archetypes": [
+    {
+      "id": "someone-built-x",
+      "name": "Someone Built X",
+      "description": "Project reveals, tool demos, build walkthroughs showing what someone created",
+      "hook_pattern": "This [person/company] just built [X] and it [surprising result]",
+      "best_format": "Screen Recording",
+      "niche_seeds": {
+        "cold_email": [
+          "cold email tool built",
+          "email outreach automation built",
+          "AI cold email system",
+          "lead gen tool launch",
+          "email deliverability tool"
+        ],
+        "ai_automation": [
+          "AI agent built",
+          "n8n automation workflow",
+          "no-code AI tool",
+          "GPT automation project",
+          "Claude automation build"
+        ],
+        "lead_gen": [
+          "lead scraping tool built",
+          "LinkedIn automation tool",
+          "lead gen system demo",
+          "appointment setting bot",
+          "outbound sales tool"
+        ]
+      }
+    },
+    {
+      "id": "company-dropped-x",
+      "name": "Company Dropped X",
+      "description": "Product launches, major updates, feature drops from tools in the space",
+      "hook_pattern": "[Company] just dropped [feature] and it changes everything for [audience]",
+      "best_format": "Talking Head + Screen Recording",
+      "niche_seeds": {
+        "cold_email": [
+          "Instantly new feature",
+          "Smartlead update",
+          "Apollo product launch",
+          "Mailgun deliverability update",
+          "email warmup tool update"
+        ],
+        "ai_automation": [
+          "OpenAI new release",
+          "Claude update",
+          "n8n new nodes",
+          "Zapier AI features",
+          "Make.com update"
+        ],
+        "lead_gen": [
+          "Clay new feature",
+          "GoHighLevel update",
+          "LinkedIn Sales Navigator update",
+          "ZoomInfo product launch",
+          "Aimfox update"
+        ]
+      }
+    },
+    {
+      "id": "free-replaces-paid",
+      "name": "Free Tool Replaces $X/mo",
+      "description": "Cost disruption — showing a free or cheap alternative to expensive tools",
+      "hook_pattern": "Stop paying $[amount]/mo for [tool]. This free [alternative] does the same thing",
+      "best_format": "Screen Recording",
+      "niche_seeds": {
+        "cold_email": [
+          "free cold email tool",
+          "free email finder",
+          "free email verifier alternative",
+          "free warmup tool",
+          "free lead list building"
+        ],
+        "ai_automation": [
+          "free AI automation",
+          "free n8n workflows",
+          "free GPT alternative",
+          "free no-code automation",
+          "open source AI tools"
+        ],
+        "lead_gen": [
+          "free lead generation tool",
+          "free LinkedIn scraper",
+          "free CRM alternative",
+          "free appointment setter",
+          "free B2B database"
+        ]
+      }
+    },
+    {
+      "id": "contrarian-take",
+      "name": "Contrarian Take",
+      "description": "Hot takes that go against consensus — controversial opinions that spark debate",
+      "hook_pattern": "[Common belief] is wrong. Here's what actually works",
+      "best_format": "Talking Head",
+      "niche_seeds": {
+        "cold_email": [
+          "cold email is dead debate",
+          "email outreach wrong way",
+          "personalization overrated",
+          "volume vs quality emails",
+          "cold email myths"
+        ],
+        "ai_automation": [
+          "AI replacing jobs debate",
+          "no-code overrated",
+          "AI automation mistakes",
+          "ChatGPT wrong use cases",
+          "automation vs manual"
+        ],
+        "lead_gen": [
+          "LinkedIn outreach dead",
+          "lead gen agencies scam",
+          "cold calling vs cold email",
+          "inbound vs outbound debate",
+          "lead quality vs quantity"
+        ]
+      }
+    },
+    {
+      "id": "behind-the-scenes",
+      "name": "Behind the Scenes",
+      "description": "Process reveals — showing how something actually gets done, real workflows",
+      "hook_pattern": "Here's exactly how I [achieved result] — step by step",
+      "best_format": "Talking Head + B-Roll",
+      "niche_seeds": {
+        "cold_email": [
+          "cold email campaign setup",
+          "email copywriting process",
+          "domain setup walkthrough",
+          "inbox management routine",
+          "campaign optimization process"
+        ],
+        "ai_automation": [
+          "AI workflow building process",
+          "automation stack reveal",
+          "n8n workflow walkthrough",
+          "AI tool stack behind the scenes",
+          "daily automation routine"
+        ],
+        "lead_gen": [
+          "lead gen agency operations",
+          "client onboarding process",
+          "lead list building process",
+          "sales pipeline setup",
+          "CRM workflow walkthrough"
+        ]
+      }
+    },
+    {
+      "id": "tutorial-how-to",
+      "name": "Tutorial / How-To",
+      "description": "Teaching something new — actionable steps the viewer can follow",
+      "hook_pattern": "How to [achieve result] in [timeframe] (step by step)",
+      "best_format": "Screen Recording + Talking Head",
+      "niche_seeds": {
+        "cold_email": [
+          "how to write cold emails",
+          "cold email setup tutorial",
+          "email deliverability guide",
+          "cold email subject lines",
+          "how to book meetings cold email"
+        ],
+        "ai_automation": [
+          "how to automate with AI",
+          "n8n tutorial beginner",
+          "AI agent setup guide",
+          "workflow automation tutorial",
+          "how to use Claude for business"
+        ],
+        "lead_gen": [
+          "how to generate leads",
+          "LinkedIn lead gen tutorial",
+          "B2B lead scraping guide",
+          "how to build lead lists",
+          "appointment setting tutorial"
+        ]
+      }
+    },
+    {
+      "id": "data-research",
+      "name": "Data / Research",
+      "description": "Surprising statistics, study results, data-backed insights",
+      "hook_pattern": "We analyzed [X number] of [things] and found [surprising insight]",
+      "best_format": "Talking Head + Data Overlay",
+      "niche_seeds": {
+        "cold_email": [
+          "cold email response rate data",
+          "email open rate statistics",
+          "best time to send cold emails",
+          "cold email benchmark study",
+          "email deliverability statistics"
+        ],
+        "ai_automation": [
+          "AI adoption statistics",
+          "automation ROI data",
+          "AI tool usage trends",
+          "productivity automation study",
+          "AI business impact research"
+        ],
+        "lead_gen": [
+          "lead generation statistics",
+          "B2B conversion rate data",
+          "outbound vs inbound data",
+          "sales meeting booking rates",
+          "lead response time study"
+        ]
+      }
+    },
+    {
+      "id": "prediction-trend",
+      "name": "Prediction / Trend",
+      "description": "Forward-looking content about what's coming next in the space",
+      "hook_pattern": "[Trend] is about to change [industry]. Here's what to do now",
+      "best_format": "Talking Head",
+      "niche_seeds": {
+        "cold_email": [
+          "cold email future predictions",
+          "email outreach trends 2026",
+          "deliverability changes coming",
+          "Google email policy updates",
+          "cold email AI future"
+        ],
+        "ai_automation": [
+          "AI predictions 2026",
+          "automation trends next year",
+          "AI agents replacing workers",
+          "no-code future predictions",
+          "AI business trends"
+        ],
+        "lead_gen": [
+          "lead gen trends 2026",
+          "B2B sales future",
+          "outbound sales predictions",
+          "LinkedIn algorithm changes",
+          "CRM industry trends"
+        ]
+      }
+    }
+  ]
+}
