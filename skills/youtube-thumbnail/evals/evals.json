@@ -1,0 +1,370 @@
+{
+  "skill_name": "youtube-thumbnail",
+  "domain": "general",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Create a thumbnail for my new YouTube video about cold email deliverability in 2026. The video shows how to avoid spam folders. I want a shocked/surprised expression.",
+      "expected_output": "Full Option 1 pipeline: 2-3 concepts in correct format, generate-base with --prompt and --count 4, generate-jay with excited or shocked preset mapping, face-swap compositing via generate-thumbnail.mjs face-swap, quality checklist verification including Jay in front layer and looking at camera, Preview.app opens at each review point",
+      "assertions": [
+        {
+          "text": "FAL_KEY is exported before any generation command runs (export $(grep FAL_KEY .env.local | xargs))",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "Option 1 (From Scratch) workflow is identified and followed — not Option 2 or 3",
+          "type": "structural"
+        },
+        {
+          "text": "2-3 thumbnail concepts are written before any generation step, each following the format: [emotion] expression, [action/pose], [key props], [environment], text: \"[HEADLINE]\" — [composition note]",
+          "type": "structural"
+        },
+        {
+          "text": "generate-base command uses correct CLI interface: node scripts/generate-thumbnail.mjs generate-base --prompt \"[concept]\" --name [name] --count 4",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "generate-jay command maps the shocked/surprised emotion to the excited preset (not confident or cinematic): node scripts/generate-thumbnail.mjs generate-jay --preset excited --name [name]",
+          "type": "content"
+        },
+        {
+          "text": "face-swap command uses generate-thumbnail.mjs (NOT face-swap-thumbnail.mjs): node scripts/generate-thumbnail.mjs face-swap --base [path] --jay [path] --name [name]",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Preview.app is opened at least twice during the workflow (once for base review, once for jay review) using open -a Preview",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "Concept specifies Jay looking directly at the camera (e.g., 'looking at camera', 'direct eye contact', 'facing camera')",
+          "type": "content"
+        },
+        {
+          "text": "Concept specifies a natural, non-exaggerated expression — not over-the-top, cartoonish, or wildly exaggerated (e.g., 'natural shocked', 'genuine surprise', 'confident' — NOT 'jaw-dropped', 'screaming', 'eyes popping')",
+          "type": "quality"
+        },
+        {
+          "text": "No banned AI words are used (delve, tapestry, realm, landscape, ever-evolving, cutting-edge, robust, transformative, pivotal, vibrant, crucial, compelling, seamless, groundbreaking, leverage, harness, embark, navigate, unveil, facilitate, synergy, game-changer, unlock, unleash, elevate, utilize, endeavour, multifaceted)",
+          "type": "quality",
+          "deterministic": true
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Find the best performing thumbnails for AI automation YouTube videos and remix one with my face",
+      "expected_output": "Option 2 pipeline: Apify MCP scrape via streamers/youtube-scraper, download thumbnails to output/thumbnails/research/, sips resize before viewing, Preview.app for review, user picks best, remix via nano-banana with structured KEEP/CHANGE prompt, face-swap via generate-thumbnail.mjs face-swap (not face-swap-thumbnail.mjs)",
+      "assertions": [
+        {
+          "text": "Option 2 (Scrape Competitors) workflow is identified and followed — not Option 1 or 3",
+          "type": "structural"
+        },
+        {
+          "text": "Apify MCP tools are used: fetch-actor-details to get the schema, then call-actor to run the scraper, then get-actor-output for results",
+          "type": "structural"
+        },
+        {
+          "text": "Downloaded thumbnails are saved to output/thumbnails/research/ directory",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "sips --resampleHeightWidthMax 1000 is run on downloaded images before viewing them (mandatory resize to prevent Claude Code crashes)",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Preview.app is opened for user review of downloaded thumbnails: open -a Preview output/thumbnails/research/",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "Before face-swapping, 3 differentiation changes are proposed via AskUserQuestion (color, background, element)",
+          "type": "structural"
+        },
+        {
+          "text": "nano-banana differentiation prompt uses explicit KEEP vs CHANGE structure with numbered lists and capitalized emphasis (e.g., 'KEEP EXACTLY: 1. person position... CHANGE: 1. background to...'). Generic/vague prompts are not acceptable.",
+          "type": "content"
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap command (NOT face-swap-thumbnail.mjs) because it properly uploads both local images to fal.ai storage: node scripts/generate-thumbnail.mjs face-swap --base [remix-path] --jay [jay-path] --name [output-name]",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Quality checklist includes verifying Jay is in the front layer (in front of all props, icons, laptops — never behind elements) and looking directly at the camera",
+          "type": "quality"
+        },
+        {
+          "text": "No banned AI words are used (delve, tapestry, realm, landscape, ever-evolving, cutting-edge, robust, transformative, pivotal, vibrant, crucial, compelling, seamless, groundbreaking, leverage, harness, embark, navigate, unveil, facilitate, synergy, game-changer, unlock, unleash, elevate, utilize, endeavour, multifaceted)",
+          "type": "quality",
+          "deterministic": true
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Remix this thumbnail with my face: https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "expected_output": "Option 3 pipeline: extract videoId dQw4w9WgXcQ from URL, construct maxresdefault.jpg URL, download to output/thumbnails/, sips resize, Preview.app, remix via nano-banana with KEEP/CHANGE prompt, face-swap via generate-thumbnail.mjs face-swap (not face-swap-thumbnail.mjs)",
+      "assertions": [
+        {
+          "text": "Option 3 (From Specific URL) workflow is identified and followed — not Option 1 or 2",
+          "type": "structural"
+        },
+        {
+          "text": "Video ID is extracted from the YouTube URL and the maxresdefault thumbnail URL is constructed: https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "The thumbnail is downloaded via curl to output/thumbnails/ directory",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "sips --resampleHeightWidthMax 1000 is run on the downloaded image before viewing",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Before face-swapping, differentiation changes are proposed to the user for approval",
+          "type": "structural"
+        },
+        {
+          "text": "nano-banana differentiation prompt uses explicit KEEP vs CHANGE structure with numbered lists and capitalized emphasis — not a generic vague prompt",
+          "type": "content"
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap command (NOT face-swap-thumbnail.mjs): node scripts/generate-thumbnail.mjs face-swap --base [path] --jay [path] --name [name]",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "FAL_KEY is exported before the face-swap step",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "Quality checklist includes: Jay in front layer (never behind props/icons), looking at camera, natural expression, natural seams, matching lighting, expression readable at mobile size, 16:9 aspect ratio",
+          "type": "quality"
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Generate thumbnails for the script I just wrote. Here are the concepts: thumbnailConcepts: [{ label: 'Server Build', description: 'excited expression, standing next to massive server rack, LED lights, hardware visible, text: \"$50K\" — left third clear for text', recommended: true }, { label: 'Dashboard', description: 'confident expression, multiple monitors showing dashboards behind, text: \"NEW ERA\" — right side clear' }]. Use jay-preset: excited.",
+      "expected_output": "Option 1 shortcut: skip concept writing, use the provided thumbnailConcepts array directly, generate-base with the recommended concept (Server Build), generate-jay with excited preset, face-swap via generate-thumbnail.mjs, quality check including front layer and camera direction",
+      "assertions": [
+        {
+          "text": "Concept writing step is skipped — the provided thumbnailConcepts array is used directly instead of writing new concepts",
+          "type": "structural"
+        },
+        {
+          "text": "The recommended concept (Server Build with 'excited expression, standing next to massive server rack...') is selected or prioritized for generation",
+          "type": "content"
+        },
+        {
+          "text": "generate-base command uses the provided concept description as the --prompt value, not a rewritten version",
+          "type": "content"
+        },
+        {
+          "text": "generate-jay uses --preset excited as specified by the jay-preset parameter in the prompt",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "FAL_KEY is exported before any generation command runs",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "The concept prompt never uses the name 'Jay' — uses a generic man placeholder per the skill rules",
+          "type": "quality",
+          "deterministic": true
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap (NOT face-swap-thumbnail.mjs): node scripts/generate-thumbnail.mjs face-swap --base [path] --jay [path] --name [name]",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Create a dark, dramatic thumbnail for my video 'The Death of Cold Email'. I want a serious, intense mood with dramatic lighting.",
+      "expected_output": "Option 1 with cinematic preset: 2-3 concepts with dark lighting override and dramatic mood, generate-base, generate-jay with cinematic preset (maps from dramatic/intense), face-swap, quality check with Jay in front layer and looking at camera with natural expression",
+      "assertions": [
+        {
+          "text": "Option 1 (From Scratch) workflow is identified and followed",
+          "type": "structural"
+        },
+        {
+          "text": "Thumbnail concepts include a dark lighting override (e.g., 'dark lighting mood' or 'dramatic lighting') rather than relying on the default bright & clean lighting",
+          "type": "content"
+        },
+        {
+          "text": "generate-jay maps the dramatic/intense mood to the cinematic preset: --preset cinematic (not excited, not confident, not thinking)",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Concepts include text overlay of 3 words or fewer (e.g., 'IT'S OVER' or 'COLD EMAIL DEAD')",
+          "type": "content"
+        },
+        {
+          "text": "FAL_KEY is exported before any generation command runs",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "Output paths follow the output/thumbnails/ convention with a kebab-case name",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "The concept prompt never uses the name 'Jay' — uses a generic man placeholder per the skill rules",
+          "type": "quality",
+          "deterministic": true
+        },
+        {
+          "text": "Concepts specify looking directly at camera and a natural/confident expression — no exaggerated or cartoonish emotions",
+          "type": "quality"
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Remix this competitor thumbnail: output/thumbnails/research/06-taylor-haren-claude-code-leads.jpg. Make it look like my own — change the colors to my brand, use a plain white background, and swap the main prop.",
+      "expected_output": "Analyze the source thumbnail, propose 3 specific simple changes (LGJ brand colors, white background, element swap), get approval, run nano-banana with -r reference using KEEP/CHANGE structured prompt, preview result, then face-swap Jay via generate-thumbnail.mjs face-swap",
+      "assertions": [
+        {
+          "text": "The source thumbnail is analyzed and 3 differentiation changes are proposed: color shift to LGJ brand, background change, and one element swap",
+          "type": "structural"
+        },
+        {
+          "text": "Proposed background is simple — plain white, light color, desk setup, or gradient — never a complex scene like server room or cityscape",
+          "type": "quality"
+        },
+        {
+          "text": "Changes are presented to the user for approval via AskUserQuestion before generating",
+          "type": "structural"
+        },
+        {
+          "text": "nano-banana CLI is invoked with -r output/thumbnails/research/06-taylor-haren-claude-code-leads.jpg and -a 16:9",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "nano-banana prompt uses explicit KEEP vs CHANGE structure with numbered lists and capitalized emphasis (e.g., 'KEEP EXACTLY: 1. person on right third 2. text zone on left CHANGE: 1. background to plain white 2. accent color to #ED0D51'). NOT a generic description.",
+          "type": "content"
+        },
+        {
+          "text": "Result is opened in Preview.app for approval before proceeding to face-swap",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap (NOT face-swap-thumbnail.mjs): node scripts/generate-thumbnail.mjs face-swap --base [remix-path] --jay [jay-path] --name [name]",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "No banned AI words are used in the output",
+          "type": "quality",
+          "deterministic": true
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "The first remix attempt (v1) got Jay's position right but the background is wrong and the badge element didn't carry over. Use v1 as the reference for v2 so we keep Jay's position. The v1 file is at output/thumbnails/cold-email-remix-v1.png and the original competitor thumb is output/thumbnails/research/03-alex-berman-killer-cold-emails.jpg.",
+      "expected_output": "Iterative reference chaining: use v1 (not the original competitor thumbnail) as the -r reference for v2, write a KEEP/CHANGE prompt that preserves what v1 got right (Jay position) while fixing what's wrong (background, badge), face-swap the result via generate-thumbnail.mjs",
+      "assertions": [
+        {
+          "text": "nano-banana uses the v1 file (output/thumbnails/cold-email-remix-v1.png) as the -r reference — NOT the original competitor thumbnail (03-alex-berman-killer-cold-emails.jpg). This is iterative reference chaining: using the latest iteration that has the right elements as the new reference.",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "The prompt explicitly lists what to KEEP from v1 (e.g., 'KEEP EXACTLY: 1. Jay's position on right third') and what to CHANGE (e.g., 'CHANGE: 1. background to... 2. add badge element...'). Uses capitalized emphasis and numbered lists.",
+          "type": "content"
+        },
+        {
+          "text": "The output file is named v2 (not v1 again), following an iterative naming convention (e.g., cold-email-remix-v2)",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap (NOT face-swap-thumbnail.mjs) for the final compositing step",
+          "type": "content",
+          "deterministic": true
+        },
+        {
+          "text": "Quality checklist mentions Jay must be in the front layer (in front of all props, icons, badges) and looking directly at camera",
+          "type": "quality"
+        },
+        {
+          "text": "Result is opened in Preview.app for review before declaring the iteration complete",
+          "type": "structural",
+          "deterministic": true
+        },
+        {
+          "text": "After face-swap, the generated thumbnail is analyzed via Read tool to verify Jay is in the front layer, looking at the camera, and has a natural expression before presenting to the user",
+          "type": "structural"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I just ran a face-swap and the result shows Jay behind a laptop icon and not looking at the camera. The file is at output/thumbnails/test-final.png. Fix it.",
+      "expected_output": "Analyze the image, identify the two failures (not front layer, not looking at camera), regenerate with an adjusted prompt emphasizing these criteria, verify the new result before presenting",
+      "assertions": [
+        {
+          "text": "The image is read and analyzed — specific failures are identified (Jay behind laptop, not looking at camera)",
+          "type": "structural"
+        },
+        {
+          "text": "Face-swap is re-run with an adjusted prompt that specifically addresses the identified failures (front layer emphasis, camera direction emphasis)",
+          "type": "content"
+        },
+        {
+          "text": "The new result is analyzed via Read tool before presenting to the user — not just opened in Preview.app",
+          "type": "structural"
+        },
+        {
+          "text": "face-swap uses generate-thumbnail.mjs face-swap (NOT face-swap-thumbnail.mjs)",
+          "type": "content",
+          "deterministic": true
+        }
+      ]
+    }
+  ]
+}

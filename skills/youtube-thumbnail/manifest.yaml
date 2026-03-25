@@ -1,0 +1,25 @@
+id: youtube-thumbnail
+type: skill
+name: "YouTube Thumbnail"
+description: "Generate YouTube thumbnails using AI pipeline — concept writing, base generation via Nano Banana, Jay photo via Flux Lora, and body-swap compositing via fal.ai. Supports from-scratch, competitor scrape + remix, and URL-based remix workflows."
+categories:
+  - lgj-exclusive
+  - content
+  - design
+tags:
+  - youtube
+  - thumbnail
+  - face-swap
+  - nano-banana
+  - fal-ai
+  - flux-lora
+  - video
+icon: ImagePlus
+path: skills/youtube-thumbnail
+files:
+  - SKILL.md
+  - evals/evals.json
+version: "1.0"
+composesWell:
+  - short-form-script
+  - content-research
