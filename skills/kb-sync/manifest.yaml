@@ -1,0 +1,20 @@
+id: kb-sync
+type: skill
+name: "Knowledge Base Sync"
+description: "Extract knowledge from project docs (CLAUDE.md, docs/, memory files) and sync to an Obsidian knowledge base. AI-driven categorization, deduplication, Obsidian-formatted notes with frontmatter and wikilinks, auto-commit and push."
+version: "1.0"
+categories:
+  - productivity
+  - knowledge-management
+tags:
+  - obsidian
+  - knowledge-base
+  - documentation
+  - sync
+  - extraction
+icon: book-open
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/extraction-patterns.md
+  - references/note-templates.md
