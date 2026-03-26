@@ -21,6 +21,6 @@ files:
   - references/content-types.json
   - references/niche-keywords.json
   - evals/evals.json
-version: "1.0"
+version: "2.1"
 composesWell:
   - short-form-script

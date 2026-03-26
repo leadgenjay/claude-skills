@@ -1,6 +1,6 @@
 {
   "skill": "content-research",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "evals": [
     {
       "id": "competitors-mode",
@@ -18,33 +18,44 @@
     },
     {
       "id": "scrape-mode",
-      "name": "Scrape Competitor Content",
+      "name": "Scrape Competitor Content via Apify MCP",
       "prompt": "Scrape my competitors — pull the latest content from all saved creators",
       "expected_mode": "scrape",
       "assertions": [
         "Loads saved_creators list first",
         "Displays creator list and asks for confirmation before scraping",
-        "Triggers scrape via /api/ideas/scrape endpoint",
-        "Monitors scrape_jobs for completion status",
-        "Extracts hooks from new scraped_ideas after scrape completes",
-        "Each hook includes: spoken_hook, hook_framework, hook_structure, content_type, visual_format",
-        "Presents summary table of top hooks found",
-        "Reports Apify cost estimate"
+        "Validates handles before scraping (WebSearch verification for each platform)",
+        "Presents handle validation table with Status column (Verified / NOT FOUND / PRIVATE)",
+        "Calculates and displays cost estimate before scraping with per-platform breakdown",
+        "Warns if cost estimate exceeds $3",
+        "Asks for explicit permission with detailed cost breakdown if estimate exceeds $5",
+        "Uses correct Apify actors per platform: grow_media/youtube-channel-video-scraper for YouTube, apify/instagram-post-scraper for Instagram, clockworks/tiktok-scraper or apidojo/tiktok-profile-scraper for TikTok",
+        "Uses detailedData level for Instagram post scraper (NOT basicData)",
+        "Scrapes platforms in parallel using call-actor",
+        "Normalizes output fields across platforms into common schema (views, likes, comments, title, caption)",
+        "Extracts hooks from scraped content: spoken_hook, hook_framework, hook_structure, content_type, visual_format",
+        "Presents summary table with Platform column",
+        "Reports actual cost after scraping completes"
       ]
     },
     {
       "id": "analyze-mode",
-      "name": "Analyze Competitor Content",
+      "name": "Analyze Competitor Content with Enhanced Outlier Scoring",
       "prompt": "Analyze my competitors — show me an outlier report and the top hooks to steal",
       "expected_mode": "analyze",
       "assertions": [
         "Queries scraped_ideas from last 90 days",
-        "Calculates outlier score as views / account average views",
-        "Ranks top 20 videos by outlier score",
-        "Each outlier includes: creator, title, views, outlier score, hook, content type",
+        "Calculates outlier score as views / creator average views",
+        "Applies recency multiplier bonus for videos posted within last 30 days",
+        "Calculates engagement rate (likes + comments) / views where data available",
+        "Computes final_score = outlier_score * recency_multiplier",
+        "Ranks top 20 videos by final_score",
+        "Each outlier row includes: creator, title, views, avg views, outlier score, recency multiplier, engagement rate",
+        "Applies engagement rate override: engagement_rate > 5% AND outlier >= 2x upgrades to MAKE IT",
+        "Includes MAKE IT / MAYBE / SKIP decision for each idea using final_score thresholds",
         "Extracts top 10 hook frameworks from outlier videos",
         "Each hook framework uses X/Y/Z/W placeholders for mad-lib adaptation",
-        "Includes MAKE IT / MAYBE / SKIP decision for each idea",
+        "Hooks to Steal table includes Eng. Rate column",
         "Offers to append new hook frameworks to hooks-database.json",
         "Offers to chain selected ideas to /short-form-script"
       ]
@@ -80,6 +91,78 @@
         "Presents numbered list for user selection",
         "Offers to chain selected idea to /short-form-script",
         "Completes in under 30 seconds (no heavy scraping)"
+      ]
+    },
+    {
+      "id": "handle-validation",
+      "name": "Handle Validation Before Scraping",
+      "prompt": "Scrape these 3 YouTube creators: @alexberman, @wronghandlethatdoesnotexist, @instantlyai",
+      "expected_mode": "scrape",
+      "assertions": [
+        "Validates each handle via WebSearch before scraping",
+        "Presents validation table with handle and status (Verified / NOT FOUND)",
+        "Identifies @wronghandlethatdoesnotexist as NOT FOUND",
+        "Suggests correct handle alternatives for NOT FOUND entries when possible",
+        "Asks user to confirm validated list before proceeding",
+        "Does NOT scrape invalid handles",
+        "Only scrapes verified handles after user confirmation"
+      ]
+    },
+    {
+      "id": "cost-estimation",
+      "name": "Cost Estimation Before Scraping",
+      "prompt": "Scrape all 30 of my saved competitors, 50 videos each, across YouTube, Instagram, and TikTok",
+      "expected_mode": "scrape",
+      "assertions": [
+        "Calculates cost per platform using correct actor pricing",
+        "YouTube cost uses $0.001/video rate",
+        "Instagram cost uses $0.0027/post rate (basic + detailed)",
+        "TikTok cost uses either $0.0037 (clockworks) or $0.0003 (apidojo) rate",
+        "Displays cost breakdown table with Platform, Creators, Videos, Actor, Cost columns",
+        "Shows total estimated cost",
+        "Warns user because estimate exceeds $3",
+        "Suggests reducing video count or using budget actors to lower cost",
+        "Asks for explicit permission with detailed cost breakdown when estimate exceeds $5",
+        "Does NOT proceed without user confirmation when cost is high"
+      ]
+    },
+    {
+      "id": "instagram-detailed-data",
+      "name": "Instagram Scrape Returns Engagement Metrics",
+      "prompt": "Scrape the latest 20 Instagram posts from @gaborlevente and @leadgenjay",
+      "expected_mode": "scrape",
+      "assertions": [
+        "Uses apify/instagram-post-scraper actor (NOT instagram-scraper/fast-instagram-post-scraper)",
+        "Sets dataDetailLevel to detailedData in the actor input",
+        "Input includes username array with both handles",
+        "Sets resultsLimit to 20",
+        "Output includes engagement metrics: likesCount, commentsCount, videoViewCount",
+        "Does NOT return results with missing engagement data"
+      ]
+    },
+    {
+      "id": "tiktok-working-actor",
+      "name": "TikTok Scrape Uses Working Actor",
+      "prompt": "Scrape the latest 15 TikToks from @alexhormozi and @jordanwelch",
+      "expected_mode": "scrape",
+      "assertions": [
+        "Uses clockworks/tiktok-scraper or apidojo/tiktok-profile-scraper (NOT sovereigntaylor/tiktok-scraper or sociavault/tiktok-profile-videos-scraper)",
+        "Usernames passed WITHOUT @ prefix",
+        "Output includes engagement data: playCount/views, diggCount/likes, commentCount, shareCount",
+        "Reports failure clearly if any profile returns 0 results instead of silently skipping"
+      ]
+    },
+    {
+      "id": "scrape-failure-reporting",
+      "name": "Reports Scrape Failures Clearly",
+      "prompt": "Scrape my competitors across all platforms",
+      "expected_mode": "scrape",
+      "assertions": [
+        "When a creator returns 0 results, reports the failure with creator name, platform, and actor used",
+        "Does NOT silently skip failed creators",
+        "Suggests troubleshooting steps from the Troubleshooting section",
+        "Separates successful results from failures in the summary",
+        "Still presents results from successful scrapes even if some fail"
       ]
     }
   ]
