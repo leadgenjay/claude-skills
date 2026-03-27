@@ -1,7 +1,0 @@
-name: Web App Testing
-description: "Toolkit for testing local web applications using Playwright. Verify frontend functionality, debug UI behavior, capture screenshots, view browser logs, and manage server lifecycle with helper scripts."
-categories: [testing]
-tags: [playwright, testing, browser, screenshots, debugging, automation, server]
-icon: TestTube
-version: "1.0"
-composesWell: [live-test, mobile-test]

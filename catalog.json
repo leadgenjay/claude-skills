@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-27T16:41:11.878Z",
+  "generatedAt": "2026-03-27T16:51:13.670Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -321,36 +321,6 @@
       ]
     },
     {
-      "id": "autoheal",
-      "type": "skill",
-      "name": "Autoheal",
-      "description": "Closed-loop skill healer: reviews creative output for blatant defects (misspellings, broken layout, missing elements, garbled text, wrong colors), traces each defect to a gap in the producing skill, mutates the skill, regenerates, and re-reviews until clean.",
-      "categories": [
-        "productivity",
-        "quality"
-      ],
-      "tags": [
-        "skill-improvement",
-        "self-healing",
-        "defect-detection",
-        "creative-quality",
-        "mutation",
-        "closed-loop"
-      ],
-      "icon": "HeartPulse",
-      "path": "skills/autoheal",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml",
-        "references"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "autoimprove",
-        "autolearn"
-      ]
-    },
-    {
       "id": "brainstorming",
       "type": "skill",
       "name": "brainstorming",
@@ -617,35 +587,6 @@
       ]
     },
     {
-      "id": "guided-browser",
-      "type": "skill",
-      "name": "Guided Browser",
-      "description": "Browser co-pilot mode where Claude observes via screenshots and guides the user step-by-step instead of taking direct actions. Perfect for sensitive workflows like admin dashboards and account settings, complex multi-step tasks, or when direct automation is unreliable.",
-      "categories": [
-        "testing",
-        "workflow"
-      ],
-      "tags": [
-        "browser",
-        "copilot",
-        "guided",
-        "walkthrough",
-        "step-by-step",
-        "chrome",
-        "screenshots"
-      ],
-      "icon": "Navigation",
-      "path": "skills/guided-browser",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "live-test"
-      ]
-    },
-    {
       "id": "hero-section-designer",
       "type": "skill",
       "name": "hero-section-designer",
@@ -894,36 +835,6 @@
       ]
     },
     {
-      "id": "remotion-explainer",
-      "type": "skill",
-      "name": "Remotion Explainer",
-      "description": "Create explainer videos for landing pages using Remotion. Generates Problem-Agitate-Solution videos, testimonial animations, feature showcases, and case study highlights with Dan Kennedy copy principles.",
-      "categories": [
-        "content",
-        "video"
-      ],
-      "tags": [
-        "remotion",
-        "video",
-        "explainer",
-        "landing-page",
-        "marketing",
-        "animation"
-      ],
-      "icon": "Video",
-      "path": "skills/remotion-explainer",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "motion-graphics",
-        "dan-kennedy-copywriter",
-        "frontend-design"
-      ]
-    },
-    {
       "id": "senior-frontend",
       "type": "skill",
       "name": "Senior Frontend",
@@ -987,63 +898,36 @@
       ]
     },
     {
-      "id": "testimonial-edit",
+      "id": "taste",
       "type": "skill",
-      "name": "Testimonial Edit",
-      "description": "Edit raw customer testimonial videos into polished social clips with AI-driven content selection, speaker intro cards, captions, and multi-format output. Cuts long testimonials to the best 30-90 seconds.",
+      "name": "Taste",
+      "description": "Quality enforcement layer for eliminating generic AI aesthetics in frontend code. Anti-slop rules, style archetypes (Standard, Soft-Premium, Editorial-Minimal), configuration dials, and motion choreography standards.",
       "categories": [
-        "content",
-        "video"
+        "lgj-exclusive",
+        "design",
+        "quality"
       ],
       "tags": [
-        "testimonial",
-        "video-editing",
-        "social-clips",
-        "captions",
-        "customer-stories",
-        "social-proof"
+        "anti-slop",
+        "quality",
+        "aesthetics",
+        "design-audit",
+        "style-archetypes",
+        "frontend",
+        "craft"
       ],
-      "icon": "Film",
-      "path": "skills/testimonial-edit",
+      "icon": "Eye",
+      "path": "skills/taste",
       "files": [
         "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "social-proof-builder"
-      ]
-    },
-    {
-      "id": "webapp-testing",
-      "type": "skill",
-      "name": "Web App Testing",
-      "description": "Toolkit for testing local web applications using Playwright. Verify frontend functionality, debug UI behavior, capture screenshots, view browser logs, and manage server lifecycle with helper scripts.",
-      "categories": [
-        "testing"
-      ],
-      "tags": [
-        "playwright",
-        "testing",
-        "browser",
-        "screenshots",
-        "debugging",
-        "automation",
-        "server"
-      ],
-      "icon": "TestTube",
-      "path": "skills/webapp-testing",
-      "files": [
-        "LICENSE.txt",
-        "SKILL.md",
-        "examples",
         "manifest.yaml",
-        "scripts"
+        "references"
       ],
       "version": "1.0",
       "composesWell": [
-        "live-test",
-        "mobile-test"
+        "frontend-design",
+        "test-improve",
+        "design-motion-principles"
       ]
     },
     {

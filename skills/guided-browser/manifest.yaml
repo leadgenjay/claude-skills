@@ -1,7 +1,0 @@
-name: Guided Browser
-description: "Browser co-pilot mode where Claude observes via screenshots and guides the user step-by-step instead of taking direct actions. Perfect for sensitive workflows like admin dashboards and account settings, complex multi-step tasks, or when direct automation is unreliable."
-categories: [testing, workflow]
-tags: [browser, copilot, guided, walkthrough, step-by-step, chrome, screenshots]
-icon: Navigation
-version: "1.0"
-composesWell: [live-test]

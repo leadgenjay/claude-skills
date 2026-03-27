@@ -1,7 +1,0 @@
-name: Autoheal
-description: "Closed-loop skill healer: reviews creative output for blatant defects (misspellings, broken layout, missing elements, garbled text, wrong colors), traces each defect to a gap in the producing skill, mutates the skill, regenerates, and re-reviews until clean."
-categories: [productivity, quality]
-tags: [skill-improvement, self-healing, defect-detection, creative-quality, mutation, closed-loop]
-icon: HeartPulse
-version: "1.0"
-composesWell: [autoimprove, autolearn]
