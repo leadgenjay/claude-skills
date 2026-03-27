@@ -821,35 +821,7 @@
       "version": "1.0",
       "composesWell": [
         "commit",
-        "test"
-      ]
-    },
-    {
-      "id": "test",
-      "type": "command",
-      "name": "test",
-      "description": "Live browser testing with auto-detection, visual review, functional testing, and automatic UI improvements. Tests responsive layouts.",
-      "categories": [
-        "testing",
-        "workflow",
-        "lgj-exclusive"
-      ],
-      "tags": [
-        "browser",
-        "playwright",
-        "visual-testing",
-        "responsive",
-        "ui"
-      ],
-      "icon": "FlaskConical",
-      "path": "commands/test",
-      "files": [
-        "command.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "ship"
+        "test-improve"
       ]
     },
     {
