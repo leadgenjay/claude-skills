@@ -1,0 +1,23 @@
+id: fathom-kb
+type: skill
+name: "Fathom KB — Coaching Call Processor"
+description: "Process coaching call transcripts from Fathom into structured Obsidian knowledge notes. Pulls transcripts via Fathom MCP, feeds to NotebookLM for deep extraction, generates categorized Obsidian notes (frameworks, strategies, objections, lessons), and commits to the knowledge base repo. Use when the user says 'coaching call', 'process call', 'extract coaching', 'fathom transcript', 'coaching notes', 'process coaching', or 'extract framework from call'."
+version: "1.1"
+categories:
+  - knowledge-management
+  - coaching
+  - productivity
+tags:
+  - fathom
+  - notebooklm
+  - obsidian
+  - coaching
+  - knowledge-extraction
+  - transcription
+icon: mic
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/extraction-prompts.md
+  - references/note-templates.md
+  - references/frameworks-taxonomy.md
