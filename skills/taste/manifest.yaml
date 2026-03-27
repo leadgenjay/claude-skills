@@ -1,7 +1,0 @@
-name: Taste
-description: "Quality enforcement layer for eliminating generic AI aesthetics in frontend code. Anti-slop rules, style archetypes (Standard, Soft-Premium, Editorial-Minimal), configuration dials, and motion choreography standards."
-categories: [lgj-exclusive, design, quality]
-tags: [anti-slop, quality, aesthetics, design-audit, style-archetypes, frontend, craft]
-icon: Eye
-version: "1.0"
-composesWell: [frontend-design, test-improve, design-motion-principles]

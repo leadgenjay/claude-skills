@@ -1,7 +1,0 @@
-name: Launch Page
-description: "Production launch checklist for new landing pages and checkout pages. Verifies tracking codes (PostHog, GA4, Meta Pixel, all ad pixels), metadata/SEO, admin registration, A/B test middleware, and deployment configuration."
-categories: [lgj-exclusive, deployment, workflow]
-tags: [launch, tracking, deployment, seo, ab-test, production, checklist, posthog]
-icon: Rocket
-version: "1.0"
-composesWell: [seo-optimizer, ab-testing-suite, heatmap-analyzer]
