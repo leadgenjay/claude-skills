@@ -504,34 +504,40 @@
       "version": "1.0",
       "composesWell": [
         "commit",
-        "test"
+        "test-improve"
       ]
     },
     {
-      "id": "test",
-      "type": "command",
-      "name": "test",
-      "description": "Live browser testing with auto-detection, visual review, functional testing, and automatic UI improvements. Tests responsive layouts.",
+      "id": "test-improve",
+      "type": "skill",
+      "name": "test-improve",
+      "description": "Iterative visual design review and improvement tool using Playwright screenshots. Audits pages against design guidelines, fixes issues, and re-checks until quality standards are met.",
       "categories": [
         "testing",
-        "workflow",
+        "design",
         "lgj-exclusive"
       ],
       "tags": [
-        "browser",
         "playwright",
         "visual-testing",
+        "design-audit",
         "responsive",
-        "ui"
+        "ui",
+        "auto-fix"
       ],
       "icon": "FlaskConical",
-      "path": "commands/test",
+      "path": "skills/test-improve",
       "files": [
-        "command.md",
-        "manifest.yaml"
+        "SKILL.md",
+        "manifest.yaml",
+        "references/design-checklist.md"
       ],
       "version": "1.0",
       "composesWell": [
+        "taste",
+        "design-motion-principles",
+        "landing-page-auditor",
+        "frontend-design",
         "ship"
       ]
     },

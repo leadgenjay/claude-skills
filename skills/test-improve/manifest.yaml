@@ -1,0 +1,21 @@
+name: test-improve
+description: Iterative visual design review and improvement tool using Playwright screenshots. Audits pages against design guidelines, fixes issues, and re-checks until quality standards are met.
+categories:
+  - testing
+  - design
+  - lgj-exclusive
+tags:
+  - playwright
+  - visual-testing
+  - design-audit
+  - responsive
+  - ui
+  - auto-fix
+icon: FlaskConical
+version: "1.0"
+composesWell:
+  - taste
+  - design-motion-principles
+  - landing-page-auditor
+  - frontend-design
+  - ship
