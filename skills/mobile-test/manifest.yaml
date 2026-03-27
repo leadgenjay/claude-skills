@@ -1,0 +1,7 @@
+name: Mobile Device Testing
+description: "Test landing pages on mobile devices using Playwright WebKit (Safari engine) and Chromium. Captures screenshots across iPhone, iPad, and Android viewports with real device emulation, touch simulation, and proper user agents."
+categories: [testing, mobile]
+tags: [playwright, mobile, safari, webkit, responsive, ios, android, screenshots]
+icon: Smartphone
+version: "1.0"
+composesWell: [mobile-ux-auditor, live-test, webapp-testing]

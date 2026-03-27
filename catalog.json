@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-27T15:14:52.370Z",
+  "generatedAt": "2026-03-27T16:40:35.268Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -321,6 +321,36 @@
       ]
     },
     {
+      "id": "autoheal",
+      "type": "skill",
+      "name": "Autoheal",
+      "description": "Closed-loop skill healer: reviews creative output for blatant defects (misspellings, broken layout, missing elements, garbled text, wrong colors), traces each defect to a gap in the producing skill, mutates the skill, regenerates, and re-reviews until clean.",
+      "categories": [
+        "productivity",
+        "quality"
+      ],
+      "tags": [
+        "skill-improvement",
+        "self-healing",
+        "defect-detection",
+        "creative-quality",
+        "mutation",
+        "closed-loop"
+      ],
+      "icon": "HeartPulse",
+      "path": "skills/autoheal",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "autoimprove",
+        "autolearn"
+      ]
+    },
+    {
       "id": "brainstorming",
       "type": "skill",
       "name": "brainstorming",
@@ -402,6 +432,33 @@
         "icon-set-creator",
         "LGJ-graphics"
       ]
+    },
+    {
+      "id": "cleanup",
+      "type": "skill",
+      "name": "Project Cleanup",
+      "description": "Audit and clean any project workspace across 7 categories: temp files, security issues, dead code, unused dependencies, git hygiene, build caches, and code quality. Dry-run first, user confirms before any destructive action.",
+      "categories": [
+        "developer-tools"
+      ],
+      "tags": [
+        "cleanup",
+        "audit",
+        "temp-files",
+        "dead-code",
+        "dependencies",
+        "git-hygiene",
+        "security"
+      ],
+      "icon": "Trash2",
+      "path": "skills/cleanup",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": []
     },
     {
       "id": "conversion-copywriting",
@@ -560,6 +617,35 @@
       ]
     },
     {
+      "id": "guided-browser",
+      "type": "skill",
+      "name": "Guided Browser",
+      "description": "Browser co-pilot mode where Claude observes via screenshots and guides the user step-by-step instead of taking direct actions. Perfect for sensitive workflows like admin dashboards and account settings, complex multi-step tasks, or when direct automation is unreliable.",
+      "categories": [
+        "testing",
+        "workflow"
+      ],
+      "tags": [
+        "browser",
+        "copilot",
+        "guided",
+        "walkthrough",
+        "step-by-step",
+        "chrome",
+        "screenshots"
+      ],
+      "icon": "Navigation",
+      "path": "skills/guided-browser",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "live-test"
+      ]
+    },
+    {
       "id": "hero-section-designer",
       "type": "skill",
       "name": "hero-section-designer",
@@ -653,6 +739,34 @@
       ]
     },
     {
+      "id": "image-enhancer",
+      "type": "skill",
+      "name": "Image Enhancer",
+      "description": "Improve image quality by enhancing resolution, sharpness, and clarity. Upscale low-resolution images, sharpen blurry photos, reduce compression artifacts, and optimize for web, print, or social media.",
+      "categories": [
+        "design",
+        "images"
+      ],
+      "tags": [
+        "image-quality",
+        "upscaling",
+        "sharpening",
+        "screenshots",
+        "enhancement",
+        "optimization"
+      ],
+      "icon": "ImageUp",
+      "path": "skills/image-enhancer",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "brand-image-generator"
+      ]
+    },
+    {
       "id": "landing-page-auditor",
       "type": "skill",
       "name": "landing-page-auditor",
@@ -682,6 +796,69 @@
         "conversion-copywriting",
         "hero-section-designer",
         "social-proof-builder"
+      ]
+    },
+    {
+      "id": "live-test",
+      "type": "skill",
+      "name": "Live Test",
+      "description": "Live browser testing for web applications using Playwright CLI. Visual review, functional testing, console/network debugging, auto-fix UI issues, and responsive testing at desktop, tablet, and mobile breakpoints.",
+      "categories": [
+        "testing"
+      ],
+      "tags": [
+        "playwright",
+        "browser",
+        "visual-testing",
+        "responsive",
+        "debugging",
+        "ui",
+        "functional-testing"
+      ],
+      "icon": "MonitorCheck",
+      "path": "skills/live-test",
+      "files": [
+        "NOTES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "test-improve",
+        "mobile-test",
+        "webapp-testing"
+      ]
+    },
+    {
+      "id": "mobile-test",
+      "type": "skill",
+      "name": "Mobile Device Testing",
+      "description": "Test landing pages on mobile devices using Playwright WebKit (Safari engine) and Chromium. Captures screenshots across iPhone, iPad, and Android viewports with real device emulation, touch simulation, and proper user agents.",
+      "categories": [
+        "testing",
+        "mobile"
+      ],
+      "tags": [
+        "playwright",
+        "mobile",
+        "safari",
+        "webkit",
+        "responsive",
+        "ios",
+        "android",
+        "screenshots"
+      ],
+      "icon": "Smartphone",
+      "path": "skills/mobile-test",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "mobile-ux-auditor",
+        "live-test",
+        "webapp-testing"
       ]
     },
     {
@@ -717,6 +894,68 @@
       ]
     },
     {
+      "id": "remotion-explainer",
+      "type": "skill",
+      "name": "Remotion Explainer",
+      "description": "Create explainer videos for landing pages using Remotion. Generates Problem-Agitate-Solution videos, testimonial animations, feature showcases, and case study highlights with Dan Kennedy copy principles.",
+      "categories": [
+        "content",
+        "video"
+      ],
+      "tags": [
+        "remotion",
+        "video",
+        "explainer",
+        "landing-page",
+        "marketing",
+        "animation"
+      ],
+      "icon": "Video",
+      "path": "skills/remotion-explainer",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "motion-graphics",
+        "dan-kennedy-copywriter",
+        "frontend-design"
+      ]
+    },
+    {
+      "id": "senior-frontend",
+      "type": "skill",
+      "name": "Senior Frontend",
+      "description": "Comprehensive frontend development skill for building modern, performant web applications with React, Next.js, TypeScript, and Tailwind CSS. Includes component scaffolding, bundle analysis, performance optimization, and frontend best practices.",
+      "categories": [
+        "frontend",
+        "development"
+      ],
+      "tags": [
+        "react",
+        "nextjs",
+        "typescript",
+        "tailwind",
+        "performance",
+        "components",
+        "bundle-analysis"
+      ],
+      "icon": "Layout",
+      "path": "skills/senior-frontend",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references",
+        "scripts"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "frontend-design",
+        "taste"
+      ]
+    },
+    {
       "id": "social-proof-builder",
       "type": "skill",
       "name": "social-proof-builder",
@@ -745,6 +984,66 @@
         "dan-kennedy-copywriter",
         "hero-section-designer",
         "landing-page-auditor"
+      ]
+    },
+    {
+      "id": "testimonial-edit",
+      "type": "skill",
+      "name": "Testimonial Edit",
+      "description": "Edit raw customer testimonial videos into polished social clips with AI-driven content selection, speaker intro cards, captions, and multi-format output. Cuts long testimonials to the best 30-90 seconds.",
+      "categories": [
+        "content",
+        "video"
+      ],
+      "tags": [
+        "testimonial",
+        "video-editing",
+        "social-clips",
+        "captions",
+        "customer-stories",
+        "social-proof"
+      ],
+      "icon": "Film",
+      "path": "skills/testimonial-edit",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "social-proof-builder"
+      ]
+    },
+    {
+      "id": "webapp-testing",
+      "type": "skill",
+      "name": "Web App Testing",
+      "description": "Toolkit for testing local web applications using Playwright. Verify frontend functionality, debug UI behavior, capture screenshots, view browser logs, and manage server lifecycle with helper scripts.",
+      "categories": [
+        "testing"
+      ],
+      "tags": [
+        "playwright",
+        "testing",
+        "browser",
+        "screenshots",
+        "debugging",
+        "automation",
+        "server"
+      ],
+      "icon": "TestTube",
+      "path": "skills/webapp-testing",
+      "files": [
+        "LICENSE.txt",
+        "SKILL.md",
+        "examples",
+        "manifest.yaml",
+        "scripts"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "live-test",
+        "mobile-test"
       ]
     },
     {

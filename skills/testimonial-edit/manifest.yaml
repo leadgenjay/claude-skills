@@ -1,0 +1,7 @@
+name: Testimonial Edit
+description: "Edit raw customer testimonial videos into polished social clips with AI-driven content selection, speaker intro cards, captions, and multi-format output. Cuts long testimonials to the best 30-90 seconds."
+categories: [content, video]
+tags: [testimonial, video-editing, social-clips, captions, customer-stories, social-proof]
+icon: Film
+version: "1.0"
+composesWell: [social-proof-builder]

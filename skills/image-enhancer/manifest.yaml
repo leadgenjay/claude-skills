@@ -1,0 +1,7 @@
+name: Image Enhancer
+description: "Improve image quality by enhancing resolution, sharpness, and clarity. Upscale low-resolution images, sharpen blurry photos, reduce compression artifacts, and optimize for web, print, or social media."
+categories: [design, images]
+tags: [image-quality, upscaling, sharpening, screenshots, enhancement, optimization]
+icon: ImageUp
+version: "1.0"
+composesWell: [brand-image-generator]

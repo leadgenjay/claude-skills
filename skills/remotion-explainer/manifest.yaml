@@ -1,0 +1,7 @@
+name: Remotion Explainer
+description: "Create explainer videos for landing pages using Remotion. Generates Problem-Agitate-Solution videos, testimonial animations, feature showcases, and case study highlights with Dan Kennedy copy principles."
+categories: [content, video]
+tags: [remotion, video, explainer, landing-page, marketing, animation]
+icon: Video
+version: "1.0"
+composesWell: [motion-graphics, dan-kennedy-copywriter, frontend-design]

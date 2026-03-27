@@ -1,0 +1,7 @@
+name: Project Cleanup
+description: "Audit and clean any project workspace across 7 categories: temp files, security issues, dead code, unused dependencies, git hygiene, build caches, and code quality. Dry-run first, user confirms before any destructive action."
+categories: [developer-tools]
+tags: [cleanup, audit, temp-files, dead-code, dependencies, git-hygiene, security]
+icon: Trash2
+version: "1.0"
+composesWell: []
