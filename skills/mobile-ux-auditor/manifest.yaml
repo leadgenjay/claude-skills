@@ -1,0 +1,7 @@
+name: Mobile UX Auditor
+description: "Audit landing pages for mobile-specific conversion issues including thumb zones, tap targets, scroll depth, form friction, and page speed. 83% of landing page traffic is mobile — optimized for real-world mobile conversion."
+categories: [lgj-exclusive, conversion, mobile]
+tags: [mobile, ux-audit, thumb-zones, tap-targets, conversion, responsive, performance]
+icon: TabletSmartphone
+version: "1.0"
+composesWell: [mobile-test, landing-page-auditor, heatmap-analyzer]

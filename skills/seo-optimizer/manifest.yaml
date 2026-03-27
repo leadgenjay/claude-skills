@@ -1,0 +1,7 @@
+name: SEO Optimizer
+description: "Comprehensive SEO optimization combining technical audit, on-page optimization, keyword research via DataForSEO, Search Console analysis, JSON-LD structured data, and Google Indexing API integration."
+categories: [lgj-exclusive, marketing, seo]
+tags: [seo, keywords, structured-data, json-ld, search-console, meta-tags, indexing]
+icon: Search
+version: "1.0"
+composesWell: [landing-page-auditor]
