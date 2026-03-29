@@ -1,0 +1,282 @@
+{
+  "platforms": {
+    "instagram": {
+      "detection_level": "aggressive",
+      "detection_rating": 4,
+      "required_proxy": "residential",
+      "optimal_proxy": "mobile_4g_5g",
+      "max_accounts_per_ip": 3,
+      "rate_limits": {
+        "feed_scroll_delay_seconds": "2-4",
+        "profile_visits_per_day": 150,
+        "post_interactions_per_hour": 60,
+        "api_requests_per_hour": 200,
+        "follow_unfollow_per_day": 60,
+        "dm_per_day": 50
+      },
+      "key_cookies": [
+        {
+          "name": "sessionid",
+          "purpose": "Primary session identifier",
+          "expiry": "90 days"
+        },
+        {
+          "name": "csrftoken",
+          "purpose": "CSRF protection token",
+          "expiry": "1 year"
+        },
+        {
+          "name": "ds_user_id",
+          "purpose": "Logged-in user ID",
+          "expiry": "90 days"
+        },
+        {
+          "name": "mid",
+          "purpose": "Machine ID / device fingerprint",
+          "expiry": "2 years"
+        },
+        {
+          "name": "ig_did",
+          "purpose": "Device ID",
+          "expiry": "10 years"
+        },
+        {
+          "name": "rur",
+          "purpose": "Region routing",
+          "expiry": "Session"
+        }
+      ],
+      "detection_mechanisms": [
+        "Chrome fingerprinting focus",
+        "Datacenter IP blocking (~50 requests)",
+        "Account creation monitoring",
+        "Behavioral analysis (action patterns)",
+        "Device fingerprint correlation"
+      ],
+      "recommended_framework": "playwright",
+      "recommended_browser": "firefox",
+      "recommended_stealth": "rebrowser-patches",
+      "best_library": "instagrapi (Python)",
+      "captcha_type": "behavioral_verification",
+      "notes": "Firefox avoids Chrome-specific fingerprinting rules. Established accounts get more lenient treatment."
+    },
+    "tiktok": {
+      "detection_level": "very_strict",
+      "detection_rating": 5,
+      "required_proxy": "mobile_4g_5g",
+      "optimal_proxy": "mobile_5g",
+      "max_accounts_per_ip": 2,
+      "rate_limits": {
+        "profile_views_per_day": 100,
+        "searches_per_day": 50,
+        "video_interactions_per_hour": 30,
+        "api_requests_per_hour": 100,
+        "follow_per_day": 30
+      },
+      "key_cookies": [
+        {
+          "name": "sessionid",
+          "purpose": "Primary session",
+          "expiry": "30 days"
+        },
+        {
+          "name": "tt_csrf_token",
+          "purpose": "CSRF token",
+          "expiry": "Session"
+        },
+        {
+          "name": "passport_csrf_token",
+          "purpose": "Auth CSRF",
+          "expiry": "Session"
+        },
+        {
+          "name": "sid_tt",
+          "purpose": "Session identifier",
+          "expiry": "30 days"
+        },
+        {
+          "name": "tt_webid",
+          "purpose": "Device/browser fingerprint",
+          "expiry": "1 year"
+        }
+      ],
+      "detection_mechanisms": [
+        "Datacenter IP blocking (within minutes)",
+        "Heavy fingerprinting + behavioral analysis",
+        "Device fingerprint tied to session",
+        "Mobile user-agent enforcement",
+        "Account creation heavy monitoring",
+        "Custom CAPTCHA types (rotate, puzzle, 3D)"
+      ],
+      "recommended_framework": "puppeteer",
+      "recommended_browser": "chrome",
+      "recommended_stealth": "puppeteer-extra-plugin-stealth",
+      "best_library": null,
+      "captcha_type": "custom_challenges",
+      "captcha_solver": "sadcaptcha",
+      "notes": "Mobile proxy is non-negotiable. DIY scraping rarely cost-effective — use Apify MCP or commercial APIs. Desktop user-agents are flagged."
+    },
+    "linkedin": {
+      "detection_level": "moderate",
+      "detection_rating": 3,
+      "required_proxy": "residential",
+      "optimal_proxy": "residential",
+      "max_accounts_per_ip": 3,
+      "rate_limits": {
+        "profile_views_per_day_free": 100,
+        "profile_views_per_day_premium": 150,
+        "search_pages_per_day": 100,
+        "connection_requests_per_week": 100,
+        "messages_per_day": 150,
+        "post_interactions_per_day": 100
+      },
+      "key_cookies": [
+        {
+          "name": "li_at",
+          "purpose": "Primary session token (protect this)",
+          "expiry": "1 year"
+        },
+        {
+          "name": "JSESSIONID",
+          "purpose": "CSRF token",
+          "expiry": "Session"
+        },
+        {
+          "name": "bcookie",
+          "purpose": "Browser ID",
+          "expiry": "2 years"
+        },
+        {
+          "name": "bscookie",
+          "purpose": "Secure browser ID",
+          "expiry": "2 years"
+        },
+        {
+          "name": "lang",
+          "purpose": "Language preference",
+          "expiry": "Session"
+        }
+      ],
+      "detection_mechanisms": [
+        "Account activity pattern monitoring",
+        "Search velocity tracking",
+        "Connection request velocity",
+        "Profile view pattern analysis",
+        "Less focused on browser fingerprinting"
+      ],
+      "recommended_framework": "playwright",
+      "recommended_browser": "chrome",
+      "recommended_stealth": "rebrowser-patches",
+      "best_library": null,
+      "captcha_type": "behavioral_verification",
+      "notes": "LinkedIn actively litigates against scrapers. Use official API where possible. Voyager API changes every 4-8 weeks. li_at cookie is the crown jewel — losing it means re-auth."
+    },
+    "twitter_x": {
+      "detection_level": "light",
+      "detection_rating": 2,
+      "required_proxy": "residential",
+      "optimal_proxy": "residential",
+      "max_accounts_per_ip": 4,
+      "rate_limits": {
+        "api_v2_tweets_per_month_free": 500000,
+        "api_v2_posts_per_month_free": 1500,
+        "search_requests_per_15min": 180,
+        "profile_views_per_hour": 200,
+        "tweet_interactions_per_hour": 100
+      },
+      "key_cookies": [
+        {
+          "name": "auth_token",
+          "purpose": "Primary authentication",
+          "expiry": "2 years"
+        },
+        {
+          "name": "ct0",
+          "purpose": "CSRF token",
+          "expiry": "Session"
+        },
+        {
+          "name": "twid",
+          "purpose": "User ID",
+          "expiry": "2 years"
+        },
+        {
+          "name": "guest_id",
+          "purpose": "Guest tracking",
+          "expiry": "2 years"
+        }
+      ],
+      "detection_mechanisms": [
+        "Official API available (preferred)",
+        "Light web scraping detection",
+        "Occasional reCAPTCHA v2",
+        "Rate limiting on search"
+      ],
+      "recommended_framework": "either",
+      "recommended_browser": "chrome",
+      "recommended_stealth": "rebrowser-patches",
+      "best_library": "twscrape (Python)",
+      "captcha_type": "recaptcha_v2_occasional",
+      "notes": "Always check if official API can serve your use case first. API v2 free tier is generous (500K reads/month). Web scraping is lightest detection of all social platforms."
+    },
+    "youtube": {
+      "detection_level": "moderate",
+      "detection_rating": 3,
+      "required_proxy": "residential",
+      "optimal_proxy": "residential",
+      "max_accounts_per_ip": 10,
+      "rate_limits": {
+        "api_quota_per_day": 10000,
+        "search_per_hour": 200,
+        "video_downloads_per_hour": "unlimited_with_yt_dlp",
+        "comment_interactions_per_hour": 50,
+        "subscribe_per_day": 50
+      },
+      "key_cookies": [
+        {
+          "name": "SID",
+          "purpose": "Google session ID",
+          "expiry": "2 years"
+        },
+        {
+          "name": "HSID",
+          "purpose": "Security cookie",
+          "expiry": "2 years"
+        },
+        {
+          "name": "SSID",
+          "purpose": "Secure session",
+          "expiry": "2 years"
+        },
+        {
+          "name": "LOGIN_INFO",
+          "purpose": "Login state",
+          "expiry": "2 years"
+        },
+        {
+          "name": "PREF",
+          "purpose": "Preferences (region, language)",
+          "expiry": "2 years"
+        }
+      ],
+      "detection_mechanisms": [
+        "Google infrastructure (sophisticated but less aggressive)",
+        "API quota enforcement",
+        "CONSENT cookie wall",
+        "Age-restricted content requires auth",
+        "IP-based throttling for downloads"
+      ],
+      "recommended_framework": "yt-dlp",
+      "recommended_browser": "chrome",
+      "recommended_stealth": "rebrowser-patches",
+      "best_library": "yt-dlp (CLI/Python)",
+      "captcha_type": "recaptcha_v2_rare",
+      "notes": "yt-dlp is the gold standard for downloads (active nightly builds). For interactions (comments, subscriptions), use Playwright. Google is less strict than Meta — 5-10 accounts per IP is fine."
+    }
+  },
+  "metadata": {
+    "last_updated": "2026-03-29",
+    "sources": "Research synthesis from 100+ sources",
+    "disclaimer": "Rate limits are approximate and change without notice. Always start conservative and increase gradually."
+  }
+}

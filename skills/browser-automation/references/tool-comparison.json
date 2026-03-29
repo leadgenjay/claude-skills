@@ -1,0 +1,434 @@
+{
+  "categories": {
+    "frameworks": {
+      "description": "Core browser automation frameworks",
+      "tools": [
+        {
+          "name": "Playwright",
+          "github": "microsoft/playwright",
+          "stars": "70k+",
+          "language": "JS/Python",
+          "status": "active",
+          "maintained": true,
+          "key_features": ["Multi-browser (Chrome, Firefox, Safari)", "storageState for sessions", "AutoWait", "Network interception"],
+          "best_for": "Instagram (Firefox), LinkedIn, general automation",
+          "recommendation": "primary_choice"
+        },
+        {
+          "name": "Puppeteer",
+          "github": "puppeteer/puppeteer",
+          "stars": "90k+",
+          "language": "JS",
+          "status": "active",
+          "maintained": true,
+          "key_features": ["Chrome-only", "puppeteer-extra ecosystem", "Best stealth plugins", "Largest community"],
+          "best_for": "TikTok, Cloudflare bypass, Chrome-specific needs",
+          "recommendation": "primary_choice"
+        },
+        {
+          "name": "Crawlee",
+          "github": "apify/crawlee",
+          "stars": "15k+ (JS), 2k+ (Python)",
+          "language": "JS/Python",
+          "status": "active",
+          "maintained": true,
+          "key_features": ["Zero-config anti-bot", "Auto proxy rotation", "TLS fingerprint spoofing", "Puppeteer/Playwright/HTTP support"],
+          "best_for": "Production crawlers, heavy anti-scraping sites",
+          "recommendation": "production_crawling"
+        },
+        {
+          "name": "Selenium",
+          "github": "SeleniumHQ/selenium",
+          "stars": "31k+",
+          "language": "Multi",
+          "status": "active",
+          "maintained": true,
+          "key_features": ["Widest language support", "WebDriver protocol", "Most documentation"],
+          "best_for": "Legacy projects, language requirements",
+          "recommendation": "legacy_only"
+        }
+      ]
+    },
+    "stealth_libraries": {
+      "description": "Anti-detection patches and stealth plugins",
+      "tools": [
+        {
+          "name": "rebrowser-patches",
+          "github": "rebrowser/rebrowser-patches",
+          "stars": "N/A",
+          "language": "JS",
+          "status": "active (v24.8.1, May 2025)",
+          "maintained": true,
+          "targets": ["CDP detection", "navigator.webdriver", "Cloudflare CAPTCHA", "DataDome"],
+          "works_with": ["Playwright", "Puppeteer"],
+          "recommendation": "best_maintained_2026"
+        },
+        {
+          "name": "puppeteer-extra-plugin-stealth",
+          "github": "berstend/puppeteer-extra",
+          "stars": "8.7k+",
+          "language": "JS",
+          "status": "active",
+          "maintained": true,
+          "targets": ["Chrome stealth", "Cloudflare (deprecated Feb 2026)"],
+          "works_with": ["Puppeteer"],
+          "recommendation": "chrome_stealth_gold_standard"
+        },
+        {
+          "name": "nodriver",
+          "github": "ultrafunkamsterdam/nodriver",
+          "stars": "N/A",
+          "language": "Python",
+          "status": "active",
+          "maintained": true,
+          "targets": ["Async CDP", "Zero Selenium overhead", "WAF resistance"],
+          "works_with": ["Standalone"],
+          "recommendation": "best_python_async"
+        },
+        {
+          "name": "Pydoll",
+          "github": "autoscrape-labs/pydoll",
+          "stars": "N/A",
+          "language": "Python",
+          "status": "active",
+          "maintained": true,
+          "targets": ["No navigator.webdriver flag", "Direct CDP", "Typed API"],
+          "works_with": ["Standalone"],
+          "recommendation": "avoids_primary_detection_vector"
+        },
+        {
+          "name": "Camoufox",
+          "github": "CloverLabsAI/camoufox",
+          "stars": "N/A",
+          "language": "Python",
+          "status": "recovered (1-year gap)",
+          "maintained": true,
+          "targets": ["C++ WebGL spoofing", "Firefox-based", "Canvas randomization"],
+          "works_with": ["Standalone"],
+          "recommendation": "monitor_quality_uncertain"
+        },
+        {
+          "name": "undetected-chromedriver",
+          "github": "ultrafunkamsterdam/undetected-chromedriver",
+          "stars": "12k+",
+          "language": "Python",
+          "status": "declining (no PyPI releases 12+ months)",
+          "maintained": false,
+          "targets": ["Chrome stealth (outdated)"],
+          "works_with": ["Selenium"],
+          "recommendation": "avoid_use_nodriver_instead"
+        }
+      ]
+    },
+    "ai_browsers": {
+      "description": "AI-driven browser automation with LLM integration",
+      "tools": [
+        {
+          "name": "Browser-Use",
+          "github": "browser-use/browser-use",
+          "stars": "78k+",
+          "language": "Python",
+          "status": "active",
+          "maintained": true,
+          "approach": "Perceive (DOM + screenshot) → LLM decides → Act",
+          "claude_support": true,
+          "cost": "Free (bring your own LLM)",
+          "recommendation": "best_open_source_ai_browser"
+        },
+        {
+          "name": "Stagehand",
+          "github": "browserbase/stagehand",
+          "stars": "N/A",
+          "language": "JS",
+          "status": "active (v3)",
+          "maintained": true,
+          "approach": "Element/action caching, intelligent AI involvement",
+          "claude_support": true,
+          "cost": "Free",
+          "recommendation": "best_for_inference_cost_reduction"
+        },
+        {
+          "name": "Skyvern",
+          "github": "Skyvern-AI/skyvern",
+          "stars": "N/A",
+          "language": "Python",
+          "status": "active (Mar 2026)",
+          "maintained": true,
+          "approach": "Vision LLM, auto-adapts to layout changes",
+          "claude_support": true,
+          "cost": "Free (self-hosted)",
+          "recommendation": "production_grade_vision_based"
+        },
+        {
+          "name": "AgentQL",
+          "github": "tinyfish-io/agentql",
+          "stars": "N/A",
+          "language": "Python",
+          "status": "active",
+          "maintained": true,
+          "approach": "Natural language element selection, self-healing",
+          "claude_support": false,
+          "cost": "Free",
+          "recommendation": "natural_language_queries"
+        }
+      ]
+    },
+    "anti_detect_browsers": {
+      "description": "Enterprise anti-detection browsers with fingerprint management",
+      "tools": [
+        {
+          "name": "Multilogin",
+          "type": "commercial",
+          "cost_per_month": "$6.50 (with built-in proxies)",
+          "proxy_included": true,
+          "fingerprint_quality": "highest",
+          "features": ["Dual browser engines", "Cookie Robot (session aging)", "Mobile emulation"],
+          "best_for": "Instagram/TikTok multi-account campaigns",
+          "recommendation": "best_value_overall"
+        },
+        {
+          "name": "AdsPower",
+          "type": "commercial",
+          "cost_per_month": "$5.40 (+ $50-200/mo proxy)",
+          "proxy_included": false,
+          "fingerprint_quality": "high",
+          "features": ["RPA automation", "Synchronizer", "Bulk management"],
+          "best_for": "E-commerce, high-volume when cost matters",
+          "recommendation": "budget_high_volume"
+        },
+        {
+          "name": "GoLogin",
+          "type": "commercial",
+          "cost_per_month": "Free tier available",
+          "proxy_included": false,
+          "fingerprint_quality": "medium",
+          "features": ["Free basic plan", "Proxy required separately"],
+          "best_for": "Testing before scaling",
+          "recommendation": "testing_only"
+        },
+        {
+          "name": "Browserbase",
+          "type": "commercial",
+          "cost_per_month": "$100-500+",
+          "proxy_included": true,
+          "fingerprint_quality": "high",
+          "features": ["50M sessions in 2025", "Anti-detection built-in", "API-first"],
+          "best_for": "High-scale production, AI agent infrastructure",
+          "recommendation": "enterprise_scale"
+        }
+      ]
+    },
+    "captcha_services": {
+      "description": "CAPTCHA solving services (for general websites, NOT social media)",
+      "tools": [
+        {
+          "name": "NopeCHA",
+          "cost_per_1k_recaptcha_v2": "$0.01",
+          "speed": "<1 second",
+          "accuracy": "96%+",
+          "method": "AI browser extension",
+          "free_tier": "100/day",
+          "recommendation": "cheapest_fastest"
+        },
+        {
+          "name": "CapMonster Cloud",
+          "cost_per_1k_recaptcha_v2": "$0.30-2.20",
+          "speed": "~5 seconds",
+          "accuracy": "95-99%",
+          "method": "ML models",
+          "free_tier": null,
+          "recommendation": "best_value_at_scale"
+        },
+        {
+          "name": "CapSolver",
+          "cost_per_1k_recaptcha_v2": "$0.80-3.00",
+          "speed": "3-9 seconds",
+          "accuracy": "96-98%",
+          "method": "AI-native",
+          "free_tier": null,
+          "recommendation": "best_coverage_new_types"
+        },
+        {
+          "name": "2Captcha",
+          "cost_per_1k_recaptcha_v2": "$1.00-2.99",
+          "speed": "10-15 seconds",
+          "accuracy": "95-98%",
+          "method": "Human workers",
+          "free_tier": null,
+          "recommendation": "complex_puzzles"
+        },
+        {
+          "name": "SadCaptcha",
+          "cost_per_1k_recaptcha_v2": null,
+          "speed": "varies",
+          "accuracy": "varies",
+          "method": "Specialized",
+          "free_tier": null,
+          "recommendation": "tiktok_specific_captchas_only"
+        }
+      ]
+    },
+    "proxy_providers": {
+      "description": "Residential and mobile proxy providers",
+      "tools": [
+        {
+          "name": "Bright Data",
+          "residential_pool": "150M+ IPs",
+          "mobile_pool": "7M+",
+          "geo_coverage": "ZIP-code level",
+          "features": ["Web Unlocker (proxy + fingerprint + CAPTCHA)", "Largest pool"],
+          "recommendation": "largest_pool_best_features"
+        },
+        {
+          "name": "Oxylabs",
+          "residential_pool": "100M+",
+          "mobile_pool": null,
+          "geo_coverage": "Country/city",
+          "features": ["Enterprise support", "Reliable uptime"],
+          "recommendation": "enterprise_support"
+        },
+        {
+          "name": "NetNut",
+          "residential_pool": "85M+",
+          "mobile_pool": "5M+ (100 countries)",
+          "geo_coverage": "Country/city",
+          "features": ["Strong mobile coverage", "Good pricing"],
+          "recommendation": "best_mobile_coverage"
+        },
+        {
+          "name": "IPRoyal",
+          "residential_pool": "10M+",
+          "mobile_pool": null,
+          "geo_coverage": "Country",
+          "features": ["Budget-friendly", "Pay-per-GB"],
+          "recommendation": "budget_option"
+        }
+      ]
+    },
+    "web_unlockers": {
+      "description": "Managed anti-bot bypass services (proxy + fingerprint + CAPTCHA)",
+      "tools": [
+        {
+          "name": "Scrapfly",
+          "cost": "$50-300/mo",
+          "features": ["Detects Cloudflare changes within 48h", "LinkedIn API change detection"],
+          "recommendation": "best_cloudflare_handling"
+        },
+        {
+          "name": "ZenRows",
+          "cost": "$50-300/mo",
+          "features": ["Anti-bot bypass included", "Simple API"],
+          "recommendation": "simple_api"
+        },
+        {
+          "name": "Bright Data Web Unlocker",
+          "cost": "$100-500/mo",
+          "features": ["Proxy + fingerprint + CAPTCHA bundled", "Largest IP pool"],
+          "recommendation": "enterprise_all_in_one"
+        }
+      ]
+    },
+    "scraping_frameworks": {
+      "description": "General-purpose web scraping frameworks",
+      "tools": [
+        {
+          "name": "Crawl4AI",
+          "stars": "58k+",
+          "language": "Python",
+          "status": "active",
+          "features": ["LLM-ready output", "HTML/PDF/image", "Fastest star growth"],
+          "recommendation": "most_vibrant_community"
+        },
+        {
+          "name": "Botasaurus",
+          "github": "omkarcloud/botasaurus",
+          "language": "Python",
+          "status": "active (2025)",
+          "features": ["Passes nowsecure.nl AND g2.com", "All-in-one framework"],
+          "recommendation": "best_all_in_one_python"
+        },
+        {
+          "name": "Firecrawl",
+          "language": "TS/Python",
+          "status": "active",
+          "features": ["Markdown conversion", "Optimized for LLM/RAG"],
+          "recommendation": "llm_pipeline_preparation"
+        },
+        {
+          "name": "ScrapeGraphAI",
+          "language": "Python",
+          "status": "active",
+          "features": ["Natural language schema", "Structured JSON"],
+          "recommendation": "easiest_entry_point"
+        }
+      ]
+    },
+    "social_media_libraries": {
+      "description": "Platform-specific scraping libraries",
+      "tools": [
+        {
+          "name": "Instagrapi",
+          "github": "subzeroid/instagrapi",
+          "platform": "Instagram",
+          "language": "Python",
+          "status": "active (Jan 2026)",
+          "features": ["Private API wrapper", "Async support", "Regular updates"],
+          "recommendation": "best_instagram_library"
+        },
+        {
+          "name": "Instaloader",
+          "platform": "Instagram",
+          "language": "Python",
+          "status": "maintained (2025)",
+          "features": ["CLI tool", "Public/private profiles", "Stories"],
+          "recommendation": "simple_instagram_downloads"
+        },
+        {
+          "name": "Twscrape",
+          "github": "vladkens/twscrape",
+          "platform": "Twitter/X",
+          "language": "Python",
+          "status": "active (2025)",
+          "features": ["Auth support", "Search/profiles/followers"],
+          "recommendation": "only_reliable_twitter_scraper"
+        },
+        {
+          "name": "yt-dlp",
+          "github": "yt-dlp/yt-dlp",
+          "platform": "YouTube",
+          "language": "Python/CLI",
+          "status": "active (nightly builds, Mar 2026)",
+          "features": ["Audio/video download", "Metadata extraction", "Cookie support"],
+          "recommendation": "gold_standard_youtube"
+        },
+        {
+          "name": "Snscrape",
+          "platform": "Twitter/X",
+          "language": "Python",
+          "status": "fragile (2025)",
+          "features": ["Multiple platforms"],
+          "recommendation": "fallback_only_breaks_frequently"
+        },
+        {
+          "name": "Twint",
+          "platform": "Twitter/X",
+          "language": "Python",
+          "status": "defunct (2025)",
+          "features": [],
+          "recommendation": "do_not_use"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "last_updated": "2026-03-29",
+    "github_stars_note": "Star counts are approximate and may have changed since research date",
+    "recommendation_key": {
+      "primary_choice": "Recommended as default for most use cases",
+      "best_maintained_2026": "Most actively maintained in 2025-2026",
+      "avoid_use_nodriver_instead": "Deprecated — use the recommended alternative",
+      "do_not_use": "Defunct or broken — do not use",
+      "monitor_quality_uncertain": "Promising but needs verification before production"
+    }
+  }
+}

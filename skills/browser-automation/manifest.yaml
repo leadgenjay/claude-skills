@@ -1,0 +1,29 @@
+id: browser-automation
+type: skill
+name: "Browser Automation & Scraping"
+description: "Browser automation and social media scraping with saved cookies, anti-detection, and stealth browsing. Covers Playwright/Puppeteer/nodriver, session persistence, rebrowser-patches, proxy strategy, CAPTCHA avoidance, and platform playbooks for Instagram, LinkedIn, Twitter/X, TikTok, and YouTube."
+categories:
+  - lgj-exclusive
+  - automation
+  - development
+tags:
+  - browser-automation
+  - web-scraping
+  - anti-detection
+  - playwright
+  - puppeteer
+  - proxy-rotation
+  - session-management
+  - stealth-browser
+icon: Globe
+path: skills/browser-automation
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/research-synthesis.md
+  - references/platform-limits.json
+  - references/tool-comparison.json
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - content-research
