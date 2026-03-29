@@ -1,0 +1,21 @@
+id: video-diagram
+type: skill
+name: Video Diagram
+description: Create hand-drawn Excalidraw diagrams for YouTube videos and course content. Analyzes concepts and produces the clearest visual explanation using shorthand copy.
+version: "1.0"
+icon: pen-tool
+categories:
+  - content-creation
+  - video
+tags:
+  - excalidraw
+  - diagram
+  - flowchart
+  - concept-map
+  - whiteboard
+  - youtube
+  - visual
+files:
+  - SKILL.md
+  - evals/evals.json
+  - manifest.yaml

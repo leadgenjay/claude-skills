@@ -1,0 +1,62 @@
+{
+  "skill_name": "video-diagram",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Create a diagram for my YouTube video about setting up cold email infrastructure. The video covers: buying domains, setting up mailboxes with Google Workspace, warming them up for 2 weeks, testing deliverability, then scaling to 1000+ emails/day.",
+      "expected_output": "Flowchart with 4-8 nodes using shorthand labels (e.g. '3 Domains', 'Warmup 2wk'), diamond for decision point, valid JSON spec, no complete sentences",
+      "assertions": [
+        { "id": 0, "text": "Diagram type chosen is appropriate (flowchart or process, NOT comparison)", "type": "content", "deterministic": false },
+        { "id": 1, "text": "All labels are 4 words or fewer", "type": "structural", "deterministic": true },
+        { "id": 2, "text": "No complete sentences in any label", "type": "quality", "deterministic": true },
+        { "id": 3, "text": "Uses shorthand/abbreviations (e.g. '2 wks' not 'two weeks')", "type": "quality", "deterministic": false },
+        { "id": 4, "text": "Valid JSON spec with required fields (type, nodes, edges)", "type": "structural", "deterministic": true },
+        { "id": 5, "text": "4-8 nodes total (not too sparse, not cluttered)", "type": "structural", "deterministic": true },
+        { "id": 6, "text": "No banned AI words (delve, leverage, seamless, etc.)", "type": "quality", "deterministic": true },
+        { "id": 7, "text": "Logical flow — edges create a sensible progression", "type": "content", "deterministic": false },
+        { "id": 8, "text": "Key steps from brief are all represented (domains, mailboxes, warmup, test, scale)", "type": "content", "deterministic": false },
+        { "id": 9, "text": "Title is shorthand (under 5 words)", "type": "structural", "deterministic": true },
+        { "id": 10, "text": "No decorative elements or unnecessary nodes", "type": "quality", "deterministic": false },
+        { "id": 11, "text": "Node shapes are semantically appropriate (diamonds for decisions only)", "type": "structural", "deterministic": false }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "I'm explaining in my course why AI-powered outreach beats manual outreach. Manual: 50 emails/day, generic templates, no personalization, costs $4k/mo for SDR. AI: 1000+ emails/day, hyper-personalized, costs $300/mo, runs 24/7. Make a diagram.",
+      "expected_output": "Comparison diagram with two columns, red for manual / green for AI, stats preserved ($4k, $300, 50, 1000+), shorthand labels, symbols (✓, ✗)",
+      "assertions": [
+        { "id": 0, "text": "Diagram type is comparison (not flowchart) — this is clearly a vs. topic", "type": "content", "deterministic": false },
+        { "id": 1, "text": "Two distinct columns/sides visible in spec (group left/right or similar)", "type": "structural", "deterministic": false },
+        { "id": 2, "text": "All labels 4 words or fewer", "type": "structural", "deterministic": true },
+        { "id": 3, "text": "Numbers/stats from brief preserved ($4k, $300, 50, 1000+)", "type": "content", "deterministic": true },
+        { "id": 4, "text": "Uses symbols (→, $, ✓, ✗) to convey meaning without words", "type": "quality", "deterministic": false },
+        { "id": 5, "text": "Valid JSON spec with required fields", "type": "structural", "deterministic": true },
+        { "id": 6, "text": "Both sides have roughly equal number of items (within 1)", "type": "structural", "deterministic": false },
+        { "id": 7, "text": "Color used to differentiate sides (e.g. red for manual, green for AI)", "type": "content", "deterministic": false },
+        { "id": 8, "text": "No banned AI words", "type": "quality", "deterministic": true },
+        { "id": 9, "text": "Shorthand copy style — fragments not sentences", "type": "quality", "deterministic": false },
+        { "id": 10, "text": "Captures the core contrast (cost, volume, personalization)", "type": "content", "deterministic": false },
+        { "id": 11, "text": "Title uses shorthand (under 5 words)", "type": "structural", "deterministic": true }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Diagram for my YouTube video explaining my content strategy. Central idea: Content Engine. Three pillars: Educational (tutorials, how-tos), Authority (case studies, results), Engagement (polls, stories, replies). Each pillar feeds back into lead generation. Show how they connect.",
+      "expected_output": "Concept map or hierarchy with center node 'Content Engine', 3 branches with sub-items, feedback arrows to lead gen, 8-15 nodes, color per pillar",
+      "assertions": [
+        { "id": 0, "text": "Diagram type is concept-map or hierarchy (radial structure, not linear)", "type": "content", "deterministic": false },
+        { "id": 1, "text": "Central/root node is 'Content Engine' or similar shorthand", "type": "content", "deterministic": false },
+        { "id": 2, "text": "Three branches visible (Educational, Authority, Engagement)", "type": "structural", "deterministic": false },
+        { "id": 3, "text": "Sub-items under each branch (tutorials, case studies, polls, etc.)", "type": "content", "deterministic": false },
+        { "id": 4, "text": "All labels 4 words or fewer", "type": "structural", "deterministic": true },
+        { "id": 5, "text": "Uses shorthand (not 'Educational Content' → just 'Educational' or 'Edu')", "type": "quality", "deterministic": false },
+        { "id": 6, "text": "Valid JSON spec with required fields", "type": "structural", "deterministic": true },
+        { "id": 7, "text": "Lead generation connection shown (feedback loop or arrows back)", "type": "content", "deterministic": false },
+        { "id": 8, "text": "No banned AI words", "type": "quality", "deterministic": true },
+        { "id": 9, "text": "8-15 nodes total (enough detail without clutter)", "type": "structural", "deterministic": true },
+        { "id": 10, "text": "Color used to distinguish the 3 pillars", "type": "content", "deterministic": false },
+        { "id": 11, "text": "Concept relationships are meaningful (not just random connections)", "type": "quality", "deterministic": false }
+      ]
+    }
+  ]
+}
