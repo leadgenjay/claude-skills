@@ -1,0 +1,27 @@
+id: youtube-description
+type: skill
+name: "YouTube Description"
+description: "Write SEO-optimized YouTube video descriptions with timestamps, lead magnets, CTAs, UTM-tracked links, keyword strategy, caption corrections, and pinned comments for Lead Gen Jay."
+categories:
+  - lgj-exclusive
+  - content
+  - seo
+tags:
+  - youtube
+  - seo
+  - description
+  - timestamps
+  - tags
+  - captions
+  - utm
+  - lead-magnet
+icon: FileText
+path: skills/youtube-description
+files:
+  - SKILL.md
+  - references/links-and-offers.md
+version: "1.2"
+composesWell:
+  - youtube-script
+  - youtube-thumbnail
+  - content-research
