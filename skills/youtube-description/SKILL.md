@@ -1,6 +1,6 @@
 ---
 name: youtube-description
-version: 1.2.0
+version: 1.3.0
 description: "Write SEO-optimized YouTube video descriptions with timestamps, lead magnets, CTAs, UTM-tracked links, and keyword strategy for Lead Gen Jay. Use when the user mentions 'video description,' 'YouTube description,' 'timestamps,' 'chapters,' 'YouTube SEO,' 'caption corrections,' 'video tags,' 'video metadata,' 'publish video,' or when a video script or transcript is ready for publishing."
 ---
 
@@ -45,15 +45,15 @@ You are an expert YouTube SEO strategist and description writer for **Lead Gen J
 3. **Video-specific lead magnet** (free resource URL, if any)
 4. **Tools/products mentioned** (for affiliate links and resources section)
 
-**Step 2:** Determine offer routing based on video topic:
+**Step 2:** Determine offer routing based on video topic.
 
-| Video Topic | Primary CTA | Secondary CTA |
-|-------------|-------------|---------------|
-| AI / Claude Code / automation | AIA | - |
-| Cold email / deliverability | AIA | Lead Gen Insiders + Inbox Insiders |
-| Lead generation / databases | AIA | Consulti.ai |
-| High-ticket / DFY services | AIA | The Machine |
-| General business / strategy | AIA | - |
+Every video gets all 4 CTA layers. The topic determines *which* community and *which* paid offer:
+
+| Video Topic | Free Thing | Community | Paid Offer | Consult |
+|-------------|------------|-----------|------------|---------|
+| AI / Claude Code / automation | topic lead magnet | AI Automation Insiders (Skool) | AIA (`/aia`) | Always |
+| Cold email / lead gen / outreach | topic lead magnet | Lead Gen Free (Skool) | Lead Gen Insiders (`/insiders`) | Always |
+| General business / strategy | topic lead magnet | Lead Gen Free (Skool) | Lead Gen Insiders (`/insiders`) | Always |
 
 **Step 3:** Extract timestamps from the transcript by identifying major topic transitions, then map them to keyword-rich chapter titles (2-6 words each).
 
@@ -94,14 +94,15 @@ TIMESTAMPS:
 TOOLS & RESOURCES MENTIONED:
 - [Tool] - [context or link]
 
-JOIN AI AUTOMATION INSIDERS:
-[AIA link with UTMs]
-[One-liner with video-specific benefit]
+[PAID OFFER CTA — AIA or Lead Gen Insiders, topic-routed]
 
-[SECONDARY CTA if applicable]
+WORK WITH MY TEAM:
+[Consult link with UTMs]
+[One-liner]
 
 FREE RESOURCES:
-- [Links]
+- [Community Skool link]
+- [Lead magnet / free resources]
 
 CONNECT WITH JAY:
 [Social links]
@@ -192,36 +193,58 @@ TOOLS & RESOURCES MENTIONED:
 - Include discount codes inline: `(Use code [CODE] for [X]% off)`
 - Non-affiliate tool links get UTMs with `utm_content=resources`
 
-### 5. Primary CTA - AIA (EVERY video)
+### 5. Paid Offer CTA (EVERY video - topic-routed)
 
+Use AIA for AI/Claude Code/automation videos. Use Lead Gen Insiders for everything else.
+
+**For AI / Claude Code / automation videos:**
 ```text
 JOIN AI AUTOMATION INSIDERS:
 https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_primary
 3,500+ members | Claude Code module (17 lessons) | [video-specific benefit] | All my apps, skills & workflows
 ```
 
+**For cold email / lead gen / business / strategy videos:**
+```text
+JOIN LEAD GEN INSIDERS:
+https://leadgenjay.com/insiders?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_primary
+1,000+ members | 100+ hours of training | [video-specific benefit] | Weekly live coaching + 700M lead database
+```
+
 **Rules:**
-- ALWAYS include, regardless of video topic
-- Third pipe-separated item MUST be customized to match the video's content
+- ALWAYS include one of the two - never skip
+- One pipe-separated item MUST be customized to match the video's content
 - Always include UTM parameters
 
-### 6. Secondary CTA (conditional)
-
-Only include when video topic matches an offer (see routing table above).
+### 6. Consult CTA (EVERY video)
 
 ```text
-[OFFER NAME]:
-{offer_url}?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_secondary
-[One-liner from references/links-and-offers.md]
+WORK WITH MY TEAM:
+https://leadgenjay.com/consult?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_consult
+Free 30-min strategy call | 4.9/5 from 190 reviews | For B2B businesses doing $10K+/mo
 ```
+
+**Rules:**
+- ALWAYS include on every video, no exceptions
+- Always include UTM parameters
+- Positioned after the paid offer CTA
 
 ### 7. Free Resources
 
+Every video MUST have a free community link and at least one free resource.
+
+**For AI / Claude Code / automation videos:**
 ```text
 FREE RESOURCES:
 - Free Skool Community: https://skool.com/ai-automation-insiders
 - [Video-specific lead magnet if exists]
-- [Related video title]: https://youtube.com/watch?v={id}
+```
+
+**For cold email / lead gen / business / strategy videos:**
+```text
+FREE RESOURCES:
+- Free Skool Community: https://skool.com/lead-gen
+- [Video-specific lead magnet if exists]
 ```
 
 Also consider standalone free resources from the references file (8M leads database, free GHL course) when relevant to the video topic.
@@ -373,6 +396,10 @@ JOIN AI AUTOMATION INSIDERS:
 https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign=my-ai-plan&utm_content=cta_primary
 3,500+ members | Claude Code module (17 lessons) | AI workflow templates for every bottleneck | All my apps, skills & workflows
 
+WORK WITH MY TEAM:
+https://leadgenjay.com/consult?utm_source=youtube&utm_medium=video&utm_campaign=my-ai-plan&utm_content=cta_consult
+Free 30-min strategy call | 4.9/5 from 190 reviews | For B2B businesses doing $10K+/mo
+
 FREE RESOURCES:
 - Free Skool Community: https://skool.com/ai-automation-insiders
 - Claude Code Beginner Course: https://youtube.com/watch?v=334ZspMJeVo
@@ -399,8 +426,9 @@ Before delivering, verify:
 - [ ] Primary keyword in first sentence
 - [ ] Lead magnet link above the fold (if one exists)
 - [ ] All timestamps start at 0:00, derived from actual transcript, at least 10s apart
-- [ ] AIA CTA present with UTM parameters
-- [ ] Secondary CTA matches video topic (if applicable)
+- [ ] Paid offer CTA present (AIA or Lead Gen Insiders, topic-routed) with UTM parameters
+- [ ] Consult CTA present (`/consult`) with UTM parameters
+- [ ] Free community link present (AI Automation Insiders or Lead Gen Free Skool, topic-routed)
 - [ ] All links use correct UTM schema from references file
 - [ ] Affiliate links use their native params (no UTMs added)
 - [ ] Discount codes included inline where applicable

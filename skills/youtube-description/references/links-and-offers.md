@@ -85,6 +85,18 @@ https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign=ai-p
 
 **When to use:** Videos about lead sourcing, databases, Apollo alternatives.
 
+### 6. Work With My Team (Consult) — ALWAYS PRESENT
+| Field | Value |
+|-------|-------|
+| **URL** | `https://leadgenjay.com/consult` |
+| **Type** | Free strategy call (30 min) |
+| **Rating** | 4.9/5 from 190 reviews |
+| **Qualifier** | For B2B businesses doing $10K+/mo |
+| **CTA line** | "Book a Free Strategy Call" / "Work With My Team" |
+| **One-liner** | Free 30-min strategy call. 4.9/5 from 190 reviews. For B2B businesses doing $10K+/mo. |
+
+**When to use:** EVERY video. Always include after the paid offer CTA.
+
 ---
 
 ## Free Lead Magnets (video-specific)
@@ -138,7 +150,8 @@ Instagram: https://instagram.com/leadgen
 Twitter/X: https://x.com/leadgenjay
 LinkedIn: https://linkedin.com/in/dr-jay-feldman
 YouTube: https://youtube.com/@leadgenjay
-Skool (free): https://skool.com/ai-automation-insiders
+Skool (AI Automation): https://skool.com/ai-automation-insiders
+Skool (Lead Gen): https://skool.com/lead-gen
 ```
 
 ---
