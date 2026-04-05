@@ -219,8 +219,10 @@ Generate this JSON and write to a temp file. The script handles all layout math.
    ```
 7. **Save winner to Nextcloud** (after review passes):
    ```bash
-   cp output/diagrams/{slug}.excalidraw ~/Nextcloud/YouTube/Diagrams/
+   mkdir -p ~/Nextcloud/YouTube/Diagrams/{video-slug}/
+   cp output/diagrams/{slug}.excalidraw ~/Nextcloud/YouTube/Diagrams/{video-slug}/
    ```
+   Each video gets its own subfolder inside `Diagrams/`. Use the video's slug (e.g., `openclaw-to-channels-2026`, `ai-plan-video-1`). All diagrams for that video go in the same folder.
 8. **Tell Jay** the file is ready — synced to Nextcloud and opens on iPad + Mac via excalidraw.com
 
 ### If Output Needs Adjustment
@@ -255,9 +257,55 @@ Before delivering, verify:
 
 **ALWAYS review each generated diagram before delivering to Jay.** After running `generate-diagram.mjs`:
 
-1. **Read the output JSON** — verify element positions don't overlap (check x/y coordinates)
-2. **Trace every arrow** — confirm each arrow's start/end points connect the correct nodes without crossing other nodes
-3. **Check concept-map tiers** — sub-items must be positioned BEYOND their parent node along the same radial direction from center
-4. **If ANY issue found** — fix the JSON spec and regenerate. Do NOT deliver a diagram with overlapping elements or unclear connections.
+### Step 1: Programmatic Position Audit (REQUIRED)
 
-Jay annotates these live on camera. If arrows are tangled or shapes overlap, the diagram is useless.
+Run this verification script for EVERY generated diagram:
+```bash
+node -e "
+const fs = require('fs');
+const data = JSON.parse(fs.readFileSync('output/diagrams/SLUG.excalidraw','utf8'));
+const shapes = data.elements.filter(e => ['rectangle','ellipse','diamond'].includes(e.type));
+const texts = data.elements.filter(e => e.type === 'text' && e.containerId);
+shapes.forEach(s => {
+  const t = texts.find(t => t.containerId === s.id);
+  const label = t ? t.text.replace(/\n/g,' ') : '???';
+  console.log(\`\${label.padEnd(30)} x=\${s.x.toFixed(0)} y=\${s.y.toFixed(0)} w=\${s.width.toFixed(0)} h=\${s.height.toFixed(0)}\`);
+});
+for (let i = 0; i < shapes.length; i++) {
+  for (let j = i+1; j < shapes.length; j++) {
+    const a = shapes[i], b = shapes[j];
+    if (a.x < b.x+b.width && a.x+a.width > b.x && a.y < b.y+b.height && a.y+a.height > b.y) {
+      const ta = texts.find(t => t.containerId === a.id);
+      const tb = texts.find(t => t.containerId === b.id);
+      console.log('OVERLAP:', ta?.text, 'and', tb?.text);
+    }
+  }
+}
+"
+```
+
+### Step 2: Arrow Crossing Analysis
+
+After reading positions, mentally trace each arrow path:
+- Arrows between adjacent nodes (close x/y) = safe
+- Arrows that span the full diagram (e.g., top-left to bottom-right through center) = likely crossing other nodes
+- If ANY long-distance arrows cross through the center zone, **redesign the diagram**
+
+### Step 3: Diagram Type Fitness Check
+
+The generator has layout limitations. Match your data shape to the right type:
+- **Linear chains** (A→B→C→D) → `flowchart` (vertical preferred)
+- **Hub with spokes** (center → multiple peers) → `concept-map`
+- **Two-column A vs B** → `comparison`
+- **Deep trees with branching** → simplify to linear `flowchart` by combining leaf nodes, OR use `concept-map` only if branches are 1 level deep
+- **NEVER use `flowchart` for branching data** — the layout is purely linear and won't show branches
+
+### Step 4: Fix or Regenerate
+
+If ANY issue is found (overlaps, crossing arrows, wrong type, nodes off-screen):
+1. Fix the JSON spec (change type, simplify nodes, adjust structure)
+2. Re-run `generate-diagram.mjs`
+3. Re-run the position audit
+4. Repeat until clean
+
+**Do NOT deliver a diagram without completing all 4 steps.** Jay annotates these live on camera with Apple Pencil. Tangled arrows or overlapping shapes make the diagram useless.

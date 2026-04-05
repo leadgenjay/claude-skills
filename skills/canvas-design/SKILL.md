@@ -97,6 +97,36 @@ This is **VERY IMPORTANT**: The reference must be refined so it enhances the wor
 
 ---
 
+## Lead Gen Jay Brand Guardrails
+
+When creating canvas art for Lead Gen Jay, apply these constraints:
+
+### Typography
+- **Headlines/display**: Big Shoulders (bold, uppercase, `tracking-tighter`)
+- **Body/captions**: Manrope (regular/medium weight)
+- **Banned fonts**: Oswald, Inter, Impact, Bebas Neue, Anton, Comic Sans, decorative serif
+
+### Color & Background
+- **Primary accent**: `#ED0D51` (Razzmatazz) — use for visual tension, CTAs, key highlights
+- **Web backgrounds**: White (`#FFFFFF`) or warm off-white (`slate-50`) — light is default
+- **Instagram/ad backgrounds**: Dark (`#0D0D0D`) — only for social media templates
+- **Never**: purple/blue gradients, neon glows, oversaturated full-bleed color
+- **60-30-10 rule**: 60% white/neutral, 30% dark text, 10% `#ED0D51` accent
+
+### Anti-AI-Slop Rules
+- No Corporate Memphis / blob people illustrations
+- No 3-column equal-width card grids
+- No purple-to-pink or blue-to-cyan gradients
+- No uniform fade-in animations on every element
+- No generic placeholder content (John Doe, Acme Corp, Lorem Ipsum)
+- No oversized H1 text without visual counterweight
+- No linear easing — use spring physics or branded cubic-bezier
+- No emojis as structural design elements
+- Every visual must carry information — no purely decorative illustrations
+- Use realistic data in illustrations (47.2% not 50%, varied bar heights)
+
+---
+
 ## CANVAS CREATION
 
 With both the philosophy and the conceptual framework established, express it on a canvas. Take a moment to gather thoughts and clear the mind. Use the design philosophy created and the instructions below to craft a masterpiece, embodying all aspects of the philosophy with expert craftsmanship.

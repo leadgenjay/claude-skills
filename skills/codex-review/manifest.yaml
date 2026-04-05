@@ -1,0 +1,4 @@
+name: codex-review
+version: 1.0.0
+description: "Independent code review using OpenAI Codex CLI"
+categories: [code-review, ai]

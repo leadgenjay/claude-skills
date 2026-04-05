@@ -1,0 +1,4 @@
+name: cli-anything
+version: 1.0.0
+description: "Build CLI tools for any API with automatic auth and venv"
+categories: [utility, development]

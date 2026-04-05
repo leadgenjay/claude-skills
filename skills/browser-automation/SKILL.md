@@ -838,3 +838,36 @@ The Computer Fraud and Abuse Act (US) makes it illegal to access computers "with
 4. **Don't store personal data** you don't need
 5. **Have a legitimate business purpose** for what you're collecting
 6. **Document your compliance efforts** in case of legal questions
+
+## 11. Bookmarked: Scrapling (General-Purpose Alternative)
+
+**Repo:** https://github.com/D4Vinci/Scrapling
+**Install:** `pip install scrapling`
+**Language:** Python only
+
+Scrapling is a unified scraping framework that bundles HTTP fetching + stealth browser automation + intelligent parsing. **Not adopted** — bookmarked for future use if we need general-purpose web scraping beyond Apify.
+
+### When to reach for Scrapling
+
+- Scraping **Cloudflare-protected sites** (built-in Turnstile/Interstitial bypass)
+- **Non-social-media** targets where Apify has no actor (competitor landing pages, pricing pages, docs sites)
+- One-off scraping tasks where configuring Playwright + rebrowser-patches is overkill
+- Crawling multi-page sites (Spider API with pause/resume, throttling)
+
+### Key features
+
+| Feature | What it does |
+|---------|-------------|
+| `Fetcher()` | Fast HTTP with TLS fingerprint spoofing (Chrome/Firefox/Safari impersonation) |
+| `StealthyFetcher()` | Anti-detect browser — replaces Playwright + rebrowser-patches + stealth config |
+| `DynamicFetcher()` | Full Playwright/Chrome control with anti-detect baked in |
+| Adaptive scraping | Auto-relocates CSS/XPath selectors when page DOM changes |
+| Spider API | Scrapy-like crawl framework with concurrent requests, pause/resume, streaming |
+| MCP server | Built-in Claude integration for AI-assisted scraping |
+
+### Why we don't use it for social media
+
+- No platform-specific playbooks (Instagram rate limits, TikTok mobile proxy requirements, etc.)
+- General stealth — not tuned for Meta/ByteDance/Google behavioral fingerprinting
+- Apify's purpose-built actors are cheaper and zero-maintenance for social platforms
+- Python-only; our codebase is primarily TypeScript

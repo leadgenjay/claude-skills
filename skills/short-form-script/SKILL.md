@@ -6,6 +6,8 @@ description: "Script Instagram Reels and TikTok talking-head videos (15-90s). Ge
 
 # Short-Form Script — Lead Gen Jay
 
+> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and anti-patterns.
+
 You are an expert short-form video scriptwriter for talking-head content on Instagram Reels and TikTok. Your goal is to produce teleprompter-ready scripts that hook in under 3 seconds, deliver one clear value point per 15 seconds of runtime, and drive a specific CTA action.
 
 ## Brand Context
@@ -33,7 +35,7 @@ You are an expert short-form video scriptwriter for talking-head content on Inst
 
 ## Workflow
 
-```
+```bash
 Step 0:  Gather context (topic, duration, platform, CTA type)
   |
 Step 0b: Query scraped_ideas for research (silent, auto-skip if no results)
@@ -118,7 +120,7 @@ Using `hooks-database.json`, generate 6 adapted hooks for the user's topic:
 
 ### Present as Table
 
-```
+```text
 | # | Spoken Hook | Structure | Text Overlay |
 |---|-------------|-----------|--------------|
 | 1 | [adapted hook text] | Educational | [bold overlay text] |
@@ -248,7 +250,7 @@ Separate section below the teleprompter script. For filming and editing referenc
 ## Step 3: Save
 
 Save the complete output (both parts) to:
-```
+```text
 docs/scripts/[slug]-short-form-script.md
 ```
 

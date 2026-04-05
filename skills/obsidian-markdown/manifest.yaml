@@ -1,0 +1,4 @@
+name: obsidian-markdown
+version: 1.0.0
+description: "Obsidian Flavored Markdown with wikilinks, callouts, and embeds"
+categories: [writing, documentation]

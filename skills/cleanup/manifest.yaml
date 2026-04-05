@@ -1,0 +1,4 @@
+name: cleanup
+version: 1.0.0
+description: "Audit and clean up project workspace"
+categories: [utility, maintenance]

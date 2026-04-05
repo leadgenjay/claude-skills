@@ -12,18 +12,18 @@ All YouTube description links MUST include UTM parameters for attribution tracki
 
 **Format:**
 ```text
-{base_url}?utm_source=youtube&utm_medium=video&utm_campaign={video_slug}&utm_content={link_position}
+{base_url}?utm_source=youtube&utm_campaign={video_slug}
 ```
 
 **Parameters:**
 - `utm_source`: always `youtube`
-- `utm_medium`: always `video`
 - `utm_campaign`: video slug (e.g., `ai-plan-2026`, `cold-email-stack-2026`)
-- `utm_content`: position identifier — `above_fold`, `resources`, `cta_primary`, `cta_secondary`, `pinned_comment`
+
+**Rule: Every link must fit on 1 line.** No `utm_medium` or `utm_content` - keep it simple.
 
 **Example:**
 ```text
-https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign=ai-plan-2026&utm_content=cta_primary
+https://leadgenjay.com/aia?utm_source=youtube&utm_campaign=ai-plan-2026
 ```
 
 **Exception:** Affiliate links (Instantly, AimFox, etc.) keep their native tracking params. Do NOT add UTMs to affiliate URLs.
@@ -90,10 +90,10 @@ https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign=ai-p
 |-------|-------|
 | **URL** | `https://leadgenjay.com/consult` |
 | **Type** | Free strategy call (30 min) |
-| **Rating** | 4.9/5 from 190 reviews |
+| **Rating** | 4.9/5 from 200+ reviews |
 | **Qualifier** | For B2B businesses doing $10K+/mo |
 | **CTA line** | "Book a Free Strategy Call" / "Work With My Team" |
-| **One-liner** | Free 30-min strategy call. 4.9/5 from 190 reviews. For B2B businesses doing $10K+/mo. |
+| **One-liner** | Free 30-min strategy call. 4.9/5 from 200+ reviews. For B2B businesses doing $10K+/mo. |
 
 **When to use:** EVERY video. Always include after the paid offer CTA.
 
@@ -122,7 +122,7 @@ These are free resources created per video. Always place above the fold (first 2
 
 | Tool | URL | Discount Code | Notes |
 |------|-----|---------------|-------|
-| Instantly.ai | `https://instantly.ai/?via=jay` | LGJ (10% off) | Cold email platform |
+| Instantly.ai | `https://instantly.ai/?via=jay` | LGJ10 (10% off) | Cold email platform |
 | AimFox | `https://fas.st/t/bGYNAggV` | - | LinkedIn automation |
 | Mission Inbox | `https://missioninbox.com/?utm_source=lgj` | LGJDISCOUNT ($50 off) | Deliverability |
 | Blotato | `https://blotato.com/?ref=jayca` | JAY30 (30% off 6mo) | Social media scheduling |

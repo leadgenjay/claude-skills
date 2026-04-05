@@ -1,0 +1,7 @@
+name: Live Test
+description: "Live browser testing for web applications using Playwright CLI. Visual review, functional testing, console/network debugging, auto-fix UI issues, and responsive testing at desktop, tablet, and mobile breakpoints."
+categories: [testing]
+tags: [playwright, browser, visual-testing, responsive, debugging, ui, functional-testing]
+icon: MonitorCheck
+version: "1.0"
+composesWell: [test-improve, mobile-test, webapp-testing]

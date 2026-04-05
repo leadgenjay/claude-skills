@@ -1,10 +1,12 @@
 ---
 name: youtube-description
-version: 1.3.0
+version: 1.4.0
 description: "Write SEO-optimized YouTube video descriptions with timestamps, lead magnets, CTAs, UTM-tracked links, and keyword strategy for Lead Gen Jay. Use when the user mentions 'video description,' 'YouTube description,' 'timestamps,' 'chapters,' 'YouTube SEO,' 'caption corrections,' 'video tags,' 'video metadata,' 'publish video,' or when a video script or transcript is ready for publishing."
 ---
 
 # YouTube Description — Lead Gen Jay
+
+> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and anti-patterns.
 
 You are an expert YouTube SEO strategist and description writer for **Lead Gen Jay** (@leadgenjay). Your goal is to write descriptions that maximize click-through from search, convert viewers into leads, and maintain consistent branding across every video.
 
@@ -18,6 +20,7 @@ You are an expert YouTube SEO strategist and description writer for **Lead Gen J
 - **No em dashes or en dashes.** Use regular hyphens only.
 - **All links MUST use canonical URLs** from `references/links-and-offers.md`. Never guess URLs.
 - **Timestamp format:** `0:00 - Title` (time at line start, space-dash-space, title). First chapter MUST be `0:00`.
+- **Every link MUST fit on 1 line.** Use simplified UTMs: `?utm_source=youtube&utm_campaign={slug}` only. No `utm_medium` or `utm_content`.
 
 ---
 
@@ -73,7 +76,7 @@ Every video gets all 4 CTA layers. The topic determines *which* community and *w
 | **Short video (<5 min)** | 3-5 timestamps. Shorter body (50-100 words). Skip "Tools & Resources" section if only 1-2 tools mentioned. |
 | **Interview / podcast format** | Use guest name in above-the-fold text. Add "Guest: [Name]" line after hook. Timestamps should mark each question/topic shift. |
 | **Shorts (<60s)** | No timestamps. Minimal description: hook + AIA CTA + social links + hashtags. |
-| **No lead magnet exists** | Flag this to the user: "No lead magnet for this video. Consider creating a [cheat sheet / template / checklist] at leadgenjay.com/r/[slug] or leadgenjay.com/value/[slug]." Then proceed without one. |
+| **No lead magnet exists** | Use the free Skool community link as the free resource. AI videos: `https://skool.com/ai-automation-insiders`. Lead gen videos: `https://skool.com/lead-gen`. |
 | **Discount code active** | Add code prominently: after the affiliate link, format as `(Use code [CODE] for [X]% off)` |
 
 ---
@@ -83,7 +86,16 @@ Every video gets all 4 CTA layers. The topic determines *which* community and *w
 Every description follows this exact order. Do NOT skip sections. Do NOT reorder them.
 
 ```text
-[ABOVE THE FOLD — lead magnet link or hook, 2-3 lines max]
+[ABOVE THE FOLD — hook + primary keyword, 2-3 lines max]
+
+FREE RESOURCE:
+[Lead magnet link OR free Skool community link]
+
+[PAID OFFER CTA — AIA or Lead Gen Insiders, topic-routed]
+
+WORK WITH MY TEAM:
+[Consult link with UTMs]
+[One-liner]
 
 TIMESTAMPS:
 0:00 - [Chapter Title]
@@ -94,15 +106,7 @@ TIMESTAMPS:
 TOOLS & RESOURCES MENTIONED:
 - [Tool] - [context or link]
 
-[PAID OFFER CTA — AIA or Lead Gen Insiders, topic-routed]
-
-WORK WITH MY TEAM:
-[Consult link with UTMs]
-[One-liner]
-
-FREE RESOURCES:
-- [Community Skool link]
-- [Lead magnet / free resources]
+[WATCH NEXT — link to newer related video, if one exists]
 
 CONNECT WITH JAY:
 [Social links]
@@ -117,18 +121,12 @@ ABOUT LEAD GEN JAY:
 
 ## Section-by-Section Rules
 
+**IMPORTANT: Free resource + CTAs go ABOVE timestamps.** The free resource, paid offer, and consult CTAs appear right after the above-the-fold hook, before timestamps. This maximizes CTA visibility since most viewers never click "Show More."
+
 ### 1. Above the Fold (Lines 1-3)
 
 This is the ONLY text visible before "Show More." Two jobs: (a) hook the viewer, (b) include the primary keyword.
 
-**If a lead magnet exists:**
-```text
-Grab my [Lead Magnet Name] here: {url}?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=above_fold
-
-[1-2 sentence hook - bold claim, result number, or pattern interrupt. Primary keyword in first sentence.]
-```
-
-**If no lead magnet:**
 ```text
 [2-3 sentence hook with primary keyword. Lead with bold claim or result. Create curiosity gap.]
 
@@ -140,7 +138,63 @@ Grab my [Lead Magnet Name] here: {url}?utm_source=youtube&utm_medium=video&utm_c
 - Never start with "In this video I..."
 - First person, conversational tone
 
-### 2. Timestamps / Chapters
+### 2. Free Resource (EVERY video - right after hook, BEFORE timestamps)
+
+**Position: Immediately after the above-the-fold hook.** Every video MUST have a free resource link here.
+
+**If a lead magnet exists for this video:**
+```text
+FREE RESOURCE:
+Grab my [Lead Magnet Name]: {url}?utm_source=youtube&utm_campaign={slug}
+```
+
+**If no lead magnet exists, use free Skool community:**
+```text
+FREE RESOURCE:
+Join the free community: https://skool.com/ai-automation-insiders?utm_source=youtube&utm_campaign={slug}
+```
+(Use `skool.com/lead-gen` for cold email / lead gen videos.)
+
+**Rules:**
+- ALWAYS include - never skip
+- Lead magnet takes priority over Skool if one exists
+- Every link must fit on 1 line
+
+### 3. Paid Offer CTA (EVERY video - after free resource)
+
+Use AIA for AI/Claude Code/automation videos. Use Lead Gen Insiders for everything else.
+
+**For AI / Claude Code / automation videos:**
+```text
+JOIN AI AUTOMATION INSIDERS:
+https://leadgenjay.com/aia?utm_source=youtube&utm_campaign={slug}
+3,500+ members | Claude Code module (17 lessons) | [video-specific benefit] | All my apps, skills & workflows
+```
+
+**For cold email / lead gen / business / strategy videos:**
+```text
+JOIN LEAD GEN INSIDERS:
+https://leadgenjay.com/insiders?utm_source=youtube&utm_campaign={slug}
+100+ hours of training | [video-specific benefit] | Weekly live coaching + 700M lead database
+```
+
+**Rules:**
+- ALWAYS include one of the two - never skip
+- One pipe-separated item MUST be customized to match the video's content
+
+### 4. Consult CTA (EVERY video - right after paid CTA)
+
+```text
+WORK WITH MY TEAM:
+https://leadgenjay.com/consult?utm_source=youtube&utm_campaign={slug}
+Free 30-min strategy call | 4.9/5 from 200+ reviews | For B2B businesses doing $10K+/mo
+```
+
+**Rules:**
+- ALWAYS include on every video, no exceptions
+- Positioned after the paid offer CTA, before timestamps
+
+### 5. Timestamps / Chapters
 
 ```text
 TIMESTAMPS:
@@ -157,7 +211,7 @@ TIMESTAMPS:
 - Include primary keyword in at least 2 chapter titles
 - Derive timestamps from actual transcript topic transitions, not estimates
 
-### 3. Body (Keyword-Rich Summary)
+### 6. Body (Keyword-Rich Summary)
 
 100-200 words. First person. 2-3 short paragraphs or paragraph + bullet list.
 
@@ -176,14 +230,14 @@ TIMESTAMPS:
 - Specific > vague. "4% reply rates" not "better results"
 - No filler. No "like and subscribe" in the body.
 
-### 4. Tools & Resources Mentioned
+### 7. Tools & Resources Mentioned
 
 Only include if 2+ tools mentioned. Skip for videos that only mention 1 tool.
 
 ```text
 TOOLS & RESOURCES MENTIONED:
 - Claude Code (Anthropic) - daily AI coding tool
-- Instantly.ai - https://instantly.ai/?via=jay (Use code LGJ for 10% off)
+- Instantly.ai - https://instantly.ai/?via=jay (Use code LGJ10 for 10% off)
 - [Tool Name] - [3-8 word context or link]
 ```
 
@@ -193,65 +247,21 @@ TOOLS & RESOURCES MENTIONED:
 - Include discount codes inline: `(Use code [CODE] for [X]% off)`
 - Non-affiliate tool links get UTMs with `utm_content=resources`
 
-### 5. Paid Offer CTA (EVERY video - topic-routed)
+### 8. Watch Next (older videos only)
 
-Use AIA for AI/Claude Code/automation videos. Use Lead Gen Insiders for everything else.
+For older videos where a newer video on the same topic exists, add a "WATCH NEXT" link:
 
-**For AI / Claude Code / automation videos:**
 ```text
-JOIN AI AUTOMATION INSIDERS:
-https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_primary
-3,500+ members | Claude Code module (17 lessons) | [video-specific benefit] | All my apps, skills & workflows
-```
-
-**For cold email / lead gen / business / strategy videos:**
-```text
-JOIN LEAD GEN INSIDERS:
-https://leadgenjay.com/insiders?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_primary
-1,000+ members | 100+ hours of training | [video-specific benefit] | Weekly live coaching + 700M lead database
+WATCH NEXT:
+[Updated Title] - https://youtube.com/watch?v={videoId}
 ```
 
 **Rules:**
-- ALWAYS include one of the two - never skip
-- One pipe-separated item MUST be customized to match the video's content
-- Always include UTM parameters
+- Only add when a newer, more comprehensive video on the same topic exists
+- Link to the most relevant newer video, not just any recent video
+- Skip this section for the newest videos on a topic
 
-### 6. Consult CTA (EVERY video)
-
-```text
-WORK WITH MY TEAM:
-https://leadgenjay.com/consult?utm_source=youtube&utm_medium=video&utm_campaign={slug}&utm_content=cta_consult
-Free 30-min strategy call | 4.9/5 from 190 reviews | For B2B businesses doing $10K+/mo
-```
-
-**Rules:**
-- ALWAYS include on every video, no exceptions
-- Always include UTM parameters
-- Positioned after the paid offer CTA
-
-### 7. Free Resources
-
-Every video MUST have a free community link and at least one free resource.
-
-**For AI / Claude Code / automation videos:**
-```text
-FREE RESOURCES:
-- Free Skool Community: https://skool.com/ai-automation-insiders
-- [Video-specific lead magnet if exists]
-```
-
-**For cold email / lead gen / business / strategy videos:**
-```text
-FREE RESOURCES:
-- Free Skool Community: https://skool.com/lead-gen
-- [Video-specific lead magnet if exists]
-```
-
-Also consider standalone free resources from the references file (8M leads database, free GHL course) when relevant to the video topic.
-
-Only include related video links if directly relevant (e.g., "Part 1" link on Part 2 video, or a prerequisite tutorial).
-
-### 8. Social Links
+### 9. Social Links
 
 Always use these exact lines from `references/links-and-offers.md`. Never modify.
 
@@ -262,14 +272,14 @@ Twitter/X: https://x.com/leadgenjay
 LinkedIn: https://linkedin.com/in/dr-jay-feldman
 ```
 
-### 9. About Boilerplate
+### 10. About Boilerplate
 
 ```text
 ABOUT LEAD GEN JAY:
 Cold email, AI automation, and lead generation strategies for entrepreneurs. Two 8-figure companies built. 3,500+ community members. 9+ years in the game.
 ```
 
-### 10. Hashtags
+### 11. Hashtags
 
 Single line at the very end. 10-15 hashtags.
 
@@ -361,6 +371,17 @@ I run two 8-figure companies and I just stopped everything - content, launches, 
 
 60,000+ tech jobs gone in Q1. CFOs predicting 9x more AI layoffs this year. There's a $5.5 trillion skills gap and 72% of employers can't find AI talent. The window is closing fast.
 
+FREE RESOURCE:
+Join the free community: https://skool.com/ai-automation-insiders?utm_source=youtube&utm_campaign=my-ai-plan
+
+JOIN AI AUTOMATION INSIDERS:
+https://leadgenjay.com/aia?utm_source=youtube&utm_campaign=my-ai-plan
+3,500+ members | Claude Code module (17 lessons) | AI workflow templates for every bottleneck | All my apps, skills & workflows
+
+WORK WITH MY TEAM:
+https://leadgenjay.com/consult?utm_source=youtube&utm_campaign=my-ai-plan
+Free 30-min strategy call | 4.9/5 from 200+ reviews | For B2B businesses doing $10K+/mo
+
 TIMESTAMPS:
 0:00 - Why I Stopped Making Content
 0:50 - The Data: AI Job Market & Skills Gap
@@ -392,18 +413,6 @@ TOOLS & RESOURCES MENTIONED:
 - GoHighLevel - CRM and pipeline management
 - n8n - workflow automation
 
-JOIN AI AUTOMATION INSIDERS:
-https://leadgenjay.com/aia?utm_source=youtube&utm_medium=video&utm_campaign=my-ai-plan&utm_content=cta_primary
-3,500+ members | Claude Code module (17 lessons) | AI workflow templates for every bottleneck | All my apps, skills & workflows
-
-WORK WITH MY TEAM:
-https://leadgenjay.com/consult?utm_source=youtube&utm_medium=video&utm_campaign=my-ai-plan&utm_content=cta_consult
-Free 30-min strategy call | 4.9/5 from 190 reviews | For B2B businesses doing $10K+/mo
-
-FREE RESOURCES:
-- Free Skool Community: https://skool.com/ai-automation-insiders
-- Claude Code Beginner Course: https://youtube.com/watch?v=334ZspMJeVo
-
 CONNECT WITH JAY:
 Instagram: https://instagram.com/leadgen
 Twitter/X: https://x.com/leadgenjay
@@ -424,12 +433,12 @@ Before delivering, verify:
 - [ ] Total description under 5,000 characters
 - [ ] First 2 lines under 300 characters and hook the viewer
 - [ ] Primary keyword in first sentence
-- [ ] Lead magnet link above the fold (if one exists)
+- [ ] Free resource (lead magnet or Skool community) present BEFORE timestamps
 - [ ] All timestamps start at 0:00, derived from actual transcript, at least 10s apart
-- [ ] Paid offer CTA present (AIA or Lead Gen Insiders, topic-routed) with UTM parameters
-- [ ] Consult CTA present (`/consult`) with UTM parameters
-- [ ] Free community link present (AI Automation Insiders or Lead Gen Free Skool, topic-routed)
-- [ ] All links use correct UTM schema from references file
+- [ ] Paid offer CTA present (AIA or Lead Gen Insiders, topic-routed)
+- [ ] Consult CTA present (`/consult`)
+- [ ] All links use simplified UTMs: `?utm_source=youtube&utm_campaign={slug}` only
+- [ ] Every link fits on 1 line (no wrapping)
 - [ ] Affiliate links use their native params (no UTMs added)
 - [ ] Discount codes included inline where applicable
 - [ ] Social links match canonical URLs from references file

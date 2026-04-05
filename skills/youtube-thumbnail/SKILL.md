@@ -44,9 +44,9 @@ Start every thumbnail request by determining which workflow fits. Present these 
 
 | Option | When to Use | Cost | Time |
 |--------|-------------|------|------|
-| **1. From Scratch** | New video, full creative control | ~$1.04 | 5-8 min |
-| **2. Scrape Competitors** | Research first, then remix the best | ~$0.20 + $0.15/remix | 3-5 min |
-| **3. From Specific URL** | Already found a thumbnail to remix | ~$0.15 | 1-2 min |
+| **1. From Scratch** | Fully custom concept, no reference | ~$1.04 | 5-8 min |
+| **2. Scrape Competitors** | Research top thumbnails for this topic, then remix | ~$0.20 + $0.15/remix | 3-5 min |
+| **3. From Specific URL** | Already found a specific thumbnail to remix | ~$0.15 | 1-2 min |
 
 If invoked from `/youtube-script`, use the script's `thumbnailConcepts` array and skip straight to Option 1 Step 2.
 
@@ -148,7 +148,7 @@ node scripts/generate-thumbnail.mjs full --prompt "[concept]" --jay-preset [pres
 
 ---
 
-## Remix Differentiation (Options 2 & 3)
+## Remix Differentiation (Options 1 & 2)
 
 Before face-swapping a competitor thumbnail, differentiate it so the result looks original while keeping the proven compositional pattern.
 
@@ -371,7 +371,7 @@ For presets without pre-generated photos, use `generate-jay` with `--preset` or 
 node scripts/generate-thumbnail.mjs generate-jay --preset thinking --name [output-name]
 ```
 
-For all face-swap operations (Options 1, 2 & 3), use `generate-thumbnail.mjs face-swap` with the `--jay` flag pointing to a pre-generated photo: `public/photos/jay-excited.png`, `jay-pointing.png`, `jay-professional.png`, `jay-cinematic.png`, or `jay-headshot.png`.
+For all face-swap operations (Options 1, 2 & 3 above), use `generate-thumbnail.mjs face-swap` with the `--jay` flag pointing to a pre-generated photo: `public/photos/jay-excited.png`, `jay-pointing.png`, `jay-professional.png`, `jay-cinematic.png`, or `jay-headshot.png`.
 
 ---
 

@@ -1,0 +1,4 @@
+name: webapp-testing
+version: 1.0.0
+description: "Live browser testing for web apps using Playwright"
+categories: [testing, browser]

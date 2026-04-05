@@ -1,0 +1,4 @@
+name: gohighlevel-cli
+version: 1.0.0
+description: "CLI interface for GoHighLevel CRM and Marketing API"
+categories: [crm, automation]

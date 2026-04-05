@@ -1,0 +1,4 @@
+name: youtube-tester
+version: 1.0.0
+description: "A/B test YouTube thumbnails with AI-generated variants"
+categories: [youtube, testing]

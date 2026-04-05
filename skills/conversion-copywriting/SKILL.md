@@ -170,6 +170,11 @@ How jaded is your market to marketing claims?
 | Email list (engaged) | Most Aware | Offer-focused, urgency |
 | Referrals | Product Aware | Social proof, testimonials |
 
+## Copy Formatting Rules
+
+- No em dashes in any copy - use hyphens instead
+- All email CTA links must include UTM parameters (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`)
+
 ## Awareness Analysis Workflow
 
 Before writing any copy:

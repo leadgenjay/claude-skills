@@ -5,6 +5,8 @@ description: Write high-converting direct response copy using Dan Kennedy's prov
 
 # Dan Kennedy Copywriter
 
+> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and anti-patterns. Dan Kennedy principles should be applied through Jay's voice, not generic DK copy.
+
 This skill provides deep expertise in Dan Kennedy's direct response copywriting methodology for creating copy that sells.
 
 ## When to Use
@@ -67,6 +69,13 @@ Every offer must include:
 - Reduce friction with reassurance: "No credit card required", "Instant access"
 - Repeat CTAs throughout long-form copy
 - Button text should complete: "I want to ___"
+- No em dashes in any copy - use hyphens instead
+
+### Email CTA UTM Rules
+All email CTA links must include UTM parameters:
+```text
+leadgenjay.com/{page}?utm_source=brevo&utm_medium=email&utm_campaign={sequence_name}&utm_content=email_{XX}
+```
 
 ## Urgency Tactics (Ethical Only)
 

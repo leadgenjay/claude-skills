@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-04T21:28:28.152Z",
+  "generatedAt": "2026-04-05T20:59:25.909Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -36,6 +36,301 @@
       ]
     },
     {
+      "id": "LGJ-n8n-code-javascript",
+      "type": "skill",
+      "name": "LGJ-n8n-code-javascript",
+      "description": "Write JavaScript code in n8n Code nodes — $input/$json/$node syntax, HTTP requests with $helpers, DateTime/Luxon, Code node modes, n8n v2 breaking changes, and error patterns.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "javascript",
+        "code-node",
+        "workflow-automation"
+      ],
+      "icon": "Code",
+      "path": "skills/LGJ-n8n-code-javascript",
+      "files": [
+        "BUILTIN_FUNCTIONS.md",
+        "COMMON_PATTERNS.md",
+        "DATA_ACCESS.md",
+        "ERROR_PATTERNS.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-expression-syntax",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-workflow-patterns",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-code-python",
+      "type": "skill",
+      "name": "LGJ-n8n-code-python",
+      "description": "Write Python code in n8n Code nodes — _input/_json/_node syntax, standard library only, n8n v2 breaking changes, and Python-specific limitations.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "python",
+        "code-node",
+        "workflow-automation"
+      ],
+      "icon": "Code",
+      "path": "skills/LGJ-n8n-code-python",
+      "files": [
+        "COMMON_PATTERNS.md",
+        "DATA_ACCESS.md",
+        "ERROR_PATTERNS.md",
+        "SKILL.md",
+        "STANDARD_LIBRARY.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-workflow-patterns"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-expression-syntax",
+      "type": "skill",
+      "name": "LGJ-n8n-expression-syntax",
+      "description": "Validate n8n expression syntax and fix common errors — {{}} patterns, $json/$node variables, webhook data access, and expression troubleshooting.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "expressions",
+        "syntax",
+        "workflow-automation"
+      ],
+      "icon": "Braces",
+      "path": "skills/LGJ-n8n-expression-syntax",
+      "files": [
+        "COMMON_MISTAKES.md",
+        "EXAMPLES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-mcp-tools-expert",
+      "type": "skill",
+      "name": "LGJ-n8n-mcp-tools-expert",
+      "description": "Expert guide for n8n-mcp MCP tools — node search, workflow management, partial updates, validation, template discovery, and known caveats.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "mcp",
+        "workflow-management",
+        "api"
+      ],
+      "icon": "Wrench",
+      "path": "skills/LGJ-n8n-mcp-tools-expert",
+      "files": [
+        "SEARCH_GUIDE.md",
+        "SKILL.md",
+        "VALIDATION_GUIDE.md",
+        "WORKFLOW_GUIDE.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-validation-expert",
+        "LGJ-n8n-workflow-patterns"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-node-configuration",
+      "type": "skill",
+      "name": "LGJ-n8n-node-configuration",
+      "description": "Operation-aware node configuration — property dependencies, required fields, critical node gotchas (Think Tool, Wait, Data Table, PostgreSQL), and n8n v2 migration guide.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "node-config",
+        "dependencies",
+        "gotchas",
+        "migration"
+      ],
+      "icon": "Settings",
+      "path": "skills/LGJ-n8n-node-configuration",
+      "files": [
+        "DEPENDENCIES.md",
+        "OPERATION_PATTERNS.md",
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-validation-expert",
+        "LGJ-n8n-expression-syntax"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-safety",
+      "type": "skill",
+      "name": "LGJ-n8n-safety",
+      "description": "Safety protocols for n8n workflow modifications — confirmation workflows, pre-operation checklists, execution retention, GHL OAuth workarounds, and error handler best practices.",
+      "categories": [
+        "n8n",
+        "operations",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "safety",
+        "operations",
+        "guardrails"
+      ],
+      "icon": "Shield",
+      "path": "skills/LGJ-n8n-safety",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-validation-expert",
+      "type": "skill",
+      "name": "LGJ-n8n-validation-expert",
+      "description": "Interpret and resolve n8n validation errors — error catalog, Think Tool API rejections, false positives, auto-sanitization, and progressive validation patterns.",
+      "categories": [
+        "n8n",
+        "development",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "validation",
+        "error-handling",
+        "debugging"
+      ],
+      "icon": "CheckCircle",
+      "path": "skills/LGJ-n8n-validation-expert",
+      "files": [
+        "ERROR_CATALOG.md",
+        "FALSE_POSITIVES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-expression-syntax"
+      ]
+    },
+    {
+      "id": "LGJ-n8n-workflow-patterns",
+      "type": "skill",
+      "name": "LGJ-n8n-workflow-patterns",
+      "description": "Proven n8n workflow architectural patterns — webhook processing, HTTP API integration, database operations, AI agent workflows, scheduled tasks, retry configuration, and common gotchas.",
+      "categories": [
+        "n8n",
+        "architecture",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "n8n",
+        "workflow-patterns",
+        "architecture",
+        "best-practices"
+      ],
+      "icon": "GitBranch",
+      "path": "skills/LGJ-n8n-workflow-patterns",
+      "files": [
+        "SKILL.md",
+        "ai_agent_workflow.md",
+        "database_operations.md",
+        "http_api_integration.md",
+        "manifest.yaml",
+        "scheduled_tasks.md",
+        "webhook_processing.md"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "LGJ-n8n-mcp-tools-expert",
+        "LGJ-n8n-node-configuration",
+        "LGJ-n8n-code-javascript",
+        "LGJ-n8n-validation-expert"
+      ]
+    },
+    {
+      "id": "ab-testing-suite",
+      "type": "skill",
+      "name": "ab-testing-suite",
+      "description": "Full-lifecycle A/B testing for Next.js + Supabase projects. Setup database schema and edge middleware for zero-flicker variant assignment, create hypothesis-driven tests with PIE scoring, track conversions, run statistical analysis, declare winners, and generate new test ideas.",
+      "categories": [
+        "conversion",
+        "testing",
+        "supabase",
+        "nextjs"
+      ],
+      "tags": [
+        "ab-testing",
+        "split-testing",
+        "conversion",
+        "supabase",
+        "nextjs",
+        "statistics",
+        "cro",
+        "hypothesis",
+        "pie-scoring"
+      ],
+      "icon": "FlaskConical",
+      "path": "skills/ab-testing-suite",
+      "files": [
+        "SKILL.md",
+        "assets",
+        "manifest.yaml",
+        "references",
+        "scripts"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "heatmap-analyzer",
+        "ab-test-designer",
+        "ab-winner"
+      ]
+    },
+    {
       "id": "animation-designer",
       "type": "skill",
       "name": "animation-designer",
@@ -61,6 +356,64 @@
       "composesWell": [
         "frontend-design",
         "react-performance"
+      ]
+    },
+    {
+      "id": "autoheal",
+      "type": "skill",
+      "name": "Autoheal",
+      "description": "Closed-loop skill healer: reviews creative output for blatant defects (misspellings, broken layout, missing elements, garbled text, wrong colors), traces each defect to a gap in the producing skill, mutates the skill, regenerates, and re-reviews until clean.",
+      "categories": [
+        "productivity",
+        "quality"
+      ],
+      "tags": [
+        "skill-improvement",
+        "self-healing",
+        "defect-detection",
+        "creative-quality",
+        "mutation",
+        "closed-loop"
+      ],
+      "icon": "HeartPulse",
+      "path": "skills/autoheal",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "autoimprove",
+        "autolearn"
+      ]
+    },
+    {
+      "id": "autoimprove",
+      "type": "skill",
+      "name": "autoimprove",
+      "description": "Autonomous critique-and-regenerate loop for any creative output. Finds the most recent creative in the conversation, grades it against domain-specific quality criteria, and regenerates an improved ver",
+      "categories": [],
+      "tags": [],
+      "path": "skills/autoimprove",
+      "files": [
+        "SKILL.md",
+        "references"
+      ]
+    },
+    {
+      "id": "autolearn",
+      "type": "skill",
+      "name": "autolearn",
+      "description": "Autonomous eval-driven improvement loop for Claude Code skills. Adapted from Karpathy's autoresearch: instead of modifying `train.py` and checking `val_bpb`, modify `SKILL.md` and check assertion pass",
+      "categories": [],
+      "tags": [],
+      "path": "skills/autolearn",
+      "files": [
+        "SKILL.md",
+        "evals",
+        "references",
+        "scripts"
       ]
     },
     {
@@ -118,6 +471,56 @@
       ]
     },
     {
+      "id": "brand-voice",
+      "type": "skill",
+      "name": "brand-voice",
+      "description": "Consistent brand voice guidelines for all content",
+      "categories": [
+        "writing",
+        "branding"
+      ],
+      "tags": [],
+      "path": "skills/brand-voice",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "browser-automation",
+      "type": "skill",
+      "name": "Browser Automation & Scraping",
+      "description": "Browser automation and social media scraping with saved cookies, anti-detection, and stealth browsing. Covers Playwright/Puppeteer/nodriver, session persistence, rebrowser-patches, proxy strategy, CAPTCHA avoidance, and platform playbooks for Instagram, LinkedIn, Twitter/X, TikTok, and YouTube.",
+      "categories": [
+        "lgj-exclusive",
+        "automation",
+        "development"
+      ],
+      "tags": [
+        "browser-automation",
+        "web-scraping",
+        "anti-detection",
+        "playwright",
+        "puppeteer",
+        "proxy-rotation",
+        "session-management",
+        "stealth-browser"
+      ],
+      "icon": "Globe",
+      "path": "skills/browser-automation",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "content-research"
+      ]
+    },
+    {
       "id": "canvas-design",
       "type": "skill",
       "name": "canvas-design",
@@ -144,6 +547,106 @@
         "brand-image-generator",
         "icon-set-creator",
         "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "cleanup",
+      "type": "skill",
+      "name": "cleanup",
+      "description": "Audit and clean up project workspace",
+      "categories": [
+        "utility",
+        "maintenance"
+      ],
+      "tags": [],
+      "path": "skills/cleanup",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "cli-anything",
+      "type": "skill",
+      "name": "cli-anything",
+      "description": "Build CLI tools for any API with automatic auth and venv",
+      "categories": [
+        "utility",
+        "development"
+      ],
+      "tags": [],
+      "path": "skills/cli-anything",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "codex-plan",
+      "type": "skill",
+      "name": "codex-plan",
+      "description": "Collaborative planning with OpenAI Codex CLI",
+      "categories": [
+        "planning",
+        "ai"
+      ],
+      "tags": [],
+      "path": "skills/codex-plan",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "codex-review",
+      "type": "skill",
+      "name": "codex-review",
+      "description": "Independent code review using OpenAI Codex CLI",
+      "categories": [
+        "code-review",
+        "ai"
+      ],
+      "tags": [],
+      "path": "skills/codex-review",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "content-research",
+      "type": "skill",
+      "name": "Content Research",
+      "description": "Find unlimited short-form video ideas through competitor tracking, scraping, outlier analysis, trending topics, and quick research. 5 modes: manage competitors, scrape content, analyze what's working, discover trends, and fast topic research with scoring.",
+      "categories": [
+        "lgj-exclusive",
+        "content"
+      ],
+      "tags": [
+        "content-research",
+        "video-ideas",
+        "competitor-analysis",
+        "trending-topics",
+        "scraping",
+        "hooks",
+        "short-form"
+      ],
+      "icon": "Radar",
+      "path": "skills/content-research",
+      "files": [
+        "SKILL.md",
+        "evals",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "2.1",
+      "composesWell": [
+        "short-form-script"
       ]
     },
     {
@@ -176,6 +679,42 @@
         "hero-section-designer",
         "landing-page-auditor"
       ]
+    },
+    {
+      "id": "copy-editing",
+      "type": "skill",
+      "name": "copy-editing",
+      "description": "Systematic copy editing with multiple focused passes",
+      "categories": [
+        "writing",
+        "editing"
+      ],
+      "tags": [],
+      "path": "skills/copy-editing",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "copywriting",
+      "type": "skill",
+      "name": "copywriting",
+      "description": "Marketing copywriting frameworks and patterns",
+      "categories": [
+        "writing",
+        "marketing"
+      ],
+      "tags": [],
+      "path": "skills/copywriting",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
     },
     {
       "id": "dan-kennedy-copywriter",
@@ -211,6 +750,23 @@
       ]
     },
     {
+      "id": "defuddle",
+      "type": "skill",
+      "name": "defuddle",
+      "description": "Extract clean markdown from web pages using Defuddle CLI",
+      "categories": [
+        "utility",
+        "web"
+      ],
+      "tags": [],
+      "path": "skills/defuddle",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
       "id": "design-motion-principles",
       "type": "skill",
       "name": "design-motion-principles",
@@ -244,6 +800,33 @@
       ]
     },
     {
+      "id": "fathom-kb",
+      "type": "skill",
+      "name": "Fathom KB — Coaching Call Processor",
+      "description": "Process coaching call transcripts from Fathom into structured Obsidian knowledge notes. Pulls transcripts via Fathom MCP, feeds to NotebookLM for deep extraction, generates categorized Obsidian notes (frameworks, strategies, objections, lessons), and commits to the knowledge base repo. Use when the user says 'coaching call', 'process call', 'extract coaching', 'fathom transcript', 'coaching notes', 'process coaching', or 'extract framework from call'.",
+      "categories": [
+        "knowledge-management",
+        "coaching",
+        "productivity"
+      ],
+      "tags": [
+        "fathom",
+        "notebooklm",
+        "obsidian",
+        "coaching",
+        "knowledge-extraction",
+        "transcription"
+      ],
+      "icon": "mic",
+      "path": "skills/fathom-kb",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.1"
+    },
+    {
       "id": "frontend-design",
       "type": "skill",
       "name": "frontend-design",
@@ -270,6 +853,107 @@
       "composesWell": [
         "animation-designer",
         "senior-frontend"
+      ]
+    },
+    {
+      "id": "gohighlevel-cli",
+      "type": "skill",
+      "name": "gohighlevel-cli",
+      "description": "CLI interface for GoHighLevel CRM and Marketing API",
+      "categories": [
+        "crm",
+        "automation"
+      ],
+      "tags": [],
+      "path": "skills/gohighlevel-cli",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "guided-browser",
+      "type": "skill",
+      "name": "Guided Browser",
+      "description": "Browser co-pilot mode where Claude observes via screenshots and guides the user step-by-step instead of taking direct actions. Perfect for sensitive workflows like admin dashboards and account settings, complex multi-step tasks, or when direct automation is unreliable.",
+      "categories": [
+        "testing",
+        "workflow"
+      ],
+      "tags": [
+        "browser",
+        "copilot",
+        "guided",
+        "walkthrough",
+        "step-by-step",
+        "chrome",
+        "screenshots"
+      ],
+      "icon": "Navigation",
+      "path": "skills/guided-browser",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "live-test"
+      ]
+    },
+    {
+      "id": "handoff",
+      "type": "skill",
+      "name": "Session Handoff",
+      "description": "Create structured YAML handoffs that preserve session context across /clear or compaction. Saves goal, progress, decisions, files, and next steps so Claude resumes seamlessly.",
+      "categories": [
+        "productivity",
+        "developer-tools"
+      ],
+      "tags": [
+        "context",
+        "handoff",
+        "session",
+        "compaction",
+        "workflow",
+        "memory"
+      ],
+      "icon": "bookmark",
+      "path": "skills/handoff",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "heatmap-analyzer",
+      "type": "skill",
+      "name": "heatmap-analyzer",
+      "description": "Analyze PostHog heatmap data, session recordings, scroll depth, rage clicks, and funnel metrics. Generates structured reports with PIE-scored AB test hypotheses.",
+      "categories": [
+        "lgj-exclusive",
+        "analytics",
+        "conversion"
+      ],
+      "tags": [
+        "posthog",
+        "heatmaps",
+        "conversion",
+        "ab-testing",
+        "analytics",
+        "cro"
+      ],
+      "icon": "Flame",
+      "path": "skills/heatmap-analyzer",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "ab-test-designer",
+        "landing-page-auditor"
       ]
     },
     {
@@ -336,6 +1020,31 @@
       ]
     },
     {
+      "id": "kb-sync",
+      "type": "skill",
+      "name": "Knowledge Base Sync",
+      "description": "Extract knowledge from project docs (CLAUDE.md, docs/, memory files) and sync to an Obsidian knowledge base. AI-driven categorization, deduplication, Obsidian-formatted notes with frontmatter and wikilinks, auto-commit and push.",
+      "categories": [
+        "productivity",
+        "knowledge-management"
+      ],
+      "tags": [
+        "obsidian",
+        "knowledge-base",
+        "documentation",
+        "sync",
+        "extraction"
+      ],
+      "icon": "book-open",
+      "path": "skills/kb-sync",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0"
+    },
+    {
       "id": "landing-page-auditor",
       "type": "skill",
       "name": "landing-page-auditor",
@@ -365,6 +1074,70 @@
         "conversion-copywriting",
         "hero-section-designer",
         "social-proof-builder"
+      ]
+    },
+    {
+      "id": "launch-page",
+      "type": "skill",
+      "name": "Launch Page",
+      "description": "Production launch checklist for new landing pages and checkout pages. Verifies tracking codes (PostHog, GA4, Meta Pixel, all ad pixels), metadata/SEO, admin registration, A/B test middleware, and deployment configuration.",
+      "categories": [
+        "lgj-exclusive",
+        "deployment",
+        "workflow"
+      ],
+      "tags": [
+        "launch",
+        "tracking",
+        "deployment",
+        "seo",
+        "ab-test",
+        "production",
+        "checklist",
+        "posthog"
+      ],
+      "icon": "Rocket",
+      "path": "skills/launch-page",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "seo-optimizer",
+        "ab-testing-suite",
+        "heatmap-analyzer"
+      ]
+    },
+    {
+      "id": "live-test",
+      "type": "skill",
+      "name": "Live Test",
+      "description": "Live browser testing for web applications using Playwright CLI. Visual review, functional testing, console/network debugging, auto-fix UI issues, and responsive testing at desktop, tablet, and mobile breakpoints.",
+      "categories": [
+        "testing"
+      ],
+      "tags": [
+        "playwright",
+        "browser",
+        "visual-testing",
+        "responsive",
+        "debugging",
+        "ui",
+        "functional-testing"
+      ],
+      "icon": "MonitorCheck",
+      "path": "skills/live-test",
+      "files": [
+        "NOTES.md",
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "test-improve",
+        "mobile-test",
+        "webapp-testing"
       ]
     },
     {
@@ -400,6 +1173,189 @@
       ]
     },
     {
+      "id": "n8n-upgrade",
+      "type": "skill",
+      "name": "n8n-upgrade",
+      "description": "Find and upgrade RAM for n8n Docker containers",
+      "categories": [
+        "n8n",
+        "devops"
+      ],
+      "tags": [],
+      "path": "skills/n8n-upgrade",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "nano-banana",
+      "type": "skill",
+      "name": "nano-banana",
+      "description": "AI image generation using Gemini-powered nano-banana CLI",
+      "categories": [
+        "ai",
+        "image-generation"
+      ],
+      "tags": [],
+      "path": "skills/nano-banana",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "obsidian-markdown",
+      "type": "skill",
+      "name": "obsidian-markdown",
+      "description": "Obsidian Flavored Markdown with wikilinks, callouts, and embeds",
+      "categories": [
+        "writing",
+        "documentation"
+      ],
+      "tags": [],
+      "path": "skills/obsidian-markdown",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "presentation",
+      "type": "skill",
+      "name": "presentation",
+      "description": "Professional Reveal.js slide presentations",
+      "categories": [
+        "presentation",
+        "design"
+      ],
+      "tags": [],
+      "path": "skills/presentation",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "remotion",
+      "type": "skill",
+      "name": "remotion",
+      "description": "Programmatic video composition with React and Remotion",
+      "categories": [
+        "video",
+        "development"
+      ],
+      "tags": [],
+      "path": "skills/remotion",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "seo-optimizer",
+      "type": "skill",
+      "name": "SEO Optimizer",
+      "description": "Comprehensive SEO optimization combining technical audit, on-page optimization, keyword research via DataForSEO, Search Console analysis, JSON-LD structured data, and Google Indexing API integration.",
+      "categories": [
+        "lgj-exclusive",
+        "marketing",
+        "seo"
+      ],
+      "tags": [
+        "seo",
+        "keywords",
+        "structured-data",
+        "json-ld",
+        "search-console",
+        "meta-tags",
+        "indexing"
+      ],
+      "icon": "Search",
+      "path": "skills/seo-optimizer",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "landing-page-auditor"
+      ]
+    },
+    {
+      "id": "short-form-script",
+      "type": "skill",
+      "name": "Short-Form Script",
+      "description": "Script Instagram Reels and TikTok talking-head videos (15-90s). Generates 6 hook options from a 100-hook database, writes teleprompter-ready scripts with production briefs, duration scaling, and voice enforcement checks.",
+      "categories": [
+        "lgj-exclusive",
+        "content"
+      ],
+      "tags": [
+        "scriptwriting",
+        "reels",
+        "tiktok",
+        "hooks",
+        "talking-head",
+        "short-form",
+        "teleprompter"
+      ],
+      "icon": "Clapperboard",
+      "path": "skills/short-form-script",
+      "files": [
+        "SKILL.md",
+        "evals",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "content-research"
+      ]
+    },
+    {
+      "id": "simple-design",
+      "type": "skill",
+      "name": "Simple Design",
+      "description": "Radically simple landing page templates for low-friction offers. 3-6 sections max, one action path, zero fluff. Includes blueprints for lead magnets, opt-in registrations, webinar/VSL pages, and assessment funnels.",
+      "categories": [
+        "lgj-exclusive",
+        "design",
+        "conversion"
+      ],
+      "tags": [
+        "landing-page",
+        "simple",
+        "conversion",
+        "lead-magnet",
+        "opt-in",
+        "minimal",
+        "templates"
+      ],
+      "icon": "Minimize2",
+      "path": "skills/simple-design",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "taste",
+        "frontend-design",
+        "dan-kennedy-copywriter"
+      ]
+    },
+    {
       "id": "social-proof-builder",
       "type": "skill",
       "name": "social-proof-builder",
@@ -429,6 +1385,236 @@
         "hero-section-designer",
         "landing-page-auditor"
       ]
+    },
+    {
+      "id": "test-improve",
+      "type": "skill",
+      "name": "test-improve",
+      "description": "Iterative visual design review and improvement tool using Playwright screenshots. Audits pages against design guidelines, fixes issues, and re-checks until quality standards are met.",
+      "categories": [
+        "testing",
+        "design",
+        "lgj-exclusive"
+      ],
+      "tags": [
+        "playwright",
+        "visual-testing",
+        "design-audit",
+        "responsive",
+        "ui",
+        "auto-fix"
+      ],
+      "icon": "FlaskConical",
+      "path": "skills/test-improve",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "taste",
+        "design-motion-principles",
+        "landing-page-auditor",
+        "frontend-design",
+        "ship"
+      ]
+    },
+    {
+      "id": "testimonial-edit",
+      "type": "skill",
+      "name": "Testimonial Edit",
+      "description": "Edit raw customer testimonial videos into polished social clips with AI-driven content selection, speaker intro cards, captions, and multi-format output. Cuts long testimonials to the best 30-90 seconds.",
+      "categories": [
+        "content",
+        "video"
+      ],
+      "tags": [
+        "testimonial",
+        "video-editing",
+        "social-clips",
+        "captions",
+        "customer-stories",
+        "social-proof",
+        "remotion",
+        "deepgram"
+      ],
+      "icon": "Film",
+      "path": "skills/testimonial-edit",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.1",
+      "composesWell": [
+        "social-proof-builder"
+      ]
+    },
+    {
+      "id": "video-diagram",
+      "type": "skill",
+      "name": "Video Diagram",
+      "description": "Create hand-drawn Excalidraw diagrams for YouTube videos and course content. Analyzes concepts and produces the clearest visual explanation using shorthand copy.",
+      "categories": [
+        "content-creation",
+        "video"
+      ],
+      "tags": [
+        "excalidraw",
+        "diagram",
+        "flowchart",
+        "concept-map",
+        "whiteboard",
+        "youtube",
+        "visual"
+      ],
+      "icon": "pen-tool",
+      "path": "skills/video-diagram",
+      "files": [
+        "SKILL.md",
+        "evals",
+        "manifest.yaml"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "webapp-testing",
+      "type": "skill",
+      "name": "webapp-testing",
+      "description": "Live browser testing for web apps using Playwright",
+      "categories": [
+        "testing",
+        "browser"
+      ],
+      "tags": [],
+      "path": "skills/webapp-testing",
+      "files": [
+        "SKILL.md",
+        "examples",
+        "manifest.yaml",
+        "scripts"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "webinar",
+      "type": "skill",
+      "name": "webinar",
+      "description": "Create webinar presentations using the Perfect Webinar framework",
+      "categories": [
+        "presentation",
+        "marketing"
+      ],
+      "tags": [],
+      "path": "skills/webinar",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "youtube-description",
+      "type": "skill",
+      "name": "youtube-description",
+      "description": "SEO-optimized YouTube descriptions with timestamps and CTAs",
+      "categories": [
+        "writing",
+        "youtube",
+        "seo"
+      ],
+      "tags": [],
+      "path": "skills/youtube-description",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "youtube-script",
+      "type": "skill",
+      "name": "youtube-script",
+      "description": "Research, write, and optimize YouTube scripts",
+      "categories": [
+        "writing",
+        "youtube"
+      ],
+      "tags": [],
+      "path": "skills/youtube-script",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "youtube-tester",
+      "type": "skill",
+      "name": "youtube-tester",
+      "description": "A/B test YouTube thumbnails with AI-generated variants",
+      "categories": [
+        "youtube",
+        "testing"
+      ],
+      "tags": [],
+      "path": "skills/youtube-tester",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "id": "youtube-thumbnail",
+      "type": "skill",
+      "name": "YouTube Thumbnail",
+      "description": "Generate YouTube thumbnails using AI pipeline — concept writing, base generation via Nano Banana, Jay photo via Flux Lora, and body-swap compositing via fal.ai. Supports from-scratch, competitor scrape + remix, and URL-based remix workflows.",
+      "categories": [
+        "lgj-exclusive",
+        "content",
+        "design"
+      ],
+      "tags": [
+        "youtube",
+        "thumbnail",
+        "face-swap",
+        "nano-banana",
+        "fal-ai",
+        "flux-lora",
+        "video"
+      ],
+      "icon": "ImagePlus",
+      "path": "skills/youtube-thumbnail",
+      "files": [
+        "SKILL.md",
+        "evals",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "composesWell": [
+        "short-form-script",
+        "content-research"
+      ]
+    },
+    {
+      "id": "yt-longtail",
+      "type": "skill",
+      "name": "yt-longtail",
+      "description": "Discover high-opportunity low-competition YouTube keywords",
+      "categories": [
+        "youtube",
+        "seo",
+        "research"
+      ],
+      "tags": [],
+      "path": "skills/yt-longtail",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0.0"
     },
     {
       "id": "commit",
@@ -504,41 +1690,7 @@
       "version": "1.0",
       "composesWell": [
         "commit",
-        "test-improve"
-      ]
-    },
-    {
-      "id": "test-improve",
-      "type": "skill",
-      "name": "test-improve",
-      "description": "Iterative visual design review and improvement tool using Playwright screenshots. Audits pages against design guidelines, fixes issues, and re-checks until quality standards are met.",
-      "categories": [
-        "testing",
-        "design",
-        "lgj-exclusive"
-      ],
-      "tags": [
-        "playwright",
-        "visual-testing",
-        "design-audit",
-        "responsive",
-        "ui",
-        "auto-fix"
-      ],
-      "icon": "FlaskConical",
-      "path": "skills/test-improve",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml",
-        "references/design-checklist.md"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "taste",
-        "design-motion-principles",
-        "landing-page-auditor",
-        "frontend-design",
-        "ship"
+        "test"
       ]
     },
     {

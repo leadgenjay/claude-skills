@@ -1,0 +1,4 @@
+name: nano-banana
+version: 1.0.0
+description: "AI image generation using Gemini-powered nano-banana CLI"
+categories: [ai, image-generation]

@@ -1,0 +1,4 @@
+name: codex-plan
+version: 1.0.0
+description: "Collaborative planning with OpenAI Codex CLI"
+categories: [planning, ai]

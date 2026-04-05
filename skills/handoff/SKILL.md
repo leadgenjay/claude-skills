@@ -1,6 +1,6 @@
 # /handoff — Manual Session Handoff
 
-Create a structured YAML handoff that preserves session context across `/clear` or compaction.
+Save current session context as a handoff for resuming after `/clear`.
 
 ## When to Use
 - Before running `/clear` to start fresh
@@ -53,20 +53,60 @@ errors:
 git_branch: "current-branch"
 ```
 
-3. **Keep the YAML under 2000 characters** (~400-500 tokens). Truncate aggressively:
+3. **Write a plan-formatted markdown handoff** to `~/.claude/plans/handoff-{timestamp}.md`:
+
+```markdown
+# Session Handoff — {timestamp}
+
+## Goal
+{goal}
+
+## Current State
+{what was being worked on}
+
+## Done This Session
+{files modified, commands run}
+
+## Key Decisions
+{decisions and rationale}
+
+## Next Steps
+{what to do next}
+
+## Files
+**Modified:** {list}
+**Read:** {list}
+
+## Git
+Branch: `{branch}`
+
+## Instructions
+This is an auto-generated handoff. Resume from the goal above.
+```
+
+4. **Keep both files concise** (~2000 chars max). Truncate aggressively:
    - `goal` and `now`: max 200 chars each
    - List items: max 150 chars each
    - `files.modified`: max 10 entries
    - `files.read`: max 10 entries
    - `decisions`: max 5 entries
 
-4. **Confirm** the handoff was saved and suggest:
-   - "Handoff saved. Run `/clear` to start fresh — the handoff will auto-load."
+5. **Rotate old handoff files:**
+   - Keep last 5 YAML files in `.omc/handoffs/`
+   - Keep last 3 plan files matching `handoff-*.md` in `~/.claude/plans/`
+
+6. **Confirm** and tell the user:
+   - "Handoff saved. Run `/clear` for a clean start."
+   - "To resume: enter plan mode, select the handoff plan file, choose 'Yes, clear context and continue'."
+
+## How It Works
+
+- **`/clear`** is always a clean clear — no auto-injection
+- **`/handoff`** is the only way to manually save context
+- **PreCompact** also auto-generates handoff files during automatic compaction
+- **Resume** by entering plan mode with the handoff plan file — native "clear context and continue" reloads it
 
 ## File Naming
-- Format: `{YYYY-MM-DDTHH-MM-SS}_{description}.yaml`
+- YAML: `{YYYY-MM-DDTHH-MM-SS}_{description}.yaml`
+- Plan: `handoff-{YYYY-MM-DDTHH-MM-SS}.md`
 - Description from argument or auto-derived from goal
-- Example: `2026-03-25T14-30-00_smart-context-system.yaml`
-
-## Rotation
-Keep only the 5 most recent handoff files. Delete older ones after writing.
