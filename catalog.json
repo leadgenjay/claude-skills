@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-04-05T20:59:25.909Z",
+  "generatedAt": "2026-04-05T21:01:56.513Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -681,24 +681,6 @@
       ]
     },
     {
-      "id": "copy-editing",
-      "type": "skill",
-      "name": "copy-editing",
-      "description": "Systematic copy editing with multiple focused passes",
-      "categories": [
-        "writing",
-        "editing"
-      ],
-      "tags": [],
-      "path": "skills/copy-editing",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml",
-        "references"
-      ],
-      "version": "1.0.0"
-    },
-    {
       "id": "copywriting",
       "type": "skill",
       "name": "copywriting",
@@ -748,23 +730,6 @@
         "social-proof-builder",
         "landing-page-auditor"
       ]
-    },
-    {
-      "id": "defuddle",
-      "type": "skill",
-      "name": "defuddle",
-      "description": "Extract clean markdown from web pages using Defuddle CLI",
-      "categories": [
-        "utility",
-        "web"
-      ],
-      "tags": [],
-      "path": "skills/defuddle",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0.0"
     },
     {
       "id": "design-motion-principles",
@@ -1173,23 +1138,6 @@
       ]
     },
     {
-      "id": "n8n-upgrade",
-      "type": "skill",
-      "name": "n8n-upgrade",
-      "description": "Find and upgrade RAM for n8n Docker containers",
-      "categories": [
-        "n8n",
-        "devops"
-      ],
-      "tags": [],
-      "path": "skills/n8n-upgrade",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0.0"
-    },
-    {
       "id": "nano-banana",
       "type": "skill",
       "name": "nano-banana",
@@ -1497,23 +1445,6 @@
       "version": "1.0.0"
     },
     {
-      "id": "webinar",
-      "type": "skill",
-      "name": "webinar",
-      "description": "Create webinar presentations using the Perfect Webinar framework",
-      "categories": [
-        "presentation",
-        "marketing"
-      ],
-      "tags": [],
-      "path": "skills/webinar",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0.0"
-    },
-    {
       "id": "youtube-description",
       "type": "skill",
       "name": "youtube-description",
@@ -1804,39 +1735,6 @@
         "LGJ-graphics",
         "frontend-design",
         "animation-designer"
-      ]
-    },
-    {
-      "id": "youtube-description",
-      "type": "skill",
-      "name": "YouTube Description",
-      "description": "Write SEO-optimized YouTube video descriptions with timestamps, lead magnets, CTAs, UTM-tracked links, keyword strategy, caption corrections, and pinned comments for Lead Gen Jay.",
-      "categories": [
-        "lgj-exclusive",
-        "content",
-        "seo"
-      ],
-      "tags": [
-        "youtube",
-        "seo",
-        "description",
-        "timestamps",
-        "tags",
-        "captions",
-        "utm",
-        "lead-magnet"
-      ],
-      "icon": "FileText",
-      "path": "skills/youtube-description",
-      "files": [
-        "SKILL.md",
-        "references/links-and-offers.md"
-      ],
-      "version": "1.2",
-      "composesWell": [
-        "youtube-script",
-        "youtube-thumbnail",
-        "content-research"
       ]
     }
   ]

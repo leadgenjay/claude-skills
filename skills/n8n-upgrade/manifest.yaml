@@ -1,4 +1,0 @@
-name: n8n-upgrade
-version: 1.0.0
-description: "Find and upgrade RAM for n8n Docker containers"
-categories: [n8n, devops]

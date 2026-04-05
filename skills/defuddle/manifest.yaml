@@ -1,4 +1,0 @@
-name: defuddle
-version: 1.0.0
-description: "Extract clean markdown from web pages using Defuddle CLI"
-categories: [utility, web]
