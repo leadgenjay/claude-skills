@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "pillars": {
     "cold_email": {
       "name": "Cold Email & Outreach",
@@ -17,12 +17,12 @@
       ],
       "competitors": {
         "youtube": ["@instantly", "@alexberman", "@taylorharen", "@patrickdang"],
-        "twitter": ["@instantaboroš", "@lemaboroš", "@apolloio"],
+        "twitter": ["@instantly_ai", "@smartlead_ai", "@saleshandy", "@ReplyAppTeam", "@alxberman", "@THArrowOfApollo", "@patrickdang"],
         "instagram": ["@leadgenjay", "@instantly.ai", "@alexberman"],
         "tiktok": ["@coldemailcoach", "@instantly.ai"]
       },
       "subreddits": [
-        "r/coldemail", "r/Emailmarketing", "r/sales", "r/B2Bsales"
+        "r/coldEmail", "r/Emailmarketing", "r/sales", "r/B2Bsales"
       ]
     },
     "ai_automation": {
@@ -40,14 +40,14 @@
         "Relevance AI", "Lindy AI", "CrewAI"
       ],
       "competitors": {
-        "youtube": ["@maborošrtech", "@aifoundershow", "@allaboutai"],
-        "twitter": ["@n8n_io", "@AnthropicAI", "@OpenAI"],
+        "youtube": ["@nateherk", "@liamottley", "@allaboutai"],
+        "twitter": ["@AnthropicAI", "@OpenAI", "@OpenAINewsroom", "@GoogleDeepMind", "@n8n_io", "@cursor_ai", "@lovable_dev", "@v0", "@Replit", "@karpathy", "@AndrewYNg"],
         "instagram": ["@aifoundershow", "@techstartuplife"],
         "tiktok": ["@aitools", "@techbusinessai"]
       },
       "subreddits": [
         "r/n8n", "r/nocode", "r/artificial", "r/ClaudeAI",
-        "r/ChatGPT", "r/AutomateYourself"
+        "r/ChatGPT", "r/LocalLLaMA"
       ]
     },
     "lead_gen": {
@@ -67,7 +67,7 @@
       ],
       "competitors": {
         "youtube": ["@alexhormozi", "@jeremyminer", "@patrickdang", "@jordanplatten"],
-        "twitter": ["@hormozi", "@Clayrun", "@gaborošghlevel"],
+        "twitter": ["@ClayRunHQ", "@gohighlevel", "@apolloio", "@ListKitio", "@AlexHormozi", "@JordanPlatten"],
         "instagram": ["@hormozi", "@saleswithjay", "@jordanplatten"],
         "tiktok": ["@salescoach", "@leadgentips"]
       },
@@ -77,6 +77,73 @@
       ]
     }
   },
+  "linkedin_influencers": {
+    "cold_email": [
+      "https://www.linkedin.com/in/nils-schneider-instantly/",
+      "https://www.linkedin.com/in/alexanderberman/",
+      "https://www.linkedin.com/in/patrickdang/",
+      "https://www.linkedin.com/in/steliefti/",
+      "https://www.linkedin.com/in/guillaume-moubeche/",
+      "https://www.linkedin.com/in/jesseoue/",
+      "https://www.linkedin.com/in/outboundphd/",
+      "https://www.linkedin.com/in/ilya-azovtsev/",
+      "https://www.linkedin.com/in/arnaud-belinga-social-selling-crm-saas/",
+      "https://www.linkedin.com/in/tom-grainger-b2b-sales-meeings/",
+      "https://www.linkedin.com/in/nick-verity/",
+      "https://www.linkedin.com/in/richard-illingworth/",
+      "https://www.linkedin.com/in/sandyzhenprofile/"
+    ],
+    "ai_automation": [
+      "https://www.linkedin.com/in/jan-oberhauser/",
+      "https://www.linkedin.com/in/gregkamradt/",
+      "https://www.linkedin.com/in/nateherk/",
+      "https://www.linkedin.com/in/liamottley/",
+      "https://www.linkedin.com/in/logankilpatrick/",
+      "https://www.linkedin.com/in/joshwhitfieldai/",
+      "https://www.linkedin.com/in/bjionhenry/",
+      "https://www.linkedin.com/in/tyfrankel/",
+      "https://www.linkedin.com/in/c-oland/",
+      "https://www.linkedin.com/in/tclarkmedia/"
+    ],
+    "lead_gen": [
+      "https://www.linkedin.com/in/alexhormozi/",
+      "https://www.linkedin.com/in/jordanplatten/",
+      "https://www.linkedin.com/in/greg-philippe/",
+      "https://www.linkedin.com/in/scot-barlow/",
+      "https://www.linkedin.com/in/timyakubson/",
+      "https://www.linkedin.com/in/alexbaldovin/",
+      "https://www.linkedin.com/in/louis-young-nofumedia/",
+      "https://www.linkedin.com/in/alanruchtein/",
+      "https://www.linkedin.com/in/benjamin-douablin/",
+      "https://www.linkedin.com/in/danielmmiller/",
+      "https://www.linkedin.com/in/underdogsales/",
+      "https://www.linkedin.com/in/xavier-c-157209175/",
+      "https://www.linkedin.com/in/michel-lieben/",
+      "https://www.linkedin.com/in/rozana-d-66b1a8225/",
+      "https://www.linkedin.com/in/rileysoward/"
+    ]
+  },
+  "x_search_queries": [
+    "\"cold email\" OR \"Instantly\" OR \"Smartlead\" OR \"Lemlist\" OR \"email deliverability\" new OR update OR launch",
+    "\"AI agent\" OR \"Claude\" OR \"n8n\" OR \"automation\" OR \"no-code\" launch OR update OR built OR workflow",
+    "\"lead generation\" OR \"Clay\" OR \"Apollo\" OR \"GoHighLevel\" OR \"lead scraping\" new OR update OR results",
+    "\"AI cold email\" OR \"AI lead gen\" OR \"automated outreach\" OR \"AI sales\" results OR built OR case study",
+    "\"cold email dead\" OR \"AI replacing\" OR \"outbound dead\" debate OR prediction OR controversial"
+  ],
+  "reddit_search_queries": [
+    "\"cold email\" OR \"email outreach\" OR \"Instantly\" OR \"Smartlead\"",
+    "\"AI automation\" OR \"AI agent\" OR \"n8n\" OR \"Claude\" workflow",
+    "\"lead generation\" OR \"lead scraping\" OR \"Apollo\" OR \"Clay\" OR \"B2B leads\"",
+    "\"AI cold email\" OR \"automated outreach\" OR \"AI lead gen\"",
+    "\"GoHighLevel\" OR \"cold email tool\" OR \"sales automation\" new OR alternative OR review"
+  ],
+  "all_subreddits": [
+    "r/coldEmail", "r/sales", "r/Entrepreneur", "r/artificial",
+    "r/ClaudeAI", "r/ChatGPT", "r/n8n", "r/nocode",
+    "r/Emailmarketing", "r/B2Bsales", "r/leadgeneration",
+    "r/SaaS", "r/agency", "r/startups", "r/smallbusiness",
+    "r/marketing", "r/growthhacking", "r/LocalLLaMA", "r/indiehackers"
+  ],
   "cross_pillar_keywords": [
     "AI cold email", "automated lead gen", "AI sales automation",
     "no-code lead generation", "AI outreach", "automated prospecting",

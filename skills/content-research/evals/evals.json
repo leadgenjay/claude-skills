@@ -61,21 +61,80 @@
       ]
     },
     {
-      "id": "trending-mode",
-      "name": "Daily Trend Research",
-      "prompt": "Find trending topics in the cold email and AI automation space for today",
+      "id": "trending-signal-quality",
+      "name": "Viral Signal Intelligence — Signal Quality",
+      "prompt": "Run trending mode. Find what's going viral right now in AI automation, cold email, and lead generation. I want to know what to make a video about TODAY.",
       "expected_mode": "trending",
       "assertions": [
-        "Checks docs/research-logs/ for recent logs to avoid repeats",
-        "Uses viral archetypes to generate keyword matrix",
-        "Searches at least 3 of 4 sources: Twitter, Reddit, YouTube, News",
-        "Scores each result on TAM, Demo-ability, Hook Potential, Timeliness, Uniqueness",
-        "Each score uses 1-5 scale with weighted total",
-        "Applies decision threshold: >= 4.0 MAKE IT, 3.0-3.9 MAYBE, < 3.0 SKIP",
-        "Presents top 10 results in ranked table",
-        "Each result includes: topic, score, hook angle, suggested format, decision",
-        "Saves research log to docs/research-logs/YYYY-MM-DD.md",
-        "Does NOT duplicate topics from recent research logs"
+        "Searches at least 2 of the 3 platforms (X, Reddit, LinkedIn)",
+        "Each signal has all 4 scoring factors filled in (Primacy, Velocity, Authority, Content-Fit)",
+        "Each signal has a total score out of 20",
+        "Each signal has a MAKE IT, WATCH, or SKIP decision",
+        "At least one MAKE IT signal has YouTube angle research showing existing videos",
+        "YouTube angle research identifies saturated vs underserved angles",
+        "Recommends a specific angle for Jay with a hook suggestion",
+        "NO signals based on someone else's personal experience or client success story (e.g., 'I made $X doing Y' from another creator)",
+        "NO signals that are just someone promoting their lead magnet, course, or coaching program",
+        "All MAKE IT signals have strong content-fit (score 4-5) for cold email, lead gen, B2B marketing, AI for business, or automation",
+        "All MAKE IT signals are from the last 7 days (Primacy score >= 3)",
+        "All MAKE IT signals show genuine viral velocity — not just big accounts posting normal content"
+      ]
+    },
+    {
+      "id": "trending-scoring-accuracy",
+      "name": "Viral Signal Intelligence — Scoring Accuracy",
+      "prompt": "Run trending mode focused on 'AI tools for cold email outreach'. Score everything you find with the 4-factor matrix.",
+      "expected_mode": "trending",
+      "assertions": [
+        "Scoring formula matches the SKILL.md: weighted sum of (P x 0.25) + (V x 0.30) + (A x 0.20) + (CF x 0.25) x 4 = /20",
+        "MAKE IT threshold is >= 16/20 (not lower)",
+        "WATCH threshold is 12-15/20",
+        "SKIP threshold is < 12/20",
+        "Each factor score has a brief justification (not just a number)",
+        "Velocity scoring considers engagement RATE (per hour or per day), not just raw numbers",
+        "Authority scoring references the source's follower count or credibility, not just the topic",
+        "Content-Fit scoring correctly identifies signals in Jay's niche pillars as 4-5, adjacent topics as 3, and off-topic as 1-2",
+        "Does NOT score a generic 'AI is changing everything' post as MAKE IT (too broad, content-fit should be 2-3)",
+        "Does NOT give a 2-week-old post a Primacy score of 4-5 (should be 2)",
+        "Each Velocity score includes the actual engagement numbers and post age (e.g., '342 likes in 6h' not just 'V=4')",
+        "Each Authority score includes follower count or account description (e.g., '150K followers' not just 'A=5')",
+        "No 3+ signals share identical V AND A scores — each is individually justified",
+        "Any signal with V <= 1 AND A <= 1 is scored SKIP, not WATCH"
+      ]
+    },
+    {
+      "id": "trending-youtube-angles",
+      "name": "Viral Signal Intelligence — YouTube Angle Gap Analysis",
+      "prompt": "A new AI cold email tool just launched and it's blowing up on X. Run the YouTube angle research stage for this topic: 'new AI cold email writing tool launch'.",
+      "expected_mode": "trending",
+      "assertions": [
+        "Searches YouTube (via WebSearch site:youtube.com) for existing videos on the topic",
+        "Lists at least 3-5 existing YouTube videos with title, channel, and view count",
+        "Classifies each video's angle (tutorial, reaction, comparison, news_breakdown, hot_take, case_study, tool_demo, listicle, prediction)",
+        "Identifies which angles are saturated (3+ videos) vs underserved (0-1 videos)",
+        "Recommends a specific angle that is underserved AND fits Jay's expertise",
+        "Does NOT recommend a 'reaction' angle if there are already 3+ reaction videos",
+        "Suggested hook is under 15 words and specific to the topic (not generic)",
+        "Recommends a visual format from the content-types reference (talking head, screen recording, etc.)",
+        "The recommended angle plays to Jay's strengths (cold email + AI automation expertise, not generic tech review)"
+      ]
+    },
+    {
+      "id": "trending-filter-self-promo",
+      "name": "Viral Signal Intelligence — Filter Self-Promotion & Personal Stories",
+      "prompt": "Run trending mode. Find viral signals about lead generation and cold email from X and Reddit.",
+      "expected_mode": "trending",
+      "assertions": [
+        "Does NOT include signals like 'I made $50K in 30 days with cold email' from random creators (personal experience stories)",
+        "Does NOT include signals like 'Download my free cold email template' (lead magnet promos)",
+        "Does NOT include signals like 'Join my course to learn cold email' (course/coaching promos)",
+        "Does NOT include tweets that are just screenshots of Stripe revenue or bank accounts",
+        "DOES include signals about new tool launches (e.g., 'Instantly just released X feature')",
+        "DOES include signals about industry trends (e.g., 'Google just changed email deliverability rules')",
+        "DOES include signals about techniques or strategies gaining traction (e.g., 'Clay + AI enrichment workflow going viral')",
+        "DOES include signals about data/research findings (e.g., 'Cold email response rates dropped 40% this month')",
+        "If a personal success story IS included, it was filtered out or scored as SKIP with content-fit <= 2",
+        "Presents a clean table with only actionable, topic-based signals for content creation"
       ]
     },
     {

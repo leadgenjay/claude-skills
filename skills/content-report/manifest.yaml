@@ -1,0 +1,21 @@
+id: content-report
+type: skill
+name: "Content Report"
+description: "Format content-research output into branded HTML reports with clickable links, scoring key, and decision color-coding. Converts to PDF, uploads to Google Drive, returns shareable team link. Supports all 5 research modes."
+categories:
+  - lgj-exclusive
+  - content
+tags:
+  - content-report
+  - html-report
+  - google-drive
+  - team-sharing
+  - trending-signals
+  - content-research
+icon: FileText
+path: skills/content-report
+files:
+  - SKILL.md
+version: "1.0"
+composesWell:
+  - content-research

@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "description": "Configurable scoring matrices for content signal intelligence. Based on Jack Roberts' 4-factor trending signal matrix.",
+  "signal_matrix": {
+    "name": "Viral Signal Intelligence Matrix",
+    "factors": [
+      {
+        "id": "primacy",
+        "name": "Primacy",
+        "weight": 0.25,
+        "description": "How recent is the signal? Newer signals have more content-creation urgency.",
+        "scoring": {
+          "5": "Last 24 hours",
+          "4": "2-3 days ago",
+          "3": "4-7 days ago",
+          "2": "8-14 days ago",
+          "1": "15+ days ago"
+        }
+      },
+      {
+        "id": "velocity",
+        "name": "Velocity",
+        "weight": 0.30,
+        "description": "How fast is engagement growing? Measures engagement-per-hour or engagement acceleration.",
+        "scoring": {
+          "5": "Exponential growth — engagement doubling every few hours, ratio > 100x normal",
+          "4": "Rapid growth — 10-100x normal engagement rate for the platform/author",
+          "3": "Above average — 3-10x normal engagement rate",
+          "2": "Moderate — 1.5-3x normal engagement rate",
+          "1": "Flat or declining — normal or below-normal engagement rate"
+        }
+      },
+      {
+        "id": "authority",
+        "name": "Authority",
+        "weight": 0.20,
+        "description": "Source credibility — larger/verified accounts signal broader relevance.",
+        "scoring": {
+          "5": "Major industry figure (100K+ followers) or verified institution",
+          "4": "Established creator/company (10K-100K followers)",
+          "3": "Growing creator (1K-10K followers) with niche relevance",
+          "2": "Small account (<1K) but with relevant expertise",
+          "1": "Anonymous, new, or unverifiable source"
+        }
+      },
+      {
+        "id": "content_fit",
+        "name": "Content-Fit",
+        "weight": 0.25,
+        "description": "How relevant is this to Jay's niche pillars (AI automation, lead gen, cold email)?",
+        "scoring": {
+          "5": "Direct hit — exactly Jay's niche (cold email tool, AI lead gen, etc.)",
+          "4": "Adjacent — related niche that Jay's audience cares about (sales tools, marketing AI)",
+          "3": "Tangential — general AI/business topic Jay could angle into his niche",
+          "2": "Stretch — requires significant reframing to fit",
+          "1": "Off-topic — no clear connection to Jay's audience"
+        }
+      }
+    ],
+    "thresholds": {
+      "make_it": {
+        "min_score": 16,
+        "label": "MAKE IT",
+        "action": "Create content immediately — this signal is hot and relevant"
+      },
+      "watch": {
+        "min_score": 12,
+        "max_score": 15,
+        "label": "WATCH",
+        "action": "Monitor for 24h, re-score if engagement grows"
+      },
+      "skip": {
+        "max_score": 11,
+        "label": "SKIP",
+        "action": "Not worth pursuing — low urgency or poor fit"
+      }
+    },
+    "max_score": 20
+  },
+  "platform_search_config": {
+    "x_twitter": {
+      "source_type": "primary",
+      "why": "Where news breaks first — fastest signal source",
+      "primary_method": "xAI Grok API x_search tool",
+      "api_base": "https://api.x.ai/v1/responses",
+      "model": "grok-4-1-fast",
+      "tool_type": "x_search",
+      "cost": "~$0.01-0.05/query (per-token, search included)",
+      "env_var": "XAI_API_KEY",
+      "fallback": "WebSearch site:x.com OR site:twitter.com",
+      "filter_window": "7 days",
+      "min_engagement": "10 likes OR 5 retweets",
+      "fields_to_extract": ["tweet_text", "likes", "retweets", "reply_count", "author_followers", "post_date", "author_handle", "tweet_url"],
+      "authority_handles": {
+        "cold_email": ["@instantly_ai", "@smartlead_ai", "@saleshandy", "@ReplyAppTeam", "@alxberman", "@THArrowOfApollo", "@patrickdang"],
+        "ai_automation": ["@AnthropicAI", "@OpenAI", "@OpenAINewsroom", "@GoogleDeepMind", "@n8n_io", "@cursor_ai", "@lovable_dev", "@v0", "@Replit", "@karpathy", "@AndrewYNg"],
+        "lead_gen": ["@ClayRunHQ", "@gohighlevel", "@apolloio", "@ListKitio", "@AlexHormozi", "@JordanPlatten"]
+      }
+    },
+    "reddit": {
+      "source_type": "community",
+      "why": "What practitioners actually care about — unfiltered signal",
+      "primary_method": "Apify trudax/reddit-scraper-lite",
+      "apify_actor": "trudax/reddit-scraper-lite",
+      "apify_cost": "$0.25/1K posts",
+      "fallback": "WebSearch site:reddit.com",
+      "target_subreddits": [
+        "r/coldEmail", "r/sales", "r/Entrepreneur", "r/artificial",
+        "r/ClaudeAI", "r/ChatGPT", "r/n8n", "r/nocode",
+        "r/Emailmarketing", "r/B2Bsales", "r/leadgeneration",
+        "r/SaaS", "r/agency", "r/startups", "r/smallbusiness",
+        "r/marketing", "r/growthhacking", "r/LocalLLaMA", "r/indiehackers"
+      ],
+      "filter_window": "7 days",
+      "min_engagement": "20 upvotes",
+      "fields_to_extract": ["title", "upvotes", "comment_count", "top_comments", "post_date", "subreddit", "author", "post_url"]
+    },
+    "linkedin": {
+      "source_type": "b2b",
+      "why": "What decision-makers discuss — B2B signal",
+      "primary_method": "Apify supreme_coder/linkedin-post",
+      "apify_actor": "supreme_coder/linkedin-post",
+      "apify_cost": "$1/1K posts",
+      "fallback": "WebSearch site:linkedin.com",
+      "note": "Scrapes by influencer profile URL, no cookies needed. Load targets from niche-keywords.json linkedin_influencers.",
+      "filter_window": "7 days",
+      "min_engagement": "50 reactions",
+      "fields_to_extract": ["post_text", "reactions", "comments", "author_name", "author_headline", "post_date", "post_url"]
+    }
+  },
+  "youtube_angle_research": {
+    "purpose": "For each MAKE IT signal, find existing YouTube videos to extract angles and identify content gaps",
+    "search_method": "WebSearch site:youtube.com",
+    "filter_window": "30 days",
+    "max_results": 10,
+    "fields_to_extract": ["title", "view_count", "channel_name", "description_snippet", "publish_date"],
+    "angle_taxonomy": [
+      "tutorial",
+      "reaction",
+      "comparison",
+      "news_breakdown",
+      "hot_take",
+      "case_study",
+      "tool_demo",
+      "listicle",
+      "prediction"
+    ]
+  }
+}

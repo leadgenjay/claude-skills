@@ -20,7 +20,8 @@ files:
   - references/viral-archetypes.json
   - references/content-types.json
   - references/niche-keywords.json
+  - references/scoring-matrices.json
   - evals/evals.json
-version: "2.1"
+version: "2.2"
 composesWell:
   - short-form-script

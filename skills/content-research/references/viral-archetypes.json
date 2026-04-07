@@ -212,6 +212,36 @@
       }
     },
     {
+      "id": "bens-framework",
+      "name": "BENS (Big, Easy, New, Safe)",
+      "description": "Content framed around the BENS decision matrix -- people adopt things that are Big (high impact), Easy (low effort), New (novel), and Safe (low risk). Content that hits 3-4 of these factors goes viral.",
+      "hook_pattern": "This [tool/method] is [big result] in [easy effort] -- and it's [new/free/safe]",
+      "best_format": "Screen Recording + Talking Head",
+      "niche_seeds": {
+        "cold_email": [
+          "easiest cold email setup ever",
+          "cold email results no risk",
+          "new cold email method free",
+          "biggest cold email results easy",
+          "safest cold email strategy"
+        ],
+        "ai_automation": [
+          "easiest AI automation setup",
+          "AI tool big results no effort",
+          "new AI workflow free easy",
+          "safest way to use AI business",
+          "biggest AI automation win easy"
+        ],
+        "lead_gen": [
+          "easiest lead gen method ever",
+          "free lead generation big results",
+          "new lead gen tool safe easy",
+          "biggest lead gen win no risk",
+          "safest B2B outreach method"
+        ]
+      }
+    },
+    {
       "id": "prediction-trend",
       "name": "Prediction / Trend",
       "description": "Forward-looking content about what's coming next in the space",

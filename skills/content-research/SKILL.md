@@ -1,8 +1,8 @@
 ---
 name: content-research
-version: 2.0.0
-triggers: "content research, video ideas, find ideas, manage competitors, add competitor, scrape competitors, analyze competitors, outlier analysis, what's working, trending topics, daily research, find hooks, hooks to steal, head to head, gap analysis"
-description: "Find unlimited SHORT-FORM video ideas (Reels, TikToks, YouTube Shorts) via 5 modes. Does NOT scrape long-form YouTube videos."
+version: 3.1.0
+triggers: "content research, video ideas, find ideas, manage competitors, add competitor, scrape competitors, analyze competitors, outlier analysis, what's working, trending topics, daily research, find hooks, hooks to steal, head to head, gap analysis, what's viral, viral signals, trending signals, content signals"
+description: "Find unlimited SHORT-FORM video ideas (Reels, TikToks, YouTube Shorts) via 5 modes including a 3-stage viral signal intelligence pipeline. Scans X, Reddit, LinkedIn for trending signals, scores them with a 4-factor matrix, then searches YouTube for existing coverage to find content angles and gaps. Does NOT scrape long-form YouTube videos."
 ---
 
 # Content Research -- Find Unlimited Short-Form Video Ideas
@@ -13,10 +13,50 @@ You are a short-form content research engine for Lead Gen Jay (@leadgenjay). You
 
 ## Before Starting
 
-**Read these reference files:**
-- `.claude/skills/content-research/references/viral-archetypes.json` -- 8 content archetypes with niche keyword seeds
+### Tool Pre-Flight Checklist (MANDATORY)
+
+Before executing ANY mode, verify these tools are available. Do NOT proceed until all required tools for the mode are confirmed working.
+
+**NEVER use WebSearch as a substitute for the tools below.** WebSearch is ONLY permitted for YouTube angle research in Stage 3 of trending mode (`site:youtube.com` queries). All signal collection MUST use the designated tools.
+
+| Platform | Required Tool | How to Verify |
+|----------|--------------|---------------|
+| X/Twitter | Grok API via Bash (`curl https://api.x.ai/v1/responses`) | Run: `source .env.local && echo $XAI_API_KEY` — must be non-empty |
+| Reddit | Apify MCP `trudax/reddit-scraper-lite` | Call: `mcp__apify__fetch-actor-details` for `trudax/reddit-scraper-lite` — must return input schema |
+| LinkedIn | Apify MCP `supreme_coder/linkedin-post` | Call: `mcp__apify__fetch-actor-details` for `supreme_coder/linkedin-post` — must return input schema |
+
+**If a tool is unavailable:**
+1. Tell the user which tool is missing and why (e.g., "Apify MCP server not connected")
+2. Ask user to fix it (e.g., "Run `claude mcp serve` or check `.mcp.json`")
+3. Do NOT silently fall back to WebSearch — this produces low-quality, off-topic results
+
+**For Grok API specifically:** The `XAI_API_KEY` lives in `.env.local`, not the shell environment. ALWAYS run `source .env.local` before any Grok curl call, or export the key inline.
+
+### Cost Guard (MANDATORY)
+
+Before ANY Apify `call-actor` invocation, calculate worst-case cost:
+
+```
+worst_case = sources x limit_per_source x cost_per_post
+```
+
+| Actor | Cost/post | Example (trending mode) |
+|-------|-----------|------------------------|
+| `trudax/reddit-scraper-lite` | $0.00025 | 19 subreddits x 10 posts = 190 x $0.00025 = $0.05 |
+| `supreme_coder/linkedin-post` | $0.001 | 38 profiles x 3 posts = 114 x $0.001 = $0.12 |
+
+**Rules:**
+- If worst-case exceeds **$1**, reduce `limitPerSource`/`maxPostCount` or split into batches
+- If worst-case exceeds **$5**, STOP and ask user for permission with a detailed cost breakdown
+- ALWAYS verify the limiting parameter name matches the actor's actual input schema (use `fetch-actor-details` if unsure). Wrong param names are silently ignored, causing unlimited scraping
+- **Incident reference:** On 2026-04-07, `maxResults` (wrong name) was used instead of `limitPerSource` for LinkedIn. Cost: $18.99 instead of $0.12. 19,060 posts scraped instead of 114.
+
+### Read Reference Files
+
+- `.claude/skills/content-research/references/viral-archetypes.json` -- 9 content archetypes with niche keyword seeds
 - `.claude/skills/content-research/references/content-types.json` -- Content type, visual format, and hook structure definitions
 - `.claude/skills/content-research/references/niche-keywords.json` -- Keyword matrix for cold email, AI automation, lead gen
+- `.claude/skills/content-research/references/scoring-matrices.json` -- 4-factor signal scoring matrix (primacy, velocity, authority, content-fit) + platform search config
 - `.claude/skills/short-form-script/references/hooks-database.json` -- 100 curated hooks (for dedup and appending)
 - `CLAUDE.md` -- Brand identity, banned words
 
@@ -29,7 +69,7 @@ Detect the mode from user input. If ambiguous, ask.
 | `competitors` | "manage competitors", "add competitor", "competitor list", "remove competitor", "recommend creators" |
 | `scrape` | "scrape competitors", "pull competitor data", "refresh competitor data", "scrape [handle]" |
 | `analyze` | "analyze competitors", "outlier analysis", "what's working", "head to head", "find hooks", "hooks to steal", "gap analysis" |
-| `trending` | "trending topics", "what's trending", "find trending", "daily research", "trend research" |
+| `trending` | "trending topics", "what's trending", "find trending", "daily research", "trend research", "viral signals", "what's viral", "content signals", "signal scan" |
 | `quick` | "find video ideas about [X]", "content research [topic]", "research [topic]", "ideas about [X]" |
 
 ---
@@ -447,68 +487,414 @@ Free -- all analysis runs on existing Supabase data.
 
 ---
 
-## Mode 4: `trending` -- Daily Trend Research
+## Mode 4: `trending` -- Viral Signal Intelligence (3-Stage Pipeline)
 
-### Workflow
+This mode scans X, Reddit, and LinkedIn for viral signals in Jay's niche, scores them with a 4-factor matrix, then searches YouTube for existing coverage to find content angles and gaps. The insight: X is where news breaks, YouTube follows days later. First-mover advantage = more views.
 
-1. **Dedup check:** Read last 3 files from `docs/research-logs/` to build a set of already-covered topics. Skip any topic that overlaps.
+Read `references/scoring-matrices.json` for the full scoring config and platform search parameters.
 
-2. **Build keyword matrix:** Load `viral-archetypes.json` and `niche-keywords.json`. For each of the 8 archetypes, generate 2-3 search queries using niche keywords:
-   - Template: `[archetype keyword seed] + [niche core keyword] + 2026`
-   - Example: "AI cold email tool launch 2026", "free lead generation alternative 2026"
+### Stage 0: Dedup Check
 
-3. **4-source parallel search** (use WebSearch tool -- free):
-   - **Twitter/X:** `site:twitter.com OR site:x.com [keywords]`
-   - **Reddit:** `site:reddit.com [keywords]`
-   - **YouTube:** `site:youtube.com [keywords]`
-   - **News/HN:** `[keywords] news 2026`
+Before collecting signals, query Supabase for recent content to build an exclusion set. This prevents resurfacing topics already saved or acted on.
 
-   Run all 4 searches in parallel per keyword batch. If Twitter results are sparse, optionally use Apify `apidojo/tweet-scraper` ($0.40/1K tweets) -- ask user first.
+**Query 1 — Recent scraped ideas (last 30 days):**
+```bash
+curl -s "${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/content_ideas?select=title,topic,tags,source_url&user_id=eq.3faff114-3c2d-4375-b422-dbb0cd6f96ba&source=eq.scraped&created_at=gte.$(date -v-30d +%Y-%m-%d)" \
+  -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
+```
 
-4. **Score each result** (1-5 scale):
+**Query 2 — Recent content items (approved/published/scheduled):**
+```bash
+curl -s "${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/content_items?select=title&user_id=eq.3faff114-3c2d-4375-b422-dbb0cd6f96ba&status=in.(approved,scheduled,published)&created_at=gte.$(date -v-30d +%Y-%m-%d)" \
+  -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
+```
 
-   | Factor | Weight | 1 (Low) | 5 (High) |
-   |--------|--------|---------|----------|
-   | TAM | 25% | Niche of a niche | Millions care |
-   | Demo-ability | 25% | Abstract concept | Can show on screen |
-   | Hook Potential | 20% | Hard to hook in 3s | Obvious 3s hook |
-   | Timeliness | 15% | Evergreen / old | Trending NOW |
-   | Uniqueness | 15% | Jay already covered | Fresh angle |
+**Build exclusion set:**
+1. Extract topic keywords from each result's `title` and `topic` fields (lowercase, split on spaces, remove stop words)
+2. Collect all `source_url` values into a URL exclusion set (for exact-match dedup in Stage 4)
+3. Pass both sets forward to Stage 2 scoring
 
-   **Weighted score** = (TAM x 0.25) + (Demo x 0.25) + (Hook x 0.20) + (Time x 0.15) + (Unique x 0.15)
+If Supabase is unreachable, log a warning and continue without dedup (don't block the pipeline).
 
-5. **Decision thresholds:**
-   - Score >= 4.0 -> **MAKE IT**
-   - Score 3.0-3.9 -> **MAYBE**
-   - Score < 3.0 -> **SKIP**
+### Stage 1: Signal Collection (Parallel)
 
-6. **Present Top 10:**
+Scan 3 platforms simultaneously. Run all searches in parallel for speed.
 
-   | # | Topic | Score | Decision | Hook Angle | Format | Archetype | Why It Works |
-   |---|-------|-------|----------|-----------|--------|-----------|-------------|
+**Step 1a: Build dynamic keywords**
 
-7. **Save research log** to `docs/research-logs/YYYY-MM-DD.md`:
+Before searching, generate fresh keywords:
+1. Load `niche-keywords.json` for:
+   - `x_search_queries` -- 5 pre-built Grok query clusters (use directly for Step 1b)
+   - `reddit_search_queries` -- 5 pre-built Reddit search terms (use directly for Step 1c)
+   - `linkedin_influencers` -- 38 profile URLs grouped by pillar (use directly for Step 1d)
+   - `all_subreddits` -- 19 target subreddits
+   - Static pillar keywords and `cross_pillar_keywords`
+2. Load `viral-archetypes.json` for archetype seed keywords
+3. Optionally scan Jay's last 5-10 published videos/posts (via YouTube Analytics MCP or `scraped_ideas` table) to extract current focus topics
+4. Enhance the pre-built queries with timely additions:
+   - Add any breaking news topics from step 3
+   - Append `[tool name] + [event word]` for any tool that just launched/updated
+   - Use `trending_search_templates` from niche-keywords.json for additional queries if needed
+
+**Step 1b: X/Twitter signal collection (Grok x_search)**
+
+X is the primary signal source -- where news breaks first. Use the xAI Grok API with the `x_search` tool for native X search. This is agent-to-agent: Claude constructs the prompt, Grok searches X natively, returns structured results.
+
+- **Primary method:** Grok API `x_search` via Bash curl call:
+  ```bash
+  curl -s https://api.x.ai/v1/responses \
+    -H "Authorization: Bearer $XAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "grok-4-1-fast",
+      "input": [
+        {"role": "system", "content": "You are a trending signal researcher for the AI automation and cold email niche. Search X for the most viral, high-engagement posts from the last 7 days matching the keywords provided. Return ONLY posts with 10+ likes or 5+ retweets. For each post, return a JSON array of objects with these fields: tweet_text, likes, retweets, reply_count, author_handle, author_followers, post_date, tweet_url. If fewer than 3 quality results, say so explicitly."},
+        {"role": "user", "content": "[DYNAMIC KEYWORD QUERIES - build from Step 1a]"}
+      ],
+      "tools": [{"type": "x_search", "from_date": "[7 days ago YYYY-MM-DD]", "to_date": "[today YYYY-MM-DD]"}]
+    }'
+  ```
+- **Batching:** Run all 5 `x_search_queries` from `niche-keywords.json` in parallel. Each query targets a different niche cluster: cold email tools, AI automation, lead gen tools, cross-pillar AI+outreach, and industry debates.
+- **Follow-up (MANDATORY):** If Grok returns fewer than 3 quality results for ANY query cluster, you MUST send a follow-up query with broader terms. Do NOT accept thin results — rephrase the query (drop boolean operators, use simpler keywords, expand date range) and re-query until you have at least 3 signals per cluster or have exhausted 3 retry attempts per cluster. This is critical for pipeline quality.
+- **Filter:** Discard anything with < 10 likes AND < 5 retweets. Discard posts older than 7 days.
+- **Extract per signal:** tweet text (the signal content), likes, retweets, reply count, author handle, author follower count, post date, tweet URL
+- **Fallback:** If `XAI_API_KEY` is not set, check `.env.local` and source it. If API errors persist, STOP and tell the user: "Grok API key invalid or expired. Check XAI_API_KEY in `.env.local`." Do NOT fall back to WebSearch.
+- **Cost:** ~$0.01-0.05 per query (Grok API is per-token, x_search tool usage is included)
+
+**Step 1c: Reddit signal collection (Apify)**
+
+Reddit shows what practitioners actually care about -- unfiltered community signal.
+
+- **Primary method:** Apify `trudax/reddit-scraper-lite` ($0.25/1K posts) via Apify MCP tools.
+  **IMPORTANT:** Use `mcp__apify__call-actor` (MCP tool), NOT curl. NEVER use WebSearch for Reddit signals.
+
+  **Strategy:** Use `startUrls` with subreddit URLs (NOT `searches` with keywords). The `searches` field does global Reddit search and returns off-topic noise. Subreddit URLs give targeted, high-quality posts from our 19 monitored communities.
+
+  ```
+  mcp__apify__call-actor with actor: "trudax/reddit-scraper-lite"
+  ```
+  ```json
+  {
+    "startUrls": [
+      {"url": "https://www.reddit.com/r/coldEmail/"},
+      {"url": "https://www.reddit.com/r/sales/"},
+      {"url": "https://www.reddit.com/r/Entrepreneur/"},
+      {"url": "https://www.reddit.com/r/artificial/"},
+      {"url": "https://www.reddit.com/r/ClaudeAI/"},
+      {"url": "https://www.reddit.com/r/ChatGPT/"},
+      {"url": "https://www.reddit.com/r/n8n/"},
+      {"url": "https://www.reddit.com/r/nocode/"},
+      {"url": "https://www.reddit.com/r/Emailmarketing/"},
+      {"url": "https://www.reddit.com/r/B2Bsales/"},
+      {"url": "https://www.reddit.com/r/leadgeneration/"},
+      {"url": "https://www.reddit.com/r/SaaS/"},
+      {"url": "https://www.reddit.com/r/agency/"},
+      {"url": "https://www.reddit.com/r/startups/"},
+      {"url": "https://www.reddit.com/r/smallbusiness/"},
+      {"url": "https://www.reddit.com/r/marketing/"},
+      {"url": "https://www.reddit.com/r/growthhacking/"},
+      {"url": "https://www.reddit.com/r/LocalLLaMA/"},
+      {"url": "https://www.reddit.com/r/indiehackers/"}
+    ],
+    "maxPostCount": 10,
+    "maxComments": 0,
+    "maxItems": 1000,
+    "skipComments": false,
+    "skipCommunity": true,
+    "sort": "new",
+    "time": "week",
+    "searchPosts": true,
+    "includeNSFW": false,
+    "proxy": {"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"]}
+  }
+  ```
+  ```
+  Then: mcp__apify__get-actor-output with datasetId from run
+  ```
+- **Target subreddits** (19 total, loaded from `all_subreddits` in `niche-keywords.json`):
+  `r/coldEmail`, `r/sales`, `r/Entrepreneur`, `r/artificial`, `r/ClaudeAI`, `r/ChatGPT`, `r/n8n`, `r/nocode`, `r/Emailmarketing`, `r/B2Bsales`, `r/leadgeneration`, `r/SaaS`, `r/agency`, `r/startups`, `r/smallbusiness`, `r/marketing`, `r/growthhacking`, `r/LocalLLaMA`, `r/indiehackers`
+- **Filter:** Last 7 days, minimum 20 upvotes.
+- **Extract per signal:** post title (the signal), upvotes, comment count, top 2-3 comments (for context), post date, subreddit, author, post URL
+- **Fallback:** If Apify MCP unavailable, STOP and tell the user: "Apify MCP tools not connected. Please check `.mcp.json` configuration." Do NOT fall back to WebSearch.
+- **Cost:** ~10 posts x 19 subreddits = 190 posts = ~$0.05
+
+**Step 1d: LinkedIn signal collection (Apify)**
+
+LinkedIn shows what B2B decision-makers discuss.
+
+- **Primary method:** Apify `supreme_coder/linkedin-post` ($0.001/post, no cookies needed) via Apify MCP tools.
+  **IMPORTANT:** Use `mcp__apify__call-actor` (MCP tool). NEVER use WebSearch for LinkedIn signals.
+
+  **CRITICAL: Use `limitPerSource` (NOT `maxResults`).** The field `maxResults` does NOT exist in this actor's schema. Using it causes unlimited scraping and cost overruns ($19+ instead of $0.12). This was learned from a real incident on 2026-04-07.
+
+  ```
+  mcp__apify__call-actor with actor: "supreme_coder/linkedin-post"
+  ```
+  ```json
+  {
+    "urls": ["[ALL 38 LinkedIn influencer URLs from niche-keywords.json linkedin_influencers section]"],
+    "limitPerSource": 3,
+    "scrapeUntil": "[7 days ago in YYYY-MM-DD format]",
+    "deepScrape": true
+  }
+  ```
+  ```
+  Then: mcp__apify__get-actor-output with datasetId from run
+  ```
+
+  **Parameter reference (from actual actor schema):**
+  - `urls` (required): array of LinkedIn profile URLs
+  - `limitPerSource` (integer): max posts per profile URL. Use 3 for trending (3 x 38 = 114 posts max)
+  - `scrapeUntil` (string): ISO date cutoff. ALWAYS set to 7 days ago to prevent historical scraping
+  - `deepScrape` (boolean): true to get engagement metrics (likes, comments). Always true for signal scoring
+
+- **Influencer targets:** Load all 38 profile URLs from `niche-keywords.json` -> `linkedin_influencers` section (13 cold email, 10 AI automation, 15 lead gen). These are B2B thought leaders who post regularly about cold email, AI automation, and lead gen on LinkedIn. Use base profile URLs (not `/recent-activity/all/` suffixed URLs).
+- **Filter:** Last 7 days, focus on posts with 50+ reactions.
+- **Extract per signal:** post text/summary, reactions count, comments count, author name, author headline, post date, post URL
+- **Fallback:** If Apify MCP unavailable, STOP and tell the user: "Apify MCP tools not connected. Please check `.mcp.json` configuration." Do NOT fall back to WebSearch.
+- **Cost:** ~3 posts x 38 profiles = 114 posts x $0.001 = ~$0.12
+- **Timeout protocol:** LinkedIn scraping 38 profiles takes 5-10 minutes with limitPerSource=3. After calling `mcp__apify__call-actor`:
+  1. Proceed immediately with X and Reddit signal processing (do NOT block on LinkedIn)
+  2. Check LinkedIn run status with `mcp__apify__get-actor-run` after completing Reddit processing
+  3. If still RUNNING after 15 minutes, proceed to scoring with X + Reddit signals and note "LinkedIn: pending" in the research log
+  4. Check again before saving the final research log. If SUCCEEDED, fetch results with `mcp__apify__get-actor-output` and merge into signals
+  5. If FAILED or TIMED-OUT after 20 minutes, log the failure and continue without LinkedIn data
+- **Cost:** ~$0.02 for 20 posts
+
+**Step 1e: Filter Out Noise**
+
+Before scoring, discard these signal types — they're not content ideas, they're self-promotion:
+
+| Filter Out | Why | Example |
+|-----------|-----|---------|
+| **Personal success stories** | Someone else's results aren't Jay's content angle | "I made $50K in 30 days with cold email" |
+| **Lead magnet promos** | These are ads, not signals | "Download my free cold email template" |
+| **Course/coaching promos** | Self-promotion, not trending topics | "Join my masterclass on lead gen" |
+| **Revenue screenshots** | Stripe/bank flexing isn't a topic | Tweet with Stripe dashboard screenshot |
+| **Engagement bait** | Broad platitudes with no specific topic | "The future of AI will change everything" |
+
+**DO include:** Tool launches, feature updates, industry news, technique breakdowns, data/research findings, strategy discussions, regulation changes, comparison debates.
+
+The test: "Could Jay make a video about this TOPIC (not this PERSON)?" If the signal is about someone's personal journey, skip it. If it's about a tool, technique, trend, or industry event, keep it.
+
+**Step 1f: Dedup & Normalize**
+
+After collecting and filtering signals from all 3 platforms:
+1. Check against last 3 files in `docs/research-logs/` -- skip any topic already covered
+2. Merge signals about the same topic from different platforms (e.g., an X thread and a Reddit post about the same tool launch = 1 signal with 2 sources)
+3. Normalize into a unified signal list:
+
+| # | Signal Topic | Source(s) | Raw Engagement | Post Date | URL(s) |
+|---|-------------|-----------|----------------|-----------|--------|
+
+### Stage 2: Score & Rank (4-Factor Matrix)
+
+Score each signal 1-5 on 4 factors. Read `scoring-matrices.json` for detailed scoring rubrics.
+
+| Factor | Weight | What It Measures |
+|--------|--------|-----------------|
+| **Primacy** | 25% | How recent? Last 24h = 5, 2-3 days = 4, 4-7 days = 3, 8-14 days = 2, 15+ days = 1 |
+| **Velocity** | 30% | How fast is engagement growing? Engagement-per-hour rate vs. normal for that platform/author |
+| **Authority** | 20% | Source credibility -- 100K+ followers = 5, 10-100K = 4, 1-10K = 3, <1K = 2, anonymous = 1 |
+| **Content-Fit** | 25% | Relevance to Jay's niche pillars -- direct hit = 5, adjacent = 4, tangential = 3, stretch = 2, off-topic = 1 |
+
+**Weighted score** = ((P x 0.25) + (V x 0.30) + (A x 0.20) + (CF x 0.25)) x 4 = total out of 20
+
+**Decision thresholds:**
+- Score >= 16/20 -> **MAKE IT** (create content immediately -- this signal is hot)
+- Score 12-15/20 -> **WATCH** (monitor for 24h, re-score if engagement grows)
+- Score < 12/20 -> **SKIP** (not worth pursuing)
+
+**Scoring rules (MANDATORY):**
+1. **Velocity evidence required:** Log the actual engagement numbers AND the post age. V score = engagement_rate / platform_baseline. Examples: "342 likes in 6h on acct avg 20/post = V5", "45 upvotes in 3 days = V2". Bare numbers without rate context = V2 default.
+2. **Authority evidence required:** Log follower count or account description. "Ollama official (150K followers) = A5", "Reddit user with no history = A1". Unknown follower count = A2 default.
+3. **No identical batch scores:** If 3+ signals share the same V AND A scores, re-examine each individually. Different posts have different engagement patterns.
+4. **SKIP enforcement:** Any signal where V <= 1 AND A <= 1 MUST be scored SKIP regardless of P and CF. Low-velocity posts from anonymous sources are noise, not signals.
+5. **Dedup enforcement (from Stage 0):** Before scoring, check each signal against the exclusion set from Stage 0:
+   - **URL match:** If signal's source URL is already in the URL exclusion set, mark as **DEDUP** and skip entirely (don't score).
+   - **Topic overlap:** Extract topic keywords from the signal title/topic. If >60% overlap with any existing idea's keywords, mark as **DEDUP** and skip.
+   - Log deduped signals at the bottom of the scored table: `| DEDUP | [topic] | -- | -- | -- | -- | -- | Already in content_ideas (source_url match) |`
+
+**Present scored signals:**
+
+| # | Signal Topic | P | V (evidence) | A (evidence) | CF | Score | Decision | Sources |
+|---|-------------|---|--------------|--------------|-----|-------|----------|---------|
+
+### Stage 3: YouTube Angle Research
+
+For each **MAKE IT** signal (score >= 16), search YouTube to find what content already exists and identify the angle Jay should take.
+
+**Step 3a: Search YouTube for existing coverage**
+
+For each MAKE IT topic:
+- WebSearch: `site:youtube.com "[topic keywords]"` (filter to last 30 days)
+- Also try: `[topic] tutorial`, `[topic] review`, `[topic] explained`
+- Collect top 5-10 results
+
+**Step 3b: Extract video data**
+
+For each YouTube result found:
+
+| # | Title | Channel | Views | Published | Angle Used |
+|---|-------|---------|-------|-----------|-----------|
+
+Classify each video's angle into one of these categories:
+- `tutorial` -- step-by-step teaching
+- `reaction` -- reacting to news/announcement
+- `comparison` -- X vs Y
+- `news_breakdown` -- explaining what happened
+- `hot_take` -- controversial opinion
+- `case_study` -- showing results/experience
+- `tool_demo` -- walkthrough of a product
+- `listicle` -- "top 5/10 things..."
+- `prediction` -- what's coming next
+
+**Step 3c: Identify content gaps**
+
+For each MAKE IT signal, analyze the YouTube landscape:
+1. **Saturated angles:** Which angles have 3+ videos already? (avoid these)
+2. **Underserved angles:** Which angles have 0-1 videos? (opportunity)
+3. **Jay's unique angle:** Given Jay's niche (cold email + AI automation + lead gen), what twist can he add that nobody else is doing?
+4. **Recommended format:** Based on the topic + angle, suggest the best visual format from `content-types.json` (talking head, screen recording, split screen, etc.)
+
+**Step 3d: Present final recommendations**
+
+For each MAKE IT signal, present:
+
+```
+SIGNAL: [Topic]
+Score: [X]/20 (MAKE IT)
+Sources: [X thread] [Reddit post] [LinkedIn post]
+─────────────────────────────────
+YouTube Landscape: X videos found in last 30 days
+  Saturated: tutorial (4 videos), news_breakdown (3 videos)
+  Underserved: comparison (0), case_study (1), hot_take (0)
+
+RECOMMENDED ANGLE: [specific angle]
+WHY: [1-2 sentences on why this angle + Jay's unique perspective]
+HOOK SUGGESTION: [3-second hook for this angle]
+FORMAT: [talking head / screen recording / etc.]
+ARCHETYPE: [from viral-archetypes.json — must match the signal's nature]
+```
+
+**Archetype validation (MANDATORY):**
+- The archetype MUST be selected from `viral-archetypes.json` by matching the signal's core action, not just its topic
+- `company-dropped-x` = a company released/updated/launched something (positive: new feature, speed boost, price cut)
+- `company-dropped-x` does NOT fit: company restricting access, raising prices, shutting down features, or removing capabilities. For those, use a descriptive label like "access-restriction" or "pricing-change" and note it's not in the standard taxonomy
+- If no archetype fits cleanly, state "No standard archetype — [custom label]" instead of forcing a bad fit
+
+### Stage 4: Save & Schedule
+
+1. **Save research log** to `docs/research-logs/YYYY-MM-DD.md`:
    ```markdown
-   # Content Research -- YYYY-MM-DD
+   # Viral Signal Intelligence -- YYYY-MM-DD
 
-   ## Sources Searched
-   - [list of queries and platforms]
+   ## Signal Sources
+   - X/Twitter: [N] signals collected
+   - Reddit: [N] signals collected
+   - LinkedIn: [N] signals collected
 
-   ## Top Ideas
-   [table of scored results]
+   ## Scored Signals
+   [full scored table from Stage 2]
 
-   ## MAKE IT List
-   [ideas scoring >= 4.0 with hook angles]
+   ## MAKE IT Signals + YouTube Angle Research
+   [recommendations from Stage 3]
+
+   ## WATCH List
+   [signals scoring 12-15 to re-check tomorrow]
    ```
 
-8. **Auto-save MAKE IT ideas** to `content_ideas` table via Supabase MCP:
-   ```sql
-   INSERT INTO content_ideas (user_id, title, description, source, status, platform, tags)
-   VALUES ('3faff114-...', title, description, 'discovered', 'new', 'instagram', tags)
+2. **Save all MAKE IT + WATCH signals** to `content_ideas` table via Supabase REST API.
+
+   **Step 2a: Source URL dedup** — check which signal URLs already exist:
+   ```bash
+   curl -s "${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/content_ideas?select=source_url&user_id=eq.3faff114-3c2d-4375-b422-dbb0cd6f96ba&source_url=in.(URL1,URL2,...)" \
+     -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+     -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
    ```
+   Filter out any signals whose `source_url` already exists. Log: "Skipped N signals (already in database)."
+
+   **Step 2b: Batch insert** — insert all non-SKIP, non-deduped signals in one request:
+   ```bash
+   curl -s -X POST "${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/content_ideas" \
+     -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+     -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+     -H "Content-Type: application/json" \
+     -H "Prefer: return=representation" \
+     -d '[...rows...]'
+   ```
+
+   **Row format** for each signal (MAKE IT or WATCH):
+   ```json
+   {
+     "user_id": "3faff114-3c2d-4375-b422-dbb0cd6f96ba",
+     "title": "Signal topic title",
+     "topic": "AI & Automation | Lead Gen | Business Growth",
+     "notes": "{\"score\":17.0,\"factors\":{\"P\":5,\"V\":4,\"A\":4,\"CF\":4},\"decision\":\"MAKE IT\",\"archetype\":\"access-restriction\",\"recommended_angle\":\"Hot take -- Anthropic just made Claude 50x more expensive\",\"hook\":\"Anthropic just cut off 135,000 AI developers. Here's why.\",\"format\":\"Talking head (30-60s)\",\"youtube_landscape\":{\"saturated\":[\"news_breakdown\"],\"underserved\":[\"tutorial\",\"comparison\",\"hot_take\"]},\"cross_platform\":\"Reinforces Signal 10 (Claude Code ad automation)\",\"recheck_trigger\":null}",
+     "source": "scraped",
+     "source_url": "https://x.com/_LuoFuli/status/2040825059342721520",
+     "tags": ["signal:make_it", "platform:x", "score:17.0", "archetype:access-restriction"],
+     "status": "new"
+   }
+   ```
+
+   **Field mapping rules:**
+   - `title` = signal topic (e.g. "Anthropic Cuts Off 3rd-Party Harnesses")
+   - `topic` = closest pillar: "AI & Automation", "Lead Gen", or "Business Growth"
+   - `notes` = JSON.stringify of structured data (score, factors, decision, archetype, angle, hook, format, YouTube landscape, cross-platform notes, recheck trigger)
+   - `source` = `"scraped"` (valid CHECK constraint value)
+   - `source_url` = original signal URL (X tweet, Reddit post, LinkedIn post)
+   - `tags` = array of structured tags: `signal:<decision>`, `platform:<source>`, `score:<value>`, `archetype:<name>`
+   - `status` = `"new"`
+
+   **Error handling:** If Supabase insert fails, save the rows as JSON to `docs/research-logs/YYYY-MM-DD-signals.json` as a fallback. Log the error but don't block the pipeline.
+
+   **After insert, log:** "Saved N signals to content_ideas (M MAKE IT, K WATCH). Skipped J duplicates."
+
+3. **Offer scheduling:** "Want to run this every morning? I can set up a daily 9am signal scan."
+   If user says yes, use CronCreate to schedule:
+   ```
+   CronCreate: cron "57 8 * * *", prompt "Run content research trending mode -- scan X, Reddit, LinkedIn for viral signals in AI automation / cold email / lead gen niche. Score with 4-factor matrix, research YouTube angles for MAKE IT signals. Save results to research log and content_ideas table."
+   ```
+
+4. **Skill chain menu:** After presenting all results, offer the user action options for any MAKE IT or WATCH signal:
+
+   ```
+   Ready to act on any of these signals? Pick an option:
+
+   1. /short-form-script — Write a talking-head script for a signal
+   2. /carousel-post — Turn a signal into an Instagram carousel
+   3. /skool-post — Share a signal breakdown with the Skool community
+   4. /content-report — Generate a formatted report from these results
+   5. Skip — Just save the research for now
+   ```
+
+   Use AskUserQuestion to present these options. If user picks 1-3, ask which signal number, then chain:
+
+   **For /short-form-script:** Invoke the `short-form-script` skill with:
+   - Topic: the signal's recommended angle
+   - Hook: the hook suggestion from Stage 3
+   - Format: the recommended format (talking head, screen recording, etc.)
+   - Context: signal summary + why it matters to Jay's audience
+
+   **For /carousel-post:** Invoke the `carousel-post` skill with:
+   - Topic: the signal topic reframed as a carousel headline
+   - Key points: extract 5-8 slide-worthy facts from the signal context
+   - CTA: "Follow @leadgenjay for daily AI automation tips"
+   - Style: use the signal's hook as the cover slide headline
+
+   **For /skool-post:** Invoke the `skool-writing` skill with:
+   - Topic: the signal topic as a community discussion starter
+   - Angle: "Here's what this means for your business" (teaching, not news)
+   - Include: the signal context, why it matters, and a question to drive comments
+   - Then chain output to `skool-post` skill for publishing
+
+   **For /content-report:** Invoke the `content-report` skill with the full research output from this session. The content-report skill will auto-detect `trending` mode and format all scored signals, MAKE IT deep-dives, WATCH list, and cost summary into a branded HTML report with clickable source links.
 
 ### Cost
-$0.00-$0.40 (mostly free WebSearch; Apify Twitter only if opted in).
+~$0.10-$0.15 per run (Grok x_search ~$0.05, Apify Reddit ~$0.03, Apify LinkedIn ~$0.02, WebSearch for YouTube angle research is free).
 
 ---
 
@@ -611,13 +997,26 @@ final_score = outlier_score * recency_multiplier
 - Forgetting recency multiplier (penalizes recent hits that haven't peaked yet)
 - Ignoring engagement override (a 2.5x outlier with 8% engagement rate is a MAKE IT, not MAYBE)
 
-### Trending Score (Trending mode)
+### Viral Signal Score (Trending mode -- 4-Factor Matrix)
 ```
-score = (TAM x 0.25) + (Demo x 0.25) + (Hook x 0.20) + (Time x 0.15) + (Unique x 0.15)
+signal_score = (Primacy x 5) + (Velocity x 6) + (Authority x 4) + (Content-Fit x 5) = total /20
 ```
-- >= 4.0 -> MAKE IT
-- 3.0-3.9 -> MAYBE
-- < 3.0 -> SKIP
+Each factor scored 1-5. Weights reflect importance: velocity (30%) > primacy (25%) = content-fit (25%) > authority (20%).
+- >= 16/20 -> MAKE IT (create content immediately)
+- 12-15/20 -> WATCH (monitor 24h, re-score)
+- < 12/20 -> SKIP
+
+**Good scoring example:**
+- Signal: "Instantly just launched AI email writer" on X
+- Primacy: 5 (posted 6 hours ago)
+- Velocity: 4 (200 likes in 6h, 10x normal for this account)
+- Authority: 4 (@instantlyai, 50K followers)
+- Content-Fit: 5 (direct hit -- cold email + AI tool)
+- Score: (5x5) + (4x6) + (4x4) + (5x5) = 25+24+16+25 = 90... wait, that's wrong.
+- Correct: (5x0.25) + (4x0.30) + (4x0.20) + (5x0.25) = 1.25+1.20+0.80+1.25 = 4.50 x 4 = 18/20 -> MAKE IT
+
+**Simplified calculation:** Multiply each factor score by its weight, sum, then multiply by 4 to get /20 scale.
+`score_20 = ((P x 0.25) + (V x 0.30) + (A x 0.20) + (CF x 0.25)) x 4`
 
 ---
 
@@ -632,6 +1031,53 @@ score = (TAM x 0.25) + (Demo x 0.25) + (Hook x 0.20) + (Time x 0.15) + (Unique x
 - Respect the $5 Apify spending limit -- warn before any operation that might exceed it
 - When scraping fails for a creator, report the failure with the actor name and error -- do not silently skip
 - When some creators succeed and others fail, present results in two separate sections: (1) **Successful Results** table with all scraped data, (2) **Failed Creators** table with creator name, platform, actor used, and error message. Always present successful data even if some creators fail
+
+---
+
+## Pipeline Handoff
+
+After presenting the MAKE IT ideas table (from analyze outlier report, trending, or quick mode), offer to chain into content creation:
+
+> "Want to create content from any of these? Pick a number."
+
+When the user picks an idea:
+
+1. **Ask format & platforms:**
+   - Content format: carousel, short-form video, or video ad
+   - Target platforms: instagram, linkedin, threads (multi-select)
+   - Angle/twist (optional — default to the hook angle from the table)
+
+2. **Write manifest** to `output/carousel/manifest.json`:
+   ```json
+   {
+     "version": "1.0",
+     "pipeline_stage": "research",
+     "research": {
+       "idea_title": "<title from table>",
+       "creator": "<original creator>",
+       "hook": "<spoken hook>",
+       "hook_framework": "<mad-lib framework>",
+       "category": "<category>",
+       "relevance_score": 8.5,
+       "source_url": "<video URL if available>"
+     },
+     "creative": {
+       "content_type": "<carousel | short-form | video-ad>",
+       "topic": "<topic angle>",
+       "angle": "<user's chosen angle or hook angle>",
+       "platforms": ["instagram", "linkedin"]
+     }
+   }
+   ```
+
+3. **Chain to next skill** based on format:
+   - **Carousel:** Invoke via Skill tool: `Skill: carousel-post, Args: "from-manifest"`
+   - **Short-form:** Invoke via Skill tool: `Skill: short-form-script, Args: "<topic> -- hook: <hook> -- <duration>s"`
+   - **Video ad:** Invoke via Skill tool: `Skill: video-ad, Args: "<topic>"`
+
+4. **Confirm before chaining:** "Manifest saved to `output/carousel/manifest.json`. Ready to create [format]?"
+
+The manifest is optional — this skill works standalone without it. The handoff only happens when the user explicitly picks an idea and confirms the format.
 
 ---
 
