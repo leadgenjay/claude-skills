@@ -1,0 +1,19 @@
+id: winnr-smtp
+type: skill
+name: "Winnr SMTP"
+description: "Provision SMTP mailboxes via Winnr API. Connect domains, create email users, check DNS verification, set up cold email infrastructure."
+categories:
+  - lgj-exclusive
+  - automation
+tags:
+  - winnr
+  - smtp
+  - mailboxes
+  - cold-email
+  - infrastructure
+icon: Server
+path: skills/winnr-smtp
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

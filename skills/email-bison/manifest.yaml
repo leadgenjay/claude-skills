@@ -1,0 +1,19 @@
+id: email-bison
+type: skill
+name: "Email Bison"
+description: "Manage cold email campaigns via Email Bison API. Create campaigns, manage sequences, configure warmup, fetch analytics, add leads."
+categories:
+  - lgj-exclusive
+  - automation
+tags:
+  - email-bison
+  - cold-email
+  - campaign-management
+  - api
+  - warmup
+icon: Mail
+path: skills/email-bison
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

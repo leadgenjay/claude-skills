@@ -1,0 +1,22 @@
+id: cold-email-strategy
+type: skill
+name: "Cold Email Strategy"
+description: "Discovery interview, ICP profiling, offer positioning, and messaging angles for cold email campaigns. Ingests transcripts, docs, recordings, and competitor research."
+categories:
+  - lgj-exclusive
+  - content
+tags:
+  - cold-email
+  - strategy
+  - icp
+  - outreach
+  - b2b
+  - lead-generation
+icon: Target
+path: skills/cold-email-strategy
+files:
+  - SKILL.md
+  - references/context-intake-guide.md
+  - references/icp-template.md
+version: "1.0"
+branch: LGJ-exclusive

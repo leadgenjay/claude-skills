@@ -1,0 +1,20 @@
+id: domain-management
+type: skill
+name: "Domain Management"
+description: "Purchase and configure cold email domains across Dynadot, Spaceship, and Porkbun. Check availability, set nameservers, manage registrar accounts."
+categories:
+  - lgj-exclusive
+  - automation
+tags:
+  - domains
+  - dynadot
+  - spaceship
+  - porkbun
+  - cold-email
+  - dns
+icon: Globe
+path: skills/domain-management
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

@@ -1,0 +1,19 @@
+id: email-verification
+type: skill
+name: "Email Verification"
+description: "Verify email addresses before adding to cold email campaigns using Reacher with SMTP proxy. Validate lead lists, check deliverability, filter invalid contacts."
+categories:
+  - lgj-exclusive
+  - quality
+tags:
+  - email-verification
+  - reacher
+  - deliverability
+  - cold-email
+  - lead-quality
+icon: CheckCircle
+path: skills/email-verification
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

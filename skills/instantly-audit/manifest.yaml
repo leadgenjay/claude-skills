@@ -1,0 +1,19 @@
+id: instantly-audit
+type: skill
+name: "Instantly Audit"
+description: "Comprehensive Instantly campaign audit — performance scoring, A/B test analysis, deliverability health, lead response trends, copy optimization, and prioritized recommendations."
+categories:
+  - lgj-exclusive
+  - analytics
+tags:
+  - instantly
+  - audit
+  - cold-email
+  - deliverability
+  - optimization
+icon: ClipboardCheck
+path: skills/instantly-audit
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

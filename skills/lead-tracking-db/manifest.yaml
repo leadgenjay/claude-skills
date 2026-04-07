@@ -1,0 +1,20 @@
+id: lead-tracking-db
+type: skill
+name: "Lead Tracking DB"
+description: "Manage the lead tracking database (Turso/SQLite). Query leads, insert domains/mailboxes, sync analytics, run reports, track campaign infrastructure."
+categories:
+  - lgj-exclusive
+  - analytics
+tags:
+  - database
+  - turso
+  - leads
+  - tracking
+  - cold-email
+  - reporting
+icon: Database
+path: skills/lead-tracking-db
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive

@@ -1,0 +1,21 @@
+id: cold-email-copywriting
+type: skill
+name: "Cold Email Copywriting"
+description: "Write cold email sequences with copy constraints, spintax, and deliverability rules. Platform-aware formatting for Email Bison and Instantly."
+categories:
+  - lgj-exclusive
+  - content
+tags:
+  - cold-email
+  - copywriting
+  - spintax
+  - email-sequences
+  - b2b
+  - outreach
+icon: PenTool
+path: skills/cold-email-copywriting
+files:
+  - SKILL.md
+  - references/copy-constraints.md
+version: "1.0"
+branch: LGJ-exclusive

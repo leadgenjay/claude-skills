@@ -1,0 +1,21 @@
+id: cold-email-ab-testing
+type: skill
+name: "Cold Email A/B Testing"
+description: "Full lifecycle A/B testing for cold email. Pre-launch variant generation with minimum thresholds (3/2/2/2). Post-launch z-test winner analysis and optimization."
+categories:
+  - lgj-exclusive
+  - conversion
+tags:
+  - cold-email
+  - ab-testing
+  - variants
+  - z-test
+  - statistics
+  - optimization
+icon: FlaskConical
+path: skills/cold-email-ab-testing
+files:
+  - SKILL.md
+  - references/z-test-snippet.py
+version: "1.0"
+branch: LGJ-exclusive

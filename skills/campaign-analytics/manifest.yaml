@@ -1,0 +1,20 @@
+id: campaign-analytics
+type: skill
+name: "Campaign Analytics"
+description: "Analyze cold email campaign performance and optimize results. Review stats, evaluate A/B tests, check deliverability health, make optimization recommendations."
+categories:
+  - lgj-exclusive
+  - analytics
+tags:
+  - analytics
+  - cold-email
+  - deliverability
+  - optimization
+  - ab-testing
+  - reporting
+icon: BarChart3
+path: skills/campaign-analytics
+files:
+  - SKILL.md
+version: "1.0"
+branch: LGJ-exclusive
