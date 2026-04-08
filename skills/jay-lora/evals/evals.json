@@ -1,0 +1,195 @@
+{
+  "skill": "jay-lora",
+  "version": "1.0.0",
+  "domain": "graphic-design",
+  "evals": [
+    {
+      "id": "thumbnail-serious-photo",
+      "description": "Generate a Jay photo for a YouTube thumbnail about cold email",
+      "prompt": "I need a Jay photo for a YouTube thumbnail about cold email deliverability. Dark, serious tone.",
+      "assertions": [
+        {
+          "type": "llm",
+          "text": "The output specifies a serious/confident expression, NOT smiling or excited"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "NO SMILE|serious confident|calm intensity",
+          "text": "Prompt includes explicit no-smile instruction for thumbnail context"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "jay",
+          "text": "Prompt includes the 'jay' trigger token"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "looking directly at camera|direct eye contact",
+          "text": "Prompt specifies direct eye contact"
+        },
+        {
+          "type": "llm",
+          "text": "The output does NOT include hand gestures like pointing, thumbs up, or OK sign in the prompt"
+        },
+        {
+          "type": "llm",
+          "text": "The output uses the correct script command or API call with proper LoRA weights URL"
+        }
+      ]
+    },
+    {
+      "id": "carousel-cover-photo",
+      "description": "Generate a Jay photo for an Instagram carousel cover slide",
+      "prompt": "Generate a Jay photo for the cover slide of an Instagram carousel about AI automation. Light, approachable feel.",
+      "assertions": [
+        {
+          "type": "llm",
+          "text": "The output uses a warm/friendly/approachable expression, appropriate for carousel cover context"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "jay",
+          "text": "Prompt includes the 'jay' trigger token"
+        },
+        {
+          "type": "llm",
+          "text": "The output specifies upper body framing suitable for a carousel cover (not full body, not just headshot)"
+        },
+        {
+          "type": "llm",
+          "text": "The output recommends checking pre-generated photos first before generating fresh"
+        }
+      ]
+    },
+    {
+      "id": "ad-creative-photo",
+      "description": "Generate a Jay photo for a 4:5 portrait Meta ad creative",
+      "prompt": "I need a Jay photo for a Meta ad creative in 4:5 portrait format. Professional, authoritative.",
+      "assertions": [
+        {
+          "type": "deterministic",
+          "pattern": "square_hd",
+          "text": "Uses square_hd generation size (crop to 4:5 after)"
+        },
+        {
+          "type": "llm",
+          "text": "The output mentions generating square and cropping to 4:5 afterward, not generating directly in 4:5"
+        },
+        {
+          "type": "llm",
+          "text": "Expression is confident/authoritative, matching ad creative context"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "jay",
+          "text": "Prompt includes the 'jay' trigger token"
+        }
+      ]
+    },
+    {
+      "id": "custom-prompt-validation",
+      "description": "Custom prompt that tests all mandatory rules are followed",
+      "prompt": "Generate a photo of me looking surprised, pointing at my laptop screen, with a busy city skyline behind me. For a YouTube thumbnail.",
+      "assertions": [
+        {
+          "type": "llm",
+          "text": "The output pushes back on or removes the pointing gesture, defaulting to natural relaxed pose unless user insists"
+        },
+        {
+          "type": "llm",
+          "text": "The output pushes back on or simplifies the busy city skyline background to something cleaner"
+        },
+        {
+          "type": "llm",
+          "text": "The output converts 'surprised' to a natural version (genuine surprise, not exaggerated jaw-drop)"
+        },
+        {
+          "type": "llm",
+          "text": "Since this is for a thumbnail, the output defaults to serious/confident instead of surprised, or explains the thumbnail-serious rule"
+        }
+      ]
+    },
+    {
+      "id": "batch-generation",
+      "description": "Generate multiple Jay photo variations for selection",
+      "prompt": "I need 4 variations of Jay for a thumbnail face-swap. Confident, professional look.",
+      "assertions": [
+        {
+          "type": "llm",
+          "text": "The output uses generate-thumbnail.mjs generate-jay or equivalent batch approach to create 4 variations"
+        },
+        {
+          "type": "llm",
+          "text": "The output includes a verification/review step where user or Claude picks the best variation"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "generate-jay|generate-thumbnail",
+          "text": "References the correct script for batch Jay generation"
+        }
+      ]
+    },
+    {
+      "id": "pre-generated-check",
+      "description": "Request that should use an existing pre-generated photo",
+      "prompt": "I need a Jay photo with an excited expression for a social post. Quick, don't want to wait for generation.",
+      "assertions": [
+        {
+          "type": "deterministic",
+          "pattern": "jay-excited\\.png|public/photos",
+          "text": "Points to the pre-generated jay-excited.png file"
+        },
+        {
+          "type": "llm",
+          "text": "The output recommends using the existing pre-generated photo rather than generating a new one"
+        }
+      ]
+    },
+    {
+      "id": "banner-compositing-photo",
+      "description": "Generate a Jay photo for banner/header compositing",
+      "prompt": "Need a Jay photo for a YouTube channel banner. Will be composited onto a dark background.",
+      "assertions": [
+        {
+          "type": "llm",
+          "text": "The output specifies a clean/simple/solid background for easy cutout and compositing"
+        },
+        {
+          "type": "llm",
+          "text": "The output uses professional/composed expression appropriate for banner context"
+        },
+        {
+          "type": "llm",
+          "text": "Framing is upper body, suitable for banner compositing (not too tight, not full body)"
+        }
+      ]
+    },
+    {
+      "id": "api-parameters-correct",
+      "description": "Verify correct API parameters when calling Flux Lora directly",
+      "prompt": "Call the Flux Lora API directly to generate a dramatic cinematic Jay photo. Show me the full API call.",
+      "assertions": [
+        {
+          "type": "deterministic",
+          "pattern": "Cubmr1zZLBb2fzlGo6Yao",
+          "text": "Uses the correct LoRA weights file URL"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "\"scale\":\\s*1\\.0|scale.*1\\.0",
+          "text": "LoRA scale is set to 1.0"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "28|num_inference_steps",
+          "text": "Uses 28 inference steps"
+        },
+        {
+          "type": "deterministic",
+          "pattern": "3\\.5|guidance_scale",
+          "text": "Uses 3.5 guidance scale"
+        }
+      ]
+    }
+  ]
+}

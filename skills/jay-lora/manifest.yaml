@@ -1,0 +1,22 @@
+id: jay-lora
+name: Jay Lora Photo Generator
+description: Generate character-consistent AI photos of Jay using Flux Lora for thumbnails, carousels, ads, banners, and social content
+version: 1.0.0
+categories:
+  - lgj-exclusive
+  - content
+  - design
+tags:
+  - flux-lora
+  - jay-lora
+  - ai-photo
+  - face-swap
+  - character-consistent
+  - fal-ai
+icon: Camera
+composes_well_with:
+  - youtube-thumbnail
+  - carousel-post
+  - ad-creative
+  - social-media-banner
+  - social-content
