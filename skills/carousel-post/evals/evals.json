@@ -1,0 +1,173 @@
+{
+  "skill_name": "carousel-post",
+  "domain": "general",
+  "method": "fal-ai-carousel",
+  "grading": "llm",
+  "evals": [
+    {
+      "id": 0,
+      "type": "listicle",
+      "prompt": "Create a 10-slide listicle carousel: 5 Cold Email Mistakes That Kill Your Reply Rate. Target audience: B2B founders doing their own outreach. Organic format.",
+      "assertions": [
+        {"text": "Output references `generateImage` from lib/fal for generating the Jay cover photo via Flux LoRA", "type": "deterministic", "weight": 2},
+        {"text": "Output references `generateWithNanoBanana` or `editWithNanoBanana` from lib/fal for generating inner slides", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies aspect_ratio '3:4' for organic format", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K' (not '2K' or '4K')", "type": "deterministic", "weight": 2},
+        {"text": "Output includes hex color #ED0D51 (hot pink) in prompts for accent text", "type": "deterministic", "weight": 1},
+        {"text": "Prompt templates use light/white background (#FFFFFF or #F8F8F8) — NOT dark #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon, emoji-style graphic, or abstract symbol (no 'icon', 'emoji', 'lightning bolt icon', 'envelope icon', 'chart icon')", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes a slide counter like '2/10', '3/10', 'N/M' format", "type": "deterministic", "weight": 2},
+        {"text": "No prompt includes visible pixel dimensions like '180px', '50px', '120px' as text to render — safe zones described only as layout constraints like 'generous margins'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies Big Shoulders as the headline font", "type": "deterministic", "weight": 1},
+        {"text": "Output specifies Manrope as the body font", "type": "deterministic", "weight": 1},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "Cover slide includes a 'SWIPE' call-to-action element", "type": "deterministic", "weight": 1},
+        {"text": "No banned AI words in any slide copy (delve, tapestry, realm, landscape, ever-evolving, cutting-edge, robust, transformative, pivotal, vibrant, crucial, compelling, seamless, groundbreaking, leverage, harness, embark, navigate, unveil, facilitate, synergy, game-changer, unlock, unleash, elevate, utilize, endeavour, multifaceted)", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy contains prompt instruction words like 'CRITICAL', 'EXACTLY', 'DO NOT', 'IMPORTANT', 'NOTE', 'MUST' — no prompt leakage into visible copy", "type": "deterministic", "weight": 2},
+        {"text": "No prompt mentions purple, blue, or gradient backgrounds — only white (#FFFFFF), off-white (#F8F8F8), or light gray allowed", "type": "deterministic", "weight": 2},
+        {"text": "Brand text in prompts says exactly '@leadgen' — no mangled variations like '@leadgenjay_official' or '@lead_gen'", "type": "deterministic", "weight": 1},
+        {"text": "The cover slide hook is specific and scroll-stopping — addresses a real pain point", "type": "llm", "weight": 1},
+        {"text": "Each inner slide focuses on one distinct mistake (not overlapping or repetitive)", "type": "llm", "weight": 1},
+        {"text": "Slide copy is concise and punchy — reads like Instagram, not a blog post", "type": "llm", "weight": 1},
+        {"text": "The final slide has a CTA with a comment trigger keyword (e.g., 'Comment EMAILS') or a follow CTA — not just more content", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 1,
+      "type": "how-to",
+      "prompt": "Create an 8-slide how-to carousel: How to Set Up Your First Cold Email Campaign in 30 Minutes. Target audience: agency owners new to cold outreach. Organic format.",
+      "assertions": [
+        {"text": "Output references `generateImage` for Flux LoRA Jay cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output references `editWithNanoBanana` with real screenshot references for inner slides", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies aspect_ratio '3:4'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Each inner slide has a step number in the prompt", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background (#FFFFFF) — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No prompt includes visible pixel dimensions as rendered text", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "Inner slide prompts describe realistic screenshots of actual tools (Instantly, Gmail, Google Sheets, etc.) — not illustrations or diagrams", "type": "llm", "weight": 3},
+        {"text": "All slide copy words are correctly spelled — no misspellings or garbled text", "type": "llm", "weight": 1},
+        {"text": "No slide copy contains prompt instruction words like 'CRITICAL', 'EXACTLY', 'DO NOT', 'IMPORTANT', 'NOTE', 'MUST'", "type": "deterministic", "weight": 2},
+        {"text": "Steps are in logical chronological order", "type": "llm", "weight": 2},
+        {"text": "Steps are actionable and specific — mention exact tool names and specific actions", "type": "llm", "weight": 2},
+        {"text": "CTA slide has text overlay with comment trigger or follow prompt", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 2,
+      "type": "comparison",
+      "prompt": "Create a comparison carousel: Cold Calling vs Cold Email in 2026. 9 slides. Target audience: sales teams evaluating outreach methods. Organic format.",
+      "assertions": [
+        {"text": "Output references `generateWithNanoBanana` or `editWithNanoBanana` for inner slides", "type": "deterministic", "weight": 2},
+        {"text": "Output references `generateImage` for Flux LoRA cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies aspect_ratio '3:4'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "No prompt mentions purple, blue, or gradient backgrounds — only white (#FFFFFF), off-white, or light gray allowed", "type": "deterministic", "weight": 2},
+        {"text": "No two inner slides have substantially the same headline or body copy — each slide is distinct", "type": "llm", "weight": 2},
+        {"text": "Cover slide has a clear comparison framing (vs, compared to, or split visual)", "type": "llm", "weight": 1},
+        {"text": "Comparison points use real data/stats, not strawman arguments", "type": "llm", "weight": 2},
+        {"text": "Each comparison slide covers a different dimension (cost, time, scale, etc.)", "type": "llm", "weight": 1},
+        {"text": "CTA uses comment trigger keyword or follow prompt", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 3,
+      "type": "case-study",
+      "prompt": "Create a case-study carousel: How We Booked 47 Calls in 14 Days with Cold Email. 10 slides. Target audience: B2B founders skeptical about cold email. Organic format. Include a screenshot reference of a Stripe dashboard as proof.",
+      "assertions": [
+        {"text": "Output references `editWithNanoBanana` for compositing screenshot references into slides", "type": "deterministic", "weight": 2},
+        {"text": "Output references `generateImage` for Flux LoRA cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output references `uploadToFalStorage` for uploading local screenshot assets", "type": "deterministic", "weight": 1},
+        {"text": "Output specifies aspect_ratio '3:4'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "At least one slide prompt references a real screenshot or proof image via image_urls", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy contains prompt instruction words like 'CRITICAL', 'EXACTLY', 'DO NOT', 'IMPORTANT', 'NOTE', 'MUST'", "type": "deterministic", "weight": 2},
+        {"text": "All slide copy words are correctly spelled — no misspellings or garbled text", "type": "llm", "weight": 1},
+        {"text": "Proof slides describe realistic dashboard screenshots (Stripe, analytics, calendar) — not styled text or bar charts", "type": "llm", "weight": 3},
+        {"text": "The case study follows a narrative arc: problem -> approach -> results -> takeaway", "type": "llm", "weight": 2},
+        {"text": "CTA leverages social proof from the case study", "type": "llm", "weight": 1}
+      ]
+    },
+    {
+      "id": 4,
+      "type": "tool-stack",
+      "prompt": "Create a carousel: The 3 Tools I Use to Get 1,000 Leads/Day. 8 slides. Target audience: cold email practitioners. Organic format. Tools are bolt.new, Instantly, and Claude Code.",
+      "assertions": [
+        {"text": "Output references `editWithNanoBanana` with real screenshot references for tool slides", "type": "deterministic", "weight": 2},
+        {"text": "Output references `generateImage` for Flux LoRA cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies aspect_ratio '3:4'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt asks AI to generate or render a company logo — logos must come from real files or be omitted", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No prompt duplicates a tool name (e.g., showing logo text 'bolt.' AND also writing 'bolt.new' as separate text)", "type": "llm", "weight": 3},
+        {"text": "Tool slides describe realistic screenshots of each tool's actual interface — not generic descriptions", "type": "llm", "weight": 3},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "All slide copy words are correctly spelled — no misspellings or garbled text", "type": "llm", "weight": 1},
+        {"text": "Brand text in prompts says exactly '@leadgen' — no mangled variations like '@leadgenjay_official' or '@lead_gen'", "type": "deterministic", "weight": 1},
+        {"text": "No prompt mentions purple, blue, or gradient backgrounds", "type": "deterministic", "weight": 2},
+        {"text": "Workflow includes checking for real logos in public/brand/ or public/ads/assets/ before generating", "type": "llm", "weight": 2},
+        {"text": "CTA uses comment trigger keyword or follow prompt", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 5,
+      "type": "myth-busting",
+      "prompt": "Create a 5-slide myth-busting carousel: 3 Lies About Cold Email. Target audience: marketers who think cold email is dead. Organic format.",
+      "assertions": [
+        {"text": "Output references `generateWithNanoBanana` or `editWithNanoBanana` for slides", "type": "deterministic", "weight": 2},
+        {"text": "Output references `generateImage` for Flux LoRA cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies aspect_ratio '3:4'", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "No prompt mentions purple, blue, or gradient backgrounds", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy contains prompt instruction words like 'CRITICAL', 'EXACTLY', 'DO NOT', 'IMPORTANT', 'NOTE', 'MUST'", "type": "deterministic", "weight": 2},
+        {"text": "Cover slide has a provocative/controversial hook", "type": "llm", "weight": 1},
+        {"text": "Each myth is followed by a truth/reality counterpoint", "type": "llm", "weight": 2},
+        {"text": "Works with only 5 slides — cover + CTA + 3 myth slides", "type": "llm", "weight": 2},
+        {"text": "CTA slide has text overlay with comment trigger or follow prompt — not just a photo", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 6,
+      "type": "boosted-format",
+      "prompt": "Create a boosted/paid carousel: Why 90% of Cold Emails Get Ignored. 8 slides. Target audience: B2B SaaS founders. Use 4:5 format for ad placement.",
+      "assertions": [
+        {"text": "Output specifies aspect_ratio '4:5' (not 3:4) since this is a boosted/paid carousel", "type": "deterministic", "weight": 3},
+        {"text": "Output references `generateImage` for Flux LoRA cover photo", "type": "deterministic", "weight": 2},
+        {"text": "Output specifies resolution '1K'", "type": "deterministic", "weight": 2},
+        {"text": "Prompt templates use light/white background — NOT #0D0D0D", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes slide counters", "type": "deterministic", "weight": 2},
+        {"text": "No prompt includes visible pixel dimensions as rendered text", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy", "type": "deterministic", "weight": 2},
+        {"text": "No prompt mentions purple, blue, or gradient backgrounds", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy contains prompt instruction words like 'CRITICAL', 'EXACTLY', 'DO NOT', 'IMPORTANT', 'NOTE', 'MUST'", "type": "deterministic", "weight": 2},
+        {"text": "Brand text in prompts says exactly '@leadgen' — no mangled variations", "type": "deterministic", "weight": 1},
+        {"text": "The 90% statistic is used effectively in the cover headline", "type": "llm", "weight": 1},
+        {"text": "Slide copy is optimized for paid — more direct, benefit-focused", "type": "llm", "weight": 1},
+        {"text": "CTA is action-oriented for paid context (book a call, get started, comment keyword)", "type": "llm", "weight": 2}
+      ]
+    }
+  ]
+}

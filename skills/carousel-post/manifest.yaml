@@ -1,0 +1,25 @@
+id: carousel-post
+type: skill
+name: "Carousel Post"
+description: "Generate Instagram carousel posts as AI images via fal.ai (Nano Banana 2 + Flux LoRA). Creates polished, viral-style carousels with Jay photos, light backgrounds, real screenshots, and brand-consistent typography."
+categories:
+  - lgj-exclusive
+  - content
+  - design
+tags:
+  - instagram
+  - carousel
+  - fal-ai
+  - nano-banana
+  - flux-lora
+  - social-media
+  - content-creation
+icon: GalleryHorizontalEnd
+path: skills/carousel-post
+files:
+  - SKILL.md
+  - evals/evals.json
+  - references/carousel-research.md
+  - manifest.yaml
+version: "1.0"
+branch: LGJ-exclusive
