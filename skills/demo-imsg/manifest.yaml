@@ -1,0 +1,20 @@
+id: demo-imsg
+type: skill
+name: iMessage Demo Generator
+description: Generate iMessage conversation videos simulating Jay texting Bob to showcase any Claude Code skill. Reads SKILL.md, scripts realistic text exchanges, renders transparent ProRes or MP4 via Remotion.
+version: "1.1"
+categories:
+  - video
+  - demo
+  - marketing
+tags:
+  - imessage
+  - remotion
+  - video-demo
+  - phone-mockup
+  - prores
+  - transparent-video
+icon: smartphone
+files:
+  - SKILL.md
+  - manifest.yaml

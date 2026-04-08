@@ -1,0 +1,20 @@
+id: skill-demo
+type: skill
+name: Skill Demo Generator
+description: Read any skill's SKILL.md and generate a scripted terminal demo MP4 that mimics Claude Code's rich output. Shows unique tools, scoring systems, and final results via VHS tape files, bash scripts, and asciinema casts.
+version: "2.1"
+categories:
+  - demo
+  - developer-tools
+  - marketing
+tags:
+  - terminal-demo
+  - vhs
+  - asciinema
+  - skill-showcase
+  - ansi
+  - mp4
+icon: terminal
+files:
+  - SKILL.md
+  - manifest.yaml
