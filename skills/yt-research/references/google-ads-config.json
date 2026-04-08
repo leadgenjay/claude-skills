@@ -1,0 +1,44 @@
+{
+  "description": "Google Ads API configuration for Lead Gen Jay. Reusable by any skill needing keyword data, campaign metrics, or ad insights.",
+  "auth": {
+    "method": "service_account",
+    "credentials_path": "~/.config/google-ads/service-account.json",
+    "developer_token": "WtTdv7P2BGtAZn6m6N_l7A",
+    "customer_id": "2691347493",
+    "login_customer_id": "8800460649",
+    "oauth_scope": "https://www.googleapis.com/auth/adwords"
+  },
+  "python_client": {
+    "package": "google-ads",
+    "version": "29.0.0",
+    "installed": "global (python3)",
+    "existing_lib": "~/Documents/Tech & Dev/Studio Apps/Archive/marketing-director/lib/google_ads/",
+    "modules": {
+      "auth": "auth.py — get_client(), get_credentials(), validate_credentials()",
+      "client": "client.py — GoogleAdsClient wrapper with search(), search_stream(), mutate()",
+      "reports": "reports/ — weekly.py, search_terms.py, change_events.py",
+      "operations": "operations/ — keywords.py, campaigns.py, bids.py, ads.py, ad_groups.py"
+    }
+  },
+  "keyword_planner": {
+    "service": "KeywordPlanIdeaService",
+    "method": "GenerateKeywordIdeas",
+    "language_constant": "languageConstants/1000",
+    "geo_target_us": "geoTargetConstants/2840",
+    "network": "GOOGLE_SEARCH",
+    "returns": [
+      "avg_monthly_searches",
+      "competition",
+      "competition_index",
+      "low_top_of_page_bid_micros",
+      "high_top_of_page_bid_micros",
+      "monthly_search_volumes (historical)"
+    ],
+    "usage_example": "See google-ads-keyword-planner.py in this directory"
+  },
+  "notes": {
+    "cost": "FREE — no per-query cost for Keyword Planner via API",
+    "python_version_warning": "System Python is 3.9.6 (EOL). google-ads works but shows deprecation warnings. Consider upgrading.",
+    "rate_limits": "Keyword Planner has daily request limits. Batch keywords into single calls (up to 2000 per request)."
+  }
+}

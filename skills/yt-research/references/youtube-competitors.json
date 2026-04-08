@@ -1,0 +1,217 @@
+{
+  "version": "1.1.0",
+  "description": "YouTube competitor channels for unicorn analysis and velocity tracking. Only channels creating content similar to Lead Gen Jay (cold email, AI automation for business, B2B lead gen). Subscriber/view counts from Apify scrape 2026-04-07 — skill auto-refreshes on first run.",
+  "last_refreshed": "2026-04-07",
+  "refresh_interval_days": 7,
+  "jay_channel": {
+    "handle": "@leadgenjay",
+    "channel_id": "UC5TQ0_ORokxOHLcybp1QlNA",
+    "subscribers_approx": 80900,
+    "pillars": ["cold_email", "ai_automation", "lead_gen"]
+  },
+  "competitors": [
+    {
+      "id": "instantly",
+      "name": "Instantly",
+      "handle": "@InstantlyAI",
+      "url": "https://www.youtube.com/@InstantlyAI",
+      "pillar": "cold_email",
+      "subscribers_approx": 75600,
+      "avg_views_approx": 12000,
+      "unicorn_multiplier": 10,
+      "notes": "Cold email SaaS leader, tutorial-heavy content"
+    },
+    {
+      "id": "taylor_haren",
+      "name": "Taylor Haren",
+      "handle": "@TaylorAHaren",
+      "url": "https://www.youtube.com/@TaylorAHaren",
+      "pillar": "cold_email",
+      "subscribers_approx": 4120,
+      "avg_views_approx": 4000,
+      "unicorn_multiplier": 10,
+      "notes": "Cold email infrastructure, sends 500K+ emails/day. Handle updated 2026-04-07 (was @taylorharen)."
+    },
+    {
+      "id": "patrick_dang",
+      "name": "Patrick Dang",
+      "handle": "@patrickdang",
+      "url": "https://www.youtube.com/@patrickdang",
+      "pillar": "cold_email",
+      "subscribers_approx": 350000,
+      "avg_views_approx": 20000,
+      "unicorn_multiplier": 10,
+      "notes": "Sales + cold outreach, broad audience"
+    },
+    {
+      "id": "saleshandy",
+      "name": "Saleshandy",
+      "handle": "@saleshandy",
+      "url": "https://www.youtube.com/@saleshandy",
+      "pillar": "cold_email",
+      "subscribers_approx": 20000,
+      "avg_views_approx": 3000,
+      "unicorn_multiplier": 10,
+      "notes": "Cold email SaaS, product tutorials"
+    },
+    {
+      "id": "smartlead",
+      "name": "Smartlead",
+      "handle": "@smartleadai",
+      "url": "https://www.youtube.com/@smartleadai",
+      "pillar": "cold_email",
+      "subscribers_approx": 33600,
+      "avg_views_approx": 5000,
+      "unicorn_multiplier": 10,
+      "notes": "Cold email SaaS, tutorials and walkthroughs"
+    },
+    {
+      "id": "matt_lucero",
+      "name": "Matt Lucero",
+      "handle": "@matthewlucero",
+      "url": "https://www.youtube.com/@matthewlucero",
+      "pillar": "cold_email",
+      "subscribers_approx": 13800,
+      "avg_views_approx": 5000,
+      "unicorn_multiplier": 10,
+      "notes": "Smartlead tutorials, lead gen tool reviews, cold email"
+    },
+    {
+      "id": "nick_abraham",
+      "name": "Nick Abraham",
+      "handle": "@nickabraham12",
+      "url": "https://www.youtube.com/@nickabraham12",
+      "pillar": "cold_email",
+      "subscribers_approx": 4200,
+      "avg_views_approx": 1500,
+      "unicorn_multiplier": 10,
+      "notes": "Cold email deliverability specialist, small but niche"
+    },
+    {
+      "id": "nate_herk",
+      "name": "Nate Herk",
+      "handle": "@nateherk",
+      "url": "https://www.youtube.com/@nateherk",
+      "pillar": "ai_automation",
+      "subscribers_approx": 635000,
+      "avg_views_approx": 25000,
+      "unicorn_multiplier": 10,
+      "notes": "AI automation tutorials, n8n, lead gen agents"
+    },
+    {
+      "id": "nick_saraev",
+      "name": "Nick Saraev",
+      "handle": "@nicksaraev",
+      "url": "https://www.youtube.com/@nicksaraev",
+      "pillar": "ai_automation",
+      "subscribers_approx": 367000,
+      "avg_views_approx": 30000,
+      "unicorn_multiplier": 10,
+      "notes": "AI automation + cold email systems, n8n deep dives"
+    },
+    {
+      "id": "ed_hill",
+      "name": "Ed Hill",
+      "handle": "@EdHillAI",
+      "url": "https://www.youtube.com/@EdHillAI",
+      "pillar": "ai_automation",
+      "subscribers_approx": 74700,
+      "avg_views_approx": 10000,
+      "unicorn_multiplier": 10,
+      "notes": "AI automation, no-code lead gen systems"
+    },
+    {
+      "id": "zubair_trabzada",
+      "name": "Zubair Trabzada",
+      "handle": "@AI-GPTWorkshop",
+      "url": "https://www.youtube.com/@AI-GPTWorkshop",
+      "pillar": "ai_automation",
+      "subscribers_approx": 123000,
+      "avg_views_approx": 20000,
+      "unicorn_multiplier": 10,
+      "notes": "AI automation for business, selling AI services"
+    },
+    {
+      "id": "automation_helpers",
+      "name": "Automation Helpers",
+      "handle": "@automationhelpers",
+      "url": "https://www.youtube.com/@automationhelpers",
+      "pillar": "ai_automation",
+      "subscribers_approx": 34800,
+      "avg_views_approx": 5000,
+      "unicorn_multiplier": 10,
+      "notes": "n8n business automation tutorials"
+    },
+    {
+      "id": "ai_growth_lab",
+      "name": "The AI Growth Lab with Tom",
+      "handle": "@theaigrowthlabwithtom",
+      "url": "https://www.youtube.com/@theaigrowthlabwithtom",
+      "pillar": "ai_automation",
+      "subscribers_approx": 12200,
+      "avg_views_approx": 8000,
+      "unicorn_multiplier": 10,
+      "notes": "n8n tutorials, AI automation, high engagement relative to size"
+    },
+    {
+      "id": "jordan_platten",
+      "name": "Jordan Platten",
+      "handle": "@JordanPlatten",
+      "url": "https://www.youtube.com/@JordanPlatten",
+      "pillar": "lead_gen",
+      "subscribers_approx": 389000,
+      "avg_views_approx": 20000,
+      "unicorn_multiplier": 10,
+      "notes": "AI cold outreach, SMMA, agency lead gen"
+    },
+    {
+      "id": "michele_torti",
+      "name": "Michele Torti",
+      "handle": "@michtortiyt",
+      "url": "https://www.youtube.com/@michtortiyt",
+      "pillar": "lead_gen",
+      "subscribers_approx": 53400,
+      "avg_views_approx": 10000,
+      "unicorn_multiplier": 10,
+      "notes": "n8n lead gen systems, automated outbound"
+    },
+    {
+      "id": "alex_leischow",
+      "name": "Alex Leischow",
+      "handle": "@alexleischow",
+      "url": "https://www.youtube.com/@alexleischow",
+      "pillar": "lead_gen",
+      "subscribers_approx": 21700,
+      "avg_views_approx": 5000,
+      "unicorn_multiplier": 10,
+      "notes": "AI outbound systems, cold email + LinkedIn + voice"
+    },
+    {
+      "id": "clay_hq",
+      "name": "Clay",
+      "handle": "@GrowWithClay",
+      "url": "https://www.youtube.com/@GrowWithClay",
+      "pillar": "lead_gen",
+      "subscribers_approx": 14900,
+      "avg_views_approx": 8000,
+      "unicorn_multiplier": 10,
+      "notes": "Data enrichment SaaS, tutorials and walkthroughs. Handle updated 2026-04-07 (was @clayhq)."
+    },
+    {
+      "id": "listkit",
+      "name": "ListKit",
+      "handle": "@listkit",
+      "url": "https://www.youtube.com/@listkit",
+      "pillar": "lead_gen",
+      "subscribers_approx": 15000,
+      "avg_views_approx": 3000,
+      "unicorn_multiplier": 10,
+      "notes": "B2B lead lists, cold email data"
+    }
+  ],
+  "by_pillar": {
+    "cold_email": ["@InstantlyAI", "@TaylorAHaren", "@patrickdang", "@saleshandy", "@smartleadai", "@matthewlucero", "@nickabraham12"],
+    "ai_automation": ["@nateherk", "@nicksaraev", "@EdHillAI", "@AI-GPTWorkshop", "@automationhelpers", "@theaigrowthlabwithtom"],
+    "lead_gen": ["@JordanPlatten", "@michtortiyt", "@alexleischow", "@GrowWithClay", "@listkit"]
+  }
+}

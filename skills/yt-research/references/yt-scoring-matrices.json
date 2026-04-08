@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "description": "Unified scoring matrix for YouTube long-form content opportunities. Adapted from content-research viral signal matrix for YouTube-specific factors.",
+  "matrix": {
+    "name": "YouTube Long-Form Opportunity Matrix",
+    "max_score": 20,
+    "factors": [
+      {
+        "id": "opportunity",
+        "name": "Opportunity",
+        "weight_default": 0.30,
+        "weight_evergreen": 0.35,
+        "weight_timely": 0.25,
+        "description": "Search demand vs competition. Combines real search volume (Google Keyword Planner) with YouTube competition analysis.",
+        "scoring": {
+          "5": "Volume 10K+/mo AND competition low (small channels, old content, low saturation)",
+          "4": "Volume 5-10K/mo AND competition medium OR Volume 10K+ with moderate competition",
+          "3": "Volume 1-5K/mo AND competition medium — viable but crowded",
+          "2": "Volume 500-1K/mo OR competition high (large channels dominate top 3)",
+          "1": "Volume <500/mo OR competition very high (saturated, huge channels only)"
+        },
+        "data_sources": {
+          "volume": "Apify iskander/google-keyword-search-volume-api — real Google Keyword Planner data",
+          "competition": "Apify streamers/youtube-scraper — top 3 videos per keyword: saturation %, avg channel subs, freshness gap"
+        }
+      },
+      {
+        "id": "ranking",
+        "name": "Ranking Probability",
+        "weight_default": 0.25,
+        "weight_evergreen": 0.30,
+        "weight_timely": 0.20,
+        "description": "Jay's specific likelihood to rank for this keyword based on channel authority, existing content, and audience engagement.",
+        "scoring": {
+          "5": "Existing content on exact topic + search terms already driving views + engagement >3% + smaller channels than Jay rank for it",
+          "4": "Adjacent content exists + related search terms drive traffic + engagement 2-3%",
+          "3": "No existing content but topic aligns with pillar + engagement >2% on related content",
+          "2": "New topic area, engagement 1-2%, would require building authority from scratch",
+          "1": "Off-pillar topic, engagement <1%, dominated by channels 10x+ Jay's size"
+        },
+        "data_sources": {
+          "topical_authority": "YouTube Analytics MCP get_channel_videos — does Jay have videos on this topic?",
+          "search_authority": "YouTube Analytics MCP get_search_terms — do related search terms drive views?",
+          "engagement": "YouTube Analytics MCP get_engagement_metrics — does Jay's audience engage with related content?",
+          "size_match": "Compare Jay's subscriber count vs keyword competitors' subscriber counts"
+        }
+      },
+      {
+        "id": "trend",
+        "name": "Trend Momentum",
+        "weight_default": 0.25,
+        "weight_evergreen": 0.15,
+        "weight_timely": 0.35,
+        "description": "Growth trajectory based on competitor video velocity and content recency. Higher weight in timely phase.",
+        "scoring": {
+          "5": "Competitor video at 5x+ velocity in last 7 days — topic is exploding NOW",
+          "4": "Multiple competitor videos on topic in last 14 days with above-average performance",
+          "3": "Stable evergreen topic — consistent search demand, no surge or decline",
+          "2": "Declining interest — fewer recent videos, lower views on recent uploads",
+          "1": "Dead topic — no recent competitor content, trend clearly over"
+        },
+        "data_sources": {
+          "velocity": "Apify streamers/youtube-scraper — recent competitor videos, views/day vs channel average",
+          "recency": "Upload dates of top-ranking videos — old top results = opportunity"
+        }
+      },
+      {
+        "id": "content_fit",
+        "name": "Content Fit",
+        "weight_default": 0.20,
+        "weight_evergreen": 0.20,
+        "weight_timely": 0.20,
+        "description": "Alignment to Jay's content pillars and audience interests.",
+        "scoring": {
+          "5": "Direct pillar match: cold email setup, AI automation tutorial, lead gen strategy",
+          "4": "Adjacent pillar: email marketing, sales tools, LinkedIn outreach, CRM",
+          "3": "Cross-pillar: touches 2+ pillars tangentially, could angle into niche",
+          "2": "Stretch: general business/AI topic requiring significant reframing",
+          "1": "Off-topic: no clear connection to Jay's audience or expertise"
+        },
+        "pillar_weights": {
+          "cold_email": 0.35,
+          "ai_automation": 0.30,
+          "lead_gen": 0.20,
+          "business_strategy": 0.15
+        }
+      }
+    ],
+    "thresholds": {
+      "make_it": {
+        "min_score": 16,
+        "max_score": 20,
+        "label": "MAKE IT",
+        "action": "Ideal opportunity — research and script immediately",
+        "color": "#22c55e"
+      },
+      "watch": {
+        "min_score": 12,
+        "max_score": 15,
+        "label": "WATCH",
+        "action": "Good potential — monitor and revisit in 1 week",
+        "color": "#eab308"
+      },
+      "skip": {
+        "min_score": 0,
+        "max_score": 11,
+        "label": "SKIP",
+        "action": "Not enough opportunity — pass for now",
+        "color": "#ef4444"
+      }
+    }
+  },
+  "unicorn_scoring": {
+    "description": "How to score competitor unicorn videos (10x+ outliers) on the same matrix",
+    "opportunity": "Based on the topic's search volume + how many other videos exist on this exact angle",
+    "ranking": "If a competitor proved the topic works, Jay can likely rank too — score 3-5 based on channel size comparison",
+    "trend": "Based on video's velocity (views/day) — unicorn status implies high trend score",
+    "content_fit": "Standard pillar alignment check"
+  },
+  "velocity_thresholds": {
+    "description": "For Phase 2 timely research — views per day relative to channel average",
+    "make_it": 5.0,
+    "watch": 3.0,
+    "skip_below": 1.5,
+    "lookback_days": 7
+  }
+}

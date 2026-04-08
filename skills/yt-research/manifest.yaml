@@ -1,0 +1,30 @@
+id: yt-research
+type: skill
+name: "YT Research"
+description: "Find high-opportunity YouTube long-form video ideas via 2 phases: Evergreen (keyword research + real search volume + competitor unicorn analysis) and Timely (high-velocity competitor videos). Scores all ideas on a 4-factor matrix (Opportunity, Ranking, Trend, Content Fit) with MAKE IT / WATCH / SKIP tiers. Saves all keywords to database for dedup."
+categories:
+  - lgj-exclusive
+  - analytics
+  - content
+tags:
+  - youtube
+  - keyword-research
+  - video-ideas
+  - competitor-analysis
+  - content-strategy
+  - scoring
+  - long-form
+icon: TrendingUp
+path: skills/yt-research
+files:
+  - SKILL.md
+  - references/youtube-competitors.json
+  - references/yt-scoring-matrices.json
+  - references/google-ads-config.json
+  - references/google-ads-keyword-planner.py
+  - evals/evals.json
+version: "1.3"
+composesWell:
+  - content-report
+  - youtube-script
+  - youtube-thumbnail

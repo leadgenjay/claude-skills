@@ -1,0 +1,205 @@
+{
+  "skill": "yt-research",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": "phase-selection",
+      "name": "Phase Selection — Always Ask",
+      "prompt": "/yt-research cold email",
+      "assertions": [
+        "MUST ask user which phase to run (Evergreen, Timely, or Both) before starting any research",
+        "MUST NOT auto-select a phase or start scraping without user confirmation",
+        "MUST accept inline phase specification like '/yt-research evergreen cold email' without re-asking"
+      ],
+      "weight": 2,
+      "tags": ["ux", "mandatory"]
+    },
+    {
+      "id": "keyword-discovery",
+      "name": "Keyword Discovery — Autocomplete Scraper",
+      "prompt": "/yt-research evergreen cold email setup",
+      "assertions": [
+        "MUST use Apify actor scraper-mind/youtube-autocomplete-scraper for keyword discovery",
+        "MUST call fetch-actor-details before call-actor to verify input schema",
+        "MUST generate 20-50 candidate keywords from the seed topic",
+        "MUST deduplicate keywords (case-insensitive)",
+        "MUST NOT use WebSearch for keyword discovery"
+      ],
+      "weight": 2,
+      "tags": ["evergreen", "tools"]
+    },
+    {
+      "id": "real-search-volume",
+      "name": "Real Search Volume — Google Keyword Planner",
+      "prompt": "/yt-research evergreen ai automation",
+      "assertions": [
+        "MUST use Apify actor iskander/google-keyword-search-volume-api to get real search volume data",
+        "MUST call fetch-actor-details before call-actor to verify input schema",
+        "MUST pass discovered keywords as a batch to the actor",
+        "MUST report actual monthly search volume numbers in the final report (not just relative scores)",
+        "MUST NOT use WebSearch or Google Trends as a substitute for real volume data",
+        "MUST NOT skip this step or use only autocomplete position as a volume proxy"
+      ],
+      "weight": 3,
+      "tags": ["evergreen", "tools", "critical"]
+    },
+    {
+      "id": "competition-scoring",
+      "name": "Competition Scoring — YouTube Video Analysis",
+      "prompt": "/yt-research evergreen lead generation",
+      "assertions": [
+        "MUST use Apify streamers/youtube-scraper to scrape top 3 videos per keyword",
+        "MUST calculate saturation (% with keyword in title)",
+        "MUST calculate channel_barrier (avg subscriber count of top channels)",
+        "MUST calculate freshness_gap (avg days since upload — 12+ months = opportunity)",
+        "MUST score competition 1-5 with evidence from the scraped data"
+      ],
+      "weight": 2,
+      "tags": ["evergreen", "scoring"]
+    },
+    {
+      "id": "authority-scoring",
+      "name": "Authority Scoring — YouTube Analytics MCP",
+      "prompt": "/yt-research evergreen cold email deliverability",
+      "assertions": [
+        "MUST attempt to use YouTube Analytics MCP tools (get_channel_videos, get_search_terms, get_engagement_metrics)",
+        "MUST score ranking probability 1-5 based on Jay's existing content, search terms, and engagement",
+        "MUST provide evidence for each ranking score (e.g., 'Jay has 3 related videos with 2.5% engagement')",
+        "If YouTube Analytics MCP unavailable, MUST warn user and use fallback score of 3",
+        "MUST NOT skip the ranking factor entirely"
+      ],
+      "weight": 2,
+      "tags": ["evergreen", "scoring", "mcp"]
+    },
+    {
+      "id": "unicorn-detection",
+      "name": "Unicorn Detection — Competitor Outliers",
+      "prompt": "/yt-research evergreen cold email",
+      "assertions": [
+        "MUST load competitor list from youtube-competitors.json reference file",
+        "MUST NOT hardcode competitor handles or URLs",
+        "MUST scrape top 10 videos per competitor channel via streamers/youtube-scraper",
+        "MUST scrape ALL competitors in the relevant pillar(s), not just 2-3",
+        "MUST calculate outlier_score as views / median_channel_views",
+        "MUST filter to only videos with outlier_score >= 10 (10x+ their average)",
+        "MUST NOT surface videos below 10x as unicorns"
+      ],
+      "weight": 3,
+      "tags": ["evergreen", "unicorns", "critical"]
+    },
+    {
+      "id": "unicorn-analysis",
+      "name": "Unicorn Analysis — Hook and Angle Extraction",
+      "prompt": "/yt-research evergreen ai automation",
+      "assertions": [
+        "For each unicorn video, MUST extract: title, topic, view count, outlier_score, upload date",
+        "MUST classify each unicorn's content angle (tutorial, reaction, comparison, news, hot_take, case_study, tool_demo, listicle, prediction)",
+        "MUST suggest how Jay could cover the unicorn topic with a different or better angle",
+        "MUST score unicorn topics on the same 4-factor matrix as keywords"
+      ],
+      "weight": 2,
+      "tags": ["evergreen", "unicorns"]
+    },
+    {
+      "id": "scoring-matrix-accuracy",
+      "name": "Scoring Matrix — Correct Weights Per Phase",
+      "prompt": "/yt-research both cold email",
+      "assertions": [
+        "Evergreen phase MUST use weights: Opportunity 35%, Ranking 30%, Trend 15%, Content Fit 20%",
+        "Timely phase MUST use weights: Opportunity 25%, Ranking 20%, Trend 35%, Content Fit 20%",
+        "MUST NOT use the same weights for both phases",
+        "Each idea MUST have all 4 factors scored individually with evidence",
+        "MUST NOT assign batch-identical scores to all ideas (each must have unique factor assessments)",
+        "MUST classify ideas into MAKE IT (16-20), WATCH (12-15), or SKIP (0-11)",
+        "Final scores MUST be on the 0-20 scale"
+      ],
+      "weight": 3,
+      "tags": ["scoring", "critical"]
+    },
+    {
+      "id": "timely-velocity",
+      "name": "Timely Phase — Velocity Detection",
+      "prompt": "/yt-research timely ai tools",
+      "assertions": [
+        "MUST scrape recent videos (last 7 days) from ALL competitors in youtube-competitors.json",
+        "MUST calculate velocity_score = views_per_day / channel_avg_views_per_day",
+        "MUST filter to velocity >= 5.0 for MAKE IT candidates",
+        "MUST filter to velocity >= 3.0 for WATCH candidates",
+        "MUST NOT flag normal-performing videos (velocity < 1.5) as trending",
+        "MUST show velocity multiplier in the report (e.g., '8.2x channel average')"
+      ],
+      "weight": 3,
+      "tags": ["timely", "critical"]
+    },
+    {
+      "id": "content-research-bridge",
+      "name": "Timely Phase — Content-Research Bridge",
+      "prompt": "/yt-research timely lead gen",
+      "assertions": [
+        "MUST query Supabase scraped_ideas table for ideas from the last 3 days",
+        "If recent ideas found: MUST surface top 5 by relevance_score with suggested YouTube long-form angles",
+        "If no recent ideas found: MUST explicitly offer to run /content-research trending",
+        "MUST NOT silently skip the content-research bridge step",
+        "MUST NOT use WebSearch as a substitute for the Supabase query"
+      ],
+      "weight": 2,
+      "tags": ["timely", "bridge"]
+    },
+    {
+      "id": "pre-flight-degradation",
+      "name": "Pre-Flight — Graceful Degradation",
+      "prompt": "/yt-research evergreen cold email",
+      "assertions": [
+        "MUST verify Apify MCP is accessible before starting",
+        "MUST check if YouTube Analytics MCP tools are available",
+        "If YouTube Analytics MCP unavailable: MUST warn user with clear message",
+        "If YouTube Analytics MCP unavailable: MUST use fallback ranking score of 3 for all keywords",
+        "If YouTube Analytics MCP unavailable: MUST NOT fail or skip Phase 1 entirely",
+        "MUST load reference files (youtube-competitors.json, yt-scoring-matrices.json) before scoring"
+      ],
+      "weight": 2,
+      "tags": ["robustness"]
+    },
+    {
+      "id": "report-format",
+      "name": "Report Format — Structured Output",
+      "prompt": "/yt-research evergreen cold email",
+      "assertions": [
+        "Report MUST include a table with columns: Keyword/Topic, Opportunity, Ranking, Trend, Fit, Score",
+        "Each MAKE IT item MUST include: why-it-scores-high explanation, search volume, competition gap, Jay's advantage, suggested angle",
+        "MAKE IT items MUST include next step: 'Run /youtube-script [keyword]'",
+        "Report MUST separate MAKE IT, WATCH, and SKIP tiers",
+        "Unicorn section MUST be separate from keyword section",
+        "Report MUST include summary with counts and top recommendation"
+      ],
+      "weight": 2,
+      "tags": ["output"]
+    },
+    {
+      "id": "save-to-db",
+      "name": "Save Behavior — Correct Tables",
+      "prompt": "/yt-research evergreen n8n automation",
+      "assertions": [
+        "Keywords scoring 60+ MUST be saved to yt_longtail_keywords table via POST /api/ideas/yt-longtail",
+        "Unicorn outliers MUST be saved to outlier_ideas table with research_context = 'yt-research-unicorn'",
+        "Saved keywords MUST include: keyword, seed_topic, volume_score, competition_score, opportunity_score, trend, category, suggested_angles",
+        "Category assignment MUST follow: 80+ = quick_win, 60-79 = growth_bet, 40-59 = standard, <40 = avoid"
+      ],
+      "weight": 1,
+      "tags": ["persistence"]
+    },
+    {
+      "id": "competitor-list-usage",
+      "name": "Competitor List — Reference File Usage",
+      "prompt": "/yt-research evergreen cold email",
+      "assertions": [
+        "MUST read youtube-competitors.json from .claude/skills/yt-research/references/",
+        "MUST NOT hardcode competitor channel handles or URLs in the skill execution",
+        "MUST use all competitors from the relevant pillar based on seed topic",
+        "If topic spans multiple pillars, MUST include competitors from all relevant pillars"
+      ],
+      "weight": 1,
+      "tags": ["config"]
+    }
+  ]
+}
