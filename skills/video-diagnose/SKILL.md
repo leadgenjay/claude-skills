@@ -1,10 +1,10 @@
 ---
 name: video-diagnose
-version: 1.0.0
-description: "Diagnose technical video and audio production issues. Use when user says 'diagnose video', 'video issues', 'video problems', 'check my video', 'audio issues', 'frame drops', 'video quality', 'mic issues', 'audio quality check'."
+version: 1.1.0
+description: "Diagnose technical video/audio issues AND camera settings. Use when user says 'diagnose video', 'video issues', 'video problems', 'check my video', 'audio issues', 'frame drops', 'video quality', 'mic issues', 'audio quality check', 'camera settings', 'check my settings', 'exposure issues', 'color looks off', 'image too dark', 'image too bright', 'blurry video', 'focus issues'."
 user_invocable: true
 command: video-diagnose
-arguments: "[path to video file]"
+arguments: "[path to video file] or [camera-settings]"
 ---
 
 # Video Production Diagnostics
@@ -15,8 +15,23 @@ Technical diagnostic tool for video and audio issues. Runs automated analysis an
 
 ### Camera Setup: Sony A7IV + CamLink 4K
 - **Signal path**: Sony A7IV HDMI out -> Elgato CamLink 4K -> Mac Studio USB
+- **Lens**: Tamron 20-40mm f/2.8 Di III VXD (Sony E-Mount)
 - **Recording software**: OBS Studio (talking head), Screen Studio (screen recordings)
-- **Audio**: Shure SM7B dynamic mic -> Shure preamp -> Mac Studio USB
+- **Audio**: Shure SM7B dynamic mic -> Shure MVX2U preamp -> Mac Studio USB
+- **Lighting**: Multi-light setup (key + fill)
+
+### Optimal Camera Settings (Talking Head @ 29.97fps)
+| Setting | Value | Why |
+|---------|-------|-----|
+| Shutter Speed | 1/60 | 180-degree rule (2x frame rate) |
+| Aperture | f/2.8 | Max background separation. f/3.5-4 if too blurry |
+| ISO | Auto (100-6400) | A7IV clean up to 6400 |
+| White Balance | Manual (match lights) | Prevents color shifts between takes |
+| Focus Mode | AF-C + Eye AF ON | Subject: Human |
+| Picture Profile | S-Cinetone (PP11) | Best skin tones, no LUT needed |
+| Metering | Multi | Works with multi-light |
+| Steady Shot | OFF | Fixed mount |
+| HDMI Output | HDMI Only, 4K 30p, Info Display OFF | Clean feed to CamLink |
 
 ### Setup B: Screen Recording
 - **Software**: Screen Studio or OBS
@@ -25,6 +40,15 @@ Technical diagnostic tool for video and audio issues. Runs automated analysis an
 ---
 
 ## Workflow
+
+### Mode Detection
+
+Detect the mode from the user's request:
+
+1. **File mode** (default) — user provides a video file path or says "diagnose video"
+2. **Camera settings mode** — user says "camera settings", "check my settings", "exposure", "color looks off", "too dark", "too bright", "blurry", "focus issues", "shutter speed", "aperture", "ISO"
+
+If camera settings mode, skip to **Camera Settings Diagnostic** section below.
 
 ### Step 1: Identify the video file
 
@@ -256,6 +280,81 @@ ffmpeg -nostdin -i input.mkv -c copy output.mp4
 # Generate spectrogram for manual inspection
 sox input.wav -n spectrogram -o spectrogram.png -x 2000 -y 513 -z 90
 ```
+
+---
+
+## Camera Settings Diagnostic
+
+When the user asks about camera settings, exposure, color, focus, or image quality — use this section instead of the file-based diagnostic.
+
+### Step 1: Identify the symptom
+
+Ask the user what they're seeing, or match from their request:
+
+| Symptom | Likely Cause | Fix |
+|---------|-------------|-----|
+| Video looks choppy/stuttery | Shutter speed too high (e.g., 1/500) | Set to 1/60 for 29.97fps (180-degree rule: 2x frame rate) |
+| Video looks too smooth / "soap opera" | Shutter speed too low (e.g., 1/30) | Set to 1/60 |
+| Image too dark | ISO too low or aperture too narrow | Open aperture to f/2.8, raise ISO (auto up to 6400) |
+| Image too bright / blown highlights | ISO too high or shutter too slow | Lower ISO, use ND filter if outdoors, check shutter at 1/60 |
+| Background not blurry enough | Aperture too narrow (high f-number) | Open to f/2.8 (Tamron max). Move subject farther from background |
+| Everything blurry / soft | Focus missed or wrong mode | Switch to AF-C + Eye AF (Subject: Human). Clean lens |
+| Focus hunting / pulsing | Wrong AF mode or low light | Use AF-C, ensure Eye AF is on. Add more light if dim |
+| Colors shift between takes | Auto white balance | Set WB to Manual, lock to your light temperature |
+| Skin tones look wrong | Wrong picture profile or WB | Use S-Cinetone (PP11). Adjust WB to match lights |
+| Video looks flat / washed out | S-Log or HLG profile without grading | Switch to S-Cinetone (PP11) unless you're grading in post |
+| Flickering | Shutter speed conflicts with light frequency | Use 1/60 (60Hz power) or 1/50 (50Hz power) |
+| Rolling shutter / jello | Fast camera movement + electronic shutter | Use mechanical shutter if available, or slow movements |
+
+### Step 2: Show optimal settings
+
+Present Jay's verified optimal settings:
+
+```
+Sony A7IV + Tamron 20-40mm f/2.8 — Talking Head
+────────────────────────────────────────────────
+Shutter:    1/60 (180-degree rule for 29.97fps)
+Aperture:   f/2.8 (wide open for background sep)
+ISO:        Auto 100-6400 (A7IV clean to 6400)
+WB:         Manual (match your light temp)
+Focus:      AF-C + Eye AF ON, Subject: Human
+Profile:    S-Cinetone (PP11)
+Metering:   Multi
+SteadyShot: OFF (fixed mount)
+HDMI:       HDMI Only, 4K 30p, Info Display OFF
+────────────────────────────────────────────────
+```
+
+### Step 3: Verify from video file (optional)
+
+If the user has a sample video, extract camera metadata:
+
+```bash
+# Check exposure metadata embedded by camera
+ffprobe -v error -show_entries format_tags -of json "<file>"
+
+# Check color space and transfer characteristics
+ffprobe -v error -select_streams v:0 -show_entries stream=color_space,color_transfer,color_primaries,color_range -of csv=p=0 "<file>"
+
+# Visual brightness check (average luminance)
+ffmpeg -nostdin -i "<file>" -vframes 30 -vf "signalstats" -f null - 2>&1 | grep "YAVG" | tail -5
+```
+
+| ffprobe Result | Meaning |
+|---------------|---------|
+| color_transfer=arib-std-b67 | HLG profile active — will look flat without grading |
+| color_transfer=bt709 | Standard Rec.709 — normal look |
+| color_transfer=unknown + flat image | Likely S-Log3 — needs grading or switch to S-Cinetone |
+| YAVG < 60 | Underexposed — raise ISO or open aperture |
+| YAVG > 200 | Overexposed — lower ISO or use ND filter |
+
+### Step 4: When Elgato 4K X arrives
+
+Update these settings:
+- Camera: 4K Output Set. → 60p (or 60p 10bit)
+- Shutter speed: 1/120 (180-degree rule for 59.94fps)
+- OBS FPS: 59.94
+- Everything else stays the same
 
 ---
 

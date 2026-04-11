@@ -1,7 +1,7 @@
 id: video-diagnose
 type: skill
 name: "Video Production Diagnostics"
-description: "Diagnose technical video and audio production issues with hardware-specific fix recommendations. Runs automated analysis via FFmpeg/sox and cross-references results with your recording setup (camera, mic, encoder)."
+description: "Diagnose technical video/audio issues AND camera settings. Runs automated FFmpeg/sox analysis, cross-references with your hardware setup, and provides camera exposure/focus/color guidance with optimal settings."
 categories:
   - lgj-exclusive
   - productivity
@@ -11,6 +11,7 @@ tags:
   - diagnostics
   - ffmpeg
   - obs
+  - camera
   - production
   - troubleshooting
 icon: MonitorCheck
@@ -18,5 +19,5 @@ path: skills/video-diagnose
 files:
   - SKILL.md
   - manifest.yaml
-version: "1.0"
+version: "1.1"
 branch: LGJ-exclusive
