@@ -1,0 +1,23 @@
+id: listmonk
+type: skill
+name: "Listmonk Email Sender"
+description: "Compose and send branded emails via self-hosted Listmonk. Send transactional emails to individuals or campaigns to subscriber lists. Supports HTML templates with brand tokens."
+categories:
+  - lgj-exclusive
+  - automation
+tags:
+  - listmonk
+  - email
+  - transactional
+  - campaigns
+  - newsletter
+  - automation
+icon: Send
+path: skills/listmonk
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - brand-voice
