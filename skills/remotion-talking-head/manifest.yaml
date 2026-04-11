@@ -1,0 +1,28 @@
+id: remotion-talking-head
+type: skill
+name: "Remotion Talking Head - Video Editing Skill"
+description: "End-to-end pipeline for creating polished short-form talking head videos (YouTube Shorts, Reels, TikTok) from raw footage. Handles transcription, silence removal, storyboarding, AI-powered B-roll suggestions, branded captions, title cards, and CTA end cards."
+categories:
+  - lgj-exclusive
+  - video
+tags:
+  - remotion
+  - talking-head
+  - shorts
+  - reels
+  - tiktok
+  - video-editing
+  - captions
+icon: Video
+path: skills/remotion-talking-head
+files:
+  - SKILL.md
+  - evals/evals.json
+  - references/caption-styles.md
+  - references/manifest-schema.md
+  - references/pipeline-stages.md
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - short-copy
+  - short-thumbnail

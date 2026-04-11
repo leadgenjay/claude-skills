@@ -1,0 +1,97 @@
+{
+  "skill_name": "remotion-talking-head",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Process a 90s talking head video about cold email automation. Title: 'The Machine' / 'Is Real'. CTA: 'Comment MACHINE below'. Include captions, silence removal, and AI discovery for B-roll suggestions.",
+      "expected_output": "Complete pipeline execution: transcript with word-level timestamps, silence segments detected and removed, storyboard with segment modes, AI discovery suggestions for B-roll/graphics, rendered 1080x1920 MP4 with pop captions, title card, and end card",
+      "assertions": [
+        {"text": "Pipeline runs all 9 stages in order: probe, extract_audio, transcribe, detect_silence, trim_silence, storyboard, discovery, build_manifest, render", "type": "workflow", "weight": 2},
+        {"text": "Transcript contains word-level timestamps with start/end times for each word", "type": "output", "weight": 2},
+        {"text": "Silence segments > 0.4s are detected and listed with start/end times", "type": "output", "weight": 1},
+        {"text": "Storyboard has segments with display modes (split, full_head, full_content)", "type": "output", "weight": 1},
+        {"text": "AI discovery suggests at least 2 B-roll placements with specific timestamps", "type": "output", "weight": 1},
+        {"text": "Discovery suggestions are presented for user approval before rendering", "type": "workflow", "weight": 2},
+        {"text": "Manifest JSON includes captionConfig with style 'pop' as default", "type": "output", "weight": 1},
+        {"text": "Manifest includes titleConfig with line1 and line2", "type": "output", "weight": 1},
+        {"text": "Manifest includes endCard with CTA text and handle", "type": "output", "weight": 1},
+        {"text": "Output directory contains: output.mp4, manifest.json, transcript.json, storyboard.json, discovery.json", "type": "output", "weight": 2},
+        {"text": "Output video is 1080x1920 vertical format at 30fps", "type": "quality", "weight": 2},
+        {"text": "Caption safe zone is bottom 15% minimum (not overlapping platform UI)", "type": "quality", "weight": 1}
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Quick YouTube Short from a 45s clip about lead generation tips. Title: '3 Lead Gen Hacks' / 'Nobody Talks About'. CTA: 'Follow for more'. Karaoke captions, no AI discovery, keep all silences.",
+      "expected_output": "Pipeline skips discovery and silence removal stages, uses karaoke caption style, renders with title and end card",
+      "assertions": [
+        {"text": "Pipeline correctly skips silence detection/removal when --no-silence-removal flag is used", "type": "workflow", "weight": 2},
+        {"text": "Pipeline correctly skips discovery stage when --no-discovery flag is used", "type": "workflow", "weight": 2},
+        {"text": "Caption style is 'karaoke' (word-by-word highlight), not 'pop'", "type": "output", "weight": 2},
+        {"text": "Manifest captionConfig.style is set to 'karaoke'", "type": "output", "weight": 1},
+        {"text": "Output video duration matches input duration (no silence removed)", "type": "quality", "weight": 1},
+        {"text": "Title card shows '3 Lead Gen Hacks' and 'Nobody Talks About'", "type": "output", "weight": 1},
+        {"text": "End card shows CTA text and @leadgenjay handle", "type": "output", "weight": 1}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Process a 2-minute talking head about email deliverability. Full pipeline with discovery. Title: 'Your Emails' / 'Are Going to Spam'. CTA: 'DM DELIVERABILITY for the fix'. Want data graphics when I mention statistics, and B-roll of email dashboards during technical sections.",
+      "expected_output": "Full pipeline with AI discovery that suggests data graphics for statistics sections and B-roll for technical segments. Manifest includes graphic segments with data-table or process-steps types.",
+      "assertions": [
+        {"text": "Deepgram transcription completes successfully with word-level timestamps", "type": "workflow", "weight": 1},
+        {"text": "Storyboard segments include at least one 'split' mode segment for graphics overlay", "type": "output", "weight": 2},
+        {"text": "AI discovery identifies statistical sections and suggests DataTableGraphic or ProcessStepsGraphic", "type": "output", "weight": 2},
+        {"text": "AI discovery identifies technical explanation sections and suggests B-roll clips", "type": "output", "weight": 1},
+        {"text": "Manifest contains segments with graphicData populated (type, title, items)", "type": "output", "weight": 2},
+        {"text": "Long silences (>0.4s) are detected and removed, reducing total duration", "type": "output", "weight": 1},
+        {"text": "Pipeline handles 2-minute video without timeout or memory issues", "type": "quality", "weight": 1},
+        {"text": "Output MP4 plays correctly with all layers visible", "type": "quality", "weight": 2}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Re-render an existing short with different captions. I already have a manifest at output/shorts/test-job/manifest.json. Change caption style from pop to pill and re-render only — skip all other stages.",
+      "expected_output": "Skill recognizes manifest-only re-render request, modifies captionConfig.style to 'pill', runs only the render stage",
+      "assertions": [
+        {"text": "Skill detects this is a re-render request (manifest already exists)", "type": "workflow", "weight": 2},
+        {"text": "Only the render stage executes — transcription, storyboard, discovery are skipped", "type": "workflow", "weight": 2},
+        {"text": "Manifest captionConfig.style is updated from 'pop' to 'pill'", "type": "output", "weight": 2},
+        {"text": "Original manifest is preserved as backup before modification", "type": "quality", "weight": 1},
+        {"text": "New output.mp4 is generated with pill-style captions", "type": "output", "weight": 1}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm building a Remotion composition for a talking head short. I need to layer these overlays on top of Jay's talking head video: title card, pop captions, screenshot overlays, and an end card CTA. Describe the correct positioning, sizing, and styling for each overlay layer so Jay's face stays visible and the video looks polished on mobile at 1080x1920.",
+      "expected_output": "Detailed visual layout guidance with specific positioning rules for each overlay: title top 1/3 with background box, 72px+ captions in bottom safe zone, screenshots in lower 1/3 with 3s max, large accent-colored end card CTA box, face visibility constraints throughout.",
+      "assertions": [
+        {"text": "Title card is positioned in the top 1/3 of the screen, NOT centered vertically", "type": "content", "weight": 2},
+        {"text": "Title has a semi-transparent dark background box (rgba(0,0,0,0.7) or similar dark overlay) with rounded corners", "type": "content", "weight": 2},
+        {"text": "Captions are 72px minimum font size OR mentions a 1.5x multiplier on base fontSize", "type": "content", "weight": 2},
+        {"text": "Screenshots positioned in lower portion of screen (60% from top or lower 1/3), NOT in upper portion where face is", "type": "content", "weight": 2},
+        {"text": "Screenshots have a maximum 3-second on-screen duration limit", "type": "content", "weight": 2},
+        {"text": "End card CTA uses accent color #ED0D51 as background box color", "type": "content", "weight": 1},
+        {"text": "End card CTA text is 64px or larger, bold, uppercase", "type": "content", "weight": 1},
+        {"text": "Face visibility is explicitly mentioned as a constraint — overlays must not cover Jay's face", "type": "quality", "weight": 2},
+        {"text": "End card overlay must be fully opaque (opacity 1.0) to completely hide captions and screenshots behind it", "type": "content", "weight": 2},
+        {"text": "Warns about CaptionOverlay endFrame — should NOT be changed dynamically due to React hooks error #300 from useMemo inside conditional blocks", "type": "content", "weight": 2}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I rendered my talking head short and found three bugs: (1) captions are still visible during the end card overlay, (2) a screenshot card overlaps into the end card transition, and (3) I tried fixing captions by setting CaptionOverlay endFrame to endCardStartFrame but got 'Rendered fewer hooks than expected' React error. How do I fix all three?",
+      "expected_output": "Troubleshooting guide: fix captions by making end card fully opaque (not by changing endFrame), fix screenshots with cutoffFrame prop, explain React hooks error #300 from conditional useMemo in CaptionOverlay.",
+      "assertions": [
+        {"text": "Recommends making the end card overlay fully opaque (opacity 1.0) to hide captions, rather than changing CaptionOverlay endFrame", "type": "content", "weight": 2},
+        {"text": "Explains the React hooks error is caused by useMemo hooks inside style-conditional blocks in CaptionOverlay — early return changes hook count", "type": "content", "weight": 2},
+        {"text": "Suggests using a cutoffFrame prop on ScreenshotOverlay to auto-cut screenshots before the end card starts", "type": "content", "weight": 2},
+        {"text": "Does NOT recommend changing CaptionOverlay endFrame as the solution (this causes the hooks error)", "type": "quality", "weight": 2},
+        {"text": "Explains the pattern: hide layers with opaque overlay on top rather than stopping/removing lower layers early", "type": "content", "weight": 2},
+        {"text": "Addresses all three issues separately (captions bleeding, screenshot overlap, hooks error)", "type": "structural", "weight": 2},
+        {"text": "Mentions z-index or layer ordering — end card must render above captions and screenshots", "type": "content", "weight": 1},
+        {"text": "Mentions that screenshot duration should be capped at a maximum (3 seconds) to prevent overlap with end card", "type": "content", "weight": 1}
+      ]
+    }
+  ]
+}
