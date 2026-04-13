@@ -1,0 +1,22 @@
+id: social-report
+type: skill
+name: Social Media Report
+description: Weekly accountability report tracking SM manager output across YouTube, LinkedIn, Skool, and Reddit. Live Apify scraping + stored DB historic mode. WoW comparisons, trend charts, AI recommendations, iMessage digest.
+version: "2.0"
+categories:
+  - analytics
+  - social-media
+  - reporting
+tags:
+  - social-media
+  - analytics
+  - apify
+  - supabase
+  - youtube
+  - linkedin
+  - skool
+  - reddit
+icon: bar-chart-3
+files:
+  - SKILL.md
+  - manifest.yaml
