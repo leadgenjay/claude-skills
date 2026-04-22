@@ -1,0 +1,27 @@
+id: meta-ads
+type: skill
+name: "Meta Ads"
+description: "Generate Instagram/Meta feed ad creatives (600x600 and 1080x1350 PNGs) in the locked Lead Gen Jay Meta Ads design style. Locked template library (HandDrawnAd, EditorialAd, StrikeAd, FaceOffAd, FaceOffStampAd, DuelAd, RepetitionAd, TerminalAd, StepListAd, ScreenshotAd) with cream/navy variants. New ads are a one-line component call — no new files per ad."
+categories:
+  - lgj-exclusive
+  - design
+  - content
+tags:
+  - meta-ads
+  - instagram
+  - instagram-ads
+  - facebook-ads
+  - lead-gen
+  - brand
+  - creative
+icon: ImagePlus
+path: skills/meta-ads
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/design-rules.md
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - brand-voice
+  - autoimprove
