@@ -54,6 +54,8 @@ During the discovery stage, the pipeline generates AI suggestions. Present them 
 - Graphics (data tables, process steps, elimination lists)
 - Emphasis moments for caption highlighting
 
+**Logo sourcing:** When B-roll or graphics reference a specific tool/software, check `~/Nextcloud/Visual assets/Logos/Tool Logos/` first (204 logos) and `~/Nextcloud/Visual assets/Logos/AI logos/` for AI tools. Never AI-generate a company logo.
+
 If the user approves, re-run with `--auto-approve`.
 
 ### Step 4: Open Output

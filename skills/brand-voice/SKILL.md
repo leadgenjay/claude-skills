@@ -29,6 +29,7 @@ These are non-negotiable. Violation of any = rewrite required.
 5. **No passive voice:** "Leads were generated" --> "I generated leads." Active voice always.
 6. **No paragraphs over 3 sentences.** 1-2 sentence paragraphs are preferred. Single-sentence paragraphs for punch. Absolute max: 3.
 7. **Max 1-2 emoji per piece.** Strategic placement only: 💣 🤯 💲 ✅ 🎁 📆 🧠 ☺️ 🥲. Never in headlines or subject lines (exception: 🥲 for guilt-trip subjects).
+8. **No jargon unless necessary for sense-making.** A term is jargon if a smart friend over coffee wouldn't recognize it — API, endpoint, runtime, container, webhook, rubric, SSE, infra, RAG, embeddings, Kubernetes, Redis, DMARC, SPF, CDP, etc. Default: cut it or replace with plain language ("a small program Anthropic runs for you" beats "cloud agent runtime"). Exception: when stripping the term would dilute the claim or a plain-language swap doesn't exist, define the term in the same sentence the first time it appears ("Outcomes, Anthropic's grading loop that rewrites the agent's work until it passes every rule you set"). Banned comparison pattern: "Think X but for Y" unless X is household-level (Uber, Netflix, Google - not Lambda, Kubernetes, Redis). Applies to every writing surface: emails, scripts, captions, carousels, Skool posts, LinkedIn, landing pages, everything.
 
 ---
 

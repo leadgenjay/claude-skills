@@ -1,449 +1,104 @@
 ---
 name: youtube-description
-version: 1.4.0
-description: "Write SEO-optimized YouTube video descriptions with timestamps, lead magnets, CTAs, UTM-tracked links, and keyword strategy for Lead Gen Jay. Use when the user mentions 'video description,' 'YouTube description,' 'timestamps,' 'chapters,' 'YouTube SEO,' 'caption corrections,' 'video tags,' 'video metadata,' 'publish video,' or when a video script or transcript is ready for publishing."
+version: 1.0.0
+description: "Write YouTube video descriptions in Lead Gen Jay's v1.4 format. Use when creating or updating a YouTube description, writing a video description for a handoff, drafting a description for upload, or the user says 'youtube description', 'video description', '/youtube-description', or 'write the description for this video'."
 ---
 
-# YouTube Description — Lead Gen Jay
+# YouTube Description Writer (v1.4 Lead Gen Jay format)
 
-> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and anti-patterns.
+Generate pre-upload YouTube descriptions that match the 177-video library at `docs/youtube-descriptions/`. Descriptions follow a strict v1.4 template: hook → Insiders CTA → Consult CTA → timestamps → expanded body → tools → watch next → free resources → socials → About → hashtags.
 
-You are an expert YouTube SEO strategist and description writer for **Lead Gen Jay** (@leadgenjay). Your goal is to write descriptions that maximize click-through from search, convert viewers into leads, and maintain consistent branding across every video.
+## Trigger
 
-## Critical Constraints
+- `/youtube-description <path-to-handoff>` or `/youtube-description <video-title>`
+- Also triggers on: "youtube description", "video description", "write the description for this video", "draft the YT description"
 
-**Read these first. They override everything below.**
+## Output location
 
-- **Total description MUST be under 5,000 characters** (YouTube's hard limit). Aim for 3,000-4,000.
-- **First 2 lines MUST be under 300 characters combined** (YouTube's visible "above the fold" cutoff before "Show More").
-- **Never use banned AI words** from CLAUDE.md (delve, leverage, unlock, seamless, etc.).
-- **No em dashes or en dashes.** Use regular hyphens only.
-- **All links MUST use canonical URLs** from `references/links-and-offers.md`. Never guess URLs.
-- **Timestamp format:** `0:00 - Title` (time at line start, space-dash-space, title). First chapter MUST be `0:00`.
-- **Every link MUST fit on 1 line.** Use simplified UTMs: `?utm_source=youtube&utm_campaign={slug}` only. No `utm_medium` or `utm_content`.
+`docs/youtube-descriptions/<video-id>.md` when the video is already published, otherwise `docs/youtube-descriptions/<slug>.md` (rename to `{videoId}.md` post-upload).
 
----
+## Voice Authority
 
-## Brand Context
+Chain to `brand-voice/SKILL.md` — use **Mode 2: Authority** blended with **Mode 1: Teaching**. Short sentences, specific stats, no hype adjectives.
 
-| Element | Value |
-|---------|-------|
-| **Channel** | Lead Gen Jay |
-| **URL** | https://youtube.com/@leadgenjay |
-| **Subscribers** | 80,000+ |
-| **Niche** | AI automation, Claude Code, cold email, lead generation, business growth |
-| **Voice** | Direct, tactical, no-fluff. Authority with accessibility. |
-| **Accent Color** | Razzmatazz `#ED0D51` |
+## Structure (in strict order)
 
----
+1. **Opening hook** — 1 to 2 sentences. Lead with a reversal, a big number, or a concrete promise. Do not use a headline or label.
+2. **Insiders CTA** (always first CTA). URL: `https://leadgenjay.com/insiders?utm_source=youtube&utm_medium=video&utm_campaign=<slug>` + one description line.
+3. **Consult CTA**. URL: `https://leadgenjay.com/consult?utm_source=youtube&utm_medium=video&utm_campaign=<slug>` + one description line.
+4. **TIMESTAMPS:** — see Timestamp Rules below.
+5. **Expanded body** — 1 to 2 short paragraphs. Include the headline stat from the video as a mini-reveal.
+6. **TOOLS & RESOURCES MENTIONED:** — bulleted list of every tool named in the video with link.
+7. **WATCH NEXT:** — 1 to 3 related `youtu.be/<id>` links from the existing library.
+8. **FREE RESOURCES:** — bulleted list. Apply the standard UTM trio (`utm_source=youtube&utm_medium=video&utm_campaign=<slug>`) to any `skool.com/lead-gen` or other trackable link. Include all free offers actually mentioned in the video.
+9. **CONNECT WITH JAY:** — Instagram, Twitter/X, LinkedIn (boilerplate, never edit).
+10. **ABOUT LEAD GEN JAY:** — boilerplate paragraph (never edit).
+11. **Hashtags** — single line, 12 to 15 hashtags, no line breaks between them.
 
-## Before Writing a Description
+## Timestamp Rules (HARD RULES)
 
-**Step 0:** Read reference file: `.claude/skills/youtube-description/references/links-and-offers.md`
+1. **Max 5 words per chapter label.** Count every space-separated token — including `Step 1:` (2 tokens), numerals (`3`), symbols (`+`), and acronyms (`AI`, `B2B`). If a label is 6+ tokens, cut it. No exceptions.
+2. **First chapter must be `0:00`** — YouTube requires this for chapter markers to render.
+3. **Timestamps strictly increasing.** Never repeat or go backwards.
+4. **Use `M:SS` or `MM:SS` format** (e.g., `0:00`, `1:01`, `23:02`). Never `00:00` or `0:0`.
+5. **Separator is ` - ` (space-hyphen-space).** Not em dash, not colon, not pipe.
+6. **Title-case the label.** Capitalize each major word. No trailing period.
+7. **Chapter count: 7 to 13.** Shorter videos get 7, long-form tutorials get 13. Match beat boundaries from the transcript, not rounded guesses.
+8. **Anchor to the transcript, not the handoff.** If the user provides an official timestamped transcript, use those timestamps exactly. Do not round.
 
-**Step 1:** Gather from the user (ask if not provided):
+### Good examples (≤ 5 words)
 
-1. **Video title** (or title options)
-2. **Transcript or script** (to extract timestamps and keywords)
-3. **Video-specific lead magnet** (free resource URL, if any)
-4. **Tools/products mentioned** (for affiliate links and resources section)
-
-**Step 2:** Determine offer routing based on video topic.
-
-Every video gets all 4 CTA layers. The topic determines *which* community and *which* paid offer:
-
-| Video Topic | Free Thing | Community | Paid Offer | Consult |
-|-------------|------------|-----------|------------|---------|
-| AI / Claude Code / automation | topic lead magnet | AI Automation Insiders (Skool) | AIA (`/aia`) | Always |
-| Cold email / lead gen / outreach | topic lead magnet | Lead Gen Free (Skool) | Lead Gen Insiders (`/insiders`) | Always |
-| General business / strategy | topic lead magnet | Lead Gen Free (Skool) | Lead Gen Insiders (`/insiders`) | Always |
-
-**Step 3:** Extract timestamps from the transcript by identifying major topic transitions, then map them to keyword-rich chapter titles (2-6 words each).
-
-**Step 4:** Identify SEO keywords:
-- Scan the transcript for repeated terms and phrases
-- Cross-reference with video title keywords
-- Primary keyword = the core topic in 2-3 words
-- Secondary keywords = related tools, methods, or concepts mentioned
-
----
-
-## Handling Edge Cases
-
-| Scenario | What to do |
-|----------|------------|
-| **No transcript provided** | Ask for one. If unavailable, work from the title + any context the user provides. Mark timestamps as `[TIMESTAMPS TO BE ADDED]` placeholder. |
-| **Short video (<5 min)** | 3-5 timestamps. Shorter body (50-100 words). Skip "Tools & Resources" section if only 1-2 tools mentioned. |
-| **Interview / podcast format** | Use guest name in above-the-fold text. Add "Guest: [Name]" line after hook. Timestamps should mark each question/topic shift. |
-| **Shorts (<60s)** | No timestamps. Minimal description: hook + AIA CTA + social links + hashtags. |
-| **No lead magnet exists** | Use the free Skool community link as the free resource. AI videos: `https://skool.com/ai-automation-insiders`. Lead gen videos: `https://skool.com/lead-gen`. |
-| **Discount code active** | Add code prominently: after the affiliate link, format as `(Use code [CODE] for [X]% off)` |
-
----
-
-## Description Template
-
-Every description follows this exact order. Do NOT skip sections. Do NOT reorder them.
-
-```text
-[ABOVE THE FOLD — hook + primary keyword, 2-3 lines max]
-
-FREE RESOURCE:
-[Lead magnet link OR free Skool community link]
-
-[PAID OFFER CTA — AIA or Lead Gen Insiders, topic-routed]
-
-WORK WITH MY TEAM:
-[Consult link with UTMs]
-[One-liner]
-
-TIMESTAMPS:
-0:00 - [Chapter Title]
-...
-
-[BODY — keyword-rich summary]
-
-TOOLS & RESOURCES MENTIONED:
-- [Tool] - [context or link]
-
-[WATCH NEXT — link to newer related video, if one exists]
-
-CONNECT WITH JAY:
-[Social links]
-
-ABOUT LEAD GEN JAY:
-[Boilerplate]
-
-#Hashtags
+```
+0:00 - Cold Email Agencies Are Back
+3:59 - Step 1: Pick B2B Niche
+14:10 - Step 4: Email Bison Deliverability
+23:02 - 7-Step Blueprint Recap
 ```
 
----
+### Bad examples (too long — rewrite)
 
-## Section-by-Section Rules
-
-**IMPORTANT: Free resource + CTAs go ABOVE timestamps.** The free resource, paid offer, and consult CTAs appear right after the above-the-fold hook, before timestamps. This maximizes CTA visibility since most viewers never click "Show More."
-
-### 1. Above the Fold (Lines 1-3)
-
-This is the ONLY text visible before "Show More." Two jobs: (a) hook the viewer, (b) include the primary keyword.
-
-```text
-[2-3 sentence hook with primary keyword. Lead with bold claim or result. Create curiosity gap.]
-
-[Secondary sentence with urgency, data point, or "here's what you'll learn" framing.]
+```
+0:00 - Cold Email Agencies Are Back (and Why I Was Wrong)   # 10 tokens
+3:30 - Step 1: Pick a B2B Niche with $10K+ LTV              # 9 tokens
+8:00 - Step 3: Smart Targeting (Probe.dev GitHub Case Study) # 7 tokens
 ```
 
-**Rules:**
-- Primary keyword MUST appear in the first sentence
-- Never start with "In this video I..."
-- First person, conversational tone
+## Copy Rules
 
-### 2. Free Resource (EVERY video - right after hook, BEFORE timestamps)
+- **No em dashes or en dashes** (`—` `–`) anywhere. Regular hyphens `-` only. Matches Jay's email preference.
+- **Banned AI words** (from CLAUDE.md): delve, tapestry, realm, unveil, utilize, unleash, game-changer, cutting-edge, leverage, harness, seamless, robust, transformative, elevate, multifaceted, ever-evolving, vibrant, crucial, compelling, groundbreaking, pivotal, embark, synergy, facilitate.
+- **Banned phrases**: "In today's ever-evolving…", "Unlock the power of", "Master the art of", "Let's delve into", "Harness the power of", "Push the boundaries of".
+- **UTM pattern**: `utm_source=youtube&utm_medium=video&utm_campaign=<kebab-slug>`. Slug matches the filename. **Do NOT add `utm_content`, `utm_term`, or any other parameter** — the URL path already identifies which CTA was clicked (`/insiders` vs `/consult` vs `/8m-leads` etc.). Extra parameters are noise in analytics, not signal.
+- **No YAML frontmatter** in the output description file — the library is plain body text only.
+- **Character budget**: under 5,000 chars (YouTube hard cap). Target 2,500 to 4,000 — matches the library.
 
-**Position: Immediately after the above-the-fold hook.** Every video MUST have a free resource link here.
+## Workflow
 
-**If a lead magnet exists for this video:**
-```text
-FREE RESOURCE:
-Grab my [Lead Magnet Name]: {url}?utm_source=youtube&utm_campaign={slug}
+```
+1. Read the handoff doc (if provided) or ask for video details.
+2. If user provides an official timestamped transcript, parse chapter beats from it.
+   Otherwise, use handoff's Section 2 timing breakdown and round to nearest beat.
+3. Draft each section in the order above. Apply timestamp rules strictly.
+4. Before saving, run the verification checklist below.
+5. Write to docs/youtube-descriptions/<slug-or-id>.md.
+6. Offer to copy the file to /tmp/<name>.txt and open in TextEdit for review.
 ```
 
-**If no lead magnet exists, use free Skool community:**
-```text
-FREE RESOURCE:
-Join the free community: https://skool.com/ai-automation-insiders?utm_source=youtube&utm_campaign={slug}
-```
-(Use `skool.com/lead-gen` for cold email / lead gen videos.)
-
-**Rules:**
-- ALWAYS include - never skip
-- Lead magnet takes priority over Skool if one exists
-- Every link must fit on 1 line
-
-### 3. Paid Offer CTA (EVERY video - after free resource)
-
-Use AIA for AI/Claude Code/automation videos. Use Lead Gen Insiders for everything else.
-
-**For AI / Claude Code / automation videos:**
-```text
-JOIN AI AUTOMATION INSIDERS:
-https://leadgenjay.com/aia?utm_source=youtube&utm_campaign={slug}
-3,500+ members | Claude Code module (17 lessons) | [video-specific benefit] | All my apps, skills & workflows
-```
-
-**For cold email / lead gen / business / strategy videos:**
-```text
-JOIN LEAD GEN INSIDERS:
-https://leadgenjay.com/insiders?utm_source=youtube&utm_campaign={slug}
-100+ hours of training | [video-specific benefit] | Weekly live coaching + 700M lead database
-```
-
-**Rules:**
-- ALWAYS include one of the two - never skip
-- One pipe-separated item MUST be customized to match the video's content
-
-### 4. Consult CTA (EVERY video - right after paid CTA)
-
-```text
-WORK WITH MY TEAM:
-https://leadgenjay.com/consult?utm_source=youtube&utm_campaign={slug}
-Free 30-min strategy call | 4.9/5 from 200+ reviews | For B2B businesses doing $10K+/mo
-```
-
-**Rules:**
-- ALWAYS include on every video, no exceptions
-- Positioned after the paid offer CTA, before timestamps
-
-### 5. Timestamps / Chapters
-
-```text
-TIMESTAMPS:
-0:00 - [Keyword-Rich Chapter Title]
-2:30 - [Keyword-Rich Chapter Title]
-```
-
-**Rules:**
-- Format: `0:00 - Title` (colon-separated time, space-dash-space, title)
-- First chapter starts at `0:00` (required for YouTube auto-chapters)
-- Each chapter at least 10 seconds apart (YouTube requirement)
-- 8-15 chapters for 15+ min videos, 5-8 for under 15 min
-- Titles are 2-6 words, keyword-rich, scannable
-- Include primary keyword in at least 2 chapter titles
-- Derive timestamps from actual transcript topic transitions, not estimates
-
-### 6. Body (Keyword-Rich Summary)
-
-100-200 words. First person. 2-3 short paragraphs or paragraph + bullet list.
-
-**Must include:**
-- Primary keyword 2-3 times (natural, not stuffed)
-- Secondary keywords 1-2 times each
-- Specific takeaways the viewer gets
-- Why this matters now (urgency/relevance)
-
-**Format by video type:**
-- Strategy/opinion: paragraph style
-- Tutorial/how-to: "What you'll learn:" bullet list
-- System/process: framework breakdown (Phase 1, Phase 2, etc.)
-
-**Rules:**
-- Specific > vague. "4% reply rates" not "better results"
-- No filler. No "like and subscribe" in the body.
-
-### 7. Tools & Resources Mentioned
-
-Only include if 2+ tools mentioned. Skip for videos that only mention 1 tool.
-
-```text
-TOOLS & RESOURCES MENTIONED:
-- Claude Code (Anthropic) - daily AI coding tool
-- Instantly.ai - https://instantly.ai/?via=jay (Use code LGJ10 for 10% off)
-- [Tool Name] - [3-8 word context or link]
-```
-
-**Rules:**
-- Only list tools actually mentioned in the video
-- Affiliate links keep their native tracking params (no UTMs added)
-- Include discount codes inline: `(Use code [CODE] for [X]% off)`
-- Non-affiliate tool links get UTMs with `utm_content=resources`
-
-### 8. Watch Next (older videos only)
-
-For older videos where a newer video on the same topic exists, add a "WATCH NEXT" link:
-
-```text
-WATCH NEXT:
-[Updated Title] - https://youtube.com/watch?v={videoId}
-```
-
-**Rules:**
-- Only add when a newer, more comprehensive video on the same topic exists
-- Link to the most relevant newer video, not just any recent video
-- Skip this section for the newest videos on a topic
-
-### 9. Social Links
-
-Always use these exact lines from `references/links-and-offers.md`. Never modify.
-
-```text
-CONNECT WITH JAY:
-Instagram: https://instagram.com/leadgen
-Twitter/X: https://x.com/leadgenjay
-LinkedIn: https://linkedin.com/in/dr-jay-feldman
-```
-
-### 10. About Boilerplate
-
-```text
-ABOUT LEAD GEN JAY:
-Cold email, AI automation, and lead generation strategies for entrepreneurs. Two 8-figure companies built. 3,500+ community members. 9+ years in the game.
-```
-
-### 11. Hashtags
-
-Single line at the very end. 10-15 hashtags.
-
-**Rules:**
-- Always include: `#LeadGenJay` and `#AIAutomation`
-- 3-5 topic-specific hashtags
-- 3-5 broader reach hashtags
-- Title case for multi-word: `#ClaudeCode` not `#claudecode`
-- All on one line, space-separated
-
----
-
-## SEO Keyword Strategy
-
-For every description, identify and document:
-
-| Type | Count | Placement |
-|------|-------|-----------|
-| **Primary keyword** | 1 phrase | Title, first sentence, 2+ chapter titles, 2-3x in body |
-| **Secondary keywords** | 3-5 | Body paragraphs, chapter titles |
-| **Long-tail keywords** | 3-5 | Body paragraphs as natural phrases |
-
-### Tags (for YouTube Studio)
-- 15-25 comma-separated phrases
-- Mix of: primary keyword, secondary keywords, long-tail phrases, branded terms
-- Include year for freshness (e.g., "claude code 2026")
-
----
-
-## Caption Corrections
-
-For every video with a transcript, generate a corrections table.
-
-**Common corrections for this channel:**
-
-| Auto-caption | Correct |
-|--------------|---------|
-| "Cloud" / "Cloud Code" / "Cloud Max" | "Claude" / "Claude Code" / "Claude Max" |
-| "school" | "Skool" |
-| "Lead genen J" | "Lead Gen Jay" |
-| "go high level" | "GoHighLevel" |
-| "n8n" (garbled) | "n8n" |
-| "Chad GPT" | "ChatGPT" |
-| "Dario Emod" | "Dario Amodei" |
-| "Jensen Hong" | "Jensen Huang" |
-| "Herozi" / "Hermosi" | "Hormozi" |
-| "reotion" | "Remotion" |
-| "Consulty" | "Instantly" |
-
-Also correct: any person's name, any technical tool name, any branded term.
-
----
-
-## Pinned Comment
-
-Draft for every video. Purpose: engagement + secondary CTA.
-
-```text
-[1 sentence teasing next video or follow-up content]
-[1 sentence CTA - community, lead magnet, or engagement question]
-[Optional: "Drop a comment with [X]"]
-```
-
-**Rules:**
-- Don't repeat the description hook
-- Include a question to drive comments
-- Under 300 characters
-
----
-
-## Output Format
-
-Deliver in this order:
-
-1. **YouTube Description** (inside a code block for easy copy-paste)
-2. **Tags** (comma-separated, inside a code block)
-3. **Caption Corrections** (markdown table)
-4. **Pinned Comment** (inside a code block)
-5. **SEO Keyword Strategy** (primary, secondary, long-tail breakdown)
-
----
-
-## Full Example
-
-Here is a complete description following this skill's format, for the video "My 3-Phase AI Plan to Rebuild My Entire Business":
-
-```text
-I run two 8-figure companies and I just stopped everything - content, launches, offers - to rebuild my entire business with AI. This is my exact 3-phase AI plan and why you need to be doing this right now.
-
-60,000+ tech jobs gone in Q1. CFOs predicting 9x more AI layoffs this year. There's a $5.5 trillion skills gap and 72% of employers can't find AI talent. The window is closing fast.
-
-FREE RESOURCE:
-Join the free community: https://skool.com/ai-automation-insiders?utm_source=youtube&utm_campaign=my-ai-plan
-
-JOIN AI AUTOMATION INSIDERS:
-https://leadgenjay.com/aia?utm_source=youtube&utm_campaign=my-ai-plan
-3,500+ members | Claude Code module (17 lessons) | AI workflow templates for every bottleneck | All my apps, skills & workflows
-
-WORK WITH MY TEAM:
-https://leadgenjay.com/consult?utm_source=youtube&utm_campaign=my-ai-plan
-Free 30-min strategy call | 4.9/5 from 200+ reviews | For B2B businesses doing $10K+/mo
-
-TIMESTAMPS:
-0:00 - Why I Stopped Making Content
-0:50 - The Data: AI Job Market & Skills Gap
-2:58 - My 3-Phase AI Plan
-3:07 - Phase 1: Enable Your Team With AI
-5:12 - Mac Minis Running Claude Code 24/7
-6:31 - Give Your Team Access via Slack & iMessage
-8:58 - Phase 2: Remove Every Bottleneck With AI
-10:30 - Old vs New AI Content Workflow
-12:48 - Editing Videos With Claude Code & Remotion
-13:57 - AI for Ads, Landing Pages & Cold Email
-16:46 - The Hard Truth About Your Team & AI
-18:50 - Phase 3: Restructure Your Business
-19:45 - Your 3-Step AI Action Plan
-
-I broke down my entire AI automation strategy across both companies. This isn't theory - I'm a Claude Code power user spending $400/month on AI, running Mac Minis as AI employees, and building custom skills and workflows that handle everything from content creation to customer support to cold email outreach.
-
-Phase 1 - Enable your team. Build AI skills and workflows. Deploy on Mac Minis running Claude Code. Give access through Slack, iMessage, or Telegram.
-
-Phase 2 - Remove bottlenecks. Map every workflow, find constraints, replace them with AI. I show how I did this for content, ads, landing pages, cold email, and customer support.
-
-Phase 3 - Restructure. Your team either 50x their productivity with AI or gets left behind.
-
-TOOLS & RESOURCES MENTIONED:
-- Claude Code (Anthropic) - daily AI coding and workflow tool
-- Claude Max ($200/mo) - heavy usage for building AI skills
-- Mac Minis - running Claude Code 24/7 as AI employees
-- Remotion - AI video editing with Claude Code
-- GoHighLevel - CRM and pipeline management
-- n8n - workflow automation
-
-CONNECT WITH JAY:
-Instagram: https://instagram.com/leadgen
-Twitter/X: https://x.com/leadgenjay
-LinkedIn: https://linkedin.com/in/dr-jay-feldman
-
-ABOUT LEAD GEN JAY:
-Cold email, AI automation, and lead generation strategies for entrepreneurs. Two 8-figure companies built. 3,500+ community members. 9+ years in the game.
-
-#AIAutomation #ClaudeCode #AIBusinessStrategy #AIAgents #MacMini #Anthropic #AITools #AIProductivity #AIWorkflow #LeadGenJay #BusinessAutomation #AIForBusiness #ClaudeAI #AIImplementation
-```
-
----
-
-## Quality Checklist (Internal - Don't Output)
-
-Before delivering, verify:
-
-- [ ] Total description under 5,000 characters
-- [ ] First 2 lines under 300 characters and hook the viewer
-- [ ] Primary keyword in first sentence
-- [ ] Free resource (lead magnet or Skool community) present BEFORE timestamps
-- [ ] All timestamps start at 0:00, derived from actual transcript, at least 10s apart
-- [ ] Paid offer CTA present (AIA or Lead Gen Insiders, topic-routed)
-- [ ] Consult CTA present (`/consult`)
-- [ ] All links use simplified UTMs: `?utm_source=youtube&utm_campaign={slug}` only
-- [ ] Every link fits on 1 line (no wrapping)
-- [ ] Affiliate links use their native params (no UTMs added)
-- [ ] Discount codes included inline where applicable
-- [ ] Social links match canonical URLs from references file
-- [ ] About boilerplate included
-- [ ] 10-15 hashtags on final line
-- [ ] No banned AI words or em dashes anywhere
-- [ ] Caption corrections cover all proper nouns and tech terms
-- [ ] Pinned comment drafted
+## Verification Checklist (run before claiming done)
+
+- [ ] Every timestamp label ≤ 5 words (grep-count space-separated tokens after the `-`).
+- [ ] First chapter is `0:00`.
+- [ ] Timestamps strictly increasing.
+- [ ] Zero em/en dashes: `grep -n "—\|–" <file>` returns nothing.
+- [ ] Zero banned words: grep the banned list case-insensitive.
+- [ ] Every tracked URL has exactly `utm_source=youtube&utm_medium=video&utm_campaign=<slug>` — no `utm_content`, no `utm_term`, no extras: `grep -nE "utm_content|utm_term" <file>` must return nothing.
+- [ ] Character count < 5000: `wc -c <file>`.
+- [ ] Section order matches the Structure list above.
+
+## Reference files
+
+- `docs/youtube-descriptions/HANDOFF.md` — v1.4 rollout summary + script pipeline
+- `docs/youtube-descriptions/aC-51u3hkbE.md` — strong analog (cold email, ~20 min)
+- `docs/youtube-descriptions/Eb2ldKtB66k.md` — course/evergreen format
+- `docs/youtube-descriptions/gQEj2UWpZK0.md` — CTA + timestamp structure
+- `scripts/tier3-patch.mjs` — shows how CTAs are patched into existing descriptions

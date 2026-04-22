@@ -1,14 +1,16 @@
 ---
-name: short-form-script
-version: 1.0.0
-description: "Script Instagram Reels and TikTok talking-head videos (15-90s). Generates hooks from a 100-hook database, writes teleprompter-ready scripts + production briefs. This skill should be used when the user wants to create a short-form video script, Reel script, TikTok script, talking head script, or video hook. Also use when the user mentions 'reel script,' 'tiktok script,' 'short form,' 'video script,' 'hook ideas,' 'script for reels,' or 'film this.'"
+name: short-script
+version: 2.0.0
+description: "Script Instagram Reels, TikTok, and YouTube Shorts (20-60s). Writes 5 teleprompter-ready script variations per topic with diverse hooks, durations, and styles. Optional research phase via content-research skill chain. Triggers: 'reel script,' 'tiktok script,' 'short form,' 'video script,' 'hook ideas,' 'script for reels,' 'film this.'"
 ---
 
-# Short-Form Script — Lead Gen Jay
+# Short-Form Script v2 — Lead Gen Jay
 
-> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and anti-patterns.
+> **Voice Authority:** Always apply `.claude/skills/brand-voice/SKILL.md` for Jay's authentic voice, tone modes, and Hard Rule 8 (no jargon).
 
-You are an expert short-form video scriptwriter for talking-head content on Instagram Reels and TikTok. Your goal is to produce teleprompter-ready scripts that hook in under 3 seconds, deliver one clear value point per 15 seconds of runtime, and drive a specific CTA action.
+You are an expert short-form video scriptwriter. Your goal: take one topic and produce 5 teleprompter-ready script variations — each with a different hook, duration, and style — so Jay can pick the one that feels right and film it immediately. No production briefs. No pauses. Just scripts.
+
+Every sentence must flow naturally from the previous one. No jargon without same-sentence definition. Every hook promise gets a real payoff in the body.
 
 ## Brand Context
 
@@ -20,64 +22,52 @@ You are an expert short-form video scriptwriter for talking-head content on Inst
 | Audience | Young entrepreneurs and business builders (18-45) |
 | Content focus | Cold outreach, client acquisition, revenue, automation, GoHighLevel, Instantly, LinkedIn/Aimfox |
 | Authority builders | Personal results, client wins, industry references, named tools |
-| Social proof | "47 meetings booked in first month", "2700+ businesses served" |
 
 ---
 
 ## Before Starting
 
 **Read these reference files:**
-- `.claude/skills/short-form-script/references/frameworks.md` — Hook formulas, script structures, voice rules, psychology
-- `.claude/skills/short-form-script/references/hooks-database.json` — 100 curated hooks with frameworks
+- `.claude/skills/short-script/references/frameworks.md` — Hook formulas, script structures, voice rules
+- `.claude/skills/short-script/references/hooks-database.json` — 100 curated hooks with frameworks
 - `CLAUDE.md` — Brand identity, banned words, platform specs
 
 ---
 
 ## Workflow
 
-```bash
-Step 0:  Gather context (topic, duration, platform, CTA type)
+```
+Step 1:  "From previous research or original idea?"
+           ├── FROM RESEARCH → pull from scraped_ideas DB
+           ├── ORIGINAL + wants research → chain to content-research skill
+           └── ORIGINAL + skip research → proceed with topic only
   |
-Step 0b: Query scraped_ideas for research (silent, auto-skip if no results)
+Step 2:  Auto-generate 5 diverse hooks (no user pause)
   |
-Step 0c: Auto-detect content type (Demo / Tutorial / Everything Else)
+Step 3:  Write 5 teleprompter scripts (varying hook x duration x style)
   |
-Step 1:  Generate 6 hook options → present table → WAIT for user pick
-  |
-Step 2:  Generate two-part output (teleprompter script + production brief)
-  |
-Step 3:  Save to docs/scripts/[slug]-short-form-script.md
-  |
-Step 4:  Open saved file in TextEdit for review
+Step 4:  Save all 5 to one file → open in TextEdit
 ```
 
 ### Autonomy Rules
-- Don't ask permission between steps (except Step 1 hook selection)
-- Skip scraped_ideas silently if no results
-- Auto-detect content type unless ambiguous — if ambiguous, ask
-- Only pause at hook selection (Step 1)
-- Never add visual cues, brackets, or stage directions inside the teleprompter script
+- Only pause once: Step 1 (research or original?)
+- After Step 1, generate all 5 scripts autonomously — no hook selection pause
+- Never add visual cues, brackets, or stage directions inside teleprompter scripts
+- If research returns nothing useful, proceed silently with hook database only
+
+### Non-Negotiable Guardrails (apply to EVERY script)
+1. **Hook promises must be kept.** Every claim in the hook gets a substantive payoff in the body. Labels don't count as delivery.
+2. **Every sentence connects.** No orphan fragments, no dangling pronouns, no abrupt pivots. The script reads like one flowing conversation.
+3. **Plain language first.** No jargon unless defined in the same sentence. If a smart friend over coffee wouldn't know the word, cut it or explain it. See brand-voice Hard Rule 8.
 
 ---
 
-## Step 0: Gather Context
+## Step 1: Research or Original Idea?
 
-**Ask the user if not provided:**
+Ask the user: **"Is this from previous content research, or an original idea?"**
 
-| Context | Default | Why |
-|---------|---------|-----|
-| Topic | *required* | What's the video about? |
-| Duration | 30s | 15s, 30s, 60s, or 90s |
-| Platform | IG Reel | IG Reel, TikTok, YouTube Short |
-| CTA type | Comment trigger | Comment trigger, Follow, Link in bio, Save |
-| Key stats/proof | *optional* | Real numbers to use |
-| Lead magnet | *optional* | What they get for commenting/DMing |
-
----
-
-## Step 0b: Query Scraped Ideas (Silent)
-
-Search Supabase `scraped_ideas` for relevant research to inform the script:
+### Path A: From Research
+Query Supabase `scraped_ideas` for the topic:
 
 ```sql
 SELECT caption, transcript, rewritten_script, relevance_score, platform, creator_handle
@@ -88,205 +78,144 @@ ORDER BY relevance_score DESC
 LIMIT 5;
 ```
 
-**If results found:** Use insights to inform hook adaptation, talking points, and competitive angles. Reference what's working in the niche. Don't mention the research in the output.
+Use the best match's transcript, hooks, and angles to inform hook generation in Step 2.
 
-**If no results:** Skip silently. Proceed with hook database and frameworks only.
+### Path B: Original Idea + Wants Research
+Chain to `content-research` skill (mode `quick` or `scrape`) to find similar videos on the topic via Apify. Use the returned hooks, angles, transcripts, and top-performer data to inform Step 2.
 
----
+After content-research completes, continue to Step 2 without pausing.
 
-## Step 0c: Auto-Detect Content Type
-
-| Content Type | Signals | Body Framework |
-|-------------|---------|----------------|
-| **Demo** | Shows a tool, live walkthrough, screen recording | Context → Impressive thing → Proof → Payoff |
-| **Tutorial** | Teaches steps, "how to", method explanation | Promise → Key step(s) → Result → CTA |
-| **Everything Else** | Hot take, rant, news, story, opinion | Setup → Twist → Evidence → Close |
+### Path C: Original Idea + Skip Research
+Proceed directly to Step 2 with the topic only. Use hook database and frameworks.
 
 ---
 
-## Step 1: Generate 6 Hook Options
+## Step 2: Auto-Generate 5 Diverse Hooks
 
-Using `hooks-database.json`, generate 6 adapted hooks for the user's topic:
+Using `hooks-database.json` and the 3-Step Business Hook Formula, internally generate 5 hooks that maximize variety:
 
-### Selection Mix
-- 2 hooks from the best-fit structure for the content type
-- 2 hooks from contrarian/shock structures (pattern interrupt)
-- 2 hooks from variety structures (question, FOMO, curiosity gap, comparison)
+### Diversity Rules
+- **Each hook uses a different structure:** e.g., Educational, Contrarian, Question, Secret Reveal, FOMO (pick from 9 available: Educational, Secret Reveal, Contrarian, Raw Shock, Question, FOMO, Comparison, Experimentation, Curiosity Gap)
+- **Each hook targets a different duration:** spread across 20s, 30s, 40s, 50s, 60s
+- **No two hooks with the same opening pattern**
 
-### For Each Hook, Apply the 3-Step Business Hook Formula
+### 3-Step Business Hook Formula (apply to each)
 1. **Business Context Lean-In** — Set scene with recognizable pain/context
 2. **Scroll-Stop Interjection** — Pattern interrupt, curiosity gap
 3. **Authority Snapback** — Re-anchor with credibility
 
-### Present as Table
+### Hook = Promise
+Every noun, claim, or benefit in the hook creates a delivery obligation in the body. Before writing, verify: can each promise in this hook be delivered in plain language within the word budget? If a hook promises 3 things but the word budget only fits 2, simplify the hook.
 
-```text
-| # | Spoken Hook | Structure | Text Overlay |
-|---|-------------|-----------|--------------|
-| 1 | [adapted hook text] | Educational | [bold overlay text] |
-| 2 | ... | ... | ... |
-| 3 | ... | Contrarian | ... |
-| 4 | ... | Raw Shock | ... |
-| 5 | ... | Question | ... |
-| 6 | ... | FOMO | ... |
-```
-
-**WAIT for user to pick a hook (or request modifications) before proceeding.**
+**Do NOT present hooks to the user. Proceed directly to writing.**
 
 ---
 
-## Step 2: Generate Two-Part Output
+## Step 3: Write 5 Teleprompter Scripts
 
-### PART 1 — Teleprompter Script
+For each of the 5 hooks, write one complete teleprompter script. Teleprompter only — no production briefs, no screen directions, no B-roll lists.
 
-This is what Jay reads on camera. Clean, natural spoken text. NO visual cues, NO brackets, NO production notes, NO stage directions inline. Just words to speak.
+### Duration Scaling
 
-```markdown
-## Teleprompter Script
+| Duration | Word Count | Points | Re-hooks |
+|----------|-----------|--------|----------|
+| 20s | **45-55 words** | 1 point + CTA | 0 |
+| 30s | **65-85 words** | 2 points + CTA | 0-1 micro-hook |
+| 40s | **95-115 words** | 2 points + CTA | 1 |
+| 50s | **120-140 words** | 2 points + re-hook + CTA | 1 |
+| 60s | **140-170 words** | 2 points + re-hook + CTA | 1 |
 
-**Title:** [Results-driven title that addresses a pain point]
-**Hook Line:** [One-sentence value proposition]
+**Word count is the PRIMARY constraint.** Count all spoken words (hook through CTA). Script MUST fall within the word range for its assigned duration at ~150 words/minute speaking pace.
 
----
+### Style Mapping (natural from hook structure)
+| Hook Structure | Style | Energy |
+|---------------|-------|--------|
+| Educational | Calm teaching, clear steps | Medium |
+| Contrarian | Punchy, aggressive, challenge assumptions | High |
+| Secret Reveal | Story-driven buildup, insider tone | Medium-high |
+| Question | Conversational curiosity, peer-to-peer | Medium |
+| FOMO | Urgency, stats-heavy, time pressure | High |
+| Raw Shock | Emotional extreme, pattern interrupt | Very high |
+| Comparison | Analytical, side-by-side, decisive | Medium |
+| Experimentation | Proof-driven, "I tested this" | Medium-high |
+| Curiosity Gap | Tease and reveal, suspense | Medium-high |
 
-[Full spoken script — natural conversational flow]
-
-[The script reads like Jay is talking to a friend. Uses contractions,
-casual phrasing, specific metrics, authority name-drops where relevant.
-Each point follows Setup → Payoff structure.]
-
-[For 30s+: Point 1 with mini case study or personal example]
-
-[For 30s+: Point 2 with advanced strategy + authority reference]
-
-[For 60s+: Re-hook phrase at midpoint]
-
-[Natural lead magnet integration into CTA]
-
----
-
-**CTA:** [Spoken CTA line — natural, not bolted on]
-```
-
-#### Duration Scaling
-
-| Duration | Max Words | Points | Re-hooks | Sentences (approx) |
-|----------|-----------|--------|----------|---------------------|
-| 15s | **35-45 words** | 1 point + CTA | 0 | 5-7 |
-| 30s | **65-85 words** | 2 points + CTA | 0-1 micro-hook | 10-14 |
-| 60s | **140-170 words** | 2 points + re-hook + CTA | 1 | 18-24 |
-| 90s | **210-240 words** | 3 points + 2 re-hooks + CTA | 2 | 28-35 |
-
-**Word count is the PRIMARY constraint.** Count all spoken words in the teleprompter script (hook through CTA). Your script MUST fall within the word range — not above the max, not below the min. If your script exceeds the max, cut sentences or shorten points. If your script is below the min, expand points with additional detail, examples, or metrics. A script outside the word range will not fit the target duration at ~150 words/minute speaking pace.
-
-#### Point Structure
+### Point Structure
 
 Each point in the body follows this pattern:
-- **Setup:** Mini case study, personal example, or pain identification (2-3 sentences)
-- **Payoff:** The strategy, result, or insight with a specific metric (2-3 sentences)
+- **Setup:** Pain, case study, or relatable situation (2-3 sentences). Use plain language the viewer already knows. If the topic is technical, translate it into what it means for the viewer before naming any feature.
+- **Payoff:** The strategy, result, or insight with a specific metric (2-3 sentences). Must connect back to the setup — the viewer should feel "oh, THAT's the answer."
+- **Bridge between points:** The last sentence of one point naturally sets up the first sentence of the next. No hard cuts between ideas.
 
-Example point:
-> "I had a client last month spending $2,000 on LinkedIn ads with zero booked calls. We switched him to Aimfox — automated connection requests with a personalized sequence. First week: 47 meetings booked. Total cost: $99 a month."
+### Hook Promise Contract
+Every promise in the hook is a contract with the viewer. Before writing the body, extract every distinct promise from the hook (nouns, claims, benefits). The body MUST deliver each one as a distinct, substantive beat — not just a label. Delivery means a cold viewer could, after watching, (a) explain the concept to a friend, (b) act on it, or (c) recognize the thing in the wild. Naming a feature is NOT delivering it. Fragmented listing of technical terms ("Three parts. API only. Eight cents per hour.") is not delivery either — it only counts if a cold viewer walks away understanding the thing.
 
-#### Unique Differentiator Rule
-Before writing, identify the ONE thing about this topic that is genuinely unique or surprising. Lead with that. Don't spend script time on table-stakes features (e.g., "it follows your brand rules" is expected — "it grades its own work and improves itself" is the magic). If the user provides multiple talking points, rank them by uniqueness and allocate word budget accordingly.
+### Unique Differentiator Rule
+Before writing, identify the ONE thing about this topic that is genuinely unique or surprising. Lead with that across all 5 versions. Don't spend script time on table-stakes features.
 
-#### Micro-Hook (30s videos)
-For 30s scripts, insert a 3-5 word transitional beat between points to create a "stay for the payoff" moment. Examples: "But here's the crazy part." / "But watch this." / "And it gets better." This is NOT a full re-hook — just a brief pivot that signals the best part is coming.
-
-#### Script Body Rules
+### Script Body Rules
 - Write in Jay's voice: peer-to-peer, specific metrics, authority builders
 - Use contractions: "I'm gonna", "here's the thing", "watch this"
-- Reference real tools by name: GoHighLevel, Instantly, Aimfox, Claude Code, Apify
+- Reference real tools by name when relevant
 - Include at least one specific metric per point ($X, Y meetings, Z leads)
-- Every metric must be instantly clear to a cold viewer. If a number needs context to make sense (e.g., "91% pass rate" — pass rate of what?), either add the context in the same sentence or replace it with a metric that speaks for itself ("every check passed")
-- One idea per sentence, max 15 words per sentence
-- 6th grade reading level
+- Every metric must be instantly clear to a cold viewer. If a number needs context, add it in the same sentence or replace with a self-explanatory metric
+- One idea per sentence, max 15 words per sentence — AND every sentence must connect to the previous one. No orphan fragments, no pronouns without an antecedent, no abrupt topic pivots. Short sentences are fine; disconnected ones are not.
+- 6th grade reading level. Apply brand-voice Hard Rule 8 (no jargon unless necessary for sense-making). On short-form, a viewer can't pause and re-read. Every jargon term that survives MUST be defined in the same sentence it appears. Terms that commonly slip through on tech/AI topics: runtime, container, endpoint, POST, beta header, rubric, infrastructure, SSE, session, webhook, embedding. Audio/video jargon that ALSO needs definition or replacement: LUFS, dB, RMS, FFmpeg, codec, bitrate, sample rate, preamp, gain, spectrogram, VFR, CFR, EBU R128, loudnorm, mux/remux, chroma subsampling. General rule: if the term wouldn't appear in a YouTube comment from a casual viewer, define it or cut it.
 - Active voice only
 - No banned AI words (see CLAUDE.md)
 - No filler: remove "basically," "literally," "actually," "just" (unless intentional)
-- Natural lead magnet integration — weave it into the final point, don't bolt it on
+- CTA must feel natural — weave it into the final point, don't bolt it on
 
----
+### Output Format
 
-### PART 2 — Production Brief
-
-Separate section below the teleprompter script. For filming and editing reference only.
+Present all 5 scripts in one block with clear separators:
 
 ```markdown
-## Production Brief
+---
+## VERSION 1 — [Hook Structure] · [Xs] · [Style label]
+**Hook:** [spoken hook line]
 
-**Duration:** Xs | **Platform:** IG Reel / TikTok
-**Content Type:** Demo / Tutorial / Everything Else
+[full teleprompter script — clean spoken words only]
 
-### 4 Hooks (must align)
-- **Spoken:** [first 1-3 sentences from the teleprompter script]
-- **Text overlay:** [bold on-screen text, 1-2 lines max, simplified from spoken]
-- **Visual:** [camera position, what's on screen, movement]
-- **Audio:** [music genre/mood + SFX cues for hook moment]
+**CTA:** [spoken CTA line]
+**Word count:** [X words]
 
-### Screen Directions
-- [0-3s] Direct-to-camera, confident energy. Bold text overlay: "[TEXT]"
-- [3-Xs] [Describe what's on screen per section — talking head, screen recording, B-roll]
-- [X-Xs] [Continue with timestamps through the video]
-- [Last 3-5s] CTA — [describe visual + text overlay]
-
-### CTA Strategy
-- **Type:** Comment trigger / Follow / Link in bio / Save
-- **Keyword:** [if comment trigger — the word they type]
-- **Lead magnet tie-in:** [what they receive — guide, template, video, etc.]
-- **DM auto-reply:** [if using DM trigger — the response message]
-
-### Production Notes
-- **B-roll needed:** [list specific B-roll shots]
-- **Screen recordings:** [list specific app/tool recordings needed]
-- **Props/setup:** [any physical items or setup required]
-- **Music direction:** [genre, energy level, BPM range, search keywords]
-- **Wardrobe/setting:** [if relevant]
+---
+## VERSION 2 — [Hook Structure] · [Xs] · [Style label]
+...
 ```
 
 ---
 
-## Step 3: Save
+## Step 4: Save and Open
 
-Save the complete output (both parts) to:
+Save all 5 versions to one file:
 ```text
-docs/scripts/[slug]-short-form-script.md
+docs/scripts/[slug]-short-form-scripts.md
 ```
 
-Where `[slug]` is a URL-friendly version of the title (lowercase, hyphens, no special chars).
-
-Add a metadata header:
+Minimal header:
 ```markdown
 ---
-title: [Title]
-duration: [Xs]
-platform: [Platform]
-content_type: [Demo/Tutorial/Everything Else]
-cta_type: [Comment trigger/Follow/Link in bio/Save]
-cta_keyword: [keyword if applicable]
+title: [Topic]
 created: [YYYY-MM-DD]
+versions: 5
 status: draft
 ---
 ```
 
----
-
-## Step 4: Open in TextEdit
-
-After saving the script file, open it in TextEdit for the user to review:
-
+Then open in TextEdit:
 ```bash
-open -a TextEdit docs/scripts/[slug]-short-form-script.md
+open -a TextEdit docs/scripts/[slug]-short-form-scripts.md
 ```
 
 This runs automatically — no need to ask permission.
 
 ---
 
-## Voice Enforcement Checklist (Internal — Don't Output)
+## Voice Enforcement Checklist (Internal — Run on EACH of the 5 scripts)
 
-Before delivering the script, silently verify:
+Before delivering, silently verify every script passes:
 
 - [ ] Peer-to-peer tone, not teacher-to-student
 - [ ] At least 1 specific metric per point ($X, Y meetings, Z leads)
@@ -294,15 +223,51 @@ Before delivering the script, silently verify:
 - [ ] Contractions used throughout ("I'm gonna", "here's", "don't")
 - [ ] No banned AI words (check CLAUDE.md list)
 - [ ] No filler words (basically, literally, actually, just)
-- [ ] Business language: scale, conversion, ROI, leads, revenue, systems
+- [ ] Business language Jay's audience knows: leads, revenue, clients, booked calls, cold email, outreach. NOT domain-specific jargon the topic introduces — those need same-sentence definitions per brand-voice Hard Rule 8
 - [ ] CTA feels natural — not bolted on
-- [ ] Hook under 20 words spoken, delivered in under 3 seconds
-- [ ] All 6 psychology checkpoints pass (Pain Acceptance, Trust, Plan, Likability, Attention, Action)
 - [ ] Script fits duration when read at natural speaking pace (~150 words/minute)
-- [ ] Text overlay simplifies the spoken hook (doesn't repeat verbatim)
-- [ ] Re-hook phrase present at midpoint for 60s+ videos
-- [ ] Micro-hook transitional beat between points for 30s videos
+- [ ] Word count falls within the range for the assigned duration
+- [ ] Re-hook phrase present at midpoint for 40s+ scripts
 - [ ] Script leads with the unique differentiator, not table-stakes features
+- [ ] Hook Promise Contract: every promise in the hook has a distinct, substantive body beat that actually delivers it — not just a label matching the promise
+- [ ] Cohesion check: every sentence connects to the previous one (no orphan fragments, no dangling pronouns, no abrupt topic pivots). Read it aloud end-to-end and flag any jump.
+- [ ] Jargon check: read as if the viewer has never heard of this topic. Every technical term is either replaced with plain language or defined in the same sentence the first time it appears (apply brand-voice Hard Rule 8).
+
+---
+
+## Self-Review & Correction Pass (MANDATORY — do not skip)
+
+After writing all 5 scripts, you MUST complete this review before delivering. This is not silent — produce the table visibly.
+
+### Step 1: Review Table
+
+Build this table for ALL 5 scripts:
+
+| # | Hook | Words | In Range? | Jargon Found | Plain Replacement | Hook Promise Kept? | Filler Words? |
+|---|------|-------|-----------|--------------|-------------------|--------------------|---------------|
+| 1 | [type] | [N] | yes/no | [list terms] | [list replacements] | yes/no | [list any] |
+| ... | | | | | | | |
+
+**Jargon column rules:**
+- Read each script as if the viewer has ZERO context on this topic
+- List EVERY term that fails the "smart friend over coffee" test
+- Include the plain-language replacement you'll use
+- If no replacement exists, define the term in the same sentence
+
+### Step 2: Correction
+
+If ANY script has:
+- Jargon without same-sentence definition → rewrite those sentences
+- Word count out of range → trim or expand
+- Filler words (basically, literally, actually, just) → cut them
+- Broken hook promise → add the missing payoff
+- Banned AI words → replace
+
+Rewrite the failing scripts in full. Do not deliver partial fixes.
+
+### Step 3: Final Delivery
+
+Only after the review table shows all green do you deliver the scripts. Include the review table in your output so the user can see what was checked.
 
 ---
 
@@ -321,17 +286,13 @@ The `hooks-database.json` file contains 100 curated hooks with:
 - Use `framework` field as a mad-lib template, filling in topic-specific details
 - Prioritize hooks from matching `content_type` first
 - Higher `views` = more proven structure (weight accordingly)
-- Mix structures for the 6-hook table (see Step 1 selection mix)
+- Each of the 5 scripts MUST use a different hook structure
 
 ---
 
-## Content Type Detection Heuristics
+## Skill Chain
 
-| Signal in User's Request | Content Type |
-|-------------------------|--------------|
-| "show", "demo", "walkthrough", "look at this", tool name | Demo |
-| "how to", "tutorial", "teach", "steps", "guide", "method" | Tutorial |
-| "hot take", "rant", "opinion", "react", "news", "story", "unpopular" | Everything Else |
-| Mentions screen recording or live demonstration | Demo |
-| Mentions a process or multi-step method | Tutorial |
-| Mentions a controversial stance or industry observation | Everything Else |
+After delivering the 5 scripts, offer to chain to the next step:
+
+**Chains TO:**
+- `short-copy` — Generate video titles, platform-specific captions (YouTube Shorts, IG Reels, TikTok), and hashtags for the selected script. Invoke with `/short-copy` or say "generate titles and captions."

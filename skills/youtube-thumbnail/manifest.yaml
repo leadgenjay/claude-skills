@@ -19,7 +19,7 @@ path: skills/youtube-thumbnail
 files:
   - SKILL.md
   - evals/evals.json
-version: "1.0"
+version: "1.2"
 composesWell:
   - short-form-script
   - content-research

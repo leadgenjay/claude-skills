@@ -5,7 +5,7 @@ description: "Edit raw customer testimonial videos into polished social clips wi
 categories: [content, video]
 tags: [testimonial, video-editing, social-clips, captions, customer-stories, social-proof, remotion, deepgram]
 icon: Film
-version: "1.1"
+version: "1.2"
 composesWell: [social-proof-builder]
 files:
   - SKILL.md

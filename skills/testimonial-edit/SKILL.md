@@ -130,7 +130,7 @@ Naming format: `Ray Lian - Sarah2.ai Testimonial (Square).mp4`. Nextcloud syncs 
 |-------------|----------------|-----------------|
 | Vertical (9:16) | 1080x1080 square | 1080x1920 vertical |
 | Landscape (16:9) | 1920x1080 landscape | 1080x1080 square |
-| Square (1:1) | 1080x1080 square | — |
+| Square (1:1) | 1080x1080 square | - |
 
 Auto-detected from ffprobe. AI face detection (face-api.js 68-point landmarks) extracts a frame at 2s and computes crownY, chinY, faceCenterX, faceCenterY, leftEarX, rightEarX.
 
@@ -150,12 +150,12 @@ For vertical→square crops: the crop window is positioned so the **crown touche
 3. Repeated points (keep stronger version)
 4. Tangents and off-topic segments
 5. Generic praise without specifics
-6. **Program pricing / cost details** — NEVER reveal what the customer paid to join (e.g. "$1,500", "entry price", "how much it costs"). This is proprietary sales info that should not appear in public testimonial clips.
+6. **Program pricing / cost details** - NEVER reveal what the customer paid to join (e.g. "$1,500", "entry price", "how much it costs"). This is proprietary sales info that should not appear in public testimonial clips.
 
 ### Sentence Completeness (Critical)
 - Every kept segment MUST end on a complete thought
 - If a sentence trails off mid-phrase ("I hope you believe...", "and he's really..."), either cut it or ensure it merges with the next segment
-- The **last kept segment** is especially important — the video must end cleanly, not mid-sentence
+- The **last kept segment** is especially important - the video must end cleanly, not mid-sentence
 - Review each kept segment's final words to confirm the thought is finished
 
 ### Constraints
@@ -185,7 +185,7 @@ For vertical→square crops: the crop window is positioned so the **crown touche
 | Body font | Manrope |
 | Caption style | Pill (default for testimonials) |
 | Caption safe zone | Bottom 15% |
-| Music volume | 0.08 (lower than talking-head — voice clarity priority) |
+| Music volume | 0.08 (lower than talking-head - voice clarity priority) |
 | Audio normalization | -16 LUFS (two-pass loudnorm) |
 
 ## Audio Enhancement Pipeline
@@ -225,19 +225,19 @@ Options:
 
 ```
 output/testimonials/<job-id>/
-  transcript.json           — Word-level transcript (Deepgram)
-  transcript-edited.json    — Re-transcribed after edits
-  transcript-reviewed.json  — AI-reviewed captions (corrected words)
-  snippets.json             — AI content selection (scores + reasons)
-  edited.mp4                — Trimmed video (AI cuts + silence removal)
-  enhanced.mp4              — Audio-enhanced version
-  cropped-square.mp4        — Cropped for square format
-  cropped-vertical.mp4      — Cropped for vertical format (if vertical input)
-  manifest-square.json      — Remotion manifest (square)
-  manifest-vertical.json    — Remotion manifest (vertical)
-  output-square.mp4         — Final rendered square (1080x1080)
-  output-vertical.mp4       — Final rendered vertical (1080x1920)
-  qa/                       — QA verification frames
+  transcript.json           - Word-level transcript (Deepgram)
+  transcript-edited.json    - Re-transcribed after edits
+  transcript-reviewed.json  - AI-reviewed captions (corrected words)
+  snippets.json             - AI content selection (scores + reasons)
+  edited.mp4                - Trimmed video (AI cuts + silence removal)
+  enhanced.mp4              - Audio-enhanced version
+  cropped-square.mp4        - Cropped for square format
+  cropped-vertical.mp4      - Cropped for vertical format (if vertical input)
+  manifest-square.json      - Remotion manifest (square)
+  manifest-vertical.json    - Remotion manifest (vertical)
+  output-square.mp4         - Final rendered square (1080x1080)
+  output-vertical.mp4       - Final rendered vertical (1080x1920)
+  qa/                       - QA verification frames
 ```
 
 ## Cost Estimate
@@ -252,10 +252,13 @@ output/testimonials/<job-id>/
 
 ## Autonomy Rules
 
-- Don't ask permission between pipeline stages (except the AI review gate)
-- Auto-detect aspect ratio — only ask if ambiguous (very close to 1:1)
+- **Stages 1-2 (Probe, Transcribe):** Run automatically, no user input needed
+- **Stage 3 (AI Content Selection):** ALWAYS PAUSE for user review. Present the edit plan (keep/cut decisions) and wait for approval before continuing
+- **Stages 4-10 (Silence removal, Crop, Render, etc.):** Run automatically after user approves the cuts from Stage 3
+- **Exception:** If user passes `--auto-approve`, skip the Stage 3 pause and render immediately
+- Do NOT ask "should I continue?" between stages. The Stage 3 review gate is the only pause point.
+- Auto-detect aspect ratio - only ask if ambiguous (very close to 1:1)
 - Default to `pill` captions for testimonials (professional, clean)
-- Always pause at AI content selection for review unless `--auto-approve`
 - Skip re-transcription if `--transcript` provided
 - If video is already under 30s, skip AI content selection entirely
 
@@ -264,9 +267,9 @@ output/testimonials/<job-id>/
 | Issue | Root Cause | Fix |
 |-------|-----------|-----|
 | **0% reduction / 1 giant sentence** | Deepgram word-level data has bare words (no punctuation). Punctuation-based sentence splitting (`/[.!?]$/`) never matches. | Use pause-based splitting (gaps > 0.7s between words) + 30-word safety cap. Already fixed in `testimonial-analyzer.ts`. |
-| **Wrong speaker name on intro card** | Deepgram phonetically transcribes names — "Ray Lian" becomes "ray leon", "Sarah2.ai" becomes "serra two dot a i". Must verify against transcript. | Pipeline shows identity check (stage 2.5) when not using `--auto-approve`. Always compare transcript opening against `--name` / `--company` flags. |
+| **Wrong speaker name on intro card** | Deepgram phonetically transcribes names - "Ray Lian" becomes "ray leon", "Sarah2.ai" becomes "serra two dot a i". Must verify against transcript. | Pipeline shows identity check (stage 2.5) when not using `--auto-approve`. Always compare transcript opening against `--name` / `--company` flags. |
 | **Program pricing leaks into clip** | Customers often mention what they paid ("$1,500", "entry price"). This is proprietary sales info. | AI analyzer prompt has explicit rule to cut all pricing/cost segments. |
-| **Last sentence trails off mid-thought** | Pause-based chunking can split mid-sentence if there's a brief pause. Last segment is most visible. | AI analyzer prompt enforces sentence completeness — especially for the final kept segment. |
+| **Last sentence trails off mid-thought** | Pause-based chunking can split mid-sentence if there's a brief pause. Last segment is most visible. | AI analyzer prompt enforces sentence completeness - especially for the final kept segment. |
 | **Captions hidden during intro card** | Previous implementation suppressed captions for first 5s. User wants captions visible alongside intro. | Caption opacity wrapper removed from `index.tsx`. Captions render from frame 0. |
 | **Stale snippets.json reused** | `--auto-approve` loads existing `snippets.json` if present. After changing analyzer rules, old snippets persist. | Delete `snippets.json` before re-running when analyzer logic changes. |
 
@@ -276,7 +279,7 @@ output/testimonials/<job-id>/
 |------|---------|
 | `scripts/process-testimonial.ts` | Main pipeline orchestrator |
 | `lib/video/testimonial-analyzer.ts` | Claude API content scoring |
-| `lib/video/caption-review.ts` | AI caption review — fixes STT errors, flags uncertain names |
+| `lib/video/caption-review.ts` | AI caption review - fixes STT errors, flags uncertain names |
 | `lib/video/face-detection.ts` | face-api.js 68-point landmark detection → FacePosition |
 | `lib/video/testimonial-crop.ts` | FFmpeg crop/scale (crown-at-top for vertical→square) + edit plan |
 | `remotion/compositions/talking-head/components/testimonial-intro-card.tsx` | Speaker intro overlay |
