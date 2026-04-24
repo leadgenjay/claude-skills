@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-03-27T18:52:57.982Z",
+  "generatedAt": "2026-04-24T22:07:27.827Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -978,6 +978,33 @@
       "path": "commands/commit",
       "files": [
         "command.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "notes",
+      "type": "command",
+      "name": "notes",
+      "description": "Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Requires the claude-review CLI.",
+      "categories": [
+        "productivity",
+        "content"
+      ],
+      "tags": [
+        "review",
+        "comments",
+        "markdown",
+        "editing",
+        "collaboration",
+        "feedback"
+      ],
+      "icon": "MessageSquare",
+      "path": "commands/notes",
+      "files": [
+        "command.md",
+        "cr-address.md",
+        "cr-review.md",
         "manifest.yaml"
       ],
       "version": "1.0"
