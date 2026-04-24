@@ -147,6 +147,9 @@ function processDirectory(type) {
       files,
       version: manifest.version || undefined,
       composesWell: manifest.composesWell || undefined,
+      kind: manifest.kind || undefined,
+      bundledItems: manifest.bundledItems || undefined,
+      hidden: manifest.hidden || undefined,
     };
 
     // Remove undefined values
