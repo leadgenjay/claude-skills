@@ -1,0 +1,14 @@
+name: notes
+description: Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Requires the claude-review CLI.
+categories:
+  - productivity
+  - content
+tags:
+  - review
+  - comments
+  - markdown
+  - editing
+  - collaboration
+  - feedback
+icon: MessageSquare
+version: "1.0"
