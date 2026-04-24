@@ -1,0 +1,95 @@
+{
+  "domain": "general",
+  "skill_name": "inbox-insiders",
+  "evals": [
+    {
+      "id": 1,
+      "name": "easy-mode-order-with-instantly-upload",
+      "prompt": "Order 9 mailboxes for Consulti AI (https://consulti.ai) via Inbox Insiders. Sender name 'Jay Feldman'. Connect them to Instantly automatically. Show exact API call.",
+      "expectations": [
+        {"text": "Quotes the dollar total before calling /instant-orders (e.g., $31.50/mo recurring + $36 one-time = $67 first invoice)", "type": "quality", "deterministic": true},
+        {"text": "Uses POST https://inboxinsiders.io/api/v1/instant-orders endpoint", "type": "structural", "deterministic": true},
+        {"text": "Authorization header is Bearer ${INBOX_INSIDERS_API_KEY} format", "type": "structural", "deterministic": true},
+        {"text": "Payload mode is 'easy'", "type": "structural", "deterministic": true},
+        {"text": "Payload quantity is 9", "type": "structural", "deterministic": true},
+        {"text": "Payload sender_name is 'Jay Feldman' (first + last)", "type": "content", "deterministic": true},
+        {"text": "cold_email is a NESTED object with provider and api_key (not flat top-level cold_email_provider)", "type": "quality", "deterministic": true},
+        {"text": "cold_email.provider is 'instantly'", "type": "structural", "deterministic": true},
+        {"text": "Includes idempotency_key (uuid v4) in the payload", "type": "quality", "deterministic": true},
+        {"text": "Mentions Stripe charge fires immediately on POST", "type": "quality", "deterministic": true},
+        {"text": "No placeholder text remains (TODO, REPLACE, TBD)", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "full-control-mode-existing-domains",
+      "prompt": "I already own acme.com, foo.com, and bar.com. Use Inbox Insiders to provision mailboxes on them and connect to Instantly. Sender 'Madison Popoff'.",
+      "expectations": [
+        {"text": "Uses mode 'full_control' in the payload", "type": "structural", "deterministic": true},
+        {"text": "Payload includes domains array [acme.com, foo.com, bar.com]", "type": "structural", "deterministic": true},
+        {"text": "Does NOT include quantity field (full_control uses domains array, not quantity)", "type": "quality", "deterministic": true},
+        {"text": "Mentions full_control skips the $12/domain registration charge", "type": "quality", "deterministic": true},
+        {"text": "sender_name is 'Madison Popoff' (first + last)", "type": "content", "deterministic": true},
+        {"text": "Includes idempotency_key", "type": "quality", "deterministic": true},
+        {"text": "cold_email is nested with provider 'instantly' and api_key", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "poll-order-status",
+      "prompt": "I just got run_id 7c4f2e6a-1b3d-4f5e-9a8b-2c3d4e5f6a7b from Inbox Insiders. How do I check if the order is done?",
+      "expectations": [
+        {"text": "Uses GET https://inboxinsiders.io/api/v1/instant-orders?run_id={uuid} endpoint", "type": "structural", "deterministic": true},
+        {"text": "Polling cadence is 60s (not faster than 30s)", "type": "quality", "deterministic": true},
+        {"text": "Lists terminal statuses: completed, completed_with_warnings, failed", "type": "content", "deterministic": true},
+        {"text": "Lists non-terminal statuses (pending, pending_payment, pending_setup, running) that mean keep polling", "type": "content", "deterministic": false},
+        {"text": "Mentions typical run time of 5-30 minutes (and 5-10 extra for Instantly upload)", "type": "content", "deterministic": false},
+        {"text": "Authorization Bearer header is included", "type": "structural", "deterministic": true}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "export-credentials-gating",
+      "prompt": "My order with run_id abc-123 just hit status 'pending_setup'. Can I export the credentials now?",
+      "expectations": [
+        {"text": "Says NO — export only works once status is terminal (completed or completed_with_warnings)", "type": "quality", "deterministic": true},
+        {"text": "Recommends polling GET /instant-orders?run_id=... until terminal status first", "type": "quality", "deterministic": true},
+        {"text": "Mentions the export endpoint GET /instant-orders/export?run_id={uuid} for when status is terminal", "type": "structural", "deterministic": true},
+        {"text": "Treats credentials as plaintext secrets (warns against logging or committing)", "type": "quality", "deterministic": false}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "sender-name-validation",
+      "prompt": "Order 6 mailboxes with sender name 'Jay'.",
+      "expectations": [
+        {"text": "Refuses or flags that 'Jay' alone will be rejected — sender_name requires first AND last name", "type": "quality", "deterministic": true},
+        {"text": "Asks for or suggests a canonical full name like 'Jay Feldman'", "type": "quality", "deterministic": true},
+        {"text": "References standard senders (Jay Feldman, Madison Popoff, Bob Porter) as canonical options", "type": "content", "deterministic": false},
+        {"text": "Does NOT call POST /instant-orders with the invalid sender_name", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "stripe-charge-confirmation-gate",
+      "prompt": "Place an order for 12 mailboxes for brand 'TestCo' right now.",
+      "expectations": [
+        {"text": "Quotes the dollar total before calling create order: 12 × $3.50/mo = $42/mo recurring + 4 × $12 = $48 one-time", "type": "quality", "deterministic": true},
+        {"text": "Asks for explicit user confirmation before calling POST /instant-orders (does not auto-execute)", "type": "quality", "deterministic": true},
+        {"text": "Mentions that POST /instant-orders charges Stripe IMMEDIATELY", "type": "quality", "deterministic": true},
+        {"text": "Generates idempotency_key (uuid v4) to include in the payload", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "idempotency-on-retry",
+      "prompt": "I called POST /instant-orders and got a 500 error. I'm not sure if the charge went through. What do I do?",
+      "expectations": [
+        {"text": "Says to retry with the SAME idempotency_key (not a new one) to avoid duplicate charges", "type": "quality", "deterministic": true},
+        {"text": "Mentions the server caches the response for that idempotency_key (including the original error/success)", "type": "quality", "deterministic": true},
+        {"text": "Recommends checking the II dashboard or polling for an existing run_id before assuming the charge failed", "type": "quality", "deterministic": false},
+        {"text": "Warns NOT to rotate the idempotency_key until duplicate-charge risk is ruled out", "type": "quality", "deterministic": true}
+      ]
+    }
+  ]
+}

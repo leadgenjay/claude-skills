@@ -1,0 +1,30 @@
+id: inbox-insiders
+type: skill
+name: "Inbox Insiders"
+description: "End-to-end cold email mailbox ordering via Inbox Insiders Instant Order API. Provisions domains + SMTP + Instantly upload in one async order. Replaces the buy-domain → DNS → Winnr → upload chain. Includes Stripe-charge safety gate, idempotency keys, and credential export."
+categories:
+  - lgj-exclusive
+  - automation
+  - productivity
+tags:
+  - cold-email
+  - mailbox-provisioning
+  - instantly
+  - smtp
+  - dynadot
+  - stripe
+  - idempotency
+  - instant-orders
+icon: Inbox
+path: skills/inbox-insiders
+files:
+  - SKILL.md
+  - evals/evals.json
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - cold-email-strategy
+  - cold-email-copywriting
+  - cold-email-ab-testing
+  - cold-email-campaign-deploy
+  - lead-tracking-db
