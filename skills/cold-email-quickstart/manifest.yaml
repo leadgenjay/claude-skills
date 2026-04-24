@@ -1,0 +1,33 @@
+id: cold-email-quickstart
+type: skill
+name: "Cold Email Quickstart"
+description: "First-run wizard from zero to a launched cold email campaign. Chains 7 specialist skills (inbox-insiders → consulti-scrape → email-verification → strategy → copy → ab-testing → deploy) with confirmation gates and resumable state. Thin orchestrator — delegates without duplicating logic."
+categories:
+  - lgj-exclusive
+  - automation
+  - productivity
+  - onboarding
+tags:
+  - cold-email
+  - wizard
+  - orchestrator
+  - onboarding
+  - quickstart
+  - first-run
+  - resumable
+icon: Rocket
+path: skills/cold-email-quickstart
+files:
+  - SKILL.md
+  - references/phase-prompts.md
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - inbox-insiders
+  - consulti-scrape
+  - email-verification
+  - cold-email-strategy
+  - cold-email-copywriting
+  - cold-email-ab-testing
+  - cold-email-campaign-deploy
+  - lead-tracking-db
