@@ -1,0 +1,31 @@
+id: email-verification
+type: skill
+name: "Email Verification"
+description: "Verify emails via the Consulti API before adding to cold email campaigns. Single-endpoint verification with server-side cache, catch-all / disposable / role-account detection, and a verdict-to-safe/risky/invalid bucketing table for campaign-ready lists."
+categories:
+  - lgj-exclusive
+  - automation
+  - productivity
+tags:
+  - cold-email
+  - email-verification
+  - consulti
+  - deliverability
+  - bounce-rate
+  - validation
+  - smtp
+icon: MailCheck
+path: skills/email-verification
+files:
+  - SKILL.md
+  - manifest.yaml
+  - evals/evals.json
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - consulti-scrape
+  - cold-email-campaign-deploy
+  - cold-email-quickstart
+  - cold-email-strategy
+  - cold-email-copywriting
+  - cold-email-ab-testing

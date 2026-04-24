@@ -1,0 +1,60 @@
+{
+  "domain": "general",
+  "skill_name": "email-verification",
+  "evals": [
+    {
+      "id": 1,
+      "name": "verify-single-email",
+      "prompt": "Verify the email john@acme.com using Reacher. Show me the exact API call with all required headers and proxy config.",
+      "expectations": [
+        {"text": "Uses POST to https://reacher.nextwave.io/v1/check_email", "type": "structural", "deterministic": true},
+        {"text": "Includes CF-Access-Client-Id and CF-Access-Client-Secret headers", "type": "structural", "deterministic": true},
+        {"text": "Includes proxy config with host r1.proxy4smtp.com and port 1081", "type": "content", "deterministic": true},
+        {"text": "Proxy includes username and password fields", "type": "structural", "deterministic": true},
+        {"text": "Body uses to_email field for the target email", "type": "structural", "deterministic": true},
+        {"text": "Mentions the 4 verdict values: safe, risky, invalid, unknown", "type": "content", "deterministic": true}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "classify-verification-results",
+      "prompt": "I verified 5 emails. Results: (1) safe + not disposable + not role, (2) safe + is_role_account, (3) safe + is_catch_all, (4) risky + catch_all, (5) invalid. Which do I add to my campaign?",
+      "expectations": [
+        {"text": "Email 1 (safe, clean): ADD to campaign", "type": "quality", "deterministic": false},
+        {"text": "Email 2 (safe + role): EXCLUDE - role accounts (info@, admin@) are risky", "type": "quality", "deterministic": false},
+        {"text": "Email 3 (safe + catch_all): RISKY - validate with No2Bounce first", "type": "quality", "deterministic": false},
+        {"text": "Email 4 (risky + catch_all): validate with No2Bounce, include only if Deliverable", "type": "quality", "deterministic": false},
+        {"text": "Email 5 (invalid): NEVER send", "type": "quality", "deterministic": false},
+        {"text": "Mentions the downgrade logic: safe gets downgraded to risky for disposable/role/catch-all", "type": "content", "deterministic": false}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "catch-all-validation-no2bounce",
+      "prompt": "Reacher says email john@catchall-domain.com is risky with is_catch_all: true. How do I validate if it's a real mailbox?",
+      "expectations": [
+        {"text": "Uses No2Bounce API for catch-all validation", "type": "content", "deterministic": true},
+        {"text": "Step 1: POST to https://connect.no2bounce.com/v2/n2b_validate_email", "type": "structural", "deterministic": true},
+        {"text": "Includes apitoken header for No2Bounce auth", "type": "structural", "deterministic": true},
+        {"text": "Step 2: Poll GET with trackingId for results", "type": "structural", "deterministic": true},
+        {"text": "Deliverable scoreStatus means safe to send", "type": "quality", "deterministic": true},
+        {"text": "UnDeliverable/AcceptAll means do NOT send", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "pre-campaign-verification-workflow",
+      "prompt": "I have 500 leads for a cold email campaign. What's the verification workflow before I can start sending?",
+      "expectations": [
+        {"text": "Verify ALL leads before sending (not a sample)", "type": "quality", "deterministic": false},
+        {"text": "Only add safe (non-disposable, non-role) to campaigns", "type": "quality", "deterministic": true},
+        {"text": "Catch-all leads must be validated with No2Bounce", "type": "content", "deterministic": true},
+        {"text": "Never send to invalid or unknown", "type": "quality", "deterministic": true},
+        {"text": "Target bounce rate < 3%", "type": "quality", "deterministic": true},
+        {"text": "Stop sending if bounce rate > 5%", "type": "quality", "deterministic": true},
+        {"text": "Re-verify lists older than 30 days", "type": "quality", "deterministic": true},
+        {"text": "Rate limit: 60 req/min with 1s delay between checks", "type": "content", "deterministic": true}
+      ]
+    }
+  ]
+}
