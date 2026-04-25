@@ -1,0 +1,24 @@
+id: trigger
+type: skill
+name: "DM Keyword Trigger Creator"
+description: "Create DM keyword triggers with auto-generated copy in Jay's brand voice. Matches keyword topics to the best offer/link from a KB, generates a short DM reply, shows for approval, then saves to Notion + Supabase."
+categories:
+  - lgj-exclusive
+  - automation
+  - content
+tags:
+  - dm-triggers
+  - instagram
+  - linkedin
+  - brand-voice
+  - notion
+  - supabase
+  - automation
+icon: MessageSquare
+path: skills/trigger
+files:
+  - SKILL.md
+  - references/link-kb.md
+  - scripts/save-dm-trigger.mjs
+version: "1.0"
+branch: LGJ-exclusive
