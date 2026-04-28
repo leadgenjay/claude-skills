@@ -1,0 +1,32 @@
+id: apify-scraping
+type: skill
+name: Apify Scraping (B2B + Google Maps)
+description: >
+  Two battle-tested Apify actors for cold-email lead gen: code_crafter/leads-finder
+  (B2B decision-maker emails by industry/title/size) and compass/crawler-google-places
+  (local businesses by category + city). Both pipelines chain to /email-verification
+  (Consulti) for one-pass deliverability filtering before campaign upload.
+categories:
+  - lgj-exclusive
+  - cold-email
+  - lead-gen
+  - scraping
+tags:
+  - cold-email
+  - apify
+  - lead-generation
+  - b2b
+  - google-maps
+  - decision-makers
+  - leads-finder
+  - email-verification
+icon: Globe
+version: "1.0"
+branch: LGJ-exclusive
+files:
+  - SKILL.md
+composesWell:
+  - email-verification
+  - consulti-scrape
+  - email-bison
+  - instantly
