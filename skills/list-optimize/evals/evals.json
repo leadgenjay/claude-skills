@@ -1,0 +1,139 @@
+{
+  "skill": "list-optimize",
+  "version": "1.0",
+  "description": "Validates that the list-optimize skill correctly documents its 4 phases, schema additions, idempotency, cost gating, and copywriting integration.",
+  "evals": [
+    {
+      "id": "skill-frontmatter-present",
+      "category": "structure",
+      "description": "SKILL.md has valid frontmatter with name and description",
+      "assertions": [
+        "SKILL.md begins with --- frontmatter block",
+        "frontmatter contains name: list-optimize",
+        "description field mentions 'qualify', 'normalize', and 'personalize'"
+      ]
+    },
+    {
+      "id": "manifest-composes-with-chain",
+      "category": "structure",
+      "description": "manifest.yaml declares composesWell with full skill chain",
+      "assertions": [
+        "manifest.yaml composesWell includes consulti-scrape",
+        "manifest.yaml composesWell includes email-verification",
+        "manifest.yaml composesWell includes cold-email-strategy",
+        "manifest.yaml composesWell includes cold-email-copywriting",
+        "manifest.yaml composesWell includes cold-email-quickstart"
+      ]
+    },
+    {
+      "id": "four-phases-documented",
+      "category": "behavior",
+      "description": "SKILL.md describes 4 phases in correct order",
+      "assertions": [
+        "Phase 1 is qualify",
+        "Phase 2 is normalize",
+        "email-verification runs between phase 2 and phase 3",
+        "Phase 3 is research (Perplexity)",
+        "Phase 4 is personalize"
+      ]
+    },
+    {
+      "id": "schema-additive-only",
+      "category": "safety",
+      "description": "Migration adds columns only — never drops or modifies existing schema",
+      "assertions": [
+        "migrate-schema.sh contains only ALTER TABLE leads ADD COLUMN statements",
+        "migrate-schema.sh does not contain DROP, ALTER COLUMN, or RENAME",
+        "migrate-schema.sh is idempotent (guards each ADD via PRAGMA table_info)",
+        "schema.sql leads table includes the 9 new columns for fresh installs"
+      ]
+    },
+    {
+      "id": "cost-preflight-required",
+      "category": "safety",
+      "description": "Phase 3 (paid Perplexity) always runs cost preflight before any API call",
+      "assertions": [
+        "perplexity-research.sh prints estimated cost before prompting",
+        "perplexity-research.sh prompts y/N unless --yes flag passed",
+        "perplexity-research.sh aborts on any answer other than y/yes",
+        "--estimate-only flag prints cost and exits without calling API"
+      ]
+    },
+    {
+      "id": "verification-order-respected",
+      "category": "behavior",
+      "description": "Phase 3 runs only on verified+qualified survivors (cost efficiency)",
+      "assertions": [
+        "Phase 3 default WHERE includes qualification_status='qualified' AND pipeline_status='verified'",
+        "--include-unverified flag relaxes the verification requirement",
+        "Phase 4 only processes leads with personalization_status='researched'"
+      ]
+    },
+    {
+      "id": "audit-trail-on-every-write",
+      "category": "safety",
+      "description": "Every state change writes a lead_events row for audit",
+      "assertions": [
+        "qualify.sh writes a lead_events row per lead with event_type='status_changed'",
+        "perplexity-research.sh writes a lead_events row per lead",
+        "personalize.sh writes a lead_events row per lead (success or failure)",
+        "lead_events.event_data is JSON containing the phase name and status"
+      ]
+    },
+    {
+      "id": "disqualified-not-deleted",
+      "category": "safety",
+      "description": "Disqualified leads are marked + kept, never deleted",
+      "assertions": [
+        "qualify.sh sets do_not_contact=1 for disqualified leads",
+        "qualify.sh never issues DELETE FROM leads",
+        "Disqualified leads remain in DB with qualification_status='disqualified'"
+      ]
+    },
+    {
+      "id": "personalization-validation",
+      "category": "quality",
+      "description": "Phase 4 enforces hard constraints on generated openers",
+      "assertions": [
+        "personalize.sh rejects lines >25 words",
+        "personalize.sh rejects banned phrases (Dear, Hope this finds you well, etc.)",
+        "personalize.sh rejects em dashes, en dashes, double hyphens",
+        "personalize.sh rejects merge tags inside the line",
+        "personalize.sh rejects exclamation marks and questions",
+        "personalize.sh requires either uses_topic OR uses_first_name (XOR)"
+      ]
+    },
+    {
+      "id": "copywriting-integration",
+      "category": "behavior",
+      "description": "Copywriting integration via optional {personalization} token with spintax fallback",
+      "assertions": [
+        "SKILL.md documents the {personalization|fallback} token format",
+        "Token uses E1 first sentence ONLY (E2-E4 unchanged)",
+        "Spintax fallback fires when personalization_line IS NULL",
+        "Existing campaigns without the token still work (backward compatible)"
+      ]
+    },
+    {
+      "id": "idempotency",
+      "category": "behavior",
+      "description": "Re-running any phase is safe and processes only unprocessed leads",
+      "assertions": [
+        "qualify.sh WHERE clause includes qualification_status IS NULL",
+        "normalize-company.sh WHERE clause includes company_name_normalized IS NULL",
+        "perplexity-research.sh WHERE clause includes personalization_status IS NULL",
+        "Schema migration is idempotent (no errors on re-run)"
+      ]
+    },
+    {
+      "id": "perplexity-only-research",
+      "category": "scope",
+      "description": "v1 ships with Perplexity as the sole research backend (per user direction)",
+      "assertions": [
+        "perplexity-research.sh calls api.perplexity.ai only (no Apify or website scrape)",
+        "SKILL.md mentions Perplexity as the v1 backend",
+        "Multi-backend support deferred to follow-up"
+      ]
+    }
+  ]
+}

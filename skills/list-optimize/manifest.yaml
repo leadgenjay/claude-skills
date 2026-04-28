@@ -1,0 +1,36 @@
+id: list-optimize
+type: skill
+name: "List Optimize"
+description: "Qualify, normalize, research, and personalize a scraped lead list before campaign launch. AI-qualifies leads against ICP rules from strategy.md, normalizes company names, runs Perplexity research on verified survivors (with cost-gated confirmation), and writes 1-sentence personalization lines that the copywriting skill can merge into the E1 opener via an optional {personalization} token. Updates Turso leads table with 9 new columns. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
+categories:
+  - lgj-exclusive
+  - automation
+  - productivity
+tags:
+  - cold-email
+  - lead-qualification
+  - lead-research
+  - personalization
+  - perplexity
+  - turso
+  - data-cleaning
+  - icp
+icon: ListChecks
+path: skills/list-optimize
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/qualification-prompt.md
+  - references/company-normalization-rules.md
+  - references/personalization-prompt.md
+  - evals/evals.json
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - consulti-scrape
+  - lead-tracking-db
+  - email-verification
+  - cold-email-strategy
+  - cold-email-copywriting
+  - cold-email-quickstart
+  - cold-email-campaign-deploy
