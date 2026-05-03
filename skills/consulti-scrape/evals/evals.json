@@ -1,0 +1,23 @@
+{
+  "skill_name": "consulti-scrape",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Scrape 50 VP Marketing leads at US SaaS companies (50-500 employees) using the audience list 'lgj-scraped-us-saas-vp-marketing'. Import them to Turso.",
+      "expected_output": "GET /lists resolves or POST /lists creates the named list; POST /leads/search is called with {titles, industries, countries, empMin, empMax, emailStatus, excludeListId, size: 100} and paginated until target reached; leads.json written to .claude/skills/consulti-scrape-workspace/{run-id}/; emails added via POST /lists/{id}/add-leads; scripts/import-leads.sh - consulti ingests via stdin with jq-transformed shape; final summary reports list_id, scraped count, imported count; user prompted to run /email-verification next.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Pull 25 marketing agencies in Florida from the Consulti local-business database. Track them under the list 'lgj-scraped-fl-marketing-agencies'.",
+      "expected_output": "POST /local-leads/search called with {states: ['FL'], keywords: ['marketing agency']}; Turso queried for prior google_place_id values where source_actor='consulti' and results filtered client-side (no excludeListId on this endpoint); businessIds (not emails) added via POST /lists/{id}/add-leads; filtered JSON imported via scripts/import-leads.sh - consulti; summary notes local-leads path and client-side dedup.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Scrape 20 business podcasts with verified emails and track them under 'lgj-scraped-business-podcasts'.",
+      "expected_output": "POST /creator-leads/search called with {source: 'podcast', categories: ['Business'], hasEmail: true}; Turso queried for prior emails where source_actor='consulti' and results filtered client-side; emails added via POST /lists/{id}/add-leads; imported via scripts/import-leads.sh - consulti; summary notes creator-leads path and email-based client-side dedup.",
+      "files": []
+    }
+  ]
+}

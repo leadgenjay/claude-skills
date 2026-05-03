@@ -1,0 +1,53 @@
+{
+  "domain": "general",
+  "skill_name": "lead-tracking-db",
+  "evals": [
+    {
+      "id": 1,
+      "name": "register-domain-and-mailboxes",
+      "prompt": "I just bought solar1.com on Dynadot for $8.99. Register it in the lead tracking DB and add 3 Winnr mailboxes (jay, madison, bob). Show the SQL.",
+      "expectations": [
+        {"text": "INSERT INTO domains with domain, registrar, purchase_date, purchase_price, status fields", "type": "structural", "deterministic": true},
+        {"text": "INSERT INTO mailboxes with domain_id subquery, email_address, provider, display_name", "type": "structural", "deterministic": true},
+        {"text": "Uses winnr as provider value", "type": "content", "deterministic": true},
+        {"text": "Standard names: Jay Feldman, Madison Popoff, Bob Porter", "type": "content", "deterministic": true},
+        {"text": "Domain_id uses subquery SELECT id FROM domains WHERE domain = ...", "type": "structural", "deterministic": true}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "health-check-queries",
+      "prompt": "Run health checks on my cold email infrastructure. Show me domains missing DNS, mailboxes not warming, and campaigns with high bounce rates.",
+      "expectations": [
+        {"text": "Queries domains WHERE spf_configured=0 OR dkim_configured=0 OR dmarc_configured=0", "type": "structural", "deterministic": true},
+        {"text": "Queries mailboxes WHERE status=warming AND warmup_enabled=0", "type": "structural", "deterministic": true},
+        {"text": "Queries campaign_analytics WHERE bounce_rate > 5", "type": "structural", "deterministic": true},
+        {"text": "Uses JOIN between mailboxes and domains tables", "type": "structural", "deterministic": true},
+        {"text": "Uses latest synced_at subquery for campaign analytics", "type": "quality", "deterministic": false}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "classify-reply-and-update-lead",
+      "prompt": "Reply ID 42 is from a lead who wants a demo call. Classify it as interested and update the lead's pipeline status.",
+      "expectations": [
+        {"text": "UPDATE replies SET classification = 'interested' WHERE id = 42", "type": "structural", "deterministic": true},
+        {"text": "UPDATE leads SET interest_status = 'interested' using subquery from replies", "type": "structural", "deterministic": true},
+        {"text": "Updates pipeline_status to 'replied'", "type": "content", "deterministic": true},
+        {"text": "Inserts a lead_events audit trail entry", "type": "quality", "deterministic": false},
+        {"text": "Never deletes from lead_events (append-only rule)", "type": "quality", "deterministic": false}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "list-tables-and-scripts",
+      "prompt": "What tables are in the lead tracking DB and what scripts are available for managing it?",
+      "expectations": [
+        {"text": "Lists all 13 tables: scrape_jobs, leads, email_verifications, campaign_assignments, lead_analytics, campaign_analytics, domains, mailboxes, copy_variants, sent_emails, replies, ab_test_results, lead_events", "type": "content", "deterministic": true},
+        {"text": "Lists scripts: import-leads.sh, email-guesser.sh, sync-analytics.sh, lead-report.sh", "type": "content", "deterministic": true},
+        {"text": "Mentions Turso database on aws-us-east-1", "type": "content", "deterministic": true},
+        {"text": "Mentions db-query.sh as the connection helper providing db_exec, db_query, etc.", "type": "content", "deterministic": true}
+      ]
+    }
+  ]
+}
