@@ -21,7 +21,7 @@ files:
   - SKILL.md
   - manifest.yaml
   - evals/evals.json
-version: "1.1"
+version: "1.2"
 branch: LGJ-exclusive
 composesWell:
   - lead-tracking-db

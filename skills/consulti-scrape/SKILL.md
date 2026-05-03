@@ -26,15 +26,21 @@ Base URL: `https://app.consulti.ai/api/v1` · Auth: `Authorization: Bearer $CONS
 | POST | `/lists` | Create audience list |
 | POST | `/lists/{listId}/add-leads` | Add members by `emails[]` or `businessIds[]` (upsert-safe) |
 | POST | `/verify` | Email verification — primary method, used by `/email-verification` |
-| POST | `/leads/enrich` | Enrich by email |
-| POST | `/leads/find-by-linkedin` | Enrich by LinkedIn URL |
-| POST | `/leads/find-by-name` | Find email by name + domain |
+| POST | `/leads/enrich` | Enrich by email — 1 credit on match, free on 404 |
+| POST | `/leads/find-by-linkedin` | Enrich by LinkedIn URL — 1 credit on match, free on 404 |
+| POST | `/leads/find-by-name` | Find email by name + domain — 1 credit on match, free on 404 |
+| GET  | `/meta/{filter}` | Canonical enum values (no auth, free, 1h edge cache) |
+| GET  | `/meta/_all` | Snapshot of every filter at once |
+
+`/meta` filters: `industries`, `countries`, `states`, `email-statuses`, `local-states`, `creator-podcast-categories`, `creator-youtube-niches`, `creator-languages`, `creator-countries`. Hit these instead of hardcoding when a campaign returns suspiciously zero results — the canonical values change.
 
 ## Setup
 
-1. app.consulti.ai → API settings → generate key
-2. Append to `.env`: `CONSULTI_API_KEY=ctai_...`
+1. app.consulti.ai → Settings → Integrations → generate key
+2. Append to `.env`: `CONSULTI_API_KEY=capi_...` (keys start with `capi_`)
 3. Done. No MCP install, no restart.
+
+Optional: `npx consulti-mcp` exposes the same endpoints as MCP tools — this skill uses direct curl to match repo convention.
 
 ## Audience list naming
 
@@ -53,12 +59,15 @@ Re-scraping the same audience reuses the list. A new audience creates a new list
     { "first_name": "John", "last_name": "Doe", "email": "john@acme.com",
       "job_title": "CEO", "company_name": "Acme Inc", "company_domain": "acme.com",
       "linkedin_url": "https://linkedin.com/in/johndoe", "city": "San Francisco",
-      "country": "United States", "employees": 150, "industry": "Software",
-      "email_status": "good" }
+      "state": "California", "country": "United States", "employees": 150,
+      "industry": "Computer Software", "email_status": "good",
+      "verified_at": "2026-04-12T00:00:00Z" }
   ],
   "total": 1247, "page": 1, "size": 25
 }
 ```
+
+API quirk: `/leads/search` returns the count as `employees` (number); the lookup endpoints (`/leads/find-by-linkedin`, `/leads/find-by-name`, `/leads/enrich`) return it as `employee_count`. The Turso import jq below already coerces `.employees` → `company_size`. If you switch to a lookup endpoint, map `.data.employee_count` instead.
 
 ## B2B workflow (primary)
 
@@ -209,64 +218,128 @@ Dedup client-side against `leads.email` where `source_actor='consulti'`. Add mem
 |-------|------|-------|
 | `q` | string | Free-text over name/title/company/industry. Use this for fuzzy intent (`"web design"`, `"agency"`); `industries[]` is exact-match. |
 | `titles` | string[] | e.g. `["CEO","Founder","VP Marketing"]` |
-| `industries` | string[] | **Exact-match, case-sensitive** against Apollo's canonical list — see [Canonical industries](#canonical-industries) below. Wrong case or off-list strings silently return zero. |
-| `countries` | string[] | Full country names (`"United States"`, not `"US"`) |
-| `states` | string[] | Full state/region names |
+| `industries` | string[] | **Exact-match, case-sensitive** against the 145-value canonical list — see [Canonical filter values](#canonical-filter-values) below. Wrong case or off-list strings silently return zero. |
+| `countries` | string[] | Full country names (`"United States"`, not `"US"`). Quirk: list also accepts US state names (`"Florida"`, `"California"`). |
+| `states` | string[] | Full state/region names — 877 canonical values, case-sensitive. |
 | `cities` | string[] | |
 | `company` | string | Company name search |
 | `empMin` / `empMax` | number | Employee count bounds |
-| `emailStatus` | `"good"` \| `"all"` | **Use `"good"`** — matches the `email_status` response value. `"verified"` silently returns 0 results. Default `all`. |
+| `emailStatus` | enum | One of `bad`, `good`, `invalid`, `risky`, `unknown`, `valid`. Use `good` for cold-email-grade leads. **`"verified"` is not canonical and silently returns 0** — `"all"` is also not in the enum, omit the field instead of passing `"all"`. |
 | `excludeListId` | string (UUID) | **Native exclusion — B2B only** |
 | `page` / `size` | number | 1-indexed · max size 100 |
 
 ### `/local-leads/search`
-`q`, `name`, `keywords[]`, `states[]` (full or 2-letter), `cities[]`, `zips[]`, `ratingMin/Max`, `reviewsMin/Max`, `hasEmail`, `hasPhone`, `hasWeb`, `page`, `size`.
+`q`, `name`, `keywords[]`, `states[]` (**2-letter codes only — US states + Canadian provinces, 58 canonical values**; full names will not match), `cities[]`, `zips[]`, `ratingMin/Max`, `reviewsMin/Max`, `hasEmail`, `hasPhone`, `hasWeb`, `page`, `size`.
 
 ### `/creator-leads/search`
 `source: "youtube" | "podcast"` (**required**), `q`, `hasEmail`, `categories[]` (e.g. `["Business"]`), `niches[]`, `country`, `language`, `minSubscribers` / `maxSubscribers`, `minEpisodes`, `page`, `size`.
 
 **Note:** Response uses `creators` key (array of creator objects with name, email, website, category, episodes, language, source fields).
 
-## Canonical industries
+## Canonical filter values
 
-`industries[]` is **case-sensitive exact-match** against Apollo's standardized list (`industry_std`). Off-list strings, lowercase variants, or `&` ↔ `and` swaps silently return zero. For fuzzy intent (e.g. "agencies", "web design"), use the `q` field instead.
+`industries[]`, `countries[]`, `states[]`, `emailStatus`, and the creator filters are **case-sensitive exact-match** against canonical lists. Off-list strings, lowercase variants, and `&` ↔ `and` ↔ `or` ↔ `/` swaps silently return zero. For fuzzy intent, use the `q` field.
 
-The full 120-value list (use these strings verbatim):
+**Live source of truth:** `GET /api/v1/meta/{filter}` (no auth, free, 1h edge cache). Hit this when a filter starts returning zero — the canonical list shifts.
+
+```bash
+curl -s "https://app.consulti.ai/api/v1/meta/industries" | jq -r '.values[]'
+curl -s "https://app.consulti.ai/api/v1/meta/_all" | jq '.filters | keys'
+```
+
+| Filter | Slug | Count | Notes |
+|--------|------|-------|-------|
+| B2B industries | `industries` | 145 | Apollo `industry_std`. Full list below. |
+| B2B countries | `countries` | 192 | Full names (`United States`). **Quirk**: list mixes country names with US state names (`Arizona`, `California`, `Florida`, `Texas`, …) — `countries[]` accepts US-state-level granularity. |
+| B2B states | `states` | 877 | Case-sensitive global subdivisions (`California`, `Bavaria`, `Catalonia`, `County Dublin`, …). |
+| B2B email statuses | `email-statuses` | 6 | `bad, good, invalid, risky, unknown, valid`. Use `good` for cold-email-grade leads. **`"verified"` is NOT canonical and silently returns 0.** |
+| Local states | `local-states` | 58 | 2-letter codes only — US states **plus** Canadian provinces (`AB, BC, NB, NS, ON, QC, SK`). Full names will not match. |
+| Podcast categories | `creator-podcast-categories` | 243 | Both Title Case and lowercase variants exist (`Business`, `business`). |
+| YouTube niches | `creator-youtube-niches` | 361 | Mostly lowercase tokens (`saas`, `ecommerce`, `fitness`). |
+| Creator languages | `creator-languages` | 31 | Mix of `en`, `en-US`, `English`, `eng` — try multiple if zero results. |
+| Creator countries | `creator-countries` | 66 | Mix of 2-letter codes (`US`, `GB`) and full names (`United States`, `Germany`). |
+
+### Canonical industries (145 values, verbatim)
 
 ```
-Accounting · Aerospace & Defense · Agriculture · Apparel & Fashion · Architecture & Planning ·
-Automotive · Banking · Biotechnology · Broadcast Media · Building Materials · Capital Markets ·
-Chemicals · Computer Games · Computer Hardware · Computer Networking · Computer Software ·
-Construction · Consumer Electronics · Consumer Goods · Consumer Services · Cosmetics ·
-Defense & Space · Education Management · E-Learning · Electrical & Electronic Manufacturing ·
+Accounting · Agriculture · Airlines/Aviation · Alternative Dispute Resolution · Alternative Medicine ·
+Animation · Apparel & Fashion · Architecture & Planning · Arts & Crafts · Automotive ·
+Aviation & Aerospace · Banking · Biotechnology · Broadcast Media · Building Materials ·
+Business Supplies & Equipment · Capital Markets · Chemicals · Civic & Social Organization ·
+Civil Engineering · Commercial Real Estate · Computer Games · Computer Hardware ·
+Computer Networking · Computer & Network Security · Computer Software · Construction ·
+Consumer Electronics · Consumer Goods · Consumer Services · Cosmetics · Dairy ·
+Defense & Space · Design · Education Management · E-Learning · Electrical/Electronic Manufacturing ·
 Entertainment · Environmental Services · Events Services · Executive Office · Facilities Services ·
-Financial Services · Food & Beverages · Food Production · Furniture · Government Administration ·
-Government Relations · Graphic Design · Health, Wellness & Fitness · Higher Education ·
-Hospital & Health Care · Hospitality · Human Resources · Import & Export ·
+Farming · Financial Services · Fine Art · Fishery · Food & Beverages · Food Production ·
+Fund-Raising · Furniture · Gambling & Casinos · Glass, Ceramics & Concrete ·
+Government Administration · Government Relations · Graphic Design · Health, Wellness & Fitness ·
+Higher Education · Hospital & Health Care · Hospitality · Human Resources · Import & Export ·
 Individual & Family Services · Industrial Automation · Information Services ·
-Information Technology & Services · Insurance · Internet · Investment Banking ·
-Investment Management · Law Practice · Legal Services · Leisure, Travel & Tourism ·
-Logistics & Supply Chain · Luxury Goods & Jewelry · Machinery · Management Consulting ·
-Manufacturing · Market Research · Marketing & Advertising · Mechanical & Industrial Engineering ·
-Media Production · Medical Devices · Medical Practice · Mining & Metals ·
-Motion Pictures & Film · Museums & Institutions · Music · Nanotechnology · Newspapers ·
-Non-Profit Organization Management · Oil & Energy · Online Media · Outsourcing/Offshoring ·
-Package/Freight Delivery · Packaging & Containers · Paper & Forest Products · Pharmaceuticals ·
-Philanthropy · Photography · Plastics · Political Organization · Primary/Secondary Education ·
-Printing · Professional Training & Coaching · Program Development · Public Policy ·
-Public Relations & Communications · Public Safety · Publishing · Real Estate ·
-Recreational Facilities & Services · Religious Institutions · Renewables & Environment ·
-Research · Restaurants · Retail · Security & Investigations · Semiconductors · Shipbuilding ·
-Sporting Goods · Sports · Staffing & Recruiting · Supermarkets · Telecommunications · Textiles ·
-Think Tanks · Tobacco · Translation & Localization · Transportation/Trucking/Railroad ·
-Utilities · Venture Capital & Private Equity · Veterinary · Warehousing · Wholesale ·
-Wine & Spirits · Wireless · Writing & Editing
+Information Technology & Services · Insurance · International Affairs ·
+International Trade & Development · Internet · Investment Banking · Investment Management ·
+Law Enforcement · Law Practice · Legal Services · Legislative Office · Leisure, Travel & Tourism ·
+Libraries · Logistics & Supply Chain · Luxury Goods & Jewelry · Machinery · Management Consulting ·
+Maritime · Marketing & Advertising · Market Research · Mechanical or Industrial Engineering ·
+Media Production · Medical Devices · Medical Practice · Mental Health Care · Military ·
+Mining & Metals · Motion Pictures & Film · Museums & Institutions · Music · Nanotechnology ·
+Nonprofit Organization Management · Oil & Energy · Online Media · Outsourcing/Offshoring ·
+Package/Freight Delivery · Packaging & Containers · Paper & Forest Products · Performing Arts ·
+Pharmaceuticals · Philanthropy · Photography · Plastics · Political Organization ·
+Primary/Secondary Education · Printing · Professional Training & Coaching · Program Development ·
+Public Policy · Public Relations & Communications · Public Safety · Publishing ·
+Railroad Manufacture · Ranching · Real Estate · Recreational Facilities & Services ·
+Religious Institutions · Renewables & Environment · Research · Restaurants · Retail ·
+Security & Investigations · Semiconductors · Shipbuilding · Sporting Goods · Sports ·
+Staffing & Recruiting · Telecommunications · Textiles · Think Tanks · Tobacco ·
+Translation & Localization · Transportation/Trucking/Railroad · Utilities ·
+Venture Capital & Private Equity · Veterinary · Warehousing · Wholesale · Wine & Spirits ·
+Wireless · Writing & Editing
 ```
 
-**Watch-outs:**
-- `Health, Wellness & Fitness` and `Leisure, Travel & Tourism` contain commas — pass them as single array items, don't split.
-- Use `&` (with spaces), not `and` — `"Marketing & Advertising"` ✓, `"Marketing and Advertising"` ✗.
+**Watch-outs that bite:**
+- `Health, Wellness & Fitness`, `Leisure, Travel & Tourism`, and `Glass, Ceramics & Concrete` contain commas — pass as single array items, don't split.
+- `Mechanical or Industrial Engineering` uses **`or`**, not `&` (the only entry where `or` is correct).
+- `Electrical/Electronic Manufacturing`, `Airlines/Aviation`, `Outsourcing/Offshoring`, `Package/Freight Delivery`, `Primary/Secondary Education`, `Transportation/Trucking/Railroad` use slashes — no spaces around the `/`.
+- `Nonprofit Organization Management` is one word, no hyphen.
+- Outdated strings that **no longer match**: `Aerospace & Defense`, `Manufacturing`, `Newspapers`, `Supermarkets`, `Mechanical & Industrial Engineering`, `Electrical & Electronic Manufacturing`, `Non-Profit Organization Management`. If you see these in old runbooks, replace before re-running.
 - Common cold-email targets: `Marketing & Advertising`, `Internet`, `Computer Software`, `Information Technology & Services`, `Online Media`, `Public Relations & Communications`, `Management Consulting`, `Staffing & Recruiting`, `Professional Training & Coaching`.
+
+## Lookup workflow (single-record enrichment)
+
+Three lookup endpoints — each costs **1 credit on match, free on 404**. Use to enrich an existing list (Apify LinkedIn URLs, name+domain CSVs, or a known email needing more fields) before campaign launch. The skill chain still runs `/email-verification` afterward, since lookup `email_status` may be stale.
+
+```bash
+# By LinkedIn URL — best for Apify harvestapi profile dumps
+curl -s -X POST -H "Authorization: Bearer $CONSULTI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"linkedin_url":"https://linkedin.com/in/johndoe"}' \
+  "https://app.consulti.ai/api/v1/leads/find-by-linkedin"
+
+# By name + domain — best for compass/google-places + xmiso owner-name dumps
+curl -s -X POST -H "Authorization: Bearer $CONSULTI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"first_name":"John","last_name":"Doe","domain":"acme.com"}' \
+  "https://app.consulti.ai/api/v1/leads/find-by-name"
+
+# Enrich by email — fills missing first_name/job_title/company_domain on a known email
+curl -s -X POST -H "Authorization: Bearer $CONSULTI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"john@acme.com"}' \
+  "https://app.consulti.ai/api/v1/leads/enrich"
+```
+
+Response (all three): `{ "success": true, "data": { email, first_name, last_name, job_title, company_name, company_domain, industry, linkedin_url, city, state, country, employee_count, email_status, verified_at }, "credits_used": 1 }`. On 404: `{ "error": "..." }` and `credits_used: 0`.
+
+When ingesting lookup results into the same Turso pipeline, swap `.employees` for `.data.employee_count` in the step-4 jq mapper:
+
+```bash
+jq '[.data | { first_name, last_name, email, job_title,
+  company_name, company_domain, industry,
+  company_size: (.employee_count // empty | tostring),
+  city, state, country, linkedin: .linkedin_url }]' lookup-results.json \
+  | ./scripts/import-leads.sh - consulti
+```
 
 ## Pagination & credit safety
 
@@ -278,8 +351,8 @@ Wine & Spirits · Wireless · Writing & Editing
 
 ## Gotchas
 
-- **`emailStatus` enum is `"good" | "all"`** — `"verified"` silently returns 0 results and looks like an empty result set, not an error
-- **`industries[]` is exact-match against the canonical list above** — wrong case or off-list strings return zero. Use `q` for fuzzy intent
+- **`emailStatus` canonical values: `bad, good, invalid, risky, unknown, valid`** — `"verified"` and `"all"` are NOT in the enum and silently return 0. Omit the field instead of passing `"all"`. See `GET /meta/email-statuses` for the live list.
+- **`industries[]` is exact-match against the 145-value canonical list** — wrong case, off-list strings, or stale names like `Aerospace & Defense`/`Manufacturing`/`Newspapers`/`Supermarkets`/`Mechanical & Industrial Engineering`/`Non-Profit Organization Management` return zero. Use `q` for fuzzy intent, or `GET /meta/industries` to refresh.
 - **`POST /lists` wraps the response in `{"list": {...}}`** — extract `.list.id`, not `.id`. `GET /lists` uses `.lists[].id` (plural). Don't conflate them
 - **`total: 10001` is a server-side cap, not a true count** — at >10k matches the API returns the literal `10001`. Trust `pulled >= target_count` to stop, not `total`
 - **`excludeListId` is B2B-only** — local + creator dedup happens client-side against Turso
