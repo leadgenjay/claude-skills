@@ -1,7 +1,7 @@
 id: list-optimize
 type: skill
 name: "List Optimize"
-description: "Qualify, normalize, research, and personalize a scraped lead list before campaign launch. AI-qualifies leads against ICP rules from strategy.md, normalizes company names, runs Perplexity research on verified survivors (with cost-gated confirmation), and writes 1-sentence personalization lines that the copywriting skill can merge into the E1 opener via an optional {personalization} token. Updates Turso leads table with 9 new columns. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
+description: "Qualify, normalize, research, and personalize a scraped lead list before campaign launch. Interactive phase picker (qualify-only / personalize-only / both / skip). Pre-flight validates the target Instantly or Email Bison campaign template carries the personalization variable with a fallback before any DB writes (template scan + dry-run roundtrip). AI-qualifies leads against ICP rules from strategy.md, normalizes company names, runs Perplexity research on verified survivors (with cost-gated confirmation), and writes 1-sentence personalization lines that the copywriting skill merges into E1 sentence 1 via the {personalization|fallback} token. Updates Turso leads table with 9 new columns. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
 categories:
   - lgj-exclusive
   - automation
@@ -15,6 +15,8 @@ tags:
   - turso
   - data-cleaning
   - icp
+  - phase-picker
+  - campaign-validation
 icon: ListChecks
 path: skills/list-optimize
 files:
@@ -24,7 +26,7 @@ files:
   - references/company-normalization-rules.md
   - references/personalization-prompt.md
   - evals/evals.json
-version: "1.0"
+version: "1.1.0"
 branch: LGJ-exclusive
 composesWell:
   - consulti-scrape
@@ -34,3 +36,5 @@ composesWell:
   - cold-email-copywriting
   - cold-email-quickstart
   - cold-email-campaign-deploy
+  - instantly
+  - email-bison

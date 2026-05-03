@@ -1,6 +1,6 @@
 ---
 name: list-optimize
-description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor with Perplexity and write a 1-sentence personalization line for the E1 opener. Updates the Turso `leads` table with qualification + normalization + personalization fields. Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
+description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor with Perplexity and write a 1-sentence personalization line for the E1 opener. Interactive phase picker lets you run qualify-only, personalize-only, both, or skip. Validates the target campaign template (Instantly/Email Bison) carries the personalization variable with a fallback before any DB writes. Updates the Turso `leads` table with qualification + normalization + personalization fields. Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy', 'phase picker', 'qualify only', 'personalize only', 'validate campaign variables'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
 ---
 
 # List Optimize
@@ -33,6 +33,49 @@ consulti-scrape -> import-leads.sh
 - `.env` contains `TURSO_DB_URL` + `TURSO_DB_TOKEN` (already required by other skills)
 - `.env` contains `PERPLEXITY_API_KEY` (required only for Phase 3) — get one at https://www.perplexity.ai/settings/api
 - Leads already imported into Turso via `scripts/import-leads.sh` (so `leads` rows exist)
+
+## Phase 0: Phase Picker (interactive, idempotent)
+
+On every run, `run-pipeline.sh` reads `scripts/campaigns/{campaign}/.metadata.json` for a previous selection at `list_optimize.selection`. If absent, it prompts:
+
+```
+What do you want list-optimize to run?
+  1) Qualify + Personalize  (recommended, full pipeline)
+  2) Qualify only           (skip Perplexity research + opener writing — saves ~$0.005/lead)
+  3) Personalize only       (skip ICP qualification — assumes leads pre-qualified)
+  4) Skip everything
+```
+
+The selection is saved back to metadata so re-runs (resume after Ctrl-C, restart after email-verification) never re-prompt. Selection-to-phase mapping:
+
+| Selection | Phase 1 (qualify) | Phase 2 (normalize) | Phase 3 (research) | Phase 4 (personalize) |
+|---|---|---|---|---|
+| `both` | yes | yes | yes | yes |
+| `qualify_only` | yes | yes | skip | skip |
+| `personalize_only` | skip | skip | yes | yes |
+| `skip` | skip | skip | skip | skip (no-op exit) |
+
+`personalize_only` keeps the Phase 3 filter `pipeline_status='verified'` — it does NOT bypass the verification gate, only the qualification gate.
+
+To force re-prompt, edit `.metadata.json` and remove the `list_optimize` key (or pass `--reset-picker` to `run-pipeline.sh`).
+
+## Pre-flight: Cold Email Tool Variable Validation
+
+Before any Phase 3 or Phase 4 DB writes, `run-pipeline.sh` calls `scripts/list-optimize/validate-campaign-vars.sh <campaign>` to confirm the target Instantly / Email Bison campaign template can actually consume what we generate. Three checks; all must pass.
+
+**1. Template scan (read-only).** Pull the campaign's E1–E4 sequence text from the API and grep for `{var}` / `{{var}}` tokens. Hard-fail on any token that has no value in our lead payload schema:
+
+| Allowed (Instantly) | Allowed (Email Bison) |
+|---|---|
+| `{{firstName}}`, `{{lastName}}`, `{{companyName}}`, `{{email}}`, `{{personalization}}` | `{FIRST_NAME}`, `{LAST_NAME}`, `{COMPANY}`, `{EMAIL}`, `{personalization}` |
+
+Any other token = fail with `unknown token '{X}' in step Y`.
+
+**2. Fallback check (read-only).** Every reference to `{personalization}` (Bison) or `{{personalization}}` (Instantly) MUST be wrapped as `{personalization|fallback}` per `cold-email-copywriting/references/copy-constraints.md`. Bare token = hard fail. Citation: copy-constraints.md.
+
+**3. Dry-run roundtrip (real campaign, immediately deleted).** Push one sentinel lead (`hyperlist-test+{epoch}@example.invalid`) with every custom field populated, GET it back, confirm every field round-tripped, then DELETE. Wrapped in a `trap` so failure paths still delete. The `.invalid` TLD is reserved per RFC 2606 — even if the lead were ever sent, it would NXDOMAIN immediately.
+
+Validator exits non-zero on any failure with the offending check + step + token named. Skipped automatically when only `qualify_only` is selected (no personalization variable to check).
 
 ## Phase 1: Qualify (AI on every lead)
 
@@ -146,7 +189,21 @@ See `references/personalization-prompt.md` for the prompt template.
 bash scripts/list-optimize/run-pipeline.sh <campaign-name>
 ```
 
-Runs Phase 1 -> Phase 2 -> [pauses, prompts user to run `/email-verification`] -> Phase 3 -> Phase 4. Resume-aware: skips phases already complete (detects via `qualification_status` / `personalization_status` populated).
+Flow:
+
+1. **Phase 0 picker** (interactive, idempotent — see "Phase 0: Phase Picker" above). Selection persists in `.metadata.json`.
+2. **Phases 1-2** (qualify + normalize) if selection includes them.
+3. **Pauses, prompts user to run `/email-verification`** if any qualified leads are still unverified.
+4. **Pre-flight variable validation** — runs `validate-campaign-vars.sh` before any Phase 3/4 DB writes (skipped for `qualify_only`). Hard-fails if the target Instantly/Email Bison campaign template can't carry our personalization payload.
+5. **Phases 3-4** (Perplexity research + 1-sentence opener) if selection includes them.
+
+Resume-aware: skips phases already complete (detects via `qualification_status` / `personalization_status` populated). Re-running with a stale selection in metadata replays only the unfinished phases per the saved selection.
+
+Flags:
+- `--reset-picker` — clear `list_optimize.selection` from metadata and re-prompt.
+- `--skip-research` — legacy alias for `qualify_only` (preserved for backward compat).
+- `--auto-yes` / `-y` — skip cost preflight prompt in Phase 3.
+- `--resume` — pick up where you left off (default behavior; flag exists for clarity).
 
 ## Copywriting integration
 

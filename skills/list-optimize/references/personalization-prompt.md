@@ -1,5 +1,7 @@
 # Phase 4: Personalization Prompt Template
 
+> Constraints aligned with [`cold-email-copywriting/references/copy-constraints.md`](../../cold-email-copywriting/references/copy-constraints.md): ≤25 words, E1 sentence 1 only, the downstream `{personalization|fallback}` token enforces the fallback. Update both files together when changing the rules.
+
 Used by `scripts/list-optimize/personalize.sh`. Generates ONE sentence per lead — the opener for E1 only.
 
 ## System prompt

@@ -1,7 +1,7 @@
 {
   "skill": "list-optimize",
-  "version": "1.0",
-  "description": "Validates that the list-optimize skill correctly documents its 4 phases, schema additions, idempotency, cost gating, and copywriting integration.",
+  "version": "1.1.0",
+  "description": "Validates that the list-optimize skill correctly documents its 4 phases, schema additions, idempotency, cost gating, copywriting integration, the v1.1 phase picker, and pre-flight campaign template validation.",
   "evals": [
     {
       "id": "skill-frontmatter-present",
@@ -133,6 +133,66 @@
         "perplexity-research.sh calls api.perplexity.ai only (no Apify or website scrape)",
         "SKILL.md mentions Perplexity as the v1 backend",
         "Multi-backend support deferred to follow-up"
+      ]
+    },
+    {
+      "id": "phase-picker-documented",
+      "category": "behavior",
+      "description": "v1.1 Phase 0 picker is documented and offers four selections",
+      "assertions": [
+        "SKILL.md describes a Phase 0: Phase Picker section",
+        "Picker offers: Qualify + Personalize, Qualify only, Personalize only, Skip everything",
+        "Selection persists in scripts/campaigns/{campaign}/.metadata.json under list_optimize.selection",
+        "Re-runs with a saved selection do NOT re-prompt (idempotent)",
+        "--reset-picker flag is documented as the way to clear the saved selection"
+      ]
+    },
+    {
+      "id": "phase-picker-routing",
+      "category": "behavior",
+      "description": "run-pipeline.sh routes phases by selection",
+      "assertions": [
+        "selection 'both' runs phases 1, 2, 3, and 4",
+        "selection 'qualify_only' runs phases 1 and 2 and skips 3 and 4 plus the variable validator",
+        "selection 'personalize_only' skips phases 1 and 2 and runs 3 and 4",
+        "selection 'skipped' exits without running any phase",
+        "personalize_only still respects the verification gate (Phase 3 filters pipeline_status='verified')"
+      ]
+    },
+    {
+      "id": "campaign-vars-validation",
+      "category": "safety",
+      "description": "Pre-flight validate-campaign-vars.sh runs before any Phase 3/4 DB writes when personalization is selected",
+      "assertions": [
+        "validate-campaign-vars.sh exists at scripts/list-optimize/validate-campaign-vars.sh",
+        "run-pipeline.sh calls validate-campaign-vars.sh before invoking perplexity-research.sh",
+        "Validator hard-fails on unknown {var}/{{var}} tokens not in the lead payload allow-list",
+        "Validator hard-fails on bare {personalization} or {{personalization}} (no fallback)",
+        "Validator runs a sentinel-lead dry-run roundtrip (POST + readback + DELETE) wrapped in a trap so failure paths still delete",
+        "Validator is skipped when selection == 'qualify_only'",
+        "Sentinel email uses .invalid TLD (RFC 2606) so accidental sends NXDOMAIN immediately"
+      ]
+    },
+    {
+      "id": "quickstart-optional-gate",
+      "category": "behavior",
+      "description": "cold-email-quickstart Phase 6a is gated with default = run; skipping cascades to 6c",
+      "assertions": [
+        "cold-email-quickstart/SKILL.md documents the Phase 6a Y/n gate (default = Y)",
+        "cold-email-quickstart/references/phase-prompts.md contains §P6.optimize_gate copy",
+        "Skipping Phase 6a sets list_optimize.selection = 'skipped' in metadata",
+        "When Phase 6a is skipped, Phase 6c is also skipped automatically",
+        "Skipping does NOT break copywriting — {personalization|fallback} fires the fallback when personalization_line is null"
+      ]
+    },
+    {
+      "id": "personalization-prompt-cross-reference",
+      "category": "structure",
+      "description": "personalization-prompt.md cross-references copy-constraints.md for fallback rules",
+      "assertions": [
+        "references/personalization-prompt.md links to cold-email-copywriting/references/copy-constraints.md",
+        "Both files agree on: <=25 words, E1 sentence 1 only, fallback required",
+        "Cross-reference makes it explicit that updates to one file should be mirrored in the other"
       ]
     }
   ]
