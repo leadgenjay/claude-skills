@@ -1,7 +1,7 @@
 id: cold-email-quickstart
 type: skill
 name: "Cold Email Quickstart"
-description: "First-run wizard from zero to a launched cold email campaign. Chains 7 specialist skills (inbox-insiders → consulti-scrape → email-verification → strategy → copy → ab-testing → deploy) with confirmation gates and resumable state. Thin orchestrator — delegates without duplicating logic."
+description: "First-run wizard from zero to a launched cold email campaign. Chains 8 specialist skills with confirmation gates and resumable state via .metadata.json. Phase 0.5 bootstraps shared infrastructure (Turso DB + Anthropic + Perplexity keys, one-time across campaigns). Strategy precedes scraping so its ICP feeds both the scrape filters AND the list-optimize qualification rules. Phase 6 includes an optional Y/n gate for list-optimize (qualify + personalize, default = run); skipping cascades cleanly to copywriting via the {personalization|fallback} token. Thin orchestrator — delegates without duplicating logic."
 categories:
   - lgj-exclusive
   - automation
@@ -15,19 +15,22 @@ tags:
   - quickstart
   - first-run
   - resumable
+  - list-optimize-gate
 icon: Rocket
 path: skills/cold-email-quickstart
 files:
   - SKILL.md
+  - manifest.yaml
   - references/phase-prompts.md
-version: "1.0"
+version: "1.2"
 branch: LGJ-exclusive
 composesWell:
   - inbox-insiders
-  - consulti-scrape
-  - email-verification
   - cold-email-strategy
+  - lead-tracking-db
+  - consulti-scrape
+  - list-optimize
+  - email-verification
   - cold-email-copywriting
   - cold-email-ab-testing
   - cold-email-campaign-deploy
-  - lead-tracking-db
