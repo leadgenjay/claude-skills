@@ -1,0 +1,68 @@
+id: reply-claw
+type: skill
+name: "Reply Claw"
+description: "Interactive setup wizard that deploys a 24/7 cold-email reply agent on nanoclaw. Interviews you about your company + ICP, generates per-tenant KB, validates API keys, and ships a parameterized fork of bison-replies to your Zeus host."
+categories:
+  - automation
+  - productivity
+tags:
+  - cold-email
+  - email-bison
+  - reply-agent
+  - nanoclaw
+  - telegram
+  - turso
+  - ai-classification
+  - setup-wizard
+icon: MessageCircle
+path: skills/reply-claw
+files:
+  - SKILL.md
+  - manifest.yaml
+  - README.md
+  - .gitignore
+  - interview/01-tenant-identity.md
+  - interview/02-bison-workspaces.md
+  - interview/03-personas.md
+  - interview/04-kb-positioning.md
+  - interview/05-kb-faqs.md
+  - interview/06-kb-objections.md
+  - interview/07-booking-links.md
+  - interview/08-ai-keys.md
+  - interview/09-state-keys.md
+  - interview/10-telegram.md
+  - interview/11-nanoclaw-access.md
+  - interview/12-preferences.md
+  - templates/tenant-config.json.template
+  - templates/env.conf.append.template
+  - templates/kb/company-facts.md.template
+  - templates/kb/pricing-posture.md.template
+  - templates/kb/booking-handoff.md.template
+  - templates/kb/booking-links.md.template
+  - templates/kb/faq.md.template
+  - templates/kb/objection.md.template
+  - runtime/prompts/classify.md
+  - runtime/prompts/draft.md
+  - runtime/migrations/001_agent_replies.sql
+  - runtime/migrations/002_tenant_scoping.sql
+  - runtime/scripts/check-replies.mjs
+  - runtime/scripts/slash-command-handler.mjs
+  - runtime/scripts/send-bison-reply.sh
+  - runtime/scripts/auto-send-interested.sh
+  - runtime/scripts/classify-haiku.sh
+  - runtime/scripts/draft-sonnet.sh
+  - runtime/scripts/deploy-tenant.sh
+  - scripts/wizard.mjs
+  - scripts/render-config.mjs
+  - scripts/render-kb.mjs
+  - scripts/validate-keys.mjs
+  - scripts/apply-migration.mjs
+  - scripts/deploy.sh
+  - scripts/status.sh
+  - scripts/reset-tenant.sh
+version: "0.1"
+composesWell:
+  - bison-replies
+  - lead-tracking-db
+  - cold-email-strategy
+branch: LGJ-exclusive

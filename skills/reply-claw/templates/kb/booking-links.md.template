@@ -1,0 +1,53 @@
+---
+title: "Booking Links"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - booking
+  - calendar
+  - {{tenant_slug}}
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# Booking Links
+
+Per-account URLs the reply agent inserts into `{booking_url}` substitutions.
+The agent picks the URL based on `account_key` at send time.
+
+## Primary booking URLs (REQUIRED for auto-send-on-interested path)
+
+{{#each booking_links}}
+### {{persona_name}} — {{account_key}}
+
+```yaml
+account_key: {{account_key}}
+persona: {{persona_slug}}
+booking_url: {{url}}
+```
+
+{{/each}}
+
+## UTM tracking rule (NON-NEGOTIABLE)
+
+Every booking URL the agent inserts into a reply MUST carry `?utm_source=bison` in the query string.
+This is the attribution channel for replies the agent generates.
+
+If a URL is updated without `utm_source=bison`, the build script will fail loudly.
+
+## Known URL history
+
+These URLs are canonical for this tenant and should not change without a new deployment.
+
+{{#each booking_links}}
+- {{url}} ({{persona_name}}, {{account_key}})
+{{/each}}
+
+## Hard rule (auto-send safety)
+
+If any booking URL above is still `TODO_*_URL`, the auto-send path will NOT fire for that persona.
+The agent will fall back to review-first (you approve in Telegram).
+
+Once all real URLs are in place, auto-send unlocks.

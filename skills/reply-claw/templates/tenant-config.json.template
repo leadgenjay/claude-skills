@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "tenant_slug": "{{tenant_slug}}",
+  "tenant_display_name": "{{tenant_display_name}}",
+  "deployed_at": null,
+  "last_validated_at": null,
+  "bison": {
+    "base_url": "{{bison.base_url}}",
+    "workspaces": [
+      {{#each bison.workspaces}}
+      {
+        "account_key": "{{account_key}}",
+        "api_key_env": "{{api_key_env}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  },
+  "personas": [
+    {{#each personas}}
+    {
+      "name": "{{name}}",
+      "first_name": "{{first_name}}",
+      "last_name": "{{last_name}}",
+      "role": "{{role}}",
+      "email": "{{email}}",
+      "auto_send_eligible": {{auto_send_eligible}},
+      "signature_html": "{{signature_html}}"
+    }{{#unless @last}},{{/unless}}
+    {{/each}}
+  ],
+  "knowledge_base": {
+    "company_pitch": "{{kb.company_pitch}}",
+    "icp_description": "{{kb.icp_description}}",
+    "headline_outcome": "{{kb.headline_outcome}}",
+    "differentiators": [
+      {{#each kb.differentiators}}
+      "{{this}}"{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    "pricing_posture": "{{kb.pricing_posture}}",
+    "post_reply_pricing": "{{kb.post_reply_pricing}}"
+  },
+  "booking_links": [
+    {{#each booking_links}}
+    {
+      "account_key": "{{account_key}}",
+      "persona_slug": "{{persona_slug}}",
+      "url": "{{url}}"
+    }{{#unless @last}},{{/unless}}
+    {{/each}}
+  ],
+  "telegram": {
+    "bot_token_env": "{{telegram.bot_token_env}}",
+    "chat_id": "{{telegram.chat_id}}",
+    "chat_jid": "{{telegram.chat_jid}}"
+  },
+  "turso": {
+    "url_env": "{{turso.url_env}}",
+    "token_env": "{{turso.token_env}}",
+    "db_url": "{{turso.db_url}}"
+  },
+  "nanoclaw": {
+    "ssh_alias": "{{nanoclaw.ssh_alias}}",
+    "container_name": "{{nanoclaw.container_name}}",
+    "group_folder": "{{nanoclaw.group_folder}}",
+    "env_conf_path": "{{nanoclaw.env_conf_path}}",
+    "skill_install_path": "{{nanoclaw.skill_install_path}}"
+  },
+  "preferences": {
+    "daily_auto_send_cap": {{preferences.daily_auto_send_cap}},
+    "confidence_floor": {{preferences.confidence_floor}},
+    "dry_run": {{preferences.dry_run}},
+    "max_per_cycle": {{preferences.max_per_cycle}},
+    "classify_model": "{{preferences.classify_model}}",
+    "draft_model": "{{preferences.draft_model}}"
+  }
+}

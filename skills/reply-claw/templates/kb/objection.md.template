@@ -1,0 +1,25 @@
+---
+title: "Objection: {{objection}}"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - objection
+  - {{tenant_slug}}
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# Objection: {{objection}}
+
+## Recommended response
+
+{{response}}
+
+## Notes for the agent
+
+- Keep the response warm and direct
+- Acknowledge their concern (don't dismiss it)
+- Avoid being defensive
+- Offer a clear next step (e.g., booking link, another question)

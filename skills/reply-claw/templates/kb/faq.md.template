@@ -1,0 +1,16 @@
+---
+title: "FAQ"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - faq
+  - {{tenant_slug}}
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# {{question}}
+
+{{answer}}

@@ -1,0 +1,50 @@
+---
+title: "Company Facts"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - company-facts
+  - {{tenant_slug}}
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# Company Facts
+
+Ground-truth facts the reply agent can cite when responding to prospects.
+
+## What we sell
+
+{{kb.company_pitch}}
+
+## Ideal customer profile (ICP)
+
+{{kb.icp_description}}
+
+## Key outcome
+
+{{kb.headline_outcome}}
+
+## What makes us different
+
+{{#each kb.differentiators}}
+- {{this}}
+{{/each}}
+
+## Pricing posture
+
+**When asked about pricing on first reply:** {{#if kb.pricing_posture_label}}{{kb.pricing_posture_label}}{{else}}Defer to a discovery call{{/if}}
+
+{{#if kb.post_reply_pricing}}
+**What's OK to share post-reply:**
+{{kb.post_reply_pricing}}
+{{/if}}
+
+## Notes for the agent
+
+- Never share enterprise pricing, custom quotes, or discounts in cold replies
+- Focus on outcome, not features
+- Keep answers warm and direct
+- Link to relevant resources only if the prospect asks

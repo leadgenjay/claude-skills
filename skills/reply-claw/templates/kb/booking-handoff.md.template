@@ -1,0 +1,68 @@
+---
+title: "Booking Handoff: {{persona_first_name}}"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - booking-handoff
+  - {{persona_slug}}
+  - {{account_key}}
+  - auto-send
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# Booking Handoff: {{persona_first_name}}
+
+> [!warning] AUTO-SEND TEMPLATE
+> When a prospect replies with interest, the agent sends this body verbatim with NO human review. Read every word. Fix what's wrong before your first deploy.
+
+## When to use
+
+When ALL of these hold:
+- Prospect classified as "interested"
+- Confidence score >= {{preferences.confidence_floor}}
+- Daily auto-send cap not hit
+- Booking URL present for {{persona_first_name}}
+
+## Variables
+
+The drafter substitutes these at send time:
+
+- `{first_name}` — prospect's first name
+- `{company}` — prospect's company
+- `{booking_url}` — calendar link from booking-links.md
+- `{sender_signature}` — {{persona_first_name}}'s email signature
+
+## Body (verbatim — sent as-is)
+
+```
+Hey {first_name},
+
+Glad it caught you. Easiest is grabbing a slot here: {booking_url}
+
+15 mins, no pitch. I'll show you what's relevant to {company} and you can decide from there.
+
+{sender_signature}
+```
+
+## Quality checklist (verify before first deploy)
+
+- [ ] Reads naturally with a real first_name + company name
+- [ ] No banned brand-voice words
+- [ ] No em dashes (regular hyphens / periods only)
+- [ ] No price numbers or claims
+- [ ] One clear CTA (booking link)
+- [ ] Tone matches {{persona_first_name}}'s voice
+- [ ] Signature is accurate
+
+## What to do if this template feels off
+
+Edit the body block above. Save. The auto-send path unlocks once you save. Until then, all replies to {{persona_first_name}} fall back to review-first (you approve in Telegram).
+
+## Related
+
+- [[booking-links]]
+- [[../../prompts/draft|drafter prompt]]
+- [[../../policy|routing policy]]

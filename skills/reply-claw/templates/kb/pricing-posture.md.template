@@ -1,0 +1,57 @@
+---
+title: "Pricing Posture in Replies"
+folder: "Cold Email/Replies"
+tags:
+  - cold-email
+  - reply-agent
+  - pricing
+  - {{tenant_slug}}
+created: {{created_timestamp}}
+updated: {{created_timestamp}}
+source: "reply-claw wizard v0.1"
+---
+
+# Pricing Posture in Replies
+
+> [!note] For this tenant
+> Pricing strategy is: **{{kb.pricing_posture_label}}**
+
+## Standing rule
+
+Pricing is OK in REPLIES. It is only blocked in cold OUTBOUND copy.
+
+## Default posture: {{kb.pricing_posture_label}}
+
+{{#if kb.pricing_posture_is_share_upfront}}
+When a prospect asks "how much?", share your standard pricing details upfront. This builds trust and filters for budget-qualified prospects.
+{{/if}}
+
+{{#if kb.pricing_posture_is_defer_to_call}}
+When a prospect asks "how much?", defer to a discovery call. This keeps the conversation moving and lets you understand their needs first.
+
+**Recommended reply:** "Happy to discuss pricing once I understand your situation better. Let's jump on a quick call — I can show you what's relevant and you'll have a clear sense of the investment."
+{{/if}}
+
+{{#if kb.pricing_posture_is_range_only}}
+When a prospect asks "how much?", share only a price range without exact tier details. This indicates scale without boxing you in for custom deals.
+{{/if}}
+
+## What's OK to share post-reply
+
+{{#if kb.post_reply_pricing}}
+{{kb.post_reply_pricing}}
+{{else}}
+(Not specified — refer to your account manager if this comes up.)
+{{/if}}
+
+## What NEVER to share in a reply
+
+- Enterprise custom pricing
+- Competitor price comparisons
+- Discount codes (unless prospect explicitly qualifies)
+- Internal cost structure or margin details
+- Payment plan options (defer to call)
+
+## Escalation path
+
+If the prospect disputes pricing or asks for a custom quote, escalate to your account manager via Telegram notification.
