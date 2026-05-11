@@ -137,11 +137,107 @@ async function postTelegram(text) {
 
 async function lookupReply(bisonReplyId) {
   const sql =
-    `SELECT account_key, bison_reply_id, draft_body, state FROM agent_replies ` +
+    `SELECT account_key, bison_reply_id, draft_body, state, kb_refs, bison_lead_id FROM agent_replies ` +
     `WHERE tenant_slug='${sqlEsc(TENANT_SLUG)}' AND bison_reply_id='${sqlEsc(bisonReplyId)}' LIMIT 1`;
   const { rows } = await turso(sql);
   if (rows.length === 0) return null;
-  return { account_key: rows[0][0], bison_reply_id: rows[0][1], draft_body: rows[0][2], state: rows[0][3] };
+  return {
+    account_key: rows[0][0],
+    bison_reply_id: rows[0][1],
+    draft_body: rows[0][2],
+    state: rows[0][3],
+    kb_refs: rows[0][4] || '[]',
+    bison_lead_id: rows[0][5] != null ? Number(rows[0][5]) : null,
+  };
+}
+
+// ─── Bison custom-tag layer (mirrors check-replies.mjs) ────────────────
+const BISON_BASE = cfg.bison?.base_url || 'https://send.leadgenjay.com/api';
+const FUNNEL_TAGS = [
+  'Interested', 'Hard No', 'Soft No', 'Auto Reply',
+  'Follow up 7d', 'Follow up 30d', 'Booked', 'Lead Magnet',
+];
+
+function bisonKeyFor(account_key) {
+  const ws = (cfg.bison?.workspaces || []).find((w) => w.account_key === account_key);
+  return ws?.api_key || null;
+}
+
+async function getBisonTagIds(account_key) {
+  const raw = await getState(`bison_tag_ids:${TENANT_SLUG}:${account_key}`);
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+async function bisonRequest(method, urlPath, key, body) {
+  const r = await fetch(`${BISON_BASE}${urlPath}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!r.ok) {
+    const txt = (await r.text()).slice(0, 200);
+    throw new Error(`bison ${method} ${urlPath} HTTP ${r.status}: ${txt}`);
+  }
+  return r.json();
+}
+
+async function applyBisonTag(account_key, lead_id, tagName) {
+  if (!lead_id || !tagName) return false;
+  const key = bisonKeyFor(account_key);
+  if (!key) return false;
+  const tagMap = await getBisonTagIds(account_key);
+  if (!tagMap) {
+    logErr(`applyBisonTag: no tag map cached for ${TENANT_SLUG}/${account_key} — run sync-bison-tags.mjs`);
+    return false;
+  }
+  const newTagId = tagMap[tagName];
+  if (!newTagId) {
+    logErr(`applyBisonTag: tag "${tagName}" missing from map for ${account_key}`);
+    return false;
+  }
+  const otherIds = FUNNEL_TAGS
+    .filter((n) => n !== tagName)
+    .map((n) => tagMap[n])
+    .filter((id) => typeof id === 'number');
+  try {
+    if (otherIds.length > 0) {
+      await bisonRequest('POST', '/tags/remove-from-leads', key, {
+        tag_ids: otherIds, lead_ids: [lead_id], skip_webhooks: true,
+      });
+    }
+    await bisonRequest('POST', '/tags/attach-to-leads', key, {
+      tag_ids: [newTagId], lead_ids: [lead_id], skip_webhooks: true,
+    });
+    return true;
+  } catch (e) {
+    logErr(`applyBisonTag(${account_key}, lead=${lead_id}, tag=${tagName}) failed: ${e.message}`);
+    return false;
+  }
+}
+
+function stripBisonTagMarkers(body) {
+  const markers = [];
+  const clean = String(body || '').replace(/<!--\s*bison_tag:\s*([a-z0-9_]+)\s*-->/gi, (_m, t) => {
+    markers.push(t.toLowerCase());
+    return '';
+  }).replace(/\n{3,}/g, '\n\n').trim();
+  return { body: clean, markers };
+}
+
+function isLeadMagnetSend({ kb_refs }, markersInBody) {
+  if (markersInBody && markersInBody.includes('lead_magnet')) return true;
+  try {
+    const refs = JSON.parse(kb_refs || '[]');
+    if (Array.isArray(refs) && refs.some((r) => typeof r === 'string' && /lead-magnet/i.test(r))) {
+      return true;
+    }
+  } catch {}
+  return false;
 }
 
 function runSendScript(account_key, bison_reply_id, body) {
@@ -159,10 +255,11 @@ function runSendScript(account_key, bison_reply_id, body) {
   };
 }
 
-async function markSent(bison_reply_id, body) {
+async function markSent(bison_reply_id, body, appliedTag = null) {
+  const tagFrag = appliedTag ? `, applied_bison_tag='${sqlEsc(appliedTag)}'` : '';
   await turso(
     `UPDATE agent_replies SET state='sent', sent_at=datetime('now'), ` +
-    `decided_at=datetime('now'), decided_by='human:jay', draft_body='${sqlEsc(body)}' ` +
+    `decided_at=datetime('now'), decided_by='human:jay', draft_body='${sqlEsc(body)}'${tagFrag} ` +
     `WHERE tenant_slug='${sqlEsc(TENANT_SLUG)}' AND bison_reply_id='${sqlEsc(bison_reply_id)}'`
   );
 }
@@ -173,13 +270,24 @@ async function handleApprove(bisonReplyId) {
   if (row.state !== 'pending_review') return `⚠️ ${bisonReplyId} state=${row.state}, not pending_review`;
   if (!row.draft_body || row.draft_body.length < 5) return `⚠️ ${bisonReplyId} has no draft body to send`;
 
-  const send = runSendScript(row.account_key, row.bison_reply_id, row.draft_body);
+  const { body: cleanBody, markers } = stripBisonTagMarkers(row.draft_body);
+  const wantsLM = isLeadMagnetSend(row, markers);
+
+  const send = runSendScript(row.account_key, row.bison_reply_id, cleanBody);
   if (!send.ok) {
     logErr(`approve ${bisonReplyId} send failed: ${send.stderr.slice(0, 300)}`);
     return `❌ Send failed for ${bisonReplyId} on ${row.account_key}: ${send.stderr.slice(0, 200)}`;
   }
-  await markSent(bisonReplyId, row.draft_body);
-  return `✅ Sent reply ${bisonReplyId} on ${row.account_key}`;
+
+  let appliedTag = null;
+  if (wantsLM && row.bison_lead_id) {
+    const ok = await applyBisonTag(row.account_key, row.bison_lead_id, 'Lead Magnet');
+    if (ok) appliedTag = 'Lead Magnet';
+  }
+
+  await markSent(bisonReplyId, cleanBody, appliedTag);
+  const tagNote = appliedTag ? ` (lead tagged "Lead Magnet")` : '';
+  return `✅ Sent reply ${bisonReplyId} on ${row.account_key}${tagNote}`;
 }
 
 async function handleSkip(bisonReplyId) {
@@ -196,12 +304,24 @@ async function handleEdit(bisonReplyId, newBody) {
   const row = await lookupReply(bisonReplyId);
   if (!row) return `❓ No agent_replies row for ${bisonReplyId}`;
   if (row.state !== 'pending_review') return `⚠️ ${bisonReplyId} state=${row.state}, not pending_review`;
-  const send = runSendScript(row.account_key, row.bison_reply_id, newBody);
+
+  const { body: cleanBody, markers } = stripBisonTagMarkers(newBody);
+  const wantsLM = isLeadMagnetSend(row, markers);
+
+  const send = runSendScript(row.account_key, row.bison_reply_id, cleanBody);
   if (!send.ok) {
     return `❌ Edit-send failed for ${bisonReplyId}: ${send.stderr.slice(0, 200)}`;
   }
-  await markSent(bisonReplyId, newBody);
-  return `✅ Sent edited reply ${bisonReplyId} on ${row.account_key}`;
+
+  let appliedTag = null;
+  if (wantsLM && row.bison_lead_id) {
+    const ok = await applyBisonTag(row.account_key, row.bison_lead_id, 'Lead Magnet');
+    if (ok) appliedTag = 'Lead Magnet';
+  }
+
+  await markSent(bisonReplyId, cleanBody, appliedTag);
+  const tagNote = appliedTag ? ` (lead tagged "Lead Magnet")` : '';
+  return `✅ Sent edited reply ${bisonReplyId} on ${row.account_key}${tagNote}`;
 }
 
 async function handleMute(threadId) {

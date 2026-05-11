@@ -131,8 +131,19 @@ ssh "$SSH_ALIAS" bash << EOFCMD
   echo "Container reloaded"
 EOFCMD
 
-# Step 4: Install host crontabs
-echo "[4/5] Installing host crontabs..."
+# Step 4: Bootstrap Bison custom funnel tags per workspace
+echo "[4/6] Bootstrapping Bison custom tags (sync-bison-tags.mjs)..."
+ssh "$SSH_ALIAS" bash << EOFCMD
+  set -e
+  if env RC_TENANT_CONFIG='$CONFIG_FILE' docker exec -e RC_TENANT_CONFIG nanoclaw node $SKILL_PATH/scripts/sync-bison-tags.mjs; then
+    echo "✓ Bison tags bootstrapped"
+  else
+    echo "⚠️ sync-bison-tags.mjs failed (non-fatal — tag layer will retry on next cron)"
+  fi
+EOFCMD
+
+# Step 5: Install host crontabs
+echo "[5/6] Installing host crontabs..."
 ssh "$SSH_ALIAS" bash << EOFCMD
   set -e
   cron_check_replies="*/8 * * * * cd $SKILL_PATH && env RC_TENANT_CONFIG='$CONFIG_FILE' docker exec -e RC_TENANT_CONFIG nanoclaw node scripts/check-replies.mjs"
@@ -150,15 +161,15 @@ ssh "$SSH_ALIAS" bash << EOFCMD
   echo "Crontab updated"
 EOFCMD
 
-# Step 5: Verify health
-echo "[5/5] Verifying deployment..."
+# Step 6: Verify health
+echo "[6/6] Verifying deployment..."
 ssh "$SSH_ALIAS" bash << EOFCMD
   set -e
   echo "Checking Docker container..."
   docker ps | grep -q nanoclaw && echo "✓ nanoclaw container running" || { echo "✗ nanoclaw not running"; exit 1; }
 
   echo "Checking scripts..."
-  for script in check-replies.mjs slash-command-handler.mjs send-bison-reply.sh auto-send-interested.sh classify-haiku.sh draft-sonnet.sh; do
+  for script in check-replies.mjs slash-command-handler.mjs send-bison-reply.sh auto-send-interested.sh classify-haiku.sh draft-sonnet.sh sync-bison-tags.mjs; do
     [[ -f "$SKILL_PATH/scripts/\$script" ]] && echo "✓ \$script" || { echo "✗ \$script missing"; exit 1; }
   done
 

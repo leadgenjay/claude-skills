@@ -61,6 +61,32 @@ const DRY_RUN = cfg.preferences?.dry_run ? '1' : '0';
 const MAX_PER_CYCLE = parseInt(process.env.MAX_PER_CYCLE || '20', 10);
 const TELEGRAM_CHAT_ID = cfg.telegram?.chat_id;
 
+// ─── Bison custom-tag layer ────────────────────────────────────────────
+// Mirror of bison-replies/scripts/check-replies.mjs tag constants — kept
+// verbatim to preserve fork parity. Bootstrap via sync-bison-tags.mjs.
+const FUNNEL_TAGS = [
+  'Interested', 'Hard No', 'Soft No', 'Auto Reply',
+  'Follow up 7d', 'Follow up 30d', 'Booked', 'Lead Magnet',
+];
+const CATEGORY_TO_TAG = {
+  interested: 'Interested',
+  booked: 'Booked',
+  question: 'Interested',
+  follow_up_7d: 'Follow up 7d',
+  follow_up_30d: 'Follow up 30d',
+  not_interested: 'Soft No',
+  unsubscribe: 'Hard No',
+  do_not_contact: 'Hard No',
+  wrong_person: 'Hard No',
+  ooo: 'Auto Reply',
+  referral: null,
+};
+
+function bisonKeyFor(account_key) {
+  const ws = (cfg.bison?.workspaces || []).find((w) => w.account_key === account_key);
+  return ws?.api_key || null;
+}
+
 const tursoPipeline = (() => {
   let u = cfg.turso?.db_url || '';
   if (!u) return null;
@@ -118,7 +144,7 @@ async function collectNewReplies() {
   const sinceIdInt = parseInt(sinceId, 10) || 0;
   const sql =
     `SELECT bison_reply_id, reply_thread_id, email_from, email_subject, reply_body, ` +
-    `account_key FROM agent_replies ` +
+    `account_key, bison_lead_id FROM agent_replies ` +
     `WHERE tenant_slug='${sqlEsc(TENANT_SLUG)}' AND state='new' AND CAST(bison_reply_id AS INTEGER) > ${sinceIdInt} ` +
     `ORDER BY CAST(bison_reply_id AS INTEGER) ASC LIMIT ${MAX_PER_CYCLE}`;
   const { rows } = await turso(sql);
@@ -129,7 +155,68 @@ async function collectNewReplies() {
     email_subject: r[3],
     reply_body: r[4],
     account_key: r[5],
+    bison_lead_id: r[6] != null ? Number(r[6]) : null,
   }));
+}
+
+// ─── Bison API helpers ─────────────────────────────────────────────────
+async function bisonRequest(method, path, key, body) {
+  const r = await fetch(`${BISON_BASE}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!r.ok) {
+    const txt = (await r.text()).slice(0, 200);
+    throw new Error(`bison ${method} ${path} HTTP ${r.status}: ${txt}`);
+  }
+  return r.json();
+}
+
+async function getBisonTagIds(account_key) {
+  const raw = await getState(`bison_tag_ids:${TENANT_SLUG}:${account_key}`);
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+// Attach tagName to the lead, detaching the other 7 funnel tags first
+// (exclusivity invariant). Never throws — failures are logged.
+async function applyBisonTag(account_key, lead_id, tagName) {
+  if (!lead_id || !tagName) return false;
+  const key = bisonKeyFor(account_key);
+  if (!key) return false;
+  const tagMap = await getBisonTagIds(account_key);
+  if (!tagMap) {
+    logErr(`applyBisonTag: no tag map for ${TENANT_SLUG}/${account_key} — run sync-bison-tags.mjs`);
+    return false;
+  }
+  const newTagId = tagMap[tagName];
+  if (!newTagId) {
+    logErr(`applyBisonTag: tag "${tagName}" missing from map for ${account_key}`);
+    return false;
+  }
+  const otherIds = FUNNEL_TAGS
+    .filter((n) => n !== tagName)
+    .map((n) => tagMap[n])
+    .filter((id) => typeof id === 'number');
+  try {
+    if (otherIds.length > 0) {
+      await bisonRequest('POST', '/tags/remove-from-leads', key, {
+        tag_ids: otherIds, lead_ids: [lead_id], skip_webhooks: true,
+      });
+    }
+    await bisonRequest('POST', '/tags/attach-to-leads', key, {
+      tag_ids: [newTagId], lead_ids: [lead_id], skip_webhooks: true,
+    });
+    return true;
+  } catch (e) {
+    logErr(`applyBisonTag(${account_key}, lead=${lead_id}, tag=${tagName}) failed: ${e.message}`);
+    return false;
+  }
 }
 
 function classifyReply(body, subject) {
@@ -171,10 +258,11 @@ function draftReply(classification, sender, subject, body, accountKey) {
   return result.stdout.toString().trim();
 }
 
-async function updateReplyState(bisonReplyId, newState, classification = null, draftBody = null) {
+async function updateReplyState(bisonReplyId, newState, classification = null, draftBody = null, appliedTag = null) {
   let sql = `UPDATE agent_replies SET state='${sqlEsc(newState)}'`;
   if (classification) sql += `, classification='${sqlEsc(classification)}'`;
   if (draftBody) sql += `, draft_body='${sqlEsc(draftBody)}'`;
+  if (appliedTag) sql += `, applied_bison_tag='${sqlEsc(appliedTag)}'`;
   sql += `, updated_at=datetime('now') WHERE tenant_slug='${sqlEsc(TENANT_SLUG)}' AND bison_reply_id='${sqlEsc(bisonReplyId)}'`;
   await turso(sql);
 }
@@ -198,7 +286,7 @@ async function postTelegram(text) {
 }
 
 async function fullCycleOne(reply) {
-  const { bison_reply_id, email_from, email_subject, reply_body, account_key } = reply;
+  const { bison_reply_id, email_from, email_subject, reply_body, account_key, bison_lead_id } = reply;
 
   // Classify
   const clf = classifyReply(reply_body, email_subject);
@@ -209,36 +297,51 @@ async function fullCycleOne(reply) {
 
   logErr(`[${bison_reply_id}] classified: ${clf.category} (conf=${clf.confidence?.toFixed(2) || 'N/A'})`);
 
+  // Apply mapped Bison funnel tag (exclusive). Logged-and-continue on failure.
+  const tagToApply = CATEGORY_TO_TAG[clf.category] || null;
+  let appliedTag = null;
+  if (tagToApply && bison_lead_id) {
+    const ok = await applyBisonTag(account_key, bison_lead_id, tagToApply);
+    if (ok) {
+      appliedTag = tagToApply;
+      logErr(`[${bison_reply_id}] tagged lead ${bison_lead_id} → "${tagToApply}"`);
+    }
+  } else if (tagToApply && !bison_lead_id) {
+    logErr(`[${bison_reply_id}] tag "${tagToApply}" skipped: bison_lead_id missing`);
+  }
+
   // Check confidence floor
   if ((clf.confidence ?? 0) < CONFIDENCE_FLOOR) {
     logErr(`  -> confidence ${clf.confidence?.toFixed(2)} below floor ${CONFIDENCE_FLOOR}; marking pending_review`);
-    await updateReplyState(bison_reply_id, 'pending_review', clf.category);
+    await updateReplyState(bison_reply_id, 'pending_review', clf.category, null, appliedTag);
     return;
   }
 
-  // Route by category
+  // Route by category — new classes (booked, follow_up_7d, follow_up_30d)
+  // are auto-handled like the other terminal classifications (no draft).
   if (clf.category === 'interested') {
     logErr(`  -> INTERESTED; drafting booking handoff`);
     const draft = draftReply(clf.category, email_from, email_subject, reply_body, account_key);
     if (!draft) {
-      await updateReplyState(bison_reply_id, 'draft_error', clf.category);
+      await updateReplyState(bison_reply_id, 'draft_error', clf.category, null, appliedTag);
       return;
     }
-    await updateReplyState(bison_reply_id, 'interested_drafted', clf.category, draft);
+    await updateReplyState(bison_reply_id, 'interested_drafted', clf.category, draft, appliedTag);
     await postTelegram(`📬 INTERESTED drafted: ${bison_reply_id} from ${email_from}`);
   } else if (['question', 'referral'].includes(clf.category)) {
     logErr(`  -> ${clf.category.toUpperCase()}; drafting contextual response`);
     const draft = draftReply(clf.category, email_from, email_subject, reply_body, account_key);
     if (!draft) {
-      await updateReplyState(bison_reply_id, 'draft_error', clf.category);
+      await updateReplyState(bison_reply_id, 'draft_error', clf.category, null, appliedTag);
       return;
     }
-    await updateReplyState(bison_reply_id, 'pending_review', clf.category, draft);
+    await updateReplyState(bison_reply_id, 'pending_review', clf.category, draft, appliedTag);
     await postTelegram(`📬 ${clf.category.toUpperCase()}: ${bison_reply_id} pending your review`);
   } else {
-    // not_interested, ooo, unsubscribe, do_not_contact, wrong_person → auto-handled
+    // booked, not_interested, follow_up_7d, follow_up_30d, ooo,
+    // unsubscribe, do_not_contact, wrong_person → no draft, tag-only path
     logErr(`  -> auto-handled (${clf.category})`);
-    await updateReplyState(bison_reply_id, clf.category, clf.category);
+    await updateReplyState(bison_reply_id, clf.category, clf.category, null, appliedTag);
   }
 }
 

@@ -41,6 +41,18 @@ Rules in priority order:
    listing the KB note paths you actually used. The loop strips this line
    before posting to Telegram and saves it to agent_replies.kb_refs.
 
+3a. LEAD-MAGNET TAGGING: when your reply primarily delivers a resource (a
+    lead magnet, case study, playbook, cheatsheet, deck, one-pager —
+    anything from `lead-magnets.md`) and treats the call as a soft optional
+    next step, append a second trailing comment on its own line AFTER the
+    kb_refs line:
+        <!-- bison_tag: lead_magnet -->
+    The loop strips this comment before the send and uses it to tag the
+    lead with "Lead Magnet" in Bison after the reply lands. Only emit it
+    when a magnet URL is actually included in the body. If your reply is
+    primarily a calendar invitation (booking_url is the lead CTA), do NOT
+    emit this marker.
+
 4. HARD-STOPS: read the KB playbook's Hard-stops section. Never violate.
    If you can't reply without violating a hard-stop, output exactly:
        <!-- escalate: cannot-draft-without-hard-stop-violation -->

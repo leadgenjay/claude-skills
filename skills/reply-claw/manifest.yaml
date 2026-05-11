@@ -1,7 +1,7 @@
 id: reply-claw
 type: skill
 name: "Reply Claw"
-description: "Interactive setup wizard that deploys a 24/7 cold-email reply agent on nanoclaw. Interviews you about your company + ICP, generates per-tenant KB, validates API keys, and ships a parameterized fork of bison-replies to your Zeus host."
+description: "Interactive setup wizard that deploys a 24/7 cold-email reply agent on nanoclaw. Classifies every reply into 11 categories, applies 8 custom Bison funnel tags (Interested, Hard No, Soft No, Auto Reply, Follow up 7d / 30d, Booked, Lead Magnet) to each lead automatically. Interviews you about your company + ICP, generates per-tenant KB, validates API keys, and ships a parameterized fork of bison-replies to your Zeus host."
 categories:
   - automation
   - productivity
@@ -45,6 +45,7 @@ files:
   - runtime/prompts/draft.md
   - runtime/migrations/001_agent_replies.sql
   - runtime/migrations/002_tenant_scoping.sql
+  - runtime/migrations/003_bison_tags.sql
   - runtime/scripts/check-replies.mjs
   - runtime/scripts/slash-command-handler.mjs
   - runtime/scripts/send-bison-reply.sh
@@ -52,6 +53,7 @@ files:
   - runtime/scripts/classify-haiku.sh
   - runtime/scripts/draft-sonnet.sh
   - runtime/scripts/deploy-tenant.sh
+  - runtime/scripts/sync-bison-tags.mjs
   - scripts/wizard.mjs
   - scripts/render-config.mjs
   - scripts/render-kb.mjs
@@ -60,7 +62,7 @@ files:
   - scripts/deploy.sh
   - scripts/status.sh
   - scripts/reset-tenant.sh
-version: "0.1"
+version: "0.2"
 composesWell:
   - bison-replies
   - lead-tracking-db
