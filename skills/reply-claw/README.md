@@ -4,9 +4,9 @@ Deploy a 24/7 cold-email reply agent to your infrastructure in minutes.
 
 ## What It Does
 
-Reply Claw is an interactive setup wizard that transforms your cold email workflow. It automatically classifies incoming replies (interested, objection, no-reply), drafts personalized responses, and either posts them to Telegram for your review or auto-sends booking confirmations to qualified leads — all without manual intervention.
+Reply Claw is an interactive setup wizard that transforms your cold email workflow. It automatically classifies incoming replies into 11 categories, applies one of 8 custom Bison funnel tags to each lead (`Interested`, `Hard No`, `Soft No`, `Auto Reply`, `Follow up 7d`, `Follow up 30d`, `Booked`, `Lead Magnet` — exclusive: one funnel tag per lead), drafts personalized responses grounded in your KB, and either posts them to Telegram for your review or auto-sends booking confirmations to qualified leads — all without manual intervention.
 
-Every 8 minutes, the agent polls your Email Bison workspace(s) for new replies. Every minute, it checks for slash commands (`/approve`, `/skip`, `/edit`, `/mute`) to fine-tune actions in real time.
+Every 8 minutes, the agent polls your Email Bison workspace(s) for new tracked replies (untracked inbox spam is filtered out automatically to save Anthropic spend). Every minute, it checks for slash commands (`/approve`, `/skip`, `/edit`, `/mute`) to fine-tune actions in real time. The `Lead Magnet` tag swaps in post-send when the drafter delivers a resource instead of a booking link.
 
 ## Who This Is For
 
