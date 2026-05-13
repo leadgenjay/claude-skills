@@ -416,7 +416,23 @@ NEVER ship a stat-headline slide with empty canvas below the number. The slide-6
    - Agent 4: Slide 8
    - Build slide 1 yourself (it's the hero, needs direct oversight)
 
-8. **Generate previewer** at `output/preview.html` using the phone mockup template below
+8. **Generate previewer** at `output/preview.html` via the shared previewer helper (see PREVIEWER TEMPLATE section below) — invokes `scripts/skills/render-preview.mjs --template ig-carousel`. Do NOT hand-roll the previewer HTML.
+
+9. **Final delivery — copy to Nextcloud (MANDATORY before declaring done):** the canonical home for finished carousels is `~/Nextcloud/Carousels/<descriptive-name-and-date>/` (Nextcloud fileid 2998, https://cloud.nextwave.io/f/2998). After the post-render autoheal check passes:
+
+   ```bash
+   DEST="$HOME/Nextcloud/Carousels/<Topic Name> <YYYY-MM-DD>"  # e.g. "Consulti Free Trial 2026-05-13"
+   mkdir -p "$DEST"
+   cp output/*.mp4 output/*-preview.png output/preview.html output/avatar.png "$DEST/" 2>/dev/null
+   cp BRIEF.md "$DEST/" 2>/dev/null  # optional but useful for revisits
+   ls -la "$DEST"  # verify all 8 MP4s + previews + preview.html landed
+   ```
+
+   Folder-name convention: `<Topic Name in Title Case> <YYYY-MM-DD>` (matches existing carousels like `Anthropic Recent Launch (Rahul)`, `POV Reverse Lead Magnet`, `Claude + SpaceX`). The dated suffix lets multiple iterations on the same topic coexist.
+
+   Bundle contents (per Consulti precedent, 2026-05-13): `slide-1.mp4 … slide-8.mp4` + `slide-1-preview.png … slide-8-preview.png` (t=3s static frames) + `preview.html` (phone-mockup viewer) + `avatar.png` + `BRIEF.md`. Total bundle ~3-5 MB.
+
+   Skip the per-slide HTML sources and the `public/assets/` working dir — those stay in the local scratch/project workspace, not Nextcloud.
 
 ### HYPERFRAMES RULES (NON-NEGOTIABLE)
 
@@ -430,123 +446,40 @@ NEVER ship a stat-headline slide with empty canvas below the number. The slide-6
 
 ### PREVIEWER TEMPLATE
 
-Save this as `output/preview.html`. Copy avatar to `output/avatar.png`. All slide MP4s go in `output/`.
+The previewer is provided by the shared template `ig-carousel` at `.claude/skills/_shared/preview-templates/ig-carousel.html`. Do NOT hand-roll the previewer HTML — invoke the shared helper instead. This keeps every visual skill's review experience consistent and centralizes the IG phone-mockup CSS.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carousel Preview</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #1a1a1a; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #fff; overflow: hidden; }
-    .phone-frame { width: 390px; height: 844px; background: #000; border-radius: 48px; border: 4px solid #333; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
-    .status-bar { height: 54px; background: #000; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 8px; font-size: 14px; font-weight: 600; z-index: 10; position: relative; }
-    .ig-header { height: 44px; background: #000; display: flex; align-items: center; padding: 0 14px; gap: 10px; z-index: 10; position: relative; }
-    .ig-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ED0D51, #6B0A2E); padding: 2px; }
-    .ig-avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
-    .ig-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
-    .ig-username { font-size: 13px; font-weight: 600; }
-    .ig-dots { margin-left: auto; font-size: 18px; letter-spacing: 2px; }
-    .carousel-viewport { width: 390px; height: 487px; position: relative; overflow: hidden; background: #000; }
-    .carousel-track { display: flex; height: 100%; transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); }
-    .carousel-slide { width: 390px; height: 487px; flex-shrink: 0; }
-    .carousel-slide video { width: 100%; height: 100%; object-fit: cover; }
-    .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.35); border: none; color: #fff; font-size: 14px; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-    .nav-arrow.left { left: 8px; }
-    .nav-arrow.right { right: 8px; }
-    .nav-arrow.hidden { opacity: 0; pointer-events: none; }
-    .ig-carousel-dots { display: flex; justify-content: center; gap: 4px; padding: 10px 0 6px; background: #000; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: #555; transition: background 0.25s, transform 0.25s; }
-    .dot.active { background: #3897f0; transform: scale(1.3); }
-    .ig-actions { display: flex; align-items: center; padding: 10px 14px; gap: 16px; background: #000; }
-    .ig-action-icon { font-size: 22px; cursor: pointer; opacity: 0.9; }
-    .ig-bookmark { margin-left: auto; }
-    .ig-engagement { padding: 4px 14px 14px; background: #000; font-size: 13px; line-height: 1.5; }
-    .ig-likes { font-weight: 600; margin-bottom: 4px; }
-    .ig-caption span { font-weight: 600; }
-    .ig-caption { color: #ccc; }
-    .ig-more { color: #777; cursor: pointer; }
-    .ig-bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: #000; border-top: 0.5px solid #222; display: flex; align-items: center; justify-content: space-around; font-size: 22px; }
-    .slide-counter { position: fixed; top: 24px; right: 24px; color: #555; font-size: 14px; font-weight: 600; }
-    .hint { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); color: #666; font-size: 13px; }
-    .hint kbd { background: #333; padding: 2px 8px; border-radius: 4px; color: #aaa; }
-  </style>
-</head>
-<body>
-<div class="phone-frame">
-  <div class="status-bar"><span>9:41</span><span>&#9679;&#9679;&#9679;&#9679; &#128267;</span></div>
-  <div class="ig-header">
-    <div class="ig-avatar"><div class="ig-avatar-inner"><img src="avatar.png" alt="" /></div></div>
-    <span class="ig-username">[HANDLE without @]</span>
-    <span class="ig-dots" style="margin-left:auto">&middot;&middot;&middot;</span>
-  </div>
-  <div class="carousel-viewport" id="viewport">
-    <button class="nav-arrow left hidden" id="navLeft" onclick="go(-1)">&#8249;</button>
-    <button class="nav-arrow right" id="navRight" onclick="go(1)">&#8250;</button>
-    <div class="carousel-track" id="track"></div>
-  </div>
-  <div class="ig-carousel-dots" id="dots"></div>
-  <div class="ig-actions">
-    <span class="ig-action-icon">&#9825;</span>
-    <span class="ig-action-icon">&#128172;</span>
-    <span class="ig-action-icon">&#9993;</span>
-    <span class="ig-action-icon ig-bookmark">&#9734;</span>
-  </div>
-  <div class="ig-engagement">
-    <div class="ig-likes">2,847 likes</div>
-    <div class="ig-caption"><span>[HANDLE without @]</span> [First line of caption] <span class="ig-more">...more</span></div>
-  </div>
-  <div class="ig-bottom-nav"><span>&#8962;</span><span>&#128269;</span><span>&#10010;</span><span>&#9654;</span><span>&#128100;</span></div>
-</div>
-<div class="slide-counter" id="counter">1 / 8</div>
-<div class="hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate</div>
-<script>
-  const slides = [
-    { src: 'slide-1.mp4', duration: 10 },
-    { src: 'slide-2.mp4', duration: 10 },
-    { src: 'slide-3.mp4', duration: 5 },
-    { src: 'slide-4.mp4', duration: 5 },
-    { src: 'slide-5.mp4', duration: 5 },
-    { src: 'slide-6.mp4', duration: 10 },
-    { src: 'slide-7.mp4', duration: 5 },
-    { src: 'slide-8.mp4', duration: 10 },
-  ];
-  const track = document.getElementById('track'), dotsC = document.getElementById('dots');
-  const navL = document.getElementById('navLeft'), navR = document.getElementById('navRight');
-  const counter = document.getElementById('counter');
-  let cur = 0; const vids = [];
-  slides.forEach((s, i) => {
-    const d = document.createElement('div'); d.className = 'carousel-slide';
-    const v = document.createElement('video');
-    v.src = s.src; v.muted = true; v.playsInline = true; v.loop = true; v.preload = 'auto';
-    d.appendChild(v); track.appendChild(d); vids.push(v);
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => goTo(i); dotsC.appendChild(dot);
-  });
-  vids[0].play();
-  function goTo(i) {
-    if (i < 0 || i >= slides.length) return;
-    vids[cur].pause(); cur = i;
-    track.style.transform = `translateX(-${cur * 390}px)`;
-    document.querySelectorAll('.dot').forEach((d, j) => d.classList.toggle('active', j === cur));
-    navL.classList.toggle('hidden', cur === 0);
-    navR.classList.toggle('hidden', cur === slides.length - 1);
-    counter.textContent = `${cur + 1} / ${slides.length}`;
-    vids[cur].currentTime = 0; vids[cur].play();
-  }
-  function go(dir) { goTo(cur + dir); }
-  document.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') go(-1); if (e.key === 'ArrowRight') go(1); });
-  let tx = 0; const vp = document.getElementById('viewport');
-  vp.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
-  vp.addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 40) go(d > 0 ? 1 : -1); });
-</script>
-</body>
-</html>
+**Step 1**: Place the brand's profile avatar (Instagram profile photo for the handle) at `output/avatar.png`. The user typically supplies this when invoking the skill — copy it from wherever they pointed (Nextcloud, a downloaded source, etc.). If no avatar is provided, the template renders a hot-pink gradient placeholder.
+
+**Step 2**: Write the preview config to `output/preview.json` then render:
+```bash
+cat > output/preview.json <<'EOF'
+{
+  "handle": "leadgenjay",
+  "avatar": "avatar.png",
+  "caption": "First line of the carousel caption…",
+  "metrics": { "likes": "2,847" },
+  "slides": [
+    { "src": "slide-1.mp4", "duration": 10 },
+    { "src": "slide-2.mp4", "duration": 10 },
+    { "src": "slide-3.mp4", "duration": 5 },
+    { "src": "slide-4.mp4", "duration": 5 },
+    { "src": "slide-5.mp4", "duration": 5 },
+    { "src": "slide-6.mp4", "duration": 10 },
+    { "src": "slide-7.mp4", "duration": 5 },
+    { "src": "slide-8.mp4", "duration": 10 }
+  ]
+}
+EOF
+
+node scripts/skills/render-preview.mjs \
+  --template ig-carousel \
+  --out output/preview.html \
+  --config @output/preview.json
 ```
+
+Replace `handle`, `caption`, `metrics.likes`, and the slide durations to match the actual carousel. The shared template renders the same 390×844 iPhone frame, 390×487 IG carousel viewport, keyboard ←/→ navigation, touch swipe, and dot indicators that hyper-carousel pioneered. The template lives in version control — see `.claude/skills/_shared/preview-templates/README.md` for the full config schema and `ig-carousel.html` for the rendered output structure.
+
+Do NOT invoke `--open` here — opening for user review happens AFTER the post-render quality gate passes (see below).
 
 ### REFERENCE SLIDE (Slide 1 — full working example)
 
@@ -656,14 +589,18 @@ If your CSS makes the container too small to hold its declared children, the ren
 
 After all 8 slides render successfully, BEFORE declaring the carousel complete:
 
-1. Extract a preview frame from each MP4 at the 3-second mark:
+1. **Run the shared quality gate** — extracts a frame at t=3s from each MP4, verifies each is real ISO Media + >50KB, and prints the deterministic checklist:
    ```bash
-   for i in 1 2 3 4 5 6 7 8; do
-     ffmpeg -y -i output/slide-$i.mp4 -ss 3 -frames:v 1 -update 1 output/slide-$i-preview.png 2>/dev/null
-   done
+   node scripts/skills/preview-quality-gate.mjs \
+     --dir output/ \
+     --type video \
+     --pattern '^slide-\d+\.mp4$'
    ```
-2. Read each preview frame with the Read tool (720x900 is safe for in-context viewing — single image, well under the multi-image dimension limit).
-3. **Self-audit checklist (per slide):**
+   The gate writes `output/slide-N-preview.png` for each of the 8 slides. If any MP4 is corrupt (e.g. 0 bytes, not real ISO Media), the gate exits non-zero with a `defects` array — `/autoheal` the affected slides and re-run.
+
+2. **Read each `output/slide-N-preview.png` with the Read tool** (720x900 is safe for in-context viewing — single image, well under the multi-image dimension limit).
+
+3. **Self-audit checklist** — combine the generic checklist printed by the gate with these **hyper-carousel-specific** extras:
    - [ ] No decorative element overlaps text or visual content (per the safe-zone rule above)
    - [ ] All comparison glyphs (`>`, `<`, `&`, `→`, em-dash) render literally — per `[[feedback-special-glyphs-in-html-text]]`, use `&gt;`/`&lt;`/`&amp;` in HTML when the brief contains the raw character
    - [ ] If the slide's central claim references a SaaS tool or a metric the user has a screenshot of, the real asset is embedded (per VISUAL PROOF GATE)
@@ -671,11 +608,16 @@ After all 8 slides render successfully, BEFORE declaring the carousel complete:
    - [ ] Brand fidelity: dark `#0D0D0D` bg, pink `#ED0D51` accents, Big Shoulders Display headlines, Manrope body, footer with progress bar
    - [ ] Counter / scrub / cycling animations end on their final visible value at the back half of the clip (e.g. a 0→12% counter must be holding at 12% by t = 6-10s, not still mid-tween)
    - [ ] Banned AI words absent (delve, leverage, unleash, unlock, harness, etc.)
+
 4. **If ANY check fails**, invoke `/autoheal` on the failing slides:
    ```
    /autoheal output/slide-N.mp4 — defect: <describe what failed>
    ```
    Autoheal will trace the defect to a SKILL.md gap, mutate this skill, regenerate the slide, and re-review until clean (max 5 iterations).
-5. Only after all checks pass for all 8 slides: `open output/preview.html` for user review.
 
-This check is non-optional. The slide-5 missing-`>` defect and the slide-1 star-overlap defect both shipped to the user in v1 because there was no post-render self-audit. v2 adds this gate.
+5. **Only after all checks pass** for all 8 slides, open the previewer for user review:
+   ```bash
+   open output/preview.html
+   ```
+
+This check is non-optional. The slide-5 missing-`>` defect and the slide-1 star-overlap defect both shipped to the user in v1 because there was no post-render self-audit. v2 adds this gate. v3.2 wraps it into the shared `scripts/skills/preview-quality-gate.mjs` so every visual skill in the repo uses the same gate.
