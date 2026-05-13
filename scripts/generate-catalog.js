@@ -129,11 +129,14 @@ function processDirectory(type) {
     const manifest = parseManifest(itemDir);
     const mainContent = fs.readFileSync(path.join(itemDir, mainFile), "utf8");
 
-    // Get files — recursive for components, flat for others
-    const files =
-      type === "component"
-        ? listFilesRecursive(itemDir)
-        : fs.readdirSync(itemDir).filter((f) => !f.startsWith("."));
+    // Recursively list every file under the item dir. Skills/commands/agents
+    // can have nested `references/`, `scripts/`, `evals/` subdirectories — a
+    // non-recursive readdir would emit those as bare directory names, which
+    // the install script then treats as file paths (curl GETs the dir URL,
+    // GitHub returns plain-text "404: Not Found", and that body lands on
+    // disk as a corrupt file). Components were always recursive; this aligns
+    // skills/commands/agents with the same behavior.
+    const files = listFilesRecursive(itemDir);
 
     const item = {
       id: entry.name,
