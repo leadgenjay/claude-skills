@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-04-24T23:41:31.677Z",
+  "generatedAt": "2026-05-13T17:33:47.962Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -189,7 +189,8 @@
         "OPERATION_PATTERNS.md",
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/N8N_V2_MIGRATION.md",
+        "references/NODE_GOTCHAS.md"
       ],
       "version": "2.0",
       "composesWell": [
@@ -365,7 +366,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/prompt-templates.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -425,7 +426,8 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/known-temp-patterns.md",
+        "references/protected-paths.md"
       ],
       "version": "1.0",
       "composesWell": []
@@ -452,7 +454,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/awareness-matrix.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -484,7 +486,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/swipe-file.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -517,7 +519,14 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/accessibility.md",
+        "references/common-mistakes.md",
+        "references/emil-kowalski.md",
+        "references/jakub-krehel.md",
+        "references/jhey-tompkins.md",
+        "references/performance.md",
+        "references/philosophy.md",
+        "references/technical-principles.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -608,7 +617,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/hero-patterns.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -670,7 +679,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/icon-prompts.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -729,7 +738,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/audit-checklist.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -857,8 +866,12 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references",
-        "scripts"
+        "references/frontend_best_practices.md",
+        "references/nextjs_optimization_guide.md",
+        "references/react_patterns.md",
+        "scripts/bundle_analyzer.py",
+        "scripts/component_generator.py",
+        "scripts/frontend_scaffolder.py"
       ],
       "version": "1.0",
       "composesWell": [
@@ -888,7 +901,7 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/proof-templates.md"
       ],
       "version": "1.0",
       "composesWell": [
@@ -921,7 +934,10 @@
       "files": [
         "SKILL.md",
         "manifest.yaml",
-        "references"
+        "references/anti-slop-patterns.md",
+        "references/motion-choreography.md",
+        "references/redesign-audit.md",
+        "references/style-archetypes.md"
       ],
       "version": "1.0",
       "composesWell": [
