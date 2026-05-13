@@ -1,6 +1,6 @@
 ---
 name: list-optimize
-description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor with Perplexity and write a 1-sentence personalization line for the E1 opener. Interactive phase picker lets you run qualify-only, personalize-only, both, or skip. Validates the target campaign template (Instantly/Email Bison) carries the personalization variable with a fallback before any DB writes. Updates the Turso `leads` table with qualification + normalization + personalization fields. Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy', 'phase picker', 'qualify only', 'personalize only', 'validate campaign variables'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
+description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor via web-search (Zeus search default, Perplexity fallback) and write a 1-sentence personalization line for the E1 opener using Claude in-session (default — free on Max plan) or Anthropic API (fallback). Interactive phase picker lets you run qualify-only, personalize-only, both, or skip. Validates the target campaign template (Instantly/Email Bison) carries the personalization variable with a fallback before any DB writes. Updates the Turso `leads` table with qualification + normalization + personalization fields. Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy', 'phase picker', 'qualify only', 'personalize only', 'validate campaign variables'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
 ---
 
 # List Optimize
@@ -31,8 +31,9 @@ consulti-scrape -> import-leads.sh
 - Turso DB schema migrated: `bash scripts/list-optimize/migrate-schema.sh` (one-time, idempotent)
 - `scripts/campaigns/{campaign-name}/strategy.md` exists (output of `cold-email-strategy`) — required for Phase 1 ICP rules and Phase 4 messaging angle
 - `.env` contains `TURSO_DB_URL` + `TURSO_DB_TOKEN` (already required by other skills)
-- `.env` contains `PERPLEXITY_API_KEY` (required only for Phase 3) — get one at https://www.perplexity.ai/settings/api
 - Leads already imported into Turso via `scripts/import-leads.sh` (so `leads` rows exist)
+- **Phase 3 (research):** Zeus search at `search.nextwave.io` works out of the box — no API key needed. Optional fallback: `.env` with `PERPLEXITY_API_KEY` for runs where Zeus is down. (Older docs may reference Perplexity as the default; the canonical default is now Zeus.)
+- **Phase 4 (personalize):** Default is **Claude in-session** — the active Claude Code session writes openers directly (free on Max plan). Fallback: `ANTHROPIC_API_KEY` in `.env` for headless runs (uses Sonnet 4.6).
 
 ## Phase 0: Phase Picker (interactive, idempotent)
 
@@ -125,61 +126,95 @@ See `references/company-normalization-rules.md` for the full rule set.
 
 After phases 1-2, run the existing `email-verification` skill against `WHERE qualification_status = 'qualified'`. This sets `pipeline_status` to `verified` / `bounced` per existing logic. **Phase 3 only runs on verified survivors** to keep Perplexity spend efficient.
 
-## Phase 3: Research (Perplexity, cost-gated)
+## Phase 3: Research (Zeus search default, Perplexity fallback)
 
-For each verified+qualified lead with `personalization_status IS NULL`, hit the Perplexity API to find a recent newsworthy thing about that person/company.
+For each verified+qualified lead with `personalization_status IS NULL`, hit a citation-grounded web-search API to find a recent newsworthy thing about that person/company.
 
 ```bash
-bash scripts/list-optimize/perplexity-research.sh <campaign-name> [--limit N]
+bash scripts/list-optimize/research.sh <campaign-name> [--limit N] [--yes]
+# Legacy alias: scripts/list-optimize/perplexity-research.sh (still works)
 ```
 
-Cost preflight (always runs first):
-1. Counts target leads via `SELECT COUNT(*) FROM leads WHERE qualification_status='qualified' AND pipeline_status='verified' AND personalization_status IS NULL`.
-2. Multiplies by `$0.005` (Perplexity sonar pricing).
-3. Prints `Estimated cost: $X.XX for N leads. Continue? [y/N]`.
-4. Aborts on anything other than `y`.
+**Default backend: Zeus search** (`search.nextwave.io`) — free, no API key required, ~30s/req, citation-grounded. Set `User-Agent: curl/8.0` on every request (urllib default UA hits a 403 from the Cloudflare WAF).
 
-Per-lead request (after confirmation):
 ```bash
-curl -s -X POST "https://api.perplexity.ai/chat/completions" \
-  -H "Authorization: Bearer $PERPLEXITY_API_KEY" \
+curl -s -X POST "https://search.nextwave.io/api/search" \
   -H "Content-Type: application/json" \
+  -H "User-Agent: curl/8.0" \
   -d '{
-    "model": "sonar",
-    "messages": [{
-      "role": "user",
-      "content": "Research <first_name> <last_name>, <job_title> at <company_name>. Find ONE specific recent newsworthy thing to mention in a cold email opener: a recent post, hire, news mention, podcast appearance, fundraising, product launch, or notable company moment from the last 90 days. Output JSON: {\"topic\": \"<short label>\", \"source_url\": \"<url>\", \"one_sentence_summary\": \"<1 sentence>\"}. If nothing notable: {\"topic\": null}."
-    }]
+    "chatModel": {"providerId": "a512070c-aecb-4540-af21-fa64c0c03d94", "key": "qwen3-14b"},
+    "embeddingModel": {"providerId": "a07fbfdd-1a9b-40f6-b729-92150936de0a", "key": "mixedbread-ai/mxbai-embed-large-v1"},
+    "optimizationMode": "balanced",
+    "sources": ["web"],
+    "query": "Recent newsworthy items from the last 90 days about <first_name> <last_name> (<job_title> at <company_name>): posts, podcast appearances, hires, funding, product launches, or notable company moments.",
+    "systemInstructions": "/no_think\n\nFind ONE specific recent newsworthy thing for a cold email opener. Output STRICT JSON only: {\"topic\": \"<short label or null>\", \"source_url\": \"<url or null>\", \"one_sentence_summary\": \"<1 sentence or null>\"}. If nothing notable, return {\"topic\": null}.",
+    "stream": false
   }'
 ```
 
-Writeback:
-- `personalization_research` = full Perplexity response (JSON string)
-- `personalization_cost_cents` = `0.5` per call (rounded up to integer cents — track aggregate via `lead-report.sh`)
-- `personalization_status` = `researched` if `topic != null`, else `skipped`
-- `lead_events` row: `event_type='status_changed'`, `event_data={phase:"list_optimize_research", status, has_topic}`
+**Fallback backend: Perplexity sonar** (`api.perplexity.ai/chat/completions`, model `sonar`) — paid at ~$0.005/req. Use when Zeus is down (set `--backend perplexity` or detect 5xx and retry on Perplexity). Requires `PERPLEXITY_API_KEY`.
+
+Cost preflight (always runs first):
+1. Counts target leads via `SELECT COUNT(*) FROM leads WHERE qualification_status='qualified' AND pipeline_status='verified' AND personalization_status IS NULL`.
+2. Backend-aware cost calc: Zeus = $0.00, Perplexity = N × $0.005.
+3. Prints `Estimated cost: $X.XX for N leads (backend: zeus|perplexity). Continue? [y/N]`.
+4. Aborts on anything other than `y`. `--yes` skips the prompt for headless runs.
+
+**Required quality guards (apply on the response, BEFORE writeback):**
+
+1. **Hallucination guard.** If `len(sources) == 0` in the Zeus response (or `citations: []` in Perplexity), force `topic = null` regardless of what the model said. qwen3-14b confabulates plausible-sounding fake news when web search returns zero hits. Without this guard ~15-25% of "researched" results are fabricated.
+2. **Company-name match filter.** After parsing the JSON, lowercase both the lead's normalized company name (strip `Inc/LLC/Corp/Ltd` suffixes) and the topic+summary text. If the company name (≥4 chars) does NOT appear anywhere in topic/summary, force `topic = null`. Drops wrong-person false positives (e.g. Aaron Boone the Yankees coach vs Aaron Boone the marketing exec). ~30% of grounded topics are wrong-person without this gate.
+
+Writeback (same as before, plus the new filter result):
+- `personalization_research` = full backend response (JSON string) — store `{message, sources_count, parsed, _hallucination_guard?}`
+- `personalization_cost_cents` = 0 for Zeus, 1 for Perplexity (rounded up)
+- `personalization_status` = `researched` if `topic != null` AFTER both guards, else `skipped`
+- `lead_events` row: `event_type='status_changed'`, `event_data={phase:"list_optimize_research", status, has_topic, backend}`
+
+**Parallelism:** Use `ThreadPoolExecutor(max_workers=20)` for Zeus (single-tenant, no rate limit) or `xargs -P 4` for Perplexity (50 req/min ceiling). 20-way parallel on Zeus cuts a 4,500-lead run from ~38 hr serial to ~3 hr wall time.
+
+**Subprocess avoidance:** Use direct HTTP to Turso (`POST /v2/pipeline`) for DB writes from the worker threads — `bash → subprocess → sql_escape` in 20 parallel workers fork-bombs the harness. The new script template handles this.
 
 `--estimate-only` flag: prints the cost calc and exits without making any paid call. Use for dry-runs.
 
-## Phase 4: Personalize (LLM 1-sentence opener)
+## Phase 4: Personalize (Claude in-session default, Anthropic API fallback)
 
-For each lead with `personalization_status='researched'`, send the lead row + research result + messaging angle to Claude and generate a 1-sentence opener.
+For each lead with `personalization_status='researched'`, generate a 1-sentence opener using the lead row + research result + strategy messaging angle.
+
+**Default: Claude in-session.** When running inside an active Claude Code session (Max plan), bypass the Anthropic API entirely:
 
 ```bash
-bash scripts/list-optimize/personalize.sh <campaign-name> [--limit N]
+# 1. Dump researched leads to a JSON prompt-pack
+bash scripts/list-optimize/personalize.sh <campaign-name> --mode in-session --dump /tmp/personalize-todo.json
+
+# 2. Claude (the active session) reads /tmp/personalize-todo.json, writes openers to /tmp/openers.json
+#    Format: [{"id": <lead_id>, "opener": "<sentence>"}, ...]
+#    Use "SKIP" as the opener value for any lead where the topic is bad-sentiment
+#    (criminal/wrong-direction/wrong-person) — those fall back to the generic opener.
+
+# 3. Import the openers back to Turso
+bash scripts/list-optimize/personalize.sh <campaign-name> --mode in-session --import /tmp/openers.json
 ```
 
-Constraints (validated before writeback; failures retry once, then mark `failed`):
+**Fallback: Anthropic API.** For headless runs (no active session) use Sonnet 4.6:
+
+```bash
+bash scripts/list-optimize/personalize.sh <campaign-name> --mode api [--limit N]
+# Requires ANTHROPIC_API_KEY. Uses claude-sonnet-4-6. Skip Haiku — quality too low for cold-email openers.
+```
+
+**Constraints (validated before writeback in both modes; failures retry once, then mark `failed`):**
 - 25 words maximum
 - No banned tokens: `!`, `dear`, `hope this finds you well`, `I hope you're doing well`
 - No em dash (`—`), en dash (`–`), or double hyphen (`--`)
 - Must NOT contain merge tags inside (`{first_name}` is added by the copywriting template, not here)
 - Must mention the lead's first name OR the specific topic from research (not both — keeps it natural)
+- Sentiment check: reject openers riffing on criminal charges, recalls, layoffs, wrong-direction news (exec leaving). When in doubt mark `SKIP` and let fallback fire.
 
-Writeback:
-- `personalization_line` = the validated sentence
-- `personalization_status` = `written` (success) | `failed` (after retry)
-- `lead_events` row: `event_type='status_changed'`, `event_data={phase:"list_optimize_personalize", status, line_preview}`
+**Writeback:**
+- `personalization_line` = the validated sentence (NULL when SKIP)
+- `personalization_status` = `written` (success) | `skipped` (SKIP marker or filter-rejected) | `failed` (after retry)
+- `lead_events` row: `event_type='status_changed'`, `event_data={phase:"list_optimize_personalize", status, line_preview, mode}`
 
 See `references/personalization-prompt.md` for the prompt template.
 
@@ -204,6 +239,24 @@ Flags:
 - `--skip-research` — legacy alias for `qualify_only` (preserved for backward compat).
 - `--auto-yes` / `-y` — skip cost preflight prompt in Phase 3.
 - `--resume` — pick up where you left off (default behavior; flag exists for clarity).
+
+## Yield expectations (set these with the user before running)
+
+For broad SMB B2B audiences (5-75 employee marketing agencies / IT services / consultancies / SaaS), the realistic yield is **2-5% of input leads end up with a personalized opener.** Most founders at this size don't have recent press coverage in the 90-day window.
+
+Distribution from a real 4,562-lead run (Consulti Beta-Launch 2026-05-11):
+
+| Stage | Count | % |
+|---|---|---|
+| Started (verified + qualified) | 4,562 | 100% |
+| Zeus returned 0 sources → killed by hallucination guard | ~3,500 | 77% |
+| Zeus returned sources but no usable topic | ~500 | 11% |
+| Zeus found topic, killed by company-name match filter (wrong-person) | 50 | 1% |
+| Topic found, killed by sentiment filter (criminal/wrong-direction) | 9 | 0.2% |
+| **Personalized opener written** | **110** | **2.4%** |
+| Errors / timeouts | ~400 | 8% |
+
+The remaining 95%+ get the generic spintax opener via the `{personalization|fallback}` token in E1. **This is the expected outcome, not a bug.** If a user expects 30%+ personalization, calibrate that expectation BEFORE running — the volume gain from going paid (Perplexity sonar) vs free (Zeus search) is marginal because the underlying problem is lack of press coverage, not search quality.
 
 ## Copywriting integration
 

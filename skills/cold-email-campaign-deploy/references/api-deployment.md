@@ -8,8 +8,10 @@
 ### Step 1: Create Campaign
 ```bash
 POST /campaigns
-Body: {"name": "{campaign_name}", "type": "email"}
+Body: {"name": "{campaign_name}", "type": "outbound"}
 ```
+
+Created campaigns start in `status: "draft"` (the paused-equivalent). Bison never auto-sends a draft. The user activates manually via the Bison UI after pre-launch checks.
 
 ### Step 2: Create Sequence Steps with A/B Variants
 
@@ -20,13 +22,15 @@ Body: {"name": "{campaign_name}", "type": "email"}
 ```bash
 POST /campaigns/v1.1/{id}/sequence-steps
 Body: {"title": "{campaign_name}", "sequence_steps": [
-  {"email_subject": "Subject A", "email_body": "Body A", "wait_in_days": 0, "order": 1, "variant": false},
-  {"email_subject": "Subject B", "email_body": "Body B", "wait_in_days": 0, "order": 2, "variant": true, "variant_from_step": 1},
-  {"email_subject": "Follow-up", "email_body": "Nudge body", "wait_in_days": 2, "order": 3, "variant": false}
+  {"email_subject": "Subject A", "email_body": "Body A", "wait_in_days": 0, "order": 1, "active": true},
+  {"email_subject": "Subject B", "email_body": "Body B", "wait_in_days": 0, "order": 2, "active": true, "variant": true, "variant_from_step": 1},
+  {"email_subject": "Follow-up", "email_body": "Nudge body", "wait_in_days": 2, "order": 3, "active": true}
 ]}
 ```
 
-> **IMPORTANT:** Every step must have a unique `order` value — even variants. Duplicate order values cause validation error: "The sequence_steps.N.order field has a duplicate value." Variant grouping is handled entirely by `variant_from_step`, NOT by shared order values.
+> **CRITICAL — variant: true is REQUIRED on every variant row.** Bison's API silently strips `variant_from_step` if the boolean is not set. The response will show `variant: true` was auto-set but `variant_from_step: null` — the variant is unlinked. Always send BOTH `variant: true` AND `variant_from_step: N` together. Parent rows can omit the `variant` key entirely (or send `variant: false`).
+
+> **Bison auto-renumbers parent `order` to sequential 1-N when variants link.** If you send parents at orders 1, 4, 6, 8 (interspersed with variants at 2, 3, 5, 7, 9), the response will renumber parents to 1, 2, 3, 4 while variants keep their sent orders. This creates "duplicate" order numbers across rows but is functionally correct — variant grouping uses `variant_from_step_id` (returned in the response), not order. Do not attempt to "fix" the orders post-create.
 
 In the example above, `variant_from_step: 1` means "variant of the 1st item in this array" (Subject A).
 
@@ -47,13 +51,26 @@ Body: {"title": "{campaign_name}", "sequence_steps": [
 
 Using the wrong field creates orphaned steps instead of linked A/B variants.
 
-### Step 2b: Delete Sequence Steps
+> **Do NOT attempt to repair variant linkage via the deprecated PUT `/campaigns/sequence-steps/{sequence_id}` bulk-update.** That endpoint accepts the payload but does NOT persist `variant_from_step_id` even when sent correctly with `variant: true`. The only reliable path to fix bad linkage is `DELETE /campaigns/{id}` (full removal) followed by re-POSTing the create payload. The `PUT /campaigns/v1.1/sequence-steps/{step_id}` endpoint is fine for updating `wait_in_days` on a single step but does not change variant relationships.
+
+### Step 2b: Verify Variant Linking After Create
+
+```bash
+GET /campaigns/v1.1/{id}/sequence-steps
+# Each variant row should have variant_from_step_id set to the parent's DB id.
+# If any variant has variant_from_step_id: null, linkage failed — DELETE and re-POST.
+```
+
+### Step 2c: Delete Sequence Steps
 
 ```bash
 DELETE /campaigns/{id}/sequence-steps/{step_id}
-```
+# Cannot delete the last remaining step — Bison requires ≥1 step per campaign.
 
-Delete individual steps by their database ID. To recreate a sequence, delete all existing steps first, then POST the corrected payload.
+DELETE /campaigns/{id}
+# Returns 200 even for draft campaigns. Removes the campaign and all its sequence
+# steps in a single call. Primary rollback path when variant linkage is broken.
+```
 
 ### Step 3: Attach Sender Emails
 ```bash
@@ -68,18 +85,34 @@ Body: {
   "open_tracking": false,
   "plain_text": true,
   "reputation_building": true,
-  "max_emails_per_day": <num_sender_emails × 30>,
-  "max_new_leads_per_day": <num_sender_emails × 30>,
+  "max_emails_per_day": <num_sender_emails × per_mailbox_daily_limit>,
+  "max_new_leads_per_day": <num_sender_emails × per_mailbox_daily_limit>,
   "can_unsubscribe": false
 }
 ```
 
-> **Important:** `max_emails_per_day` is a **campaign-level total**, NOT a per-inbox limit.
-> Calculate as: `number_of_attached_sender_emails × 30`.
-> Example: 90 sender accounts → `90 × 30 = 2700`.
-> The per-inbox safety limit (30/day) is enforced separately by Email Bison's
-> "Email account limits" setting. `max_new_leads_per_day` uses the same formula —
-> Email Bison's "Prioritize followups" handles follow-up capacity automatically.
+> **`max_emails_per_day` is a campaign-level total**, NOT a per-inbox limit. Calculate as:
+> `number_of_attached_sender_emails × per_mailbox_daily_limit`.
+> Pilot ramp: 264 senders × 20/day = 5,280. After 7 days clean: 264 × 30 = 7,920.
+> The per-inbox limit is enforced separately by Email Bison's "Email account limits" setting (Step 4b below). `max_new_leads_per_day` uses the same formula — Email Bison's `sequence_prioritization` handles follow-up vs. new-lead capacity automatically.
+
+> **`sequence_prioritization` valid values:** `"followups"` (default — drains followups before adding new leads). **Do NOT send `"top"`** — Bison rejects it with `422 "The selected sequence prioritization is invalid."`.
+
+> **`link_tracking` quirk:** Bison accepts `link_tracking: false` in the request body but the response field returns `null` regardless. The reliable way to suppress link tracking is to keep links out of the copy (E1/E2/E3 should have zero links per cold-email-copywriting constraints).
+
+### Step 4b: Bump Per-Mailbox Daily Limit (recommended for pilot)
+
+Default per-mailbox `daily_limit` is 10/day, which throttles the campaign below the campaign-level cap. Bump to 20 for a clean pilot ramp:
+
+```bash
+PATCH /sender-emails/daily-limits/bulk
+Body: {"sender_email_ids": [811, 812, ..., 94621], "daily_limit": 20}
+# Response: {"data": {"success": true, "message": "Successfully updated email daily limits..."}}
+```
+
+> **Daily-limit changes are workspace-global.** This PATCH affects every campaign these senders are attached to, not just the new pilot. To revert: re-PATCH with the previous limit.
+
+After 7 days of clean reply/bounce metrics (bounce ≤ 3%, no warmup-score regressions), bump again to 30.
 
 ### Spintax Format
 `{option1|option2|option3}`

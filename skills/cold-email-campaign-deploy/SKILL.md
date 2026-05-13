@@ -97,10 +97,11 @@ Read `references/api-deployment.md` for the full API payloads, field mappings, a
    ```
 
 2. **Create sequence steps with A/B variants** (POST /campaigns/v1.1/{id}/sequence-steps)
-   - Use `variant_from_step` (positional 1-based index) when creating all steps in one call
-   - Use `variant_from_step_id` (database ID) when adding variants to existing steps
-   - **NEVER mix these up** (creates orphaned steps)
-   - Every step needs a unique `order` value, even variants
+   - **Variant linking REQUIRES BOTH** `variant: true` (boolean) AND `variant_from_step: N` (1-based positional index of parent in same payload). Omitting `variant: true` causes Bison to silently strip the linkage — `variant_from_step` will be null in the response.
+   - Use `variant_from_step_id` (database ID) ONLY when adding variants to already-saved steps in a separate later call. Cannot mix in same step row with `variant_from_step`.
+   - **NEVER mix these up** (creates orphaned steps with no parent linkage)
+   - **Order field is auto-renumbered.** When `variant: true` is set, Bison renumbers parent `order` to sequential 1-N (parents become 1,2,3,4 instead of sent 1,4,6,8). Variant orders preserved. Send unique orders 1-N anyway; don't be alarmed by "duplicate" order numbers in the response — variant grouping is via `variant_from_step_id`, not order.
+   - **The deprecated PUT bulk-update (`PUT /campaigns/sequence-steps/{sequence_id}`) does NOT persist variant linkage.** If linkage is wrong after create, DELETE the campaign and re-POST. Do not try to fix variants via the bulk update.
 
 3. **Attach sender emails** (POST /campaigns/{id}/attach-sender-emails)
 
@@ -108,8 +109,12 @@ Read `references/api-deployment.md` for the full API payloads, field mappings, a
    - `open_tracking: false`
    - `plain_text: true`
    - `reputation_building: true`
-   - `max_emails_per_day`: number of senders x 30
+   - `max_emails_per_day`: number of senders × per-mailbox daily_limit (typical pilot: senders × 20; ramp to ×30 after 7 days clean)
    - `can_unsubscribe: false`
+   - `sequence_prioritization: "followups"` (default — `"top"` returns 422 invalid; do NOT send `"top"`)
+   - `link_tracking` accepts the value but may return null; rely on copy not having links rather than this flag
+
+5. **Bump per-mailbox daily limit** (PATCH /sender-emails/daily-limits/bulk) — default per-mailbox limit is 10 which throttles below the campaign-level cap. For a pilot ramp, send `{sender_email_ids: [...], daily_limit: 20}` then increase after 7 days of clean reply/bounce metrics.
 
 5. **Set sender signatures** (if multiple personas)
    ```bash
@@ -118,6 +123,60 @@ Read `references/api-deployment.md` for the full API payloads, field mappings, a
      -H "Content-Type: application/json" \
      -d '{"sender_email_ids": [...], "email_signature": "<html>"}'
    ```
+
+6. **Bulk-load leads** (two-phase: create → attach). For campaigns with custom variables (e.g. `{personalization}`), follow this pattern exactly:
+
+   **Phase 0: Pre-create every custom variable used in the payload.** Workspace-scoped, one-time. Bulk-create returns 422 if any variable is missing.
+   ```bash
+   for VAR in personalization company_domain industry city state country linkedin_url; do
+     curl -s -X POST "https://send.leadgenjay.com/api/custom-variables" \
+       -H "Authorization: Bearer {EMAIL_BISON_API_KEY}" \
+       -H "Content-Type: application/json" \
+       -d "{\"name\":\"$VAR\"}"
+   done
+   ```
+
+   **Phase A: Bulk-create leads (500 max per request).** Note the field names — `title` not `job_title`, `company` not `company_name`.
+   ```bash
+   curl -s --max-time 180 -X POST "https://send.leadgenjay.com/api/leads/multiple" \
+     -H "Authorization: Bearer {EMAIL_BISON_API_KEY}" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "leads": [
+         {
+           "first_name": "Aaron",
+           "last_name": "Smith",
+           "email": "aaron@example.com",
+           "title": "Founder",
+           "company": "Example Co",
+           "custom_variables": [
+             {"name": "personalization", "value": "Saw the seed round news, congrats."},
+             {"name": "company_domain", "value": "example.com"}
+           ]
+         }
+       ]
+     }'
+   # Returns .data[].id for each created lead — collect into a list
+   ```
+
+   **Phase B: Attach the new lead IDs to the campaign (chunks of 1000).**
+   ```bash
+   curl -s --max-time 120 -X POST "https://send.leadgenjay.com/api/campaigns/{id}/leads/attach-leads" \
+     -H "Authorization: Bearer {EMAIL_BISON_API_KEY}" \
+     -H "Content-Type: application/json" \
+     -d '{"lead_ids": [101, 102, 103, ...]}'
+   ```
+
+### Bison bulk-load gotchas (hard-won)
+
+- **Custom variables MUST exist in the workspace BEFORE `/leads/multiple`** or the entire batch fails with `422 "You do not have a custom variable named X"`. Pre-create every name in Phase 0 above.
+- **Batch size hard cap: 500 leads per `/leads/multiple` request.** Larger payloads silently truncate or 500.
+- **Bison silently filters personal-domain emails** (`@gmail.com`, `@yahoo.com`, `@hotmail.com`, etc.) — expect ~10-15% of input to be dropped. Don't treat the delta as a script bug. Confirm by counting `.data[].id` returned vs sent.
+- **`/campaigns/{id}.total_leads` stays 0 until ALL Phase-B chunks complete.** Don't sanity-check campaign count mid-load and panic.
+- **`/campaigns/{id}/sender-emails` ignores `?per_page=N`** — always returns 15/page. Use `meta.total` for the true sender count.
+- **Timeouts under contention.** When other processes hammer the same DB/API, Bison response times spike past 60s. Use `curl --max-time 180` + 2-3 attempt retries with sleep backoff. The first version of `bison-load.sh` died mid-batch 6 when a parallel LGJ qualify ran; the retry-aware loader recovered cleanly.
+- **`PATCH /campaigns/{id}/archive`** is the dedicated archive endpoint. `PATCH /campaigns/{id}/update {status: "archived"}` is silently no-op.
+- **Reference impl:** `scripts/campaigns/consulti-beta-launch/bison-load.sh` + `bison-load-resume.sh` (the resume script has the canonical retry logic).
 
 ### Instantly Deployment
 
@@ -165,7 +224,9 @@ After constructing the API payload but BEFORE making the call, verify:
    - Sign-off: `{Best|Cheers}` (Email Bison) or `{{RANDOM | Best | Cheers}}` (Instantly)
    If any email is missing spintax on greetings or sign-offs, add it before deploying.
 
-3. **Order uniqueness check (Email Bison):** Verify all `order` values in the sequence_steps payload are unique. No two steps should share the same order value.
+3. **Order uniqueness check (Email Bison):** Send unique `order` values 1-N in the payload. Bison may auto-renumber parent orders to sequential 1-N when `variant: true` is set on variant rows — that's the API's behavior, not a bug; functional grouping uses `variant_from_step_id`, not order.
+
+4. **Variant flag check (Email Bison):** For every variant row in the payload, BOTH `variant: true` AND `variant_from_step: N` (positional 1-based index of parent in same array) must be set. Missing the boolean causes silent linkage failure.
 
 ---
 
@@ -197,9 +258,11 @@ Deployment has multiple API calls. If one fails mid-sequence:
 
 ### Rollback
 
-Since campaigns deploy in PAUSED state, rollback is simple:
-- **Delete and recreate:** If the campaign is misconfigured, delete it and start fresh. No emails have been sent.
+Since campaigns deploy in PAUSED/draft state, rollback is simple:
+- **Delete and recreate:** `DELETE /campaigns/{id}` returns 200 and removes the campaign and all its sequence steps in one call. No emails have been sent.
 - **Don't delete steps one-by-one to "fix" them.** The variant linking depends on positional indices — editing individual steps breaks the A/B structure. Recreate the full sequence instead.
+- **Don't try to repair variant linkage via the deprecated PUT `/campaigns/sequence-steps/{sequence_id}`.** That endpoint accepts the payload but does NOT persist `variant_from_step_id` even when sent correctly. If linkage is wrong, DELETE the campaign and re-POST clean.
+- **Daily-limit changes are workspace-global.** `PATCH /sender-emails/daily-limits/bulk` updates limits for all listed senders across every campaign they're attached to. To revert a pilot ramp, re-PATCH with the previous limit (default 10).
 
 ---
 
