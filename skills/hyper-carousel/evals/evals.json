@@ -1,0 +1,58 @@
+{
+  "skill_name": "hyper-carousel",
+  "domain": "graphic-design",
+  "notes": "Each eval prompts for a SINGLE-slide HyperFrames HTML composition (not a full 8-slide carousel) so iterations stay fast. Assertions target v2 mandatory rules: Decorative safe-zone, VISUAL PROOF GATE, POST-RENDER AUTOHEAL CHECK, glyph escaping, counter timing, brand fidelity.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "hook_slide_no_decoration",
+      "prompt": "Write a single-slide HTML/CSS composition for the HOOK slide (slide 1) of an Instagram carousel using HyperFrames. 720x900 px. Brand: Lead Gen Jay. Topic: 'AI that writes your cold emails for you.' Include: section label 'THE PROBLEM', headline (4-5 words, ALL CAPS, Big Shoulders Display 100px), swap pill with 3 cycling words (use #ED0D51 fill), italic body copy, CTA pill 'SWIPE TO LEARN HOW', footer with @leadgenjay handle + progress bar at 1/8. Animate entrances with GSAP. Register the timeline on window.__timelines['main']. Output the complete index.html file.",
+      "expected_output": "A complete HTML file with viewport meta, html/body 720x900, dark #0D0D0D background, #ED0D51 accent pill, Big Shoulders Display headline at >=80px, Manrope italic body, footer with progress bar, GSAP timeline. NO decorative stars/asterisks/rotating shapes in headline or body zones. NO banned AI words. Glyph characters HTML-escaped where present.",
+      "assertions": [
+        {"text": "Output contains dimension declarations matching 720 (width) and 900 (height) in viewport meta or html/body CSS", "type": "structural", "deterministic": true, "check": "regex_count('(?:width=\"?720|width:\\\\s*720px|max-width:\\\\s*720px)', output) >= 1 && regex_count('(?:height=\"?900|height:\\\\s*900px)', output) >= 1"},
+        {"text": "Brand accent hex #ED0D51 appears in code (case-insensitive)", "type": "visual", "deterministic": true, "check": "lower(output).contains('#ed0d51')"},
+        {"text": "Background hex #0D0D0D appears in code (case-insensitive)", "type": "visual", "deterministic": true, "check": "lower(output).contains('#0d0d0d')"},
+        {"text": "Headline font-family declaration includes 'Big Shoulders' (Big Shoulders Display)", "type": "visual", "deterministic": true, "check": "output.contains('Big Shoulders')"},
+        {"text": "Body font-family declaration includes 'Manrope'", "type": "visual", "deterministic": true, "check": "output.contains('Manrope')"},
+        {"text": "At least one font-size value of 80px or greater is present (headline)", "type": "visual", "deterministic": true, "check": "max(regex_extract_all('font-size:\\\\s*(\\\\d+)px', output)) >= 80"},
+        {"text": "No banned AI words: delve, tapestry, realm, landscape, ever-evolving, cutting-edge, robust, transformative, pivotal, vibrant, crucial, compelling, seamless, groundbreaking, leverage, harness, embark, navigate, unveil, facilitate, synergy, game-changer, unlock, unleash, elevate, utilize, endeavour, multifaceted", "type": "content", "deterministic": true, "check": "no banned word found in output (case-insensitive)"},
+        {"text": "NO decorative stars/asterisks present in body zone (i.e. no ★ ✦ ✶ ✨ \\u2605 \\u2728 unicode chars AND no CSS class names like 'star', 'asterisk', 'decoration', 'sparkle' that would render at body y-coordinates)", "type": "quality", "deterministic": true, "check": "regex_count('[\\u2605\\u2606\\u2728\\u2729\\u2730\\u2731\\u2732\\u2733\\u2734\\u2735\\u2736\\u2737\\u2738\\u2739\\u273A\\u273B\\u273C\\u273D]', output) == 0 && regex_count('class=\"(?:[^\"]*\\\\b)?(?:star|asterisk|sparkle|deco-burst)\\\\b', output) == 0"},
+        {"text": "Footer block with progress bar is present (class containing 'footer' AND 'progress' related markup)", "type": "structural", "deterministic": true, "check": "output.contains('class=\"footer') && (output.contains('progress-bar') || output.contains('progress-fill') || output.contains('progress'))"},
+        {"text": "GSAP timeline registered on window.__timelines (e.g. window.__timelines[\"main\"] = tl)", "type": "structural", "deterministic": true, "check": "output.contains('window.__timelines') && (output.contains('[\"main\"]') || output.contains(\"['main']\"))"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "feature_slide_visual_proof_gate",
+      "prompt": "Write a single-slide HTML/CSS composition for the SOLUTION slide (slide 3) of an Instagram carousel using HyperFrames. 720x900 px. Brand: Lead Gen Jay. Central claim: 'Instantly drops your cold-email bounce rate below 2%.' Use the brand design system. Output the complete index.html file. Decide what proof visual to embed before writing the HTML.",
+      "expected_output": "A complete HTML file referencing a real Instantly asset (logo or dashboard screenshot path from the project asset libraries). Should NOT fabricate a fake terminal/dashboard UI when a real Instantly screenshot/logo exists. Brand fidelity intact.",
+      "assertions": [
+        {"text": "Brand accent hex #ED0D51 appears in code", "type": "visual", "deterministic": true, "check": "lower(output).contains('#ed0d51')"},
+        {"text": "Background hex #0D0D0D appears in code", "type": "visual", "deterministic": true, "check": "lower(output).contains('#0d0d0d')"},
+        {"text": "Headline font-family includes 'Big Shoulders'", "type": "visual", "deterministic": true, "check": "output.contains('Big Shoulders')"},
+        {"text": "Body font-family includes 'Manrope'", "type": "visual", "deterministic": true, "check": "output.contains('Manrope')"},
+        {"text": "VISUAL PROOF GATE: HTML references a real Instantly asset (image src or background-image pointing to 'instantly' in filename, .png/.webp/.jpg/.svg, OR a path containing 'Tool Logos' / 'public/ads/assets/lead gen' / 'instantly_logo' / 'instantly_2024')", "type": "content", "deterministic": true, "check": "regex_search('(?:src|url\\\\()=?[\"\\\\(]?[^\"\\\\)]*instantly[^\"\\\\)]*\\\\.(?:png|webp|jpg|jpeg|svg)', output, ignore_case=true) != null"},
+        {"text": "VISUAL PROOF GATE: Does NOT fabricate a fake terminal/code-mockup UI when a real screenshot is available (i.e. when an instantly asset IS referenced, there should NOT also be a hand-drawn '.terminal' or '.code-mockup' class with fake bash/shell content)", "type": "quality", "deterministic": false},
+        {"text": "Footer block with progress bar is present", "type": "structural", "deterministic": true, "check": "output.contains('class=\"footer') && output.contains('progress')"},
+        {"text": "No banned AI words", "type": "content", "deterministic": true, "check": "no banned word found in output (case-insensitive)"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "hero_panel_glyph_escaping",
+      "prompt": "Write a single-slide HTML/CSS composition for the WHY slide (slide 5) of an Instagram carousel using HyperFrames. 720x900 px. Brand: Lead Gen Jay. The slide is built around a prominent pink hero panel containing the paradigm-shift statement: PROCESS > PERSUASION. (literal text, including the greater-than glyph). Use #ED0D51 fill for the hero panel with #0D0D0D text on the panel. Output the complete index.html file. Make sure all characters render literally in the browser.",
+      "expected_output": "A complete HTML file where the literal characters 'PROCESS > PERSUASION' appear visually rendered (so the source HTML must contain 'PROCESS &gt; PERSUASION' with the > escaped, NOT a raw '>' which the browser would silently swallow inside an attribute or near a tag).",
+      "assertions": [
+        {"text": "Hero panel uses #ED0D51 as a background fill (background:#ED0D51 or background-color:#ED0D51)", "type": "visual", "deterministic": true, "check": "regex_search('background(?:-color)?:\\\\s*#ed0d51', lower(output)) != null"},
+        {"text": "Slide background uses #0D0D0D", "type": "visual", "deterministic": true, "check": "lower(output).contains('#0d0d0d')"},
+        {"text": "Hero panel text color is #0D0D0D (black-on-pink, not white-on-pink — readability rule)", "type": "visual", "deterministic": true, "check": "regex_search('(?:color|fill):\\\\s*#0d0d0d', lower(output)) != null"},
+        {"text": "Greater-than glyph is HTML-escaped as &gt; in source (the literal &gt; entity must appear) — per [[feedback-special-glyphs-in-html-text]]", "type": "structural", "deterministic": true, "check": "output.contains('&gt;')"},
+        {"text": "The literal text 'PROCESS' appears in source (the brief content was honored)", "type": "content", "deterministic": true, "check": "upper(output).contains('PROCESS')"},
+        {"text": "The literal text 'PERSUASION' appears in source", "type": "content", "deterministic": true, "check": "upper(output).contains('PERSUASION')"},
+        {"text": "Headline font-family includes 'Big Shoulders'", "type": "visual", "deterministic": true, "check": "output.contains('Big Shoulders')"},
+        {"text": "Footer block with progress bar is present", "type": "structural", "deterministic": true, "check": "output.contains('class=\"footer') && output.contains('progress')"},
+        {"text": "No banned AI words", "type": "content", "deterministic": true, "check": "no banned word found in output (case-insensitive)"}
+      ]
+    }
+  ]
+}

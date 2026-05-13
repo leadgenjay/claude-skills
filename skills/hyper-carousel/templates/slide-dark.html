@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=720, height=900" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Manrope:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=JetBrains+Mono:wght@400;700&display=swap');
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 720px; height: 900px; overflow: hidden; background: #0D0D0D; }
+
+      .scene-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        padding: 60px 50px 50px 50px;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .section-label {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #ED0D51;
+        margin-bottom: 14px;
+        flex-shrink: 0;
+      }
+
+      /* Headline: 3 lines, ~85px Big Shoulders Display */
+      .headline-block {
+        flex-shrink: 0;
+        margin-bottom: 16px;
+      }
+      .hl-line {
+        display: block;
+        font-family: 'Big Shoulders Display', sans-serif;
+        font-size: 85px;
+        line-height: 0.9;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+      }
+      .hl-white  { color: #ffffff; }
+      .hl-red    { color: #8B2020; }
+      .hl-lime   { color: #ED0D51; }
+
+      .body-copy {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 18px;
+        line-height: 1.5;
+        color: #999999;
+        max-width: 540px;
+        margin-bottom: 24px;
+        flex-shrink: 0;
+      }
+
+      /* Before/after cards side by side */
+      .compare-row {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .compare-card {
+        flex: 1;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+      }
+      .card-test  { background: #1A1A1A; border-top: 2px solid #8B2020; }
+      .card-scale { background: #1A1A1A; border-top: 2px solid #ED0D51; }
+
+      .card-header {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .header-red  { color: #8B2020; }
+      .header-lime { color: #ED0D51; }
+
+      .card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+      }
+
+      .card-item {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #cccccc;
+        line-height: 1.4;
+      }
+      .card-item-lime {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: #ED0D51;
+        line-height: 1.4;
+      }
+
+      /* Closing lines */
+      .closing-block {
+        flex-shrink: 0;
+        margin-top: 20px;
+        margin-bottom: 4px;
+      }
+      .closing-line {
+        display: block;
+        font-family: 'Big Shoulders Display', sans-serif;
+        font-size: 55px;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+      }
+      .closing-white { color: #ffffff; }
+      .closing-lime  { color: #ED0D51; }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-top: 14px;
+        flex-shrink: 0;
+      }
+      .footer-handle {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #888888;
+      }
+      .footer-progress {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        margin-left: 16px;
+      }
+      .progress-bar {
+        flex: 1;
+        height: 3px;
+        background: #2A2A2A;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .progress-fill {
+        position: absolute;
+        left: 0; top: 0;
+        height: 100%;
+        width: [PROGRESS]%;
+        background: #ED0D51;
+        border-radius: 2px;
+      }
+      .page-num {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: #888888;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="720" data-height="900">
+      <div id="s1" class="clip" data-start="0" data-duration="5" data-track-index="1">
+        <div class="scene-content">
+
+          <div class="section-label" id="section-label">[SECTION_LABEL]</div>
+
+          <div class="headline-block">
+            <span class="hl-line hl-white" id="hl-1">[HEADLINE_LINE_1]</span>
+            <span class="hl-line hl-red"   id="hl-2">[ACCENT_TEXT_1]</span>
+            <span class="hl-line hl-lime"  id="hl-3">[ACCENT_TEXT_2]</span>
+          </div>
+
+          <div class="body-copy" id="body-copy">[BODY_COPY]</div>
+
+          <div class="compare-row">
+            <div class="compare-card card-test" id="card-test">
+              <div class="card-header header-red">[CARD_1_HEADER]</div>
+              <div class="card-list">
+                <div class="card-item">[CARD_1_ITEM_1]</div>
+                <div class="card-item">[CARD_1_ITEM_2]</div>
+                <div class="card-item">[CARD_1_ITEM_3]</div>
+                <div class="card-item">[CARD_1_ITEM_4]</div>
+              </div>
+            </div>
+
+            <div class="compare-card card-scale" id="card-scale">
+              <div class="card-header header-lime">[CARD_2_HEADER]</div>
+              <div class="card-list">
+                <div class="card-item">[CARD_2_ITEM_1]</div>
+                <div class="card-item">[CARD_2_ITEM_2]</div>
+                <div class="card-item">[CARD_2_ITEM_3]</div>
+                <div class="card-item card-item-lime">[CARD_2_ITEM_4_ACCENT]</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="closing-block">
+            <span class="closing-line closing-white" id="closing-1">[CLOSING_LINE_1]</span>
+            <span class="closing-line closing-lime"  id="closing-2">[CLOSING_LINE_2]</span>
+          </div>
+
+          <div class="footer" id="footer">
+            <span class="footer-handle">[@YOUR_HANDLE]</span>
+            <div class="footer-progress">
+              <div class="progress-bar"><div class="progress-fill"></div></div>
+              <span class="page-num">[N]/[TOTAL]</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Section label (0.15s, power3.out)
+      tl.from("#section-label", { opacity: 0, y: -14, duration: 0.35, ease: "power3.out" }, 0.15);
+
+      // Headline lines stagger (0.3s, 0.12s apart, expo.out)
+      tl.from("#hl-1", { opacity: 0, x: -50, duration: 0.5, ease: "expo.out" }, 0.3);
+      tl.from("#hl-2", { opacity: 0, x: -50, duration: 0.5, ease: "expo.out" }, 0.42);
+      tl.from("#hl-3", { opacity: 0, x: -50, duration: 0.5, ease: "expo.out" }, 0.54);
+
+      // Body copy (0.7s, sine.out)
+      tl.from("#body-copy", { opacity: 0, y: 16, duration: 0.4, ease: "sine.out" }, 0.7);
+
+      // Left card from left (1.0s, power2.out)
+      tl.from("#card-test",  { opacity: 0, x: -40, duration: 0.45, ease: "power2.out" }, 1.0);
+
+      // Right card from right (1.1s, power2.out)
+      tl.from("#card-scale", { opacity: 0, x: 40,  duration: 0.45, ease: "power2.out" }, 1.1);
+
+      // Closing lines (1.6s, 1.75s, power3.out)
+      tl.from("#closing-1", { opacity: 0, y: 28, duration: 0.4, ease: "power3.out" }, 1.6);
+      tl.from("#closing-2", { opacity: 0, y: 28, duration: 0.4, ease: "power3.out" }, 1.75);
+
+      // Footer
+      tl.from("#footer", { opacity: 0, duration: 0.35, ease: "sine.out" }, 2.0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
