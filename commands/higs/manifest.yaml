@@ -1,0 +1,23 @@
+id: higs
+type: command
+name: /higs — Higgsfield Router + Ad Hook Mode
+description: "Higgsfield router for cinematic AI ad hooks. Trains and uses a Soul Character of you as the default identity, brainstorms 3 visual-metaphor concepts on vague briefs, and routes to product-photoshoot, marketplace-cards, or soul-id when intent matches. Includes battle-tested gotchas: Soul ID compatibility matrix per model, Seedance --image identity limits, Marketing Studio Video failure modes, and the CLI --wait/get 500 workaround that masks successful jobs as failures."
+categories:
+  - content-creation
+  - marketing
+tags:
+  - higgsfield
+  - ai-video
+  - ad-creative
+  - soul-id
+  - seedance
+  - marketing-studio
+  - slash-command
+  - cinematic
+icon: Clapperboard
+version: "1.1"
+author: Lead Gen Jay
+files:
+  - command.md
+  - higs-config.json
+  - references/concept-prompts.md

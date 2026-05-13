@@ -1,0 +1,42 @@
+{
+  "_INSTRUCTIONS": "BEFORE FIRST USE: (1) Train a Soul via `Skill(skill=\"higgsfield-soul-id\", args=\"train using my photos\")` and paste the returned reference_id into `jay_soul_id` below. (2) Optionally create a Marketing Studio avatar and paste its UUID into `jay_marketing_avatar_id`. (3) Populate your own photo database at `output/photos/<your-database>/` and update `fallback_photo_by_keyword` paths. Until (1) is done, the skill falls back to keyword-matched reference photos.",
+  "jay_soul_id": null,
+  "_soul_variant": "soul_cinematic",
+  "_soul_name": "yourname-cinematic",
+  "trained_at": null,
+  "photos_used": 0,
+  "_training_set_notes": "Replace this with notes about your training set (real vs AI photos, angle coverage, lighting variety).",
+  "jay_marketing_avatar_id": null,
+  "_marketing_avatar_name": "yourname-real",
+  "_marketing_avatar_source_upload": null,
+  "_marketing_avatar_source_url": null,
+  "default_aspect": "9:16",
+  "default_duration": 9,
+  "default_outfit_token": "fitted black crew neck t-shirt",
+  "default_expression_token": "serious, calm intensity, no smile, direct presence",
+  "anti_slop_negative": "no smiling, no standing and speaking to camera, no corporate framing, no specific hand gestures unless requested, no exaggerated expressions, no AI-slop perfect symmetry, no melted faces, no extra fingers",
+  "cost_ceiling_usd": 2.0,
+  "default_variations": 1,
+  "output_local_root": "output/higgsfield",
+  "output_nextcloud_root": "~/Nextcloud/Visual Assets/AI Ad Hooks",
+  "model_routing": {
+    "visual_metaphor": "seedance_2_0",
+    "talking_head": "marketing_studio_video",
+    "cinema_hero": "cinematic_studio_video_v2"
+  },
+  "default_resolution": "720p",
+  "default_genre": "auto",
+  "jay_photo_db_root": "output/photos/your-photo-database",
+  "fallback_photo_by_keyword": {
+    "default": "output/photos/your-photo-database/yourname-tee-serious.png",
+    "suit": "output/photos/your-photo-database/yourname-suit-serious.png",
+    "white tee": "output/photos/your-photo-database/yourname-white-tee.png",
+    "warm": "output/photos/your-photo-database/yourname-tee-warm.png",
+    "calm": "output/photos/your-photo-database/yourname-tee-calm.png"
+  },
+  "phone_gesture_exception": "The 'phone tap' and 'phone in palm pulses' beats are canonical brand-signature moments and are exempt from the no-hand-gestures rule. All other specific hand gestures (pointing, thumbs up, hand wave, finger-snap, etc.) remain banned unless explicitly requested.",
+  "concept_seeds_path": ".claude/skills/higs/references/concept-prompts.md",
+  "wait_timeout_initial": "10m",
+  "wait_timeout_retry": "20m",
+  "_notes": "Edit jay_soul_id after training a Soul Character via the higgsfield-soul-id skill. Until then, the skill's Jay Ad Hook Mode falls back to using the keyword-mapped photo from fallback_photo_by_keyword."
+}
