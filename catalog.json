@@ -1002,7 +1002,7 @@
       "id": "notes",
       "type": "command",
       "name": "notes",
-      "description": "Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Requires the claude-review CLI.",
+      "description": "Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.",
       "categories": [
         "productivity",
         "content"
@@ -1023,8 +1023,9 @@
         "cr-review.md",
         "manifest.yaml"
       ],
-      "version": "1.1",
-      "kind": "package"
+      "version": "1.2",
+      "kind": "package",
+      "postInstall": "command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh"
     },
     {
       "id": "pr",

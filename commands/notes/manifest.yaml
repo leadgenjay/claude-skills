@@ -1,5 +1,5 @@
 name: notes
-description: Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Requires the claude-review CLI.
+description: Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.
 categories:
   - productivity
   - content
@@ -11,5 +11,9 @@ tags:
   - collaboration
   - feedback
 icon: MessageSquare
-version: "1.1"
+version: "1.2"
 kind: package
+# Bootstraps the claude-review CLI binary on first install. Failure is non-fatal:
+# the skill files still land on disk and the customer can re-run the installer
+# from https://leadgenjay.com/install/claude-review later.
+postInstall: command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh

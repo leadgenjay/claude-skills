@@ -1,10 +1,20 @@
 ---
 description: Start a claude-review session for inline commenting. Use ONLY when user says "/notes", "review this file", "leave comments", or "inline review". Do NOT use for generic "open file" requests.
 argument-hint: <file>
-allowed-tools: Bash(claude-review review:*), Bash(claude-review address:*), Bash(claude-review resolve:*), Bash(claude-review reply:*), Bash(open http*), Edit, Read, Write, AskUserQuestion
+allowed-tools: Bash(claude-review review:*), Bash(claude-review address:*), Bash(claude-review resolve:*), Bash(claude-review reply:*), Bash(claude-review install:*), Bash(command -v claude-review:*), Bash(curl:*), Bash(sh:*), Bash(open http*), Edit, Read, Write, AskUserQuestion
 ---
 
 You are opening a document for interactive review using claude-review.
+
+## Step 0: Verify CLI is installed
+
+Currently `claude-review` only ships a macOS Apple Silicon binary. Before doing anything else, check it's on the PATH and bootstrap it if missing:
+
+```bash
+command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh
+```
+
+If that line still leaves `claude-review` missing (non-arm64 Mac, Linux, Windows, sandboxed shell), stop and tell the user the platform is not yet supported and to email help@leadgenjay.com. Do NOT continue to Step 1.
 
 ## Step 1: Open in browser
 
