@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-05-18T15:16:45.222Z",
+  "generatedAt": "2026-05-18T15:18:29.824Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1024,7 +1024,8 @@
         "manifest.yaml"
       ],
       "version": "1.2",
-      "kind": "package"
+      "kind": "package",
+      "postInstall": "command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh"
     },
     {
       "id": "pr",
