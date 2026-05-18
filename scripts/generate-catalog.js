@@ -153,6 +153,10 @@ function processDirectory(type) {
       kind: manifest.kind || undefined,
       bundledItems: manifest.bundledItems || undefined,
       hidden: manifest.hidden || undefined,
+      // Operator-authored bash that runs after the marketplace install.sh
+      // route downloads this item's files (e.g. CLI bootstrap for `notes`).
+      // Honored by Web-Designer's install.sh generator. Failure is non-fatal.
+      postInstall: manifest.postInstall || undefined,
     };
 
     // Remove undefined values
