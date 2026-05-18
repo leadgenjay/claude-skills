@@ -68,13 +68,40 @@ Check the video metadata (encoder field) to auto-detect the source. If unclear, 
 
 Store the answer as `RECORDING_SOURCE` for hardware-specific recommendations.
 
-### Step 3: Run the diagnostic script
+### Step 3: Run the diagnostic checks (inline ffprobe/ffmpeg/sox — no wrapper script)
+
+The skill installer drops you to ffmpeg/sox via the `postInstall` hook (`brew install` on macOS, manual install message on other OSes). Run each block below against `<video-file-path>` and aggregate the JSON results in working memory:
 
 ```bash
-./scripts/diagnose-video.sh --json "<video-file-path>"
+VIDEO="<video-file-path>"
+
+# 3a. Container + codec + resolution + bitrate
+ffprobe -v error -print_format json -show_format -show_streams "$VIDEO"
+
+# 3b. Frame rate VFR detection (compare avg vs r_frame_rate)
+ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate,r_frame_rate -of csv=p=0 "$VIDEO"
+
+# 3c. Frame timing — dropped / duplicated frames via mpdecimate
+ffmpeg -hide_banner -i "$VIDEO" -vf mpdecimate=hi=200:lo=100:frac=0.33,metadata=print -an -f null - 2>&1 \
+  | awk '/lavfi.mpdecimate.keep/ {keep++} /lavfi.mpdecimate.drop/ {drop++} END {print "{\"kept\":"keep+0",\"dropped\":"drop+0"}"}'
+
+# 3d. Audio peak + RMS + clipping (ebur128 emits json-like lines)
+ffmpeg -hide_banner -i "$VIDEO" -af ebur128=peak=true -f null - 2>&1 | tail -40
+
+# 3e. EBU R128 LUFS loudness target
+ffmpeg -hide_banner -i "$VIDEO" -af loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | tail -20
+
+# 3f. Silence detection (>0.5s, <-30 dB)
+ffmpeg -hide_banner -i "$VIDEO" -af silencedetect=noise=-30dB:d=0.5 -f null - 2>&1 | grep silence_
+
+# 3g. Noise floor + 60Hz hum (sox spectrogram)
+ffmpeg -hide_banner -y -i "$VIDEO" -vn -acodec pcm_s16le /tmp/diag-audio.wav 2>/dev/null
+sox /tmp/diag-audio.wav -n stat 2>&1 | head -10
+sox /tmp/diag-audio.wav -n spectrogram -o /tmp/diag-spectrogram.png 2>/dev/null
+echo "spectrogram: /tmp/diag-spectrogram.png"
 ```
 
-Parse the JSON output. The script checks:
+These checks cover:
 - Container format, codec, resolution, bitrate
 - Frame rate (VFR detection)
 - Frame timing (dropped/duplicate frames)
@@ -82,8 +109,10 @@ Parse the JSON output. The script checks:
 - Loudness (EBU R128 LUFS)
 - Silence/dropout detection
 - Noise floor
-- 60Hz hum detection
-- Generates spectrogram PNG
+- 60Hz hum detection (visible in spectrogram around 60Hz / 120Hz harmonics)
+- Generates spectrogram PNG at `/tmp/diag-spectrogram.png`
+
+If `ffmpeg`, `ffprobe`, or `sox` are missing, the installer's `postInstall` hook should have pulled them via Homebrew. On Linux: `apt install ffmpeg sox` (or your distro's equivalent). On Windows: install via Chocolatey or download static builds.
 
 ### Step 4: Cross-reference with hardware-specific known issues
 

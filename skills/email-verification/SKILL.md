@@ -5,6 +5,19 @@ description: "Verify email addresses before adding to cold email campaigns. Two 
 
 # Email Verification
 
+## Step 0 — Prerequisites
+
+This is a prompt-only skill (no scripts bundled). It teaches Claude how to call the Consulti `/verify` endpoint (default) or the Reacher + No2Bounce pipeline (high-volume) directly from inline bash. Verify these are in place before invoking:
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| `curl`, `jq`, `xargs` | `command -v curl jq xargs` | preinstalled on macOS/Linux |
+| `CONSULTI_API_KEY` (low-volume default) | `[ -n "$CONSULTI_API_KEY" ]` | <https://app.consulti.ai> → Settings → Integrations → generate key (starts with `capi_`) |
+| Reacher + No2Bounce envs (high-volume) | `[ -n "$REACHER_URL" ] && [ -n "$NO2BOUNCE_API_KEY" ]` | Self-hosted Reacher + <https://no2bounce.com> account; envs listed below |
+| `lead-tracking-db` skill | `[ -d ~/.claude/skills/lead-tracking-db ]` | optional — only needed if you want results written to the Turso `leads` table via that skill's helpers |
+
+If `CONSULTI_API_KEY` is missing, stop and tell the user where to get it — do NOT generate placeholder bash.
+
 Two backends, picked by batch size:
 
 | Backend | When to use | Throughput | Notes |

@@ -1,29 +1,52 @@
 ---
 name: lead-tracking-db
-description: "Manage the lead tracking database (Turso/SQLite). Use when querying leads, inserting domains/mailboxes, syncing analytics, running reports, writing SQL against the lead DB, or tracking campaign infrastructure."
+description: "Manage a Turso/SQLite lead-tracking database for cold email. Ships db-setup.sh + db-query.sh + 4 wrapper scripts (import-leads, email-guesser, sync-analytics, lead-report) plus the 13-table schema.sql. You provide a free Turso account; the bootstrap creates the DB and writes credentials to .env."
 ---
 
 # Lead Tracking Database Management
 
+## Step 0 — Prerequisites
+
+Before any other operation, verify these are present. If any are missing, stop and tell the user where to get each — do NOT proceed with broken state.
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| Free Turso account | run `turso auth status` after install | <https://turso.tech/> (GitHub login, no card) |
+| `curl` | `command -v curl` | preinstalled on macOS/Linux |
+| `python3` | `command -v python3` | preinstalled on macOS; `apt install python3` on Debian/Ubuntu |
+| `bash` 4+ | `bash --version` | preinstalled on Linux; macOS ships bash 3.2 — `brew install bash` for 5+ (scripts work on 3.2 but `[[ ]]` features are limited) |
+
+Env vars (written automatically by `db-setup.sh` on first run, but customers running pieces standalone can set them manually):
+
+| Var | Purpose | Source |
+|---|---|---|
+| `TURSO_DB_URL` | DB connection URL | `turso db show <name> --url` |
+| `TURSO_DB_TOKEN` | DB auth token | `turso db tokens create <name>` |
+| `TURSO_DB_NAME` | DB name (optional; defaults to `cold-email-leads`) | manual |
+
+The scripts read `.env` from the directory ABOVE the `scripts/` directory (i.e. the skill's root). On first install, `db-setup.sh` writes `.env` there automatically.
+
+**Platform**: tested on macOS (BSD utils) and Linux (GNU utils). The portable `_sed_inplace` helper inside `db-setup.sh` handles the only OS-specific divergence.
+
 ## First-Time Setup (Bootstrap)
 
-If `TURSO_DB_URL` / `TURSO_DB_TOKEN` aren't in `.env` yet (or `db_query "SELECT 1 FROM leads LIMIT 1"` fails), run the one-time bootstrap before any other DB operation:
+If `TURSO_DB_URL` / `TURSO_DB_TOKEN` aren't in `.env` yet (or `db_query "SELECT 1 FROM leads LIMIT 1"` fails), run the one-time bootstrap:
 
 ```bash
-./scripts/db-setup.sh                          # installs Turso CLI, browser auth, creates DB, applies schema, writes .env
-bash scripts/list-optimize/migrate-schema.sh   # adds 9 columns to `leads` for AI qualification + personalization
+./scripts/db-setup.sh   # installs Turso CLI, browser auth, creates DB, applies schema, writes .env
 ```
 
-Both scripts are idempotent — safe to re-run. The `cold-email-quickstart` skill triggers them automatically in **Phase 0.5**; this section exists for users invoking `lead-tracking-db` directly.
+Idempotent — safe to re-run.
 
-Sign up for Turso free at <https://turso.tech/> (GitHub or email; no credit card). The setup script opens a browser to auth.
+For the optional V2 column migration (9 extra columns on `leads` for AI qualification + personalization), install the companion **list-optimize** skill — it ships `migrate-schema.sh` for that purpose. Without it, this skill still works against the V1 schema.
+
+The `cold-email-quickstart` skill triggers `db-setup.sh` automatically in **Phase 0.5**; this section exists for users invoking `lead-tracking-db` directly.
 
 ## Connection
 
-- **Database:** `cold-email-leads` on Turso (aws-us-east-1)
-- **CLI:** `~/.turso/turso db shell cold-email-leads "SQL"`
+- **Database:** `cold-email-leads` on Turso (default name; override via `TURSO_DB_NAME`)
+- **CLI:** `turso db shell <db-name> "SQL"`
 - **Scripts:** All use `source scripts/db-query.sh` which provides `db_exec`, `db_query`, `db_scalar`, `db_batch`, `sql_escape`
-- **Full schema docs:** `docs/lead-tracking-db.md`
 
 ## Tables (13)
 
@@ -48,8 +71,8 @@ Sign up for Turso free at <https://turso.tech/> (GitHub or email; no credit card
 ```bash
 ./scripts/import-leads.sh <file.json> [actor]           # Import Apify leads
 ./scripts/email-guesser.sh <input.csv> [output.csv]     # Guess + verify emails
-./scripts/sync-analytics.sh [--sequencer email_bison]    # Sync from sequencers
-./scripts/lead-report.sh <report-type>                   # CLI reports
+./scripts/sync-analytics.sh [--sequencer email_bison]   # Sync from sequencers
+./scripts/lead-report.sh <report-type>                  # CLI reports
 ```
 
 ### Report Types

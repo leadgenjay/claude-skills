@@ -5,6 +5,18 @@ description: "Scrape leads from the Consulti.ai database (500M+ B2B, Google Maps
 
 # Consulti Lead Scraping
 
+## Step 0 — Prerequisites
+
+This is a prompt-only skill (no scripts of its own — it teaches Claude how to call the Consulti REST API and pipe results into `lead-tracking-db`'s `import-leads.sh`). Verify these before invoking:
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| `curl`, `jq` | `command -v curl jq` | preinstalled |
+| `CONSULTI_API_KEY` | `[ -n "$CONSULTI_API_KEY" ]` | <https://app.consulti.ai> → Settings → Integrations → generate key (starts with `capi_`) |
+| `lead-tracking-db` skill installed | `[ -x ~/.claude/skills/lead-tracking-db/scripts/import-leads.sh ]` | install via the marketplace before running this skill — its `import-leads.sh` is what ingests Consulti's JSON into the Turso `leads` table |
+
+If `CONSULTI_API_KEY` is missing, stop. If `lead-tracking-db` isn't installed, install it first (this skill's pipeline pipes into `lead-tracking-db/scripts/import-leads.sh`) — do NOT proceed without it.
+
 Pulls leads from Consulti.ai's three databases and tracks each pull in a named Consulti audience list so repeat scrapes never return the same lead twice.
 
 ## Skill chain position

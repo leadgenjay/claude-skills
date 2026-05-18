@@ -1,7 +1,7 @@
 id: video-diagnose
 type: skill
 name: "Video Production Diagnostics"
-description: "Diagnose technical video/audio issues AND camera settings. Runs automated FFmpeg/sox analysis, cross-references with your hardware setup, and provides camera exposure/focus/color guidance with optimal settings."
+description: "Diagnose technical video/audio issues AND camera settings. Prompt-only skill that drives inline FFmpeg/ffprobe/sox analysis (no wrapper scripts bundled), cross-references with hardware setup, and provides camera exposure/focus/color guidance. Installer attempts brew install of ffmpeg + sox (manual install fallback on Linux/Windows)."
 categories:
   - lgj-exclusive
   - productivity
@@ -19,5 +19,10 @@ path: skills/video-diagnose
 files:
   - SKILL.md
   - manifest.yaml
-version: "1.1"
+version: "2.0"
 branch: LGJ-exclusive
+postInstall: |
+  command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo "  ⚠  install ffmpeg manually (apt/yum/choco)"; }
+  command -v sox >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install sox || echo "  ⚠  install sox manually"; }
+composesWell:
+  - talking-head-short

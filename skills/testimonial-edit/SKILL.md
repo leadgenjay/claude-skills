@@ -1,10 +1,23 @@
 ---
 name: testimonial-edit
-version: 1.0.0
+version: 2.0.0
 description: "Edit testimonial videos into polished social clips. Triggers on: 'testimonial edit', 'edit testimonial', 'testimonial video', 'cut testimonial', 'testimonial clip', 'social proof video', 'customer video edit', 'case study video'."
 ---
 
 # Testimonial Video Edit
+
+## Step 0 — This is a recipe, not a turnkey tool
+
+**Read this first.** This skill describes a 10-stage FFmpeg + Deepgram + Remotion pipeline. **It does NOT ship `scripts/process-testimonial.ts` or `scripts/render-short.ts` as bundled files** — those are the orchestrator + renderer YOU (or Claude, working from this recipe) need to build inside YOUR own project. The SKILL.md commands like `tsx scripts/process-testimonial.ts …` are intended invocations, not pre-installed binaries.
+
+When invoked, Claude should:
+1. Verify FFmpeg + ffprobe are present (the installer's `postInstall` hook attempts `brew install ffmpeg`; manual install on Linux/Windows).
+2. Verify `DEEPGRAM_API_KEY` + `ANTHROPIC_API_KEY` are in `.env.local`.
+3. Either (a) walk through the 10 stages directly with inline ffmpeg/Deepgram/Claude API calls, or (b) help the user scaffold the `process-testimonial.ts` orchestrator from the spec below if they want a reusable pipeline.
+
+If you (Claude) try to run `tsx scripts/process-testimonial.ts` and the file doesn't exist, STOP — don't fake it. Tell the user to either implement the orchestrator or have you walk the stages inline.
+
+---
 
 Transform raw customer testimonial videos into polished, short social clips with AI-driven content selection, speaker intro cards, and multi-format output.
 

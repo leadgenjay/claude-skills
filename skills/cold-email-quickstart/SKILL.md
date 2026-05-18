@@ -5,6 +5,28 @@ description: "First-run wizard that walks users from zero to a launched cold ema
 
 # Cold Email Quickstart — First-Run Wizard
 
+## Step 0 — Prerequisites (install the chain first)
+
+This is a **thin orchestrator** — every phase delegates to a specialist skill. The orchestrator itself ships only `SKILL.md`, `manifest.yaml`, and `references/phase-prompts.md`; the scripts referenced inline (`./scripts/db-setup.sh`, `bash scripts/list-optimize/run-pipeline.sh`, etc.) come from the composed skills. Install ALL of these BEFORE invoking `/cold-email-quickstart`:
+
+```bash
+curl -sSL 'https://leadgenjay.com/api/skills/install.sh?items=lead-tracking-db,list-optimize,consulti-scrape,email-verification,cold-email-campaign-deploy,cold-email-strategy,cold-email-copywriting,cold-email-ab-testing,inbox-insiders' | bash
+```
+
+Without these installed, the inline `./scripts/X.sh` paths in the phases below will fail with "No such file or directory". The orchestrator is hard-required to be standalone; the workflow it walks through is NOT.
+
+**Required env vars** (Phase 0.5 writes them on first run; this list is informational):
+
+| Var | Phase | Source |
+|---|---|---|
+| `TURSO_DB_URL`, `TURSO_DB_TOKEN` | 0.5 | written by `lead-tracking-db/scripts/db-setup.sh` |
+| `ANTHROPIC_API_KEY` | 0.5 | <https://console.anthropic.com> |
+| `PERPLEXITY_API_KEY` | 0.5 (optional fallback) | <https://perplexity.ai/settings/api> |
+| `INSTANTLY_API_KEY` OR `EMAIL_BISON_API_KEY` | 1 | <https://instantly.ai> or <https://send.leadgenjay.com> |
+| `CONSULTI_API_KEY` | 5 | <https://app.consulti.ai> → Settings → Integrations |
+
+**Working directory:** the orchestrator writes campaign state to `scripts/campaigns/<name>/.metadata.json` relative to the CURRENT working directory. Customers should `cd` to a dedicated project root (`mkdir -p ~/cold-email-projects/<campaign> && cd ~/cold-email-projects/<campaign>`) before invoking `/cold-email-quickstart`. The lead-tracking-db scripts called inline assume a project layout: `<cwd>/scripts/db-query.sh` (provided by lead-tracking-db install — see its SKILL.md Step 0 for how to copy or run from the skill dir).
+
 One invocation, zero → launched campaign. This skill is a **thin orchestrator**: it walks the user through ten phases, hands each one off to the specialist skill that owns it, and advances once the artifact appears. It does not duplicate any specialist logic — when a phase belongs to another skill, invoke that skill and wait for its output.
 
 **Skill chain:**

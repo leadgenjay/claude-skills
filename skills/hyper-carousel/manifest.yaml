@@ -1,7 +1,7 @@
 id: hyper-carousel
 type: skill
 name: "Hyper Carousel"
-description: "Animated 8-slide Instagram carousels via HyperFrames + GSAP motion. One MP4 per slide + phone-mockup HTML previewer. Locked to Lead Gen Jay design (Big Shoulders + Manrope + pink/dark). Visual Proof Gate (real assets, no fake mockups), canvas density, post-render autoheal. Requires `npm install -g hyperframes`."
+description: "Animated 8-slide Instagram carousels via HyperFrames + GSAP motion. One MP4 per slide + phone-mockup HTML previewer. Locked to Lead Gen Jay design (Big Shoulders + Manrope + pink/dark). Visual Proof Gate (real assets, no fake mockups), canvas density, post-render autoheal. Installer auto-installs the `hyperframes` npm package."
 categories:
   - lgj-exclusive
   - design
@@ -28,8 +28,9 @@ files:
   - templates/slide-light.html
   - templates/slide-lime.html
   - evals/evals.json
-version: "1.1"
+version: "2.0"
 branch: LGJ-exclusive
+postInstall: command -v hyperframes >/dev/null 2>&1 || npm install -g hyperframes
 composesWell:
   - hyperframes
   - gsap

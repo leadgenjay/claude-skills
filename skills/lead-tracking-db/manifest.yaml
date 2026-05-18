@@ -1,7 +1,7 @@
 id: lead-tracking-db
 type: skill
 name: "Lead Tracking DB"
-description: "Manage the lead tracking database (Turso/SQLite) that backs the cold-email skill chain. Bootstraps via db-setup.sh, applies the V2 schema (13 tables + 27 indexes), and runs queries / inserts / analytics syncs. Used by consulti-scrape, email-verification, list-optimize, and campaign-deploy as the single source of truth for leads, domains, mailboxes, and scrape jobs."
+description: "Manage a Turso/SQLite lead-tracking database for cold email. Ships db-setup.sh + db-query.sh + 4 wrapper scripts (import-leads, email-guesser, sync-analytics, lead-report) plus the 13-table schema.sql. You provide a free Turso account; the bootstrap creates the DB and writes credentials to .env."
 categories:
   - lgj-exclusive
   - automation
@@ -20,7 +20,14 @@ files:
   - SKILL.md
   - manifest.yaml
   - evals/evals.json
-version: "1.0"
+  - scripts/db-setup.sh
+  - scripts/db-query.sh
+  - scripts/import-leads.sh
+  - scripts/email-guesser.sh
+  - scripts/sync-analytics.sh
+  - scripts/lead-report.sh
+  - scripts/schema.sql
+version: "2.0"
 branch: LGJ-exclusive
 composesWell:
   - consulti-scrape

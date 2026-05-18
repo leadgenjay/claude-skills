@@ -5,6 +5,19 @@ description: "Deploy cold email campaigns to Email Bison or Instantly. Generates
 
 # Cold Email Campaign Deploy
 
+## Step 0 — Prerequisites
+
+This is a prompt-only skill (no scripts bundled — it teaches Claude how to call the Instantly / Email Bison REST APIs directly). Verify the following before invoking:
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| `curl`, `jq` | `command -v curl jq` | preinstalled |
+| Sequencer API key | `[ -n "$INSTANTLY_API_KEY" ]` OR `[ -n "$EMAIL_BISON_API_KEY" ]` | Instantly: app → Settings → Integrations → Personal API Key. Bison: <https://send.leadgenjay.com> → Settings → API |
+| Upstream artifacts | files exist in `scripts/campaigns/<name>/` | run `cold-email-strategy`, `cold-email-copywriting`, `cold-email-ab-testing` first |
+| `lead-tracking-db` (optional) | `[ -d ~/.claude/skills/lead-tracking-db ]` | needed only if you want post-deploy domain/mailbox state recorded in the Turso leads DB |
+
+If the sequencer API key is missing OR the required artifacts (`copy/sequence.md` + `ab-testing/variants.md`) aren't in the campaign workspace, stop and tell the user which upstream skill to run — do NOT deploy with incomplete inputs.
+
 Deploy a fully prepared campaign to Email Bison or Instantly. This skill compiles all upstream artifacts into a campaign brief, runs safety checks, and creates the campaign via API in PAUSED state.
 
 **Skill chain:** `cold-email-strategy` -> `cold-email-copywriting` -> `cold-email-ab-testing` -> `cold-email-campaign-deploy` (you are here)

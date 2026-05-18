@@ -1,7 +1,7 @@
 id: email-verification
 type: skill
 name: "Email Verification"
-description: "Verify emails via the Consulti API before adding to cold email campaigns. Single-endpoint verification with server-side cache, catch-all / disposable / role-account detection, and a verdict-to-safe/risky/invalid bucketing table for campaign-ready lists."
+description: "Verify emails before adding to cold email campaigns. Two backends: Consulti /verify (default for <500 batches; one key + server-side cache) and Reacher + No2Bounce (>1K batches; 8x faster via proxy + parallel xargs with N2B catch-all recovery). Prompt-only skill — teaches Claude how to call the APIs inline; you provide CONSULTI_API_KEY (or Reacher/N2B envs). Verdict-to-safe/risky/invalid bucketing table works downstream of list-optimize and upstream of cold-email-campaign-deploy."
 categories:
   - lgj-exclusive
   - automation
@@ -20,7 +20,7 @@ files:
   - SKILL.md
   - manifest.yaml
   - evals/evals.json
-version: "1.1"
+version: "2.0"
 branch: LGJ-exclusive
 composesWell:
   - consulti-scrape

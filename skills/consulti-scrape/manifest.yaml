@@ -1,7 +1,7 @@
 id: consulti-scrape
 type: skill
 name: "Consulti Scrape"
-description: "Scrape leads from Consulti.ai's three databases (500M+ B2B contacts, Google Maps local businesses, podcast/YouTube creators) via the Consulti REST API. Tracks every pull in a named audience list so repeat scrapes never return the same lead twice — native excludeListId on B2B, client-side dedup on local + creator. Imports straight into the lead-tracking DB for the rest of the cold-email chain."
+description: "Scrape leads from Consulti.ai's three databases (500M+ B2B, Google Maps local businesses, podcast/YouTube creators) via the Consulti REST API. Prompt-only skill — teaches Claude how to call the API inline, build deduplicated audience lists (excludeListId native on B2B, client-side dedup on local + creator), and pipe results into lead-tracking-db's import-leads.sh. You provide CONSULTI_API_KEY; the lead-tracking-db skill must be installed for the ingest pipeline."
 categories:
   - lgj-exclusive
   - automation
@@ -21,7 +21,7 @@ files:
   - SKILL.md
   - manifest.yaml
   - evals/evals.json
-version: "1.2"
+version: "2.0"
 branch: LGJ-exclusive
 composesWell:
   - lead-tracking-db

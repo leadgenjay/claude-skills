@@ -1,37 +1,41 @@
 ---
 name: list-optimize
-description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor via web-search (Zeus search default, Perplexity fallback) and write a 1-sentence personalization line for the E1 opener using Claude in-session (default — free on Max plan) or Anthropic API (fallback). Interactive phase picker lets you run qualify-only, personalize-only, both, or skip. Validates the target campaign template (Instantly/Email Bison) carries the personalization variable with a fallback before any DB writes. Updates the Turso `leads` table with qualification + normalization + personalization fields. Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy', 'phase picker', 'qualify only', 'personalize only', 'validate campaign variables'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
+description: "Clean a scraped lead list before campaign launch: AI-qualify against ICP, normalize company names, then (after email-verification) research each survivor via web-search (Zeus search default, Perplexity fallback) and write a 1-sentence personalization line for the E1 opener using Claude in-session (default — free on Max plan) or Anthropic API (fallback). Interactive phase picker lets you run qualify-only, personalize-only, both, or skip. Validates the target campaign template (Instantly/Email Bison) carries the personalization variable with a fallback before any DB writes. Updates the Turso `leads` table with qualification + normalization + personalization fields. Bundles 9 shell scripts (qualify.sh, normalize-company.sh, research.sh, personalize.sh, run-pipeline.sh, validate-campaign-vars.sh, migrate-schema.sh, plus shared db-query.sh). Use when someone says 'clean my list', 'qualify leads', 'normalize company names', 'personalize leads', 'research leads', 'list cleaning', 'lead qualification', 'add personalization to copy', 'phase picker', 'qualify only', 'personalize only', 'validate campaign variables'. Slots between lead-import and email-verification (phases 1-2), and between email-verification and copywriting (phases 3-4)."
 ---
 
 # List Optimize
 
 Turn a raw scraped lead list into a qualified, deduplicated, personalized list ready for cold email. Four idempotent phases write back to the Turso `leads` table; the copywriting skill then consumes an optional `{personalization}` token in the E1 opener.
 
-**Pipeline position:**
+## Step 0 — Prerequisites & working directory
+
+This skill is part of the cold-email pack. The scripts assume a project layout (`scripts/db-query.sh` + `scripts/list-optimize/*.sh` + `scripts/campaigns/<name>/`). When installed via `curl ... install.sh?items=list-optimize | bash`, the skill files land at `~/.claude/skills/list-optimize/` — so the natural project root is that directory.
+
+**Working directory:** `cd ~/.claude/skills/list-optimize/` before running any script, OR copy `scripts/` into your own cold-email project root. The simplest path on first install:
+
+```bash
+cd ~/.claude/skills/list-optimize/
+# Now `bash scripts/list-optimize/<X>.sh` works
 ```
-consulti-scrape -> import-leads.sh
-        |
-        v
-  list-optimize Phase 1: qualify (AI on every lead vs strategy.md ICP)
-  list-optimize Phase 2: normalize (company name canonicalization)
-        |
-        v
-  email-verification (existing skill, runs only on qualified survivors)
-        |
-        v
-  list-optimize Phase 3: research (Perplexity per lead, cost-gated)
-  list-optimize Phase 4: personalize (LLM 1-sentence opener)
-        |
-        v
-  cold-email-copywriting (consumes {personalization} token if present)
-```
+
+If you've installed `cold-email-quickstart` and used it to scaffold a project, run the list-optimize scripts from inside that project (the orchestrator creates the right layout).
+
+**Required env vars** (set in `~/.claude/skills/list-optimize/.env`, or in the cold-email project's `.env` if running there):
+
+| Var | Phase | Required? | Source |
+|---|---|---|---|
+| `TURSO_DB_URL` | all | yes | written by `lead-tracking-db`'s `db-setup.sh` |
+| `TURSO_DB_TOKEN` | all | yes | written by `lead-tracking-db`'s `db-setup.sh` |
+| `PERPLEXITY_API_KEY` | 3 | optional | <https://perplexity.ai/settings/api> (only if Zeus search is down) |
+| `ANTHROPIC_API_KEY` | 4 | optional | <https://console.anthropic.com> (only for headless runs; in-session Claude is the default) |
+
+**Tooling:** `bash` 4+, `curl`, `jq`, `python3`. Run `command -v bash curl jq python3` — if anything's missing, install via `brew install <tool>` (macOS) or your distro's package manager. The companion **lead-tracking-db** skill MUST be installed for the V1 schema (it ships `db-setup.sh` + `schema.sql`); this skill ships `migrate-schema.sh` for the V2 column additions.
 
 ## Prerequisites
 
-- Turso DB schema migrated: `bash scripts/list-optimize/migrate-schema.sh` (one-time, idempotent)
-- `scripts/campaigns/{campaign-name}/strategy.md` exists (output of `cold-email-strategy`) — required for Phase 1 ICP rules and Phase 4 messaging angle
-- `.env` contains `TURSO_DB_URL` + `TURSO_DB_TOKEN` (already required by other skills)
-- Leads already imported into Turso via `scripts/import-leads.sh` (so `leads` rows exist)
+- Turso DB schema migrated: from the skill dir, `bash scripts/list-optimize/migrate-schema.sh` (one-time, idempotent) — adds 9 columns to `leads` for AI qualification + personalization. Run this after `lead-tracking-db`'s `db-setup.sh`.
+- `scripts/campaigns/{campaign-name}/strategy.md` exists (output of `cold-email-strategy`) — required for Phase 1 ICP rules and Phase 4 messaging angle.
+- Leads already imported into Turso via `scripts/import-leads.sh` (from `lead-tracking-db`) — so `leads` rows exist.
 - **Phase 3 (research):** Zeus search at `search.nextwave.io` works out of the box — no API key needed. Optional fallback: `.env` with `PERPLEXITY_API_KEY` for runs where Zeus is down. (Older docs may reference Perplexity as the default; the canonical default is now Zeus.)
 - **Phase 4 (personalize):** Default is **Claude in-session** — the active Claude Code session writes openers directly (free on Max plan). Fallback: `ANTHROPIC_API_KEY` in `.env` for headless runs (uses Sonnet 4.6).
 

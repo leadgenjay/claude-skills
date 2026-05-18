@@ -1,12 +1,28 @@
 id: testimonial-edit
 type: skill
-name: Testimonial Edit
-description: "Edit raw customer testimonial videos into polished social clips with AI-driven content selection, speaker intro cards, captions, and multi-format output. Cuts long testimonials to the best 30-90 seconds."
-categories: [content, video]
-tags: [testimonial, video-editing, social-clips, captions, customer-stories, social-proof, remotion, deepgram]
+name: "Testimonial Edit"
+description: "Guide for editing raw customer testimonial videos into polished social clips with AI-driven content selection (Deepgram + Claude), speaker intro cards, captions, and multi-format output (square + vertical). Walks Claude through a 10-stage FFmpeg + Deepgram + Remotion pipeline. NOT a turnkey tool — you build the orchestrator (or copy Jay's reference implementation); skill provides the recipe. Installer attempts brew install of ffmpeg."
+categories:
+  - lgj-exclusive
+  - content
+  - video
+tags:
+  - testimonial
+  - video-editing
+  - social-clips
+  - captions
+  - customer-stories
+  - social-proof
+  - remotion
+  - deepgram
 icon: Film
-version: "1.2"
-composesWell: [social-proof-builder]
+path: skills/testimonial-edit
 files:
   - SKILL.md
   - manifest.yaml
+version: "2.0"
+branch: LGJ-exclusive
+postInstall: |
+  command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo "  ⚠  install ffmpeg manually (apt/yum/choco)"; }
+composesWell:
+  - social-proof-builder

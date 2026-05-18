@@ -1,7 +1,7 @@
 id: cold-email-campaign-deploy
 type: skill
 name: "Cold Email Campaign Deploy"
-description: "Deploy cold email campaigns to Email Bison or Instantly. Campaign brief generation, 9-gate pre-launch checklist, API deployment in PAUSED state, error recovery."
+description: "Deploy cold email campaigns to Email Bison or Instantly. Prompt-only skill that teaches Claude how to compile upstream artifacts (strategy.md + copy/sequence.md + ab-testing/variants.md) into a campaign brief, run the 8-gate pre-launch safety checklist, and create the campaign via REST API in PAUSED state. You provide INSTANTLY_API_KEY or EMAIL_BISON_API_KEY. Step 4 of the 4-skill chain: strategy → copywriting → ab-testing → campaign-deploy."
 categories:
   - lgj-exclusive
   - automation
@@ -16,7 +16,10 @@ icon: Send
 path: skills/cold-email-campaign-deploy
 files:
   - SKILL.md
+  - manifest.yaml
   - references/api-deployment.md
   - references/campaign-brief-template.md
-version: "1.1"
+version: "2.0"
 branch: LGJ-exclusive
+composesWell:
+  - cold-email-ab-testing
