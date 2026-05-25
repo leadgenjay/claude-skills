@@ -5,18 +5,20 @@
     {
       "id": 1,
       "name": "easy-mode-order-with-instantly-upload",
-      "prompt": "Order 9 mailboxes for Consulti AI (https://consulti.ai) via Inbox Insiders. Sender name 'Jay Feldman'. Connect them to Instantly automatically. Show exact API call.",
+      "prompt": "Order mailboxes for Consulti AI (https://consulti.ai) via Inbox Insiders. Sender name 'Jay Feldman'. Connect them to Instantly automatically. Show exact API call.",
       "expectations": [
-        {"text": "Quotes the dollar total before calling /instant-orders (e.g., $31.50/mo recurring + $36 one-time = $67 first invoice)", "type": "quality", "deterministic": true},
+        {"text": "Surfaces the 30 mailboxes / 10 domains auto-fill default since the caller did not specify quantity", "type": "quality", "deterministic": true},
+        {"text": "Quotes the dollar total before calling /instant-orders: $105/mo recurring + $120 one-time = $225 first invoice", "type": "quality", "deterministic": true},
         {"text": "Uses POST https://inboxinsiders.io/api/v1/instant-orders endpoint", "type": "structural", "deterministic": true},
         {"text": "Authorization header is Bearer ${INBOX_INSIDERS_API_KEY} format", "type": "structural", "deterministic": true},
         {"text": "Payload mode is 'easy'", "type": "structural", "deterministic": true},
-        {"text": "Payload quantity is 9", "type": "structural", "deterministic": true},
+        {"text": "Payload quantity is 30 (auto-fill default when caller omits quantity)", "type": "structural", "deterministic": true},
         {"text": "Payload sender_name is 'Jay Feldman' (first + last)", "type": "content", "deterministic": true},
         {"text": "cold_email is a NESTED object with provider and api_key (not flat top-level cold_email_provider)", "type": "quality", "deterministic": true},
         {"text": "cold_email.provider is 'instantly'", "type": "structural", "deterministic": true},
         {"text": "Includes idempotency_key (uuid v4) in the payload", "type": "quality", "deterministic": true},
         {"text": "Mentions Stripe charge fires immediately on POST", "type": "quality", "deterministic": true},
+        {"text": "Waits for explicit user confirmation before calling the API (does not auto-execute the order)", "type": "quality", "deterministic": true},
         {"text": "No placeholder text remains (TODO, REPLACE, TBD)", "type": "quality", "deterministic": true}
       ]
     },
@@ -89,6 +91,20 @@
         {"text": "Mentions the server caches the response for that idempotency_key (including the original error/success)", "type": "quality", "deterministic": true},
         {"text": "Recommends checking the II dashboard or polling for an existing run_id before assuming the charge failed", "type": "quality", "deterministic": false},
         {"text": "Warns NOT to rotate the idempotency_key until duplicate-charge risk is ruled out", "type": "quality", "deterministic": true}
+      ]
+    },
+    {
+      "id": 8,
+      "name": "default-quantity-auto-fill",
+      "prompt": "Order mailboxes for TestCo (https://testco.com) — set up cold email for me. Sender 'Bob Porter'. Connect to Instantly.",
+      "expectations": [
+        {"text": "Surfaces the 30 mailboxes / 10 domains auto-fill default since the caller did not specify quantity", "type": "quality", "deterministic": true},
+        {"text": "Quotes $105/mo recurring + $120 one-time = $225 first invoice", "type": "quality", "deterministic": true},
+        {"text": "Payload mode is 'easy' and quantity is 30", "type": "structural", "deterministic": true},
+        {"text": "sender_name is 'Bob Porter' (first + last)", "type": "content", "deterministic": true},
+        {"text": "cold_email is a NESTED object with provider 'instantly' and api_key", "type": "quality", "deterministic": true},
+        {"text": "Asks for explicit user confirmation before calling POST /instant-orders (does not auto-execute)", "type": "quality", "deterministic": true},
+        {"text": "Notes the user can override quantity (multiple of 3) if 30 is not the desired size", "type": "quality", "deterministic": false}
       ]
     }
   ]

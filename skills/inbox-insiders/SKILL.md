@@ -7,6 +7,18 @@ description: "End-to-end cold email mailbox ordering via Inbox Insiders Instant 
 
 End-to-end mailbox provisioning in one async order: domain registration (Dynadot) → SMTP setup → optional auto-upload to Instantly or Email Bison. Internal Studio Apps product. Replaces the multi-skill `domain-management → cloudflare-dns → winnr-smtp → instantly` chain when a new persona/brand needs fresh infrastructure.
 
+## Default Order (auto-fill)
+
+**When the caller invokes `/inbox-insiders` without specifying `quantity`, assume easy mode + 30 mailboxes across 10 domains.** This is the recommended starting size for a new brand: it gives enough warmup-to-volume headroom for a sustainable cold campaign at 30 emails/day per warmed mailbox without overcrowding any single domain (3 mailboxes/domain × 10 domains).
+
+Quote the Stripe charge for the default explicitly before calling `POST /instant-orders`:
+
+- Recurring: `30 × $3.50/mo` = **$105/mo**
+- One-time domain registration: `10 × $12` = **$120**
+- **First invoice: $225, then $105/mo after**
+
+Wait for explicit user confirmation. The user may override `quantity` to any other number (must be a multiple of 3 — the API provisions exactly 3 mailboxes per domain); never silently substitute the default without surfacing it in the cost-gate message.
+
 ## API Reference
 
 - **Base URL:** `https://inboxinsiders.io/api/v1`
@@ -14,7 +26,7 @@ End-to-end mailbox provisioning in one async order: domain registration (Dynadot
 - **Required scope:** `instant_orders` (key must have this scope or returns 403 `MISSING_SCOPE`)
 - **Rate limit:** 60 req/min default per key (returns 429 `RATE_LIMITED`)
 - **Request timeout:** 30s server-side (use `--max-time 35` on curl)
-- **Pricing:** $3.50/mailbox/month recurring (Stripe) + $12/domain registration (easy mode only). 3 mailboxes per domain.
+- **Pricing:** $3.50/mailbox/month recurring (Stripe) + $12/domain registration (easy mode only). 3 mailboxes per domain. Default easy-mode order: 30 mailboxes / 10 domains.
 - **Source repo:** `Studio Apps/INBOX INSIDERS/` (API routes: `src/app/api/v1/instant-orders/`)
 
 ## Required Environment Variables
@@ -43,7 +55,7 @@ The default happy path. One POST replaces the entire legacy chain.
 
 Total = `quantity × $3.50/mo` recurring + `ceil(quantity / 3) × $12` one-time domain registration. Quote both numbers explicitly before calling `POST /instant-orders`.
 
-Example for 9 mailboxes: `9 × $3.50 = $31.50/mo recurring` + `3 × $12 = $36 one-time` = **$67 first invoice, $31.50/mo after**.
+Example for the default 30 mailboxes / 10 domains: `30 × $3.50 = $105/mo recurring` + `10 × $12 = $120 one-time` = **$225 first invoice, $105/mo after**.
 
 ### Step 2 — (Optional) Suggest domains
 
@@ -75,7 +87,7 @@ curl -s -X POST "https://inboxinsiders.io/api/v1/instant-orders" \
   -d '{
     "mode": "easy",
     "sender_name": "Jay Feldman",
-    "quantity": 9,
+    "quantity": 30,
     "brand_name": "Consulti AI",
     "website_url": "https://consulti.ai",
     "special_instructions": "...",
@@ -127,7 +139,7 @@ curl -s -X POST "https://inboxinsiders.io/api/v1/instant-orders" \
     "mode": "full_control",
     "sender_name": "Jay Feldman",
     "website_url": "https://consulti.ai",
-    "domains": ["example1.com","example2.com","example3.com"],
+    "domains": ["example1.com","example2.com","example3.com","example4.com","example5.com","example6.com","example7.com","example8.com","example9.com","example10.com"],
     "idempotency_key": "'"${IDEMPOTENCY_KEY}"'",
     "cold_email": {
       "provider": "instantly",
@@ -140,6 +152,7 @@ curl -s -X POST "https://inboxinsiders.io/api/v1/instant-orders" \
 
 ## Critical Rules
 
+- **CRITICAL: Default to 30 mailboxes / 10 domains in easy mode** when the caller does not supply `quantity`. Always surface "I'm defaulting to 30 mailboxes across 10 domains — $225 first invoice, $105/mo after" in the cost-gate message and wait for explicit confirmation. Never silently substitute the default without naming it.
 - **CRITICAL: `POST /instant-orders` CHARGES STRIPE IMMEDIATELY.** Always quote the dollar total to the user and wait for explicit confirmation before calling. No silent re-runs after errors — investigate first.
 - **CRITICAL: Always set `idempotency_key`** (uuid v4). Reuse the same key on retry to prevent duplicate charges. The server caches the original response (including errors) for that key.
 - **CRITICAL: `sender_name` requires first + last.** API rejects single names like `"Jay"`. Use canonical Standard Senders (below) unless the user specifies otherwise.
