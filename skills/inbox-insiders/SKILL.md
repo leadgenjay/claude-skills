@@ -7,6 +7,19 @@ description: "End-to-end cold email mailbox ordering via Inbox Insiders Instant 
 
 End-to-end mailbox provisioning in one async order: domain registration (Dynadot) → SMTP setup → optional auto-upload to Instantly or Email Bison. Internal Studio Apps product. Replaces the multi-skill `domain-management → cloudflare-dns → winnr-smtp → instantly` chain when a new persona/brand needs fresh infrastructure.
 
+## Step 0 — Prerequisites
+
+Before any other operation, verify these are present. If either is missing, STOP and tell the user exactly which one and where to get it — do NOT proceed with a placeholder, fake key, or skipped check.
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| Active **inboxinsiders.io** account with a current subscription | Sign in at <https://inboxinsiders.io> and confirm the account is active (not paused/cancelled) | Sign up at <https://inboxinsiders.io> and pick a plan |
+| `INBOX_INSIDERS_API_KEY` env var — must start with `ii_live_` and carry the `instant_orders` scope | `[[ "${INBOX_INSIDERS_API_KEY:0:8}" == "ii_live_" ]]` returns true | inboxinsiders.io → Settings → API Keys → create a key with the `instant_orders` scope enabled |
+
+If anything is missing, STOP. Do NOT call `POST /instant-orders` — it charges Stripe immediately, and a request from a missing/incorrect key fails the call but does not roll back any side-effects you may have set up downstream. Without `instant_orders` scope, the API returns 403 `MISSING_SCOPE`.
+
+Sequencer auto-upload (Instantly / Email Bison) is **optional** and adds its own conditional env vars — see the "Required Environment Variables" table below.
+
 ## Default Order (auto-fill)
 
 **When the caller invokes `/inbox-insiders` without specifying `quantity`, assume easy mode + 30 mailboxes across 10 domains.** This is the recommended starting size for a new brand: it gives enough warmup-to-volume headroom for a sustainable cold campaign at 30 emails/day per warmed mailbox without overcrowding any single domain (3 mailboxes/domain × 10 domains).
