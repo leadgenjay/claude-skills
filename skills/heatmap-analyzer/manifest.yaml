@@ -1,7 +1,7 @@
 name: heatmap-analyzer
-description: Analyze PostHog heatmap data, session recordings, scroll depth, rage clicks, and funnel metrics. Generates structured reports with PIE-scored AB test hypotheses.
+description: Analyze Microsoft Clarity scroll depth, rage clicks, dead clicks, engagement, and session-recording signals (by funnel / variant / device). Generates structured reports with PIE-scored AB test hypotheses.
 categories: [lgj-exclusive, analytics, conversion]
-tags: [posthog, heatmaps, conversion, ab-testing, analytics, cro]
+tags: [clarity, heatmaps, conversion, ab-testing, analytics, cro]
 icon: Flame
-version: "1.0"
+version: "1.1"
 composesWell: [ab-test-designer, landing-page-auditor]

@@ -1,11 +1,13 @@
 ---
 name: heatmap-analyzer
-description: Analyze PostHog heatmap data, session recordings, scroll depth, rage clicks, and funnel metrics to produce actionable conversion optimization recommendations. Generates structured reports stored in the admin dashboard and proposes PIE-scored AB test hypotheses. Use when analyzing landing page performance, diagnosing conversion drop-offs, tracking optimization trends, or generating data-driven AB test ideas.
+description: Analyze Microsoft Clarity scroll depth, rage clicks, dead clicks, engagement, and session-recording signals (broken out by funnel / landing_variant / device) to produce conversion optimization recommendations. Generates structured reports stored in the admin dashboard and proposes PIE-scored AB test hypotheses. Use when analyzing landing page performance, diagnosing conversion drop-offs, tracking optimization trends, or generating data-driven AB test ideas.
 ---
 
-# PostHog Heatmap Analyzer
+# Clarity Heatmap Analyzer
 
-Analyzes PostHog analytics data and produces structured heatmap reports with conversion optimization recommendations and AB test hypotheses.
+Analyzes Microsoft Clarity analytics (project `qk5hok8gx8` — session recordings, heatmaps, scroll depth, dead/rage clicks, Smart Events) and produces structured reports with conversion optimization recommendations and AB test hypotheses.
+
+> **Clarity vs PostHog split.** Recordings, heatmaps, scroll depth, and dead/rage-click telemetry live in Microsoft Clarity (moved 2026-05-26). PostHog still owns server-side events (`$pageview`, `user_opted_in`, `purchase_completed`) — for those, use the `check-tracking` skill or the PostHog MCP `query-run` tool directly.
 
 ---
 
@@ -15,36 +17,41 @@ Analyzes PostHog analytics data and produces structured heatmap reports with con
 
 | Requirement | Purpose | Install/Configure |
 |-------------|---------|-------------------|
-| **PostHog MCP Server** | Query analytics data from Claude Code | `npx @posthog/wizard@latest mcp add` |
-| **PostHog tracking live on site** | Ensures data exists to analyze | Admin → Settings → Custom Head Scripts |
+| **Clarity MCP Server** | Query Clarity analytics from Claude Code | `claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>` |
+| **Clarity snippet live on site** | Ensures recordings + heatmaps exist to analyze | Embedded in `app_settings.global_tracking.customHeadScripts` (Supabase) — verify `qk5hok8gx8` appears in rendered HTML |
+| **`<ClarityContext />` mounted** | Tags recordings with funnel / landing_variant / page_type for filtering | Mounted in `src/app/layout.tsx`. Audit via `tracking-check` skill. |
 | **Admin reports API** | Store and view reports in dashboard | Built into Lead Gen Jay Web Designer |
 | **AB Test Designer skill** (optional) | Enhanced hypothesis generation | Install from Skills Marketplace |
 
 ### Step-by-Step Setup
 
-#### 1. Install PostHog MCP Server
+#### 1. Install the Clarity MCP Server
 
-The skill queries PostHog directly via MCP tools. Install the PostHog MCP server into Claude Code:
+The skill queries Clarity directly via MCP tools. The server is published by Microsoft and runs locally over stdio.
 
 ```bash
-npx @posthog/wizard@latest mcp add
+claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>
 ```
 
-This configures `~/.claude/.mcp.json` with `mcp-remote` pointing to `https://mcp.posthog.com/mcp`. You'll need your PostHog **Personal API Key** (not project API key).
+Get the JWT at Clarity → Settings → Data Export → Generate new API token (`Data.Export` scope, non-expiring). Token persists in `~/.claude.json` under `mcpServers.clarity`.
 
-**Verify it works:** Ask Claude Code "list my PostHog event definitions" — if the MCP is configured, it will return your tracked events.
+**Verify it works:** in a fresh Claude Code session, ask "list available MCP tools" — `get-clarity-data` should be present. MCP servers load at session start, so add the server BEFORE the session you want to use it in.
 
-#### 2. Verify PostHog Tracking Is Live
+#### 2. Verify Clarity Tracking Is Live
 
-The site must be sending data to PostHog. Check by visiting any page and running in the browser console:
+The site must be sending data to Clarity. Check by visiting any page and running in the browser console:
 
 ```javascript
-window.posthog  // Should return the PostHog object, not undefined
+typeof window.clarity === 'function'  // Should be true
 ```
 
-If PostHog isn't loading, check Admin → Settings → Custom Head Scripts contains the PostHog snippet. Custom scripts support both raw `<script>` tags and pure JavaScript.
+If Clarity isn't loading, check Admin → Settings → Custom Head Scripts contains the Clarity snippet (search for `qk5hok8gx8`). Custom-head-scripts cache has a 5-min TTL per Vercel function instance — fresh writes may not appear immediately.
 
-#### 3. Verify Reports API
+#### 3. Verify Custom Tags Are Firing
+
+Open the Clarity dashboard → Filters → Custom. You should see at least `funnel`, `page_type`, `landing_variant`, `ab_test_id` available as filter dimensions. If none appear, `<ClarityContext />` isn't mounted — re-run `/tracking-check /<some-funnel-path>` to audit.
+
+#### 4. Verify Reports API
 
 Reports are stored via the admin dashboard. Test the endpoint:
 
@@ -54,10 +61,10 @@ GET /api/admin/reports
 
 Reports appear at `/admin/reports` in the sidebar.
 
-#### 4. Install the Skill
+#### 5. Install the Skill
 
 ```bash
-curl -sL 'https://web.leadgenjay.com/api/skills/install.sh?items=heatmap-analyzer' | bash
+curl -sL 'https://leadgenjay.com/api/skills/install.sh?items=heatmap-analyzer' | bash
 ```
 
 Or copy `SKILL.md` to `~/.claude/skills/heatmap-analyzer/SKILL.md`.
@@ -66,9 +73,11 @@ Or copy `SKILL.md` to `~/.claude/skills/heatmap-analyzer/SKILL.md`.
 
 | Setting | Value | Location |
 |---------|-------|----------|
-| PostHog Project ID | `284008` | PostHog → Settings |
-| PostHog API Host | `https://us.i.posthog.com` | PostHog → Settings |
-| MCP Config | `~/.claude/.mcp.json` | Auto-configured by wizard |
+| Clarity Project ID | `qk5hok8gx8` | Clarity dashboard URL |
+| Clarity API Host | `https://www.clarity.ms/export-data/api/v1/` | Used by MCP server internally |
+| API Rate Limit | **10 requests / day** per project | Treat every query as expensive |
+| MCP Config | `~/.claude.json` → `mcpServers.clarity` | Added via `claude mcp add -s user` |
+| Time Window Cap | **1, 2, or 3 days** per query | No 7-day option — for trends, re-run regularly |
 | Reports API | `/api/admin/reports` | Built-in |
 | Reports Dashboard | `/admin/reports` | Admin sidebar |
 
@@ -76,10 +85,11 @@ Or copy `SKILL.md` to `~/.claude/skills/heatmap-analyzer/SKILL.md`.
 
 | Problem | Solution |
 |---------|----------|
-| "No PostHog events found" | Verify tracking is live (`window.posthog` in console). Check Admin → Settings → Custom Head Scripts. |
-| MCP tools not responding | Run `npx @posthog/wizard@latest mcp add` to reinstall. Check `~/.claude/.mcp.json` has the PostHog entry. |
+| "No Clarity data found" | Confirm `typeof window.clarity === 'function'` in console. Confirm `qk5hok8gx8` appears in rendered HTML. Wait — Clarity has up to a few hours of ingestion delay for new properties. |
+| MCP tool `get-clarity-data` not available | Verify `claude mcp get clarity` returns `Connected`. Start a fresh Claude Code session — MCP servers load at session start only. |
+| 10 req/day exceeded | Cache results to local notes or memory. Plan queries before firing — pick the dimension cut you actually need. |
+| Custom-tag dimensions missing in Clarity | `<ClarityContext />` isn't firing on the page. Run `/tracking-check /<path>` to audit the mount. |
 | Reports not saving | Verify you're logged into the admin dashboard. Check `/api/admin/reports` returns 200. |
-| Stale data | PostHog has ~5 min ingestion delay. Wait and retry. |
 
 ---
 
@@ -107,17 +117,20 @@ Trend comparison against the previous report for a page.
 
 ## Workflow: `/heatmap analyze [page-url]`
 
-### Step 0: Verify PostHog Is Tracking
+### Step 0: Verify Clarity Is Tracking
 
-Before running analysis, verify PostHog is receiving data for this page:
+Before running analysis, verify Clarity is receiving data for this page:
 
-1. Query PostHog for recent `$pageview` events on the target URL (last 24 hours)
-2. If **events found** — proceed to Step 1
-3. If **no events found** — warn the user:
-   - "No PostHog events found for this page in the last 24 hours. Tracking may not be working."
-   - Suggest checking: Admin → Settings → Custom Head Scripts contains the PostHog snippet
-   - Suggest verifying: `window.posthog` exists in browser console on the page
-   - Do NOT proceed with analysis — results would be empty/misleading
+1. Run a small probe query via `get-clarity-data` with `numOfDays=1`, `dimension1=URL` filtered to the target page. Look for non-zero Traffic.
+2. If **sessions found** — proceed to Step 1.
+3. If **no sessions found** — warn the user:
+   - "No Clarity sessions found for this page in the last 24h. Either the page has zero traffic or Clarity isn't firing on it."
+   - Suggest checking: Admin → Settings → Custom Head Scripts contains the Clarity snippet (search for `qk5hok8gx8`).
+   - Suggest verifying: `typeof window.clarity === 'function'` in the browser console on the page.
+   - Suggest running `/tracking-check /<path>` to confirm `<ClarityContext />` is wired and custom tags are firing.
+   - Do NOT proceed with analysis — results would be empty/misleading.
+
+> **Note on event tracking:** if you also need to verify *event-level* tracking (`$pageview`, `user_opted_in`, `purchase_completed`), run the `check-tracking` skill instead — those events live on PostHog, not Clarity.
 
 ### Step 1: Fetch Previous Reports
 
@@ -129,62 +142,39 @@ GET /api/admin/reports?pageUrl=[url]
 
 If a previous report exists, note its `id` and `version` for comparison later.
 
-### Step 2: Query PostHog MCP (Last 7 Days)
+### Step 2: Query Clarity MCP (max 3 days per call)
 
-Run these queries using PostHog MCP tools. Default to last 7 days unless user specifies otherwise.
+Run these queries via the `get-clarity-data` MCP tool. The Clarity Data Export API caps `numOfDays` at **1, 2, or 3** — no 7-day window. For "last 7 days" trends, plan to run 3 consecutive calls (days 1–3, days 4–6, day 7) and stitch — but **mind the 10 req/day quota.** A complete analyze pass costs ~6 of the 10 daily quota, so don't loop.
 
-#### 2a. Pageview Trends + Unique Visitors
+Each `get-clarity-data` call accepts `numOfDays` (1–3) plus up to three dimension parameters. Dimension values that matter for our setup: `URL`, `Browser`, `Device`, `OS`, `Country`, `Source`, and the custom tags `<ClarityContext />` writes — `funnel`, `landing_variant`, `ab_test_id`, `page_type`, `is_admin`. Filter to the target page by passing the URL prefix or by combining a `funnel` tag filter with a `URL` dimension.
 
-Use `query-run` with a trends query:
-- Event: `$pageview`
-- Filter: `$current_url` contains `[page-url]`
-- Breakdown: by day
-- Also query unique visitors (persons)
+#### 2a. Traffic + Engagement Summary
 
-#### 2b. Bounce Rate
+Call `get-clarity-data` with `numOfDays=3`, `dimension1=URL`. Filter the response to rows where URL matches the target page. Pull: total sessions, engaged sessions, total recordings, average engagement time. Subtract `bot_sessions` if surfaced. This replaces the old "pageviews + unique visitors" metric.
 
-Use `query-run` or `query-generate-hogql-from-question`:
-- "What is the bounce rate for [page-url] in the last 7 days?"
-- Bounce = single-page sessions
+#### 2b. Scroll Depth Distribution
 
-#### 2c. Scroll Depth Distribution
+Call `get-clarity-data` with `numOfDays=3`, `dimension1=URL`. The response includes `average_scroll_depth` per URL. For a deeper distribution (25/50/75/100 thresholds), open the Clarity dashboard → Heatmaps → Scroll Map for the target page and read the bands visually — the API only surfaces the average, not the distribution. Cite this limitation if asked.
 
-Use `query-generate-hogql-from-question`:
-- "What is the scroll depth distribution for [page-url]?"
-- Get percentages at 25%, 50%, 75%, 100% thresholds
+#### 2c. Rage Clicks + Dead Clicks (Smart Events)
 
-#### 2d. Rage Click Events
+Call `get-clarity-data` with `numOfDays=3`, `dimension1=URL`. Smart Events (rage clicks, dead clicks, quick backs, excessive scrolling, JS errors) are surfaced as columns per URL row. **These are Clarity's native equivalents of `$rageclick`** and are detected algorithmically — no client-side instrumentation needed. For per-element selectors, open the recording from the Clarity dashboard — the API doesn't expose selectors.
 
-Use `query-run`:
-- Event: `$rageclick`
-- Filter: `$current_url` contains `[page-url]`
-- Include element selectors if available
+#### 2d. Top Clicked Elements (Click Heatmap)
 
-#### 2e. Top Clicked Elements (Click Heatmap)
+Open the Clarity dashboard → Heatmaps → Click Map for the target page. The API does not expose per-element click counts. If you need this programmatically, you must either (a) export the heatmap PNG and visually inspect, or (b) wire `clarity('event', 'cta_clicked')` calls into the click handlers for the CTAs you care about, then query Smart Events. Recommend (b) for repeat analyses; flag this gap in the Findings if it blocks a recommendation.
 
-Use `query-run`:
-- Event: `$autocapture` with action type `click`
-- Filter: `$current_url` contains `[page-url]`
-- Breakdown by `$el_text` or element selector
-- Top 10 most-clicked elements
+#### 2e. Device + Browser Breakdown
 
-#### 2f. Device Breakdown
+Call `get-clarity-data` with `numOfDays=3`, `dimension1=URL`, `dimension2=Device`. Pull desktop/mobile/tablet split. Re-run with `dimension2=Browser` for a browser cut if needed (counts against the 10/day budget).
 
-Use `query-run`:
-- Event: `$pageview`
-- Filter: `$current_url` contains `[page-url]`
-- Breakdown by `$device_type`
+#### 2f. Funnel-Variant Cut (LGJ-specific, high value)
 
-#### 2g. Average Time on Page
+Call `get-clarity-data` with `numOfDays=3`, `dimension1=URL`, `dimension2=landing_variant`. This gives per-variant scroll depth + engagement + Smart Events for the page — the critical cut for A/B test interpretation. If `landing_variant` doesn't appear as a dimension in the response, `<ClarityContext />` isn't wired correctly — bail and instruct the user to fix tracking first.
 
-Use `query-generate-hogql-from-question`:
-- "What is the average session duration for sessions that included [page-url]?"
+#### 2g. Exit / Next-Page Behavior
 
-#### 2h. Exit Pages
-
-Use `query-generate-hogql-from-question`:
-- "What pages do users visit after [page-url]?"
-- Shows if users convert or leave
+Clarity's API doesn't expose exit pages directly. For sequence behavior, switch to PostHog: use the `check-tracking` skill or PostHog MCP `query-run` against `$pageview` event sequences. Note this in the Findings as "follow-up via PostHog."
 
 ### Step 3: Analyze Against Conversion Best Practices
 
@@ -348,13 +338,14 @@ Identify the conversion path between start and end pages. Common patterns:
 /lead-machine → /consult
 ```
 
-### Step 2: Query PostHog Funnel
+### Step 2: Query the Funnel
 
-Use `query-run` with funnel query type:
-- Define steps as sequential pageviews
-- Get conversion rate between each step
-- Get drop-off count at each step
-- Breakdown by device type
+Funnel sequence analysis (step 1 → step 2 → step 3) is a PostHog strength, not a Clarity one — Clarity's `get-clarity-data` doesn't model multi-step sequences. Use the PostHog MCP `query-run` tool with a funnel query type:
+- Steps = sequential pageviews on the start and end URLs
+- Get conversion rate + drop-off count per step
+- Breakdown by `$device_type` or our `landing_variant` cookie property
+
+Then come back to Clarity for the per-step UX investigation in Step 3.
 
 ### Step 3: Identify Biggest Drop-offs
 
@@ -423,17 +414,25 @@ Save with `previousReportId` linking to the previous report and incremented `ver
 
 ---
 
-## PostHog MCP Tools Reference
+## Clarity MCP Tool Reference
 
-| Tool | Use For |
-|------|---------|
-| `query-run` | Trend, funnel, and retention queries |
-| `query-generate-hogql-from-question` | Natural language → HogQL query |
-| `event-definitions-list` | Discover what events are tracked |
-| `property-definitions` | Understand event properties |
-| `insights-get-all` / `insight-get` | Retrieve saved PostHog insights |
-| `experiment-create` | Create AB tests in PostHog |
-| `experiment-results-get` | Pull experiment results |
+The Clarity MCP server exposes a single tool — `get-clarity-data` — but it is multi-purpose. Plan dimension cuts before firing to respect the 10 req/day cap.
+
+| Parameter | Values | Notes |
+|---|---|---|
+| `numOfDays` | `1`, `2`, or `3` | No 7-day window. For longer windows, run multiple calls and stitch. |
+| `dimension1` / `dimension2` / `dimension3` | `URL`, `Browser`, `Device`, `OS`, `Country`, `Source`, plus any custom tag set by `<ClarityContext />` (`funnel`, `landing_variant`, `ab_test_id`, `page_type`, `is_admin`) | Up to three per call. |
+| Output metrics | Traffic, Engaged Sessions, Total Recordings, Average Engagement Time, Average Scroll Depth, Smart Events (rage clicks, dead clicks, quick backs, excessive scrolling, JS errors), Bot Sessions | Single JSON response covering all metrics for the cut. |
+
+### Surfaces the Clarity API does NOT cover (use a different tool)
+
+| Need | Where to go |
+|---|---|
+| Event-level analysis (`user_opted_in`, `purchase_completed`, `$pageview`) | PostHog MCP `query-run` |
+| Funnel sequence (page A → page B → page C) | PostHog MCP `query-run` with funnel query type |
+| Per-element click counts | Clarity dashboard → Heatmaps → Click Map (not API-exposed). Or instrument `clarity('event', '<name>')` for specific CTAs. |
+| Scroll-depth distribution (25/50/75/100 thresholds) | Clarity dashboard → Heatmaps → Scroll Map (API only surfaces the average) |
+| Individual session replay | Clarity dashboard → Recordings (use `identify` filter to find a specific user) |
 
 ## Integration with AB Test Skills
 
@@ -442,17 +441,16 @@ This skill generates AB test recommendations that follow the `ab-test-designer` 
 1. **Analysis produces recommendations** — Each finding can spawn one or more AB test hypotheses
 2. **User approves** — Review recommendations in the report summary
 3. **Create tests** — Use `/ab-test create` to implement approved recommendations
-4. **Track in PostHog** — Optionally create PostHog experiments via `experiment-create`
-5. **Measure results** — Next `/heatmap compare` checks experiment outcomes
+4. **Track conversion** — The LGJ A/B test infrastructure on `customer_journeys` + PostHog handles attribution (NOT Clarity). Clarity provides the qualitative UX read; PostHog answers "did the variant convert better?"
+5. **Measure results** — Next `/heatmap compare` checks Clarity UX deltas; `/ab-winner` checks conversion deltas.
 
-## Fallback: No PostHog MCP
+## Fallback: No Clarity MCP
 
-If PostHog MCP is not installed (configured in `~/.claude/.mcp.json` via `mcp-remote` → `https://mcp.posthog.com/mcp`):
+If the Clarity MCP server isn't installed (verify with `claude mcp get clarity`):
 
-1. Instruct the user to install it: `npx @posthog/wizard@latest mcp add`
-2. Alternatively, user can paste PostHog data manually
-3. Use the PostHog toolbar for visual heatmap overlay
-4. The skill can still generate reports from manually provided data
+1. Instruct the user to install it: `claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>`. Token comes from Clarity → Settings → Data Export.
+2. After install, **start a new Claude Code session** — MCP servers load at session start only.
+3. Manual fallback while waiting: open the Clarity dashboard directly. Heatmaps, Recordings, Smart Events, and Filters all live in the UI. User can paste screenshots or hand-copied metrics to this skill for analysis.
 
 ## Report Storage
 
