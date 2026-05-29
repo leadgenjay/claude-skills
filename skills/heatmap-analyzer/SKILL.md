@@ -1,6 +1,6 @@
 ---
 name: heatmap-analyzer
-description: Analyze Microsoft Clarity scroll depth, rage clicks, dead clicks, engagement, and session-recording signals (broken out by funnel / landing_variant / device) to produce conversion optimization recommendations. Generates structured reports stored in the admin dashboard and proposes PIE-scored AB test hypotheses. Use when analyzing landing page performance, diagnosing conversion drop-offs, tracking optimization trends, or generating data-driven AB test ideas.
+description: Analyze Microsoft Clarity scroll depth, rage clicks, dead clicks, engagement, and session-recording signals (broken out by funnel / landing_variant / device) to produce conversion optimization recommendations. Generates structured reports (saved to the LGJ admin dashboard, or a local markdown file outside it) and proposes PIE-scored AB test hypotheses. Use when analyzing landing page performance, diagnosing conversion drop-offs, tracking optimization trends, or generating data-driven AB test ideas.
 ---
 
 # Clarity Heatmap Analyzer
@@ -11,17 +11,19 @@ Analyzes Microsoft Clarity analytics (project `qk5hok8gx8` — session recording
 
 ---
 
-## Setup & Requirements
+## Step 0 — Prerequisites (verify before every run)
 
-### Prerequisites
+Before any query or analysis, verify these. **Only the first two are hard requirements.** If either is missing, STOP and set it up — do NOT fabricate metrics, emit placeholder data, or proceed on an empty Clarity response. The rest are optional; the skill degrades gracefully without them.
 
-| Requirement | Purpose | Install/Configure |
-|-------------|---------|-------------------|
-| **Clarity MCP Server** | Query Clarity analytics from Claude Code | `claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>` |
-| **Clarity snippet live on site** | Ensures recordings + heatmaps exist to analyze | Embedded in `app_settings.global_tracking.customHeadScripts` (Supabase) — verify `qk5hok8gx8` appears in rendered HTML |
-| **`<ClarityContext />` mounted** | Tags recordings with funnel / landing_variant / page_type for filtering | Mounted in `src/app/layout.tsx`. Audit via `tracking-check` skill. |
-| **Admin reports API** | Store and view reports in dashboard | Built into Lead Gen Jay Web Designer |
-| **AB Test Designer skill** (optional) | Enhanced hypothesis generation | Install from Skills Marketplace |
+| Requirement | Check | Where to get it |
+|---|---|---|
+| **Clarity MCP server** · required | `claude mcp get clarity` → `Connected`; in a fresh session ask "list MCP tools" → `get-clarity-data` is present | `claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>`. JWT: Clarity → Settings → Data Export → new token (`Data.Export` scope, non-expiring). The token is **project-scoped**, so `get-clarity-data` returns that project's data automatically. Add the server BEFORE the session — MCP loads at session start only. |
+| **Clarity is recording the site** · required | On the target page, browser console: `typeof window.clarity === 'function'` → `true` | Add the Clarity tracking snippet to your site `<head>`. LGJ: it lives in `app_settings.global_tracking.customHeadScripts` (project `qk5hok8gx8`); confirm that ID appears in the rendered HTML. New properties have a few hours of ingestion delay. |
+| **Report storage** · optional | `GET /api/admin/reports` → `200` | Built into the LGJ Web-Designer app. **No admin API (non-LGJ install)?** Skip it — the skill saves each report to a local markdown file instead (nothing to install). |
+| **Custom Clarity tags** · optional (LGJ) | Clarity dashboard → Filters → Custom shows `funnel`, `landing_variant`, `page_type`, `ab_test_id` | LGJ ships these via `<ClarityContext />` (mounted in `src/app/layout.tsx`; audit with the `tracking-check` skill). Other sites: skip the funnel/variant cuts in Step 2f, or set your own Clarity custom tags. |
+| **`ab-test-designer` skill** · optional | present in `~/.claude/skills/ab-test-designer/` | Skills Marketplace — sharpens the hypothesis output in Step 5. |
+
+> **Quota.** The Clarity Data Export API allows **10 requests/day** per project and caps each query at a **1–3 day** window (no 7-day option). Treat every query as expensive — plan the dimension cuts you need before firing (see the MCP Tool Reference at the bottom). A full `analyze` pass costs ~6 of the 10 daily calls.
 
 ### Step-by-Step Setup
 
@@ -78,8 +80,8 @@ Or copy `SKILL.md` to `~/.claude/skills/heatmap-analyzer/SKILL.md`.
 | API Rate Limit | **10 requests / day** per project | Treat every query as expensive |
 | MCP Config | `~/.claude.json` → `mcpServers.clarity` | Added via `claude mcp add -s user` |
 | Time Window Cap | **1, 2, or 3 days** per query | No 7-day option — for trends, re-run regularly |
-| Reports API | `/api/admin/reports` | Built-in |
-| Reports Dashboard | `/admin/reports` | Admin sidebar |
+| Reports API (optional) | `/api/admin/reports` | LGJ app only — local-file fallback otherwise |
+| Reports Dashboard | `/admin/reports` | LGJ admin sidebar |
 
 ### Troubleshooting
 
@@ -262,7 +264,12 @@ If a previous report exists:
 
 ### Step 7: Save Report
 
-POST to `/api/admin/reports` with the complete report:
+Persist the report — **never silently drop it.** Pick the target based on the Step 0 storage check:
+
+- **Admin API available** (`GET /api/admin/reports` returned `200`, i.e. you're in the LGJ Web-Designer app): `POST` the complete report to `/api/admin/reports`.
+- **No admin API** (non-LGJ install, or the check failed): write the report as a local markdown file at `./heatmap-reports/<page-slug>-<YYYY-MM-DD>.md` and tell the user the path. The `compare` workflow reads these files back for trend deltas — same analysis, only the storage target changes.
+
+POST body (admin API):
 
 ```typescript
 {
@@ -454,9 +461,11 @@ If the Clarity MCP server isn't installed (verify with `claude mcp get clarity`)
 
 ## Report Storage
 
-All reports are stored via the existing reports API:
+**LGJ Web-Designer app** — reports persist via the built-in reports API:
 
 - **Create:** `POST /api/admin/reports`
 - **List:** `GET /api/admin/reports`
 - **View:** `/admin/reports` in the admin dashboard
-- **Types:** `src/types/heatmap-report.ts`
+- **Types (app-internal, for reference — not shipped with the skill):** `src/types/heatmap-report.ts`
+
+**Any other environment** — there is no admin API to install. Save each report as a local markdown file under `./heatmap-reports/` and read prior files back for the `compare` workflow's trend deltas. The analysis, findings, and PIE-scored hypotheses are identical; only the storage target changes.
