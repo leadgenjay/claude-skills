@@ -1,5 +1,5 @@
 name: ab-testing-suite
-description: Full-lifecycle A/B testing for Next.js + Supabase projects. Setup database schema and edge middleware for zero-flicker variant assignment, create hypothesis-driven tests with PIE scoring, track conversions, run statistical analysis, declare winners, and generate new test ideas.
+description: Full-lifecycle A/B testing for Next.js + Supabase projects. Zero-flicker edge variant assignment, hypothesis-driven tests with PIE scoring, statistical analysis (z-test confidence), winner declaration, and Clarity-powered test ideas. Ships a hardened conversion tracker plus a conversion-model guide (server-side opt-in vs client CTA) and a tracking-gotchas reference covering the failure modes that silently corrupt A/B data.
 categories:
   - conversion
   - testing
@@ -15,8 +15,9 @@ tags:
   - cro
   - hypothesis
   - pie-scoring
+  - clarity
 icon: FlaskConical
-version: "1.0"
+version: "2.0"
 composesWell:
   - heatmap-analyzer
   - ab-test-designer

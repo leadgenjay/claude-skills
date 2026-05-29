@@ -8,8 +8,8 @@ Database (ab_test_registry)
 Edge Middleware (variant assignment)
     ↓ sets cookie + URL params (v, vid, tid)
 Page Component (renders variant content)
-    ↓ includes
-ConversionTracker (auto-detects conversion elements)
+    ↓ view on mount; conversion per chosen model
+ConversionTracker (client click on outbound links) / server-side opt-in
     ↓ POSTs to
 /api/ab-test/track → ab_test_events table
 ```
@@ -99,16 +99,17 @@ This means:
 
 ## Event Tracking
 
-The `ConversionTracker` component handles two event types:
+The `ConversionTracker` component handles views and (optionally) client-side conversions. **Where the conversion fires depends on the test's conversion model — read `tracking-gotchas.md` § Conversion Tracking Models before wiring one.**
 
 ### Views
 - Tracked automatically on component mount
 - Deduplicated via `useRef` — only one view per page load
 - Preview visits (empty `visitorId`) are ignored by the API
+- Mount the tracker ONCE at the page's outermost root — never inside a conditionally-rendered step branch, or a remount resets the dedup ref and re-fires the view (2-3× inflation)
 
 ### Conversions
-- Auto-detected by scanning the page for conversion elements
-- Detection priority: checkout links → submit buttons → forms → primary buttons → `[data-conversion="true"]`
+- **Opt-in / lead forms:** fire the conversion **server-side** in the opt-in route's success path; mount the tracker view-only (`trackConversions={false}`). A click listener on a submit button double-fires on validation retries / abandoned submits.
+- **CTA / outbound checkout:** click-tracked. Auto-detection matches **outbound purchase links only** (Stripe/Shopify/Whop/`/checkout`/`/buy`) — NOT submit buttons or forms. Mark any other element `[data-conversion="true"]` or pass an explicit `selector`.
 - Deduplicated — only one conversion per page load
 - For programmatic redirects (`window.location.href`), call `trackConversion()` manually before redirecting
 
@@ -129,8 +130,10 @@ The `ConversionTracker` component handles two event types:
 | `auto_select_winner` | BOOL | Auto-conclude at threshold |
 | `webhook_url` | TEXT | Notification URL |
 | `conversion_selector` | TEXT | Custom CSS selector |
-| `started_at` | TIMESTAMPTZ | When activated |
+| `started_at` | TIMESTAMPTZ | When activated — also the **rebaseline anchor** |
 | `concluded_at` | TIMESTAMPTZ | When completed |
+
+> **Rebaseline by `started_at`, never delete events.** When a window is confounded (broken variant, infra regression, a tracking bug you just fixed), bump `started_at = now()` instead of deleting rows. Every read — stats, winner calc, drift checks — must filter `ab_test_events.created_at >= started_at`, AND any external conversion source (journey/sales rows) must filter to the same floor, or the rebaseline manufactures fake drift. See `tracking-gotchas.md` § Rebaseline.
 
 ### `ab_test_events` — Event Tracking
 

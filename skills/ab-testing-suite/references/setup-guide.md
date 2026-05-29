@@ -81,7 +81,13 @@ The default cookie prefix is `ab_`. To customize, edit the `COOKIE_PREFIX` const
 
 Copy `assets/conversion-tracker.tsx` to `src/components/ab-test/conversion-tracker.tsx`.
 
-Then use in your page components:
+**Before wiring it, pick the conversion model** (full detail in `references/tracking-gotchas.md`):
+- **Opt-in / lead form** → conversion fires **server-side**; mount the tracker view-only.
+- **CTA / outbound checkout** → click-tracked on the client.
+
+Mount the tracker **once at the page's outermost root** (never inside a step branch — a remount re-fires the view event), and pass `testId/variantId/visitorId` from THIS page's params via `useABTestParams` — never from a stored cookie.
+
+### CTA / outbound-checkout page (click-tracked)
 
 ```tsx
 import { ConversionTracker, useABTestParams } from "@/components/ab-test/conversion-tracker";
@@ -95,26 +101,44 @@ export default function PricingPage({
 
   return (
     <main>
-      {/* Your page content */}
       <h1>{variantId === "a" ? "New Headline" : "Original Headline"}</h1>
 
-      {/* Conversion tracking */}
       {hasABTest && (
-        <ConversionTracker
-          testId={testId!}
-          variantId={variantId!}
-          visitorId={visitorId!}
-        />
+        <ConversionTracker testId={testId!} variantId={variantId!} visitorId={visitorId!} />
       )}
     </main>
   );
 }
 ```
 
-The component auto-detects conversion elements. To explicitly mark elements:
+Auto-detection matches **outbound purchase links only** (Stripe/Shopify/Whop/`/checkout`/`/buy`). To click-track any other element, mark it explicitly:
 
 ```html
-<button data-conversion="true">Buy Now</button>
+<button data-conversion="true">Start Free Trial</button>
+```
+
+### Opt-in / lead-form page (conversion fires server-side)
+
+Do NOT click-track the submit button — it double-fires on validation retries and abandoned submits. Mount the tracker view-only and record the conversion in the opt-in route:
+
+```tsx
+{hasABTest && (
+  <ConversionTracker
+    testId={testId!}
+    variantId={variantId!}
+    visitorId={visitorId!}
+    trackConversions={false}   /* view-only */
+  />
+)}
+```
+
+```typescript
+// In your opt-in API route's success path:
+await fetch(`${origin}/api/ab-test/track`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ testId, variantId, visitorId, eventType: "conversion" }),
+});
 ```
 
 ---

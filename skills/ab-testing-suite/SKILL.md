@@ -7,14 +7,18 @@ description: Full-lifecycle A/B testing for Next.js + Supabase projects. Setup d
 
 Full-lifecycle A/B testing for Next.js + Supabase projects. Covers infrastructure setup, hypothesis-driven test creation, statistical analysis, winner declaration, and iteration planning.
 
-## Prerequisites
+## Step 0 — Prerequisites (verify before every run)
 
-| Requirement | Purpose |
-|-------------|---------|
-| Next.js 14+ (App Router) | Edge middleware, server components |
-| Supabase project | Database, auth, REST API |
-| Tailwind CSS | Component styling |
-| PostHog MCP (optional) | Data-driven test ideas via heatmaps |
+Confirm each item before doing anything else. **If a required item is missing, STOP and tell the user what to install — do not improvise or scaffold around it.**
+
+| Requirement | Check | Where to get it |
+|-------------|-------|-----------------|
+| Next.js 14+ (App Router) | `cat package.json \| grep '"next"'` → 14+ | https://nextjs.org — the edge middleware + server-component variant rendering require App Router |
+| Supabase project | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` set, `SUPABASE_SERVICE_ROLE_KEY` for API routes | https://supabase.com (free tier fine) — backs `ab_test_registry` + `ab_test_events` |
+| Tailwind CSS | `tailwind.config.*` present | Component styling for variants |
+| Microsoft Clarity (optional) | Clarity MCP connected, project ID known | https://clarity.microsoft.com — powers data-driven test ideas in `/ab ideas` (scroll depth, rage/dead clicks, engagement). Optional — `/ab ideas` still works from page analysis alone. |
+
+**Before wiring conversions on any test, read `references/tracking-gotchas.md` and pick a conversion model (§ Conversion Tracking Models below).** Getting this wrong is the single most common way to silently corrupt A/B data.
 
 ## Commands
 
@@ -32,6 +36,22 @@ Full-lifecycle A/B testing for Next.js + Supabase projects. Covers infrastructur
 
 ---
 
+## Conversion Tracking Models (read before wiring any tracker)
+
+The conversion event must fire **once**, from the one place that represents the real win. Pick the model per test — getting this wrong looks identical to working and silently corrupts the data. Full detail + incident history in `references/tracking-gotchas.md`.
+
+| Model | The conversion is… | Fire it… | Tracker config |
+|-------|--------------------|----------|----------------|
+| **Opt-in / lead form** | the successful form submit | **server-side**, in the opt-in route's success path | `<ConversionTracker … trackConversions={false} />` (view-only) |
+| **Pure CTA / outbound checkout** | the click on a buy/checkout link | **client-side** on click | auto-detect (outbound links), explicit `selector`, or `trackConversion()` before a programmatic redirect |
+| **Post-opt-in checkout** | a click after opting in upstream | **client-side** on click | as above; don't reconcile against the upstream landing test |
+
+**Critical:** auto-detection in `assets/conversion-tracker.tsx` matches **outbound purchase links only** — never submit buttons or `<form>` elements. A click listener on a submit button double-fires on validation retries, double-clicks, and abandoned submits, inflating the variant with the *buggier* form. For opt-in forms, fire the conversion server-side and mount the tracker view-only.
+
+Two more invariants (see gotchas reference): mount the tracker **once at the page's outermost root** (never inside a step branch — it re-fires views), and **attribute from this page's `?v/vid/tid` params**, never "the first `ab_*` cookie."
+
+---
+
 ## `/ab setup` — Infrastructure Setup
 
 Read `references/setup-guide.md` for the full step-by-step guide.
@@ -42,7 +62,7 @@ Read `references/setup-guide.md` for the full step-by-step guide.
 
 2. **Middleware** — Copy `assets/middleware-handler.ts` to `src/lib/ab-test/middleware.ts`. Integrate into the project's `src/middleware.ts` by calling `handleABTest(request)` before other route handling.
 
-3. **Tracking Component** — Copy `assets/conversion-tracker.tsx` to `src/components/ab-test/conversion-tracker.tsx`. This auto-detects conversion elements (checkout links, forms, submit buttons, `[data-conversion="true"]`).
+3. **Tracking Component** — Copy `assets/conversion-tracker.tsx` to `src/components/ab-test/conversion-tracker.tsx`. It tracks a view on mount and (when click-tracking) auto-detects **outbound purchase links only**, plus anything you mark `[data-conversion="true"]`. It deliberately does NOT auto-attach to submit buttons / forms — those are opt-in forms tracked server-side (see Conversion Tracking Models above).
 
 4. **API Routes** — Create these routes (skeletons in `references/setup-guide.md`):
    - `POST /api/ab-test/track` — Public event tracking (views + conversions)
@@ -104,11 +124,11 @@ Every test starts with a hypothesis, not a random idea. Read `references/hypothe
 
 6. **Create variant rendering** — In the page component, read the `v` search param and render the appropriate variant content.
 
-7. **Add ConversionTracker** — Include the tracking component with testId, variantId, and visitorId from URL params.
+7. **Pick the conversion model, then add ConversionTracker** — Decide first (see Conversion Tracking Models above): opt-in form → mount the tracker view-only (`trackConversions={false}`) and fire the conversion **server-side** in the opt-in route; CTA / checkout → click-track. Mount the tracker **once at the page's outermost root** (not inside a step branch) and pass testId/variantId/visitorId from THIS page's URL params — never from a stored `ab_*` cookie.
 
 8. **Add path to middleware matcher** — Ensure the page path is included in `src/middleware.ts` matcher config.
 
-9. **Activate** — Toggle the test to `active` via the toggle API endpoint.
+9. **Activate (zero-risk option)** — Register the test `active` with the new variant `enabled: false` → 0% real traffic but `?v=<id>` still previews it. Verify on production via `?v=`, then flip `enabled: true` to start the split (~5 min edge-cache lag). See `references/tracking-gotchas.md` § Zero-risk rollout.
 
 ---
 
@@ -228,10 +248,10 @@ Read `references/hypothesis-library.md` for 24 ready-to-use test patterns.
 
 2. **Cross-reference with test library** — Match page elements against the hypothesis library to find applicable tests.
 
-3. **If PostHog MCP is available** (optional enhancement):
-   - Pull scroll depth data — identify where visitors drop off
-   - Pull click heatmap — find rage clicks and dead zones
-   - Pull device breakdown — mobile vs desktop behavior
+3. **If Microsoft Clarity MCP is available** (optional enhancement):
+   - Pull scroll depth — identify where visitors drop off
+   - Pull rage clicks + dead clicks — find frustration and broken/ignored elements
+   - Pull engagement + device breakdown — mobile vs desktop behavior
    - Use data to prioritize hypotheses
 
 4. **Generate 3-5 PIE-scored hypotheses:**
@@ -282,8 +302,8 @@ Database (ab_test_registry)
 Edge Middleware (variant assignment)
     ↓ sets cookie + URL params
 Page Component (renders variant)
-    ↓ tracks via
-ConversionTracker → ab_test_events table
+    ↓ view on mount; conversion per chosen model
+ConversionTracker (client click) / server-side opt-in → ab_test_events table
 ```
 
 **Key patterns:**
@@ -297,8 +317,8 @@ ConversionTracker → ab_test_events table
 
 ## Integration
 
-### PostHog (Optional)
-Install PostHog MCP for data-driven test ideas: `npx @posthog/wizard@latest mcp add`. Enables scroll depth, click heatmap, rage click, and device breakdown analysis in `/ab ideas`.
+### Microsoft Clarity (Optional)
+Connect the Clarity MCP for data-driven test ideas. Enables scroll depth, rage/dead clicks, engagement, and device breakdown analysis in `/ab ideas` — and pairs with the `heatmap-analyzer` skill. Optional: `/ab ideas` still works from page analysis alone.
 
 ### Webhooks
 Configure a global webhook URL to receive notifications when winners are auto-selected. Payload includes test details, winner stats, and confidence level.
@@ -332,3 +352,4 @@ Run sequential tests on the same path (v1 → v2 → v3). Each shares the same `
 | `references/statistical-methods.md` | Running statistical analysis |
 | `references/hypothesis-library.md` | Generating test ideas and PIE scoring |
 | `references/decision-framework.md` | Deciding when to call winners |
+| `references/tracking-gotchas.md` | **Before wiring any conversion** — the failure modes that silently corrupt A/B data |
