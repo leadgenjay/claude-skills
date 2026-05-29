@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env
+.env.*
+npm-debug.log
+.DS_Store
+README.md
+TEST.md
+AGENTS.md
+CLAUDE.md
+netlify.toml
+supabase

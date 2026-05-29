@@ -1,0 +1,40 @@
+# syntax=docker/dockerfile:1.7
+# Reverse-lead-magnet Dockerfile — multi-stage Next.js standalone build.
+# Reusable verbatim. The native canvas deps are needed by jsPDF/pdf rendering;
+# leave them in even if you start without PDF — they're cheap and the runner
+# stage only ships the runtime .so's.
+#
+# REQUIRES in your project:
+#   next.config.ts -> `output: "standalone"`  (see SKILL.md Phase 1)
+FROM node:20-bookworm-slim AS deps
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential pkg-config python3 \
+    libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev \
+  && rm -rf /var/lib/apt/lists/*
+COPY package.json package-lock.json ./
+# Force dev deps so Tailwind / @tailwindcss/postcss are available during `next build`.
+# Coolify injects NODE_ENV=production at build time, which would otherwise skip
+# devDependencies and break the build with "Cannot find module '@tailwindcss/postcss'".
+RUN npm ci --include=dev
+
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+FROM node:20-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libcairo2 libpango-1.0-0 libjpeg62-turbo libgif7 librsvg2-2 \
+  && rm -rf /var/lib/apt/lists/* \
+  && useradd -m -u 1001 nextjs
+COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nextjs /app/public ./public
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]

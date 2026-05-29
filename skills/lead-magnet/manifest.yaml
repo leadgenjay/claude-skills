@@ -1,0 +1,39 @@
+id: lead-magnet
+type: skill
+name: "Lead Magnet — Reverse Lead Magnet Builder"
+description: "Build & deploy a personalized reverse lead magnet web app end-to-end: PRD or intake interview -> Next.js scaffold -> Dockerfile -> private GitHub repo -> Coolify -> Cloudflare Tunnel + DNS -> live URL. A URL param (e.g. ?linkedinURL=...) drives an Apify scrape -> Claude -> rendered output (cards/PDF) + CTA in 15-30s. Apify actor and Claude prompts are customizable per PRD."
+categories:
+  - lgj-exclusive
+  - automation
+  - conversion
+tags:
+  - reverse-lead-magnet
+  - cold-email
+  - next-js
+  - cloudflare-tunnel
+  - apify
+  - anthropic
+  - coolify
+  - dockerfile
+icon: Zap
+path: skills/lead-magnet
+version: "1.0"
+branch: LGJ-exclusive
+postInstall: |
+  command -v gh >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install gh || echo "  ⚠  install gh manually: https://cli.github.com"; }
+  command -v jq >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install jq || echo "  ⚠  install jq manually (apt/yum/choco)"; }
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/Dockerfile.template
+  - references/dockerignore.template
+  - references/gitignore.template
+  - references/api-route-scrape.template.ts
+  - references/api-route-generate.template.ts
+  - references/tunnel-ingress-append.sh
+  - references/coolify-app-create.sh
+  - references/PRD.template.md
+composesWell:
+  - cold-email-campaign-deploy
+  - cold-email-copywriting
+  - consulti-scrape

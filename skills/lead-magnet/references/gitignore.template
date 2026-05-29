@@ -1,0 +1,36 @@
+# Next.js
+.next/
+out/
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Build
+build/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coolify / deploy artifacts
+.coolify/
+
+# Bolt / dev caches
+_events_*.json
