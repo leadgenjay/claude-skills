@@ -1,4 +1,30 @@
-name: brand-voice
-version: "2.2"
-description: "Consistent brand voice guidelines for all content"
-categories: [writing, branding]
+id: brand-voice
+type: skill
+name: "Brand Voice — Lead Gen Jay"
+description: "Jay Feldman's distinct human brand voice for ALL writing: emails, social posts, captions, scripts, descriptions, Skool posts, LinkedIn, YouTube. Auto-invoked by other writing skills. Includes hard rules (no em dashes, no AI words, no hedging), voice DNA, tone modes, and story bank."
+categories:
+  - lgj-exclusive
+  - content
+  - writing
+tags:
+  - brand-voice
+  - copywriting
+  - tone
+  - writing-style
+  - social-media
+  - email
+  - youtube
+icon: Megaphone
+path: skills/brand-voice
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/story-bank.md
+  - references/voice-samples.md
+version: "2.3"
+branch: LGJ-exclusive
+composesWell:
+  - copywriting
+  - short-form-script
+  - youtube-script
+  - youtube-description
