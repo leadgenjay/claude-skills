@@ -1,0 +1,32 @@
+id: lgj-email-marketing
+type: skill
+name: "LGJ Email Marketing"
+description: "Full-suite email marketing for Lead Gen Jay: writes nurture sequences, blasts, onboarding, win-back, launch, re-engagement, and cart-recovery emails in Jay's voice, then implements them via the Kit CLI/API and GoHighLevel workflows."
+categories:
+  - lgj-exclusive
+  - content
+  - writing
+tags:
+  - email
+  - nurture
+  - kit
+  - gohighlevel
+  - copywriting
+  - sequences
+  - broadcast
+icon: Mail
+path: skills/lgj-email-marketing
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/jay-voice-guide.md
+  - references/kit-integration.md
+  - references/offers-and-segments.md
+  - references/sequence-templates.md
+  - references/story-bank.md
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - brand-voice
+  - dan-kennedy-copywriter
+  - conversion-copywriting
