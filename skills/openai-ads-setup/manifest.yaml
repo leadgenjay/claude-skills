@@ -1,0 +1,26 @@
+id: openai-ads-setup
+type: skill
+name: "OpenAI Ads Tracking Setup"
+description: "Install OpenAI (ChatGPT) Ads conversion tracking on any site: the oaiq browser pixel, client events (lead_created/checkout_started/order_created), and the server Conversions API for ad-blocker-proof purchases — then define + link the events in Ads Manager. Stack-agnostic; ships a Next.js + Supabase + Whop reference implementation."
+categories:
+  - lgj-exclusive
+  - analytics
+  - conversion
+tags:
+  - openai-ads
+  - conversion-tracking
+  - capi
+  - pixel
+  - attribution
+  - chatgpt-ads
+  - marketing
+icon: Activity
+path: skills/openai-ads-setup
+files:
+  - SKILL.md
+  - manifest.yaml
+  - reference/worked-implementation.md
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - openai-ads

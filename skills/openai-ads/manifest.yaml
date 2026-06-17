@@ -1,0 +1,40 @@
+id: openai-ads
+type: skill
+name: "OpenAI Ads (ChatGPT Ads)"
+description: "Plan, build, and manage OpenAI (ChatGPT) ad campaigns via the REST API + web UI: context-hint targeting, campaigns to ad groups to ads to creatives to geo to insights, the UI-vs-API billing/budget gotchas, char limits, and UTM tracking. Ships a key-redacting dry-run/confirm CLI + a deep API reference + a worked $97 example. Builds PAUSED."
+categories:
+  - lgj-exclusive
+  - automation
+  - marketing
+tags:
+  - openai-ads
+  - chatgpt-ads
+  - ads-api
+  - context-hints
+  - ppc
+  - campaigns
+  - cli
+icon: Megaphone
+path: skills/openai-ads
+files:
+  - SKILL.md
+  - manifest.yaml
+  - reference/openai-ads-api.md
+  - cli/README.md
+  - cli/index.ts
+  - cli/client.ts
+  - cli/commands/ad-account.ts
+  - cli/commands/adgroups.ts
+  - cli/commands/ads.ts
+  - cli/commands/campaigns.ts
+  - cli/commands/geo.ts
+  - cli/commands/insights.ts
+  - cli/commands/upload.ts
+  - cli/shared/env.ts
+  - cli/shared/output.ts
+  - cli/shared/write-guard.ts
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - openai-ads-setup
+postInstall: command -v tsx >/dev/null 2>&1 || npm install -g tsx commander >/dev/null 2>&1 || echo "  ⚠  for the openai-ads CLI, install its deps: npm i commander tsx"

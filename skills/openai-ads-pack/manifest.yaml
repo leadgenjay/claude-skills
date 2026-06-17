@@ -1,0 +1,27 @@
+id: openai-ads-pack
+type: skill
+name: "OpenAI Ads (ChatGPT Ads) Pack"
+description: "Run ads inside ChatGPT end-to-end: BUILD campaigns (REST API + CLI, context-hint targeting, UI-vs-API gotchas, a worked $97 example) and MEASURE them (oaiq pixel + client events + server CAPI, then define + link conversion events). Two chained skills: set up tracking, then build."
+categories:
+  - lgj-exclusive
+  - automation
+  - marketing
+tags:
+  - openai-ads
+  - chatgpt-ads
+  - ads-api
+  - conversion-tracking
+  - context-hints
+  - capi
+  - ppc
+icon: Boxes
+path: skills/openai-ads-pack
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"
+branch: LGJ-exclusive
+bundledItems:
+  - openai-ads
+  - openai-ads-setup
+kind: package
