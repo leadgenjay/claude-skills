@@ -1,0 +1,44 @@
+name: Validate Skills
+
+# Guards against author-machine coupling in shipped skill docs (hardcoded
+# /Users/<author> paths, personal NotebookLM notebooks, etc.) — the class that
+# shipped the 2026-06-19 cold-email KB-path bug. Scans only the docs CHANGED in
+# the push/PR, so pre-existing debt doesn't block unrelated work; a new or edited
+# skill that introduces the pattern fails the check.
+#
+# NOTE: this workflow file must exist on a branch for GitHub to run it on pushes
+# to that branch. It lives on `main`; PRs (any base) and pushes to main are
+# covered here. Direct publishes to LGJ-exclusive / bundle branches rely on the
+# publish-skill Step 3.5 gate (preflight-audit.sh check [7]) at author time.
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+    paths:
+      - "skills/**"
+      - "commands/**"
+      - "agents/**"
+      - "components/**"
+      - "scripts/validate-skills.js"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate changed skill docs (author-machine coupling)
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
+          node scripts/validate-skills.js --changed "$BASE"
