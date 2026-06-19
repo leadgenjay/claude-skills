@@ -13,15 +13,9 @@ Build the strategic foundation for a cold email campaign through a 4-phase proce
 
 ## Before You Start
 
-**Read the knowledge base.** Before generating any ICP or strategy, read the relevant files from `/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/Cold Email/`:
+This skill is self-contained — it builds the ICP, offer positioning, and messaging strategy from the discovery interview below (Phase 1). There is no bundled knowledge base.
 
-| Working on... | Read first |
-|---------------|-----------|
-| ICP filters & signals | `Strategy/icp-framework.md` |
-| Analyzing an offer | `Strategy/offer-analysis.md` |
-| Targeting research | `Strategy/targeting-research.md` |
-
-**Query NotebookLM.** The "Cold Email Strategy & Copywriting" notebook (ID: `cold-email-strategy-copywritin`) contains expert source material. Query it for deeper insight on offer positioning, ICP development, and advanced strategies like reverse lead magnets or signal-based outreach.
+If the user has supplied materials (transcripts, docs, decks, existing copy), process those first (see Phase 1, Path A). **Do not ask the user for framework, ICP, or reference files, and never report such files as missing** — if you don't have material, go straight to the interview.
 
 ---
 

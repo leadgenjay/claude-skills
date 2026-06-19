@@ -13,18 +13,9 @@ Write a complete cold email sequence with platform-aware spintax, deliverability
 
 ## Before You Start
 
-**Read the knowledge base.** Before writing any copy, read the relevant files from `/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/Cold Email/`:
+This skill writes the sequence from the strategy context (loaded in Pre-Flight below) plus the copy rules already contained in this skill — the Copywriting Engine, the constraints in `references/copy-constraints.md`, and the platform-aware spintax section.
 
-| Working on... | Read first |
-|---------------|-----------|
-| Subject lines | `Copywriting/subject-lines.md` |
-| Opening / first lines | `Copywriting/opening-lines.md` |
-| Email body structure | `Copywriting/email-body-frameworks.md` |
-| CTA patterns | `Copywriting/cta-patterns.md` |
-| Spintax | `Copywriting/spintax-guide.md` |
-| Sequence timing | `Sequences/sequence-architecture.md` |
-
-**Query NotebookLM.** The "Cold Email Strategy & Copywriting" notebook (ID: `cold-email-strategy-copywritin`) has expert copywriting angles and frameworks. Query it when you need inspiration for a specific angle or want to validate a copy approach.
+There is no external knowledge base to load. **Do not ask the user for subject-line, opening-line, or framework files, and never report such files as missing.** If no strategy file is present, gather the minimum context in Pre-Flight and proceed.
 
 ---
 

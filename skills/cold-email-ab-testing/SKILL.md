@@ -13,14 +13,7 @@ Full lifecycle A/B testing: generate variants before launch, analyze winners aft
 
 ## Before You Start
 
-**Read the knowledge base:**
-
-| Working on... | Read first |
-|---------------|-----------|
-| A/B testing strategy | `Sequences/ab-testing-playbook.md` |
-| Performance benchmarks | `Analytics/metrics-benchmarks.md` |
-
-Knowledge base path: `/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/Cold Email/`
+This skill is self-contained: variant-generation rules and the z-test workflow (`references/z-test-snippet.py`, which ships with the skill) are all defined below. There is no external knowledge base to load — **do not ask the user for playbook or benchmark files, and never report such files as missing.** Proceed to Mode Detection.
 
 ---
 
