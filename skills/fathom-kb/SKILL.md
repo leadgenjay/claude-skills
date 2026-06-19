@@ -12,8 +12,10 @@ Transform coaching call recordings (from Fathom) into searchable, reusable knowl
 
 ## KB Location
 
+Operator-only: set `$KB_PATH` to your own Obsidian vault before running.
+
 ```
-/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/Coaching/
+$KB_PATH/Coaching/
 ```
 
 ## NotebookLM Notebook
@@ -184,7 +186,7 @@ Write each approved knowledge item as a structured Obsidian note.
    - `strategy-[kebab-name].md` (e.g., `strategy-linkedin-warmup-sequence.md`)
    - `objection-[kebab-topic].md` (e.g., `objection-cold-email-is-spam.md`)
    - `lesson-[kebab-insight].md` (e.g., `lesson-ask-before-prescribing.md`)
-4. Place all notes in `/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/Coaching/`
+4. Place all notes in `$KB_PATH/Coaching/`
 5. Create the **archive note** for the call:
    - Path: `Coaching/calls/[YYYY-MM-DD]-[coachee-kebab].md`
    - Links to all extracted notes
@@ -236,7 +238,7 @@ Commit all changes to the knowledge base repo.
 ### Steps
 
 ```bash
-cd "/Users/jayfeldman/Documents/Tech & Dev/knowledge-base"
+cd "$KB_PATH"
 git add Coaching/
 git commit -m "coaching: Extract knowledge from [Coachee] call ([YYYY-MM-DD])
 

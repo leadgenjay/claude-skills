@@ -1,3 +1,7 @@
 node_modules/
 package.json
 package-lock.json
+
+# Exception: the demo-imsg skill ships a self-contained Remotion renderer whose
+# package.json IS part of the bundle (listed in its manifest files[]). Track it.
+!skills/demo-imsg/renderer/package.json

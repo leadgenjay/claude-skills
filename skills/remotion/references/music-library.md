@@ -38,9 +38,11 @@ Levels derived from Jay's reference reel (`@leadgenjay` Instagram, 31.8s, ~106 B
 
 ## Library Location
 
+Operator-only — point `$MUSIC_DIR` at your own royalty-free library (if you have one):
+
 ```
-Path: /Users/jayfeldman/Nextcloud/music/Background/
-Catalog: /Users/jayfeldman/Nextcloud/music/Background/catalog.json
+Path: $MUSIC_DIR/Background/
+Catalog: $MUSIC_DIR/Background/catalog.json
 Search: tsx scripts/search-music.ts --mood <mood> --energy <energy> --no-vocals
 Script: node scripts/build-music-library.mjs (download + normalize + catalog)
 ```

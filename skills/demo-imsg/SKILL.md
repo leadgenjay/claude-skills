@@ -1,6 +1,6 @@
 ---
 name: demo-imsg
-version: 1.1.0
+version: 1.2.0
 description: Generate an iMessage conversation video simulating Jay texting Bob (his AI assistant) to showcase any Claude Code skill. Renders as transparent ProRes .mov or MP4 via Remotion.
 triggers: "imessage demo, imessage video, text demo, bob demo, phone demo, message demo, simulate imessage"
 ---
@@ -18,6 +18,21 @@ No live execution. You author a scripted conversation based on deep skill analys
 ```
 
 Maps to `.claude/skills/{skill-name}/SKILL.md`. If the skill is not found, list available skills with `ls .claude/skills/` and suggest the closest match.
+
+---
+
+## Step 0: Prerequisites
+
+The renderer ships **with this skill** — it's the self-contained Remotion project in `.claude/skills/demo-imsg/renderer/`. No external project is required.
+
+Before the first render, install its dependencies (one time):
+
+```bash
+cd .claude/skills/demo-imsg/renderer
+npm install
+```
+
+This installs Remotion (`remotion`, `@remotion/bundler`, `@remotion/renderer`) plus `tsx`, `react`, and `zod` locally inside the renderer dir. Remotion downloads a headless Chromium on first render. If `npm install` fails, stop and tell the user the renderer deps couldn't be installed — do **not** emit a render command that will fail.
 
 ---
 
@@ -129,7 +144,7 @@ Write the full manifest JSON:
   "dateSeparator": "Today 9:38 AM",
   "messages": [ ... ],
   "contactName": "Bob",
-  "contactAvatarPath": "/Users/jayfeldman/Nextcloud/bob icon.png",
+  "contactAvatarPath": "~/Downloads/bob-avatar.png",
   "typingDurationFrames": 45,
   "pauseBetweenFrames": 30,
   "outputPreset": {
@@ -154,24 +169,26 @@ The composition auto-calculates total frames from your messages:
 
 ### Step 5: Render
 
+Run the bundled renderer (from the skill's `renderer/` dir — see Step 0 for the one-time `npm install`). The manifest path is absolute, so the output lands next to the manifest regardless of where you run from.
+
 ```bash
-cd "/Users/jayfeldman/Documents/Tech & Dev/Studio Apps/social-media-tool"
-npx tsx scripts/render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json
+cd .claude/skills/demo-imsg/renderer
+npx tsx render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json
 ```
 
 Default output: ProRes 4444 `.mov` with transparency (same directory as manifest).
 
 For MP4 (opaque black background):
 ```bash
-npx tsx scripts/render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json --mp4
+npx tsx render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json --mp4
 ```
 
 For custom output path:
 ```bash
-npx tsx scripts/render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json ~/Desktop/demo.mov
+npx tsx render-imessage-demo.ts ~/Downloads/imessage-demo-{skill}/manifest.json ~/Desktop/demo.mov
 ```
 
-**If render fails:** Check that Remotion is installed (`npx remotion --version`). The avatar file at `contactAvatarPath` must exist or the render will warn and show a gray initial instead.
+**If render fails:** Confirm the Step 0 `npm install` completed inside `renderer/`. `contactAvatarPath` is optional — if the file doesn't exist the render warns and shows a gray initial instead.
 
 ### Step 6: Verify
 

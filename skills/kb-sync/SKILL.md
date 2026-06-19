@@ -8,14 +8,16 @@ description: >
 
 # Knowledge Base Sync
 
-Extract knowledge from project documentation and sync it to the Lead Gen Jay Obsidian knowledge base at `/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/`.
+Extract knowledge from project documentation and sync it to your Obsidian knowledge base. Operator-only: set `$KB_PATH` to your own vault before running.
 
 The KB is a git-synced Obsidian vault (`github.com/leadgenjay/knowledge-base`) used by Claude Code, Bob (OpenClaw), and NotebookLM. Knowledge you add here becomes accessible to all AI tools and human reference.
 
 ## KB Location
 
+Operator-only: set `$KB_PATH` to your own Obsidian vault before running.
+
 ```
-/Users/jayfeldman/Documents/Tech & Dev/knowledge-base/
+$KB_PATH/
 ```
 
 ## Workflow
@@ -159,7 +161,7 @@ For each note:
 After writing all notes:
 
 ```bash
-cd /Users/jayfeldman/Documents/Tech\ \&\ Dev/knowledge-base
+cd "$KB_PATH"
 git add -A
 git commit -m "kb-sync: Extract knowledge from [project-name]
 

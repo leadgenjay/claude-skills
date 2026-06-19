@@ -193,7 +193,7 @@ Before rendering any talking-head short-form video, verify ALL items:
 - [ ] **Accent color: #ED0D51** (brand pink, not default red)
 
 ### Audio
-- [ ] **Background music** from `/Users/jayfeldman/Nextcloud/Music Library for Videos/` — only use `yes-` prefixed tracks (pre-approved). `maybe-` tracks need user approval. `buildup-` tracks for non-talking sections only. (See `references/music-library.md`)
+- [ ] **Background music** from your own royalty-free library (`$MUSIC_DIR`, if you have one) — adopt a naming convention like `yes-` prefixed = pre-approved, `maybe-` = needs approval, `buildup-` = non-talking sections only. If you have no library, skip background music. (See `references/music-library.md`)
 - [ ] **Music volume: 0.10** (Remotion `volume` prop) — barely perceptible under voice
 - [ ] **Normalize to -16 LUFS** — `audio.targetLufs: -16` in EDL config
 - [ ] **Fade music** — 1-2s fade in/out, never hard cut
@@ -243,4 +243,4 @@ For comprehensive rules on all Remotion features (30+ topics):
 - [2026-04-05] [SILERO_VAD]: Use Silero VAD (python/detect_speech.py) for silence detection instead of FFmpeg silencedetect. ML-based, finds precise speech boundaries. Invert speech segments to get silence gaps. 10x more accurate than threshold-based detection.
 - [2026-04-05] [TRANSCRIPT_REVIEW]: Always review roughcut transcript output before rendering. Script prints [CUT] for removed words and [GAP] for suspicious gaps >0.5s. Verify no meaningful words were lost.
 - [2026-04-05] [CAPTION_SINGLE_LINE]: Caption pills must be single-line. wordsPerGroup: 2, flexWrap: nowrap. 3 words caused wrapping at 108px fontSize with 90% maxWidth. 2 words stays single-line reliably.
-- [2026-04-05] [MUSIC_LIBRARY]: Background music must come from `/Users/jayfeldman/Nextcloud/Music Library for Videos/`. Only `yes-` prefixed tracks are pre-approved. `maybe-` tracks need user approval. `buildup-` tracks for non-talking sections only.
+- [2026-04-05] [MUSIC_LIBRARY]: Background music should come from your own royalty-free library (`$MUSIC_DIR`, if available). A useful convention: `yes-` prefixed = pre-approved, `maybe-` = needs user approval, `buildup-` = non-talking sections only.

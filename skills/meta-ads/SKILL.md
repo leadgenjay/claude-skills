@@ -80,7 +80,7 @@ Each template takes a `data` prop. Add a named export to `design/meta-ads/ads/ad
 
 // TerminalWindow (primitive — raw Claude Code editor screenshot)
 { project: 'Consulti', branch: 'main',
-  tab: 'Consulti — bash /Users/jayfeldman/.c...',
+  tab: 'Consulti — bash ~/…/Consulti',
   dir: '~/…/Studio Apps/Consulti',
   section: 'Claude use Consulti MCP and scrape 100 new leads',
   items: [
@@ -151,7 +151,7 @@ node scripts/render-meta-ad.mjs --id concept-6/cream --open --sync
 - `--id <sectionId>/<slotId>` renders one artboard
 - `--all` renders every artboard in the canvas (use after multiple additions)
 - `--open` opens the written PNGs in Preview.app (arrow-key navigation)
-- `--sync` mirrors `output/meta-ads/` → `~/Nextcloud/Meta Ads/` via rsync (iPad/phone review)
+- `--sync` (operator-only convenience) mirrors `output/meta-ads/` → your own review folder (e.g. `~/Nextcloud/Meta Ads/`, if you use one) via rsync for iPad/phone review
 
 Output lands at `output/meta-ads/<sectionId>-<slotId>.png` at exact Meta Ads Manager size (1200×1200 for 600×600 artboards, 1080×1350 for RepetitionAd). No cropping needed.
 

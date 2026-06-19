@@ -273,9 +273,9 @@ ls public/ads/assets/lead\ gen/logos/                      # Email spam.webp
 - `https://placehold.it`, `https://via.placeholder.com`, `unsplash.com/random`-style URLs.
 - Made-up filenames (e.g. `instantly-dashboard.png` when the actual file on disk is `instantly_2024-11-29 (1).png` — only the literal `ls` output is allowed).
 
-**Allowed img src patterns** (only literal `ls` output is permitted):
-- `<img src="/Users/jayfeldman/Nextcloud/Visual Assets/Logos/Tool Logos/<exact-filename>">`
-- `<img src="/Users/jayfeldman/Nextcloud/Visual Assets/Demos/<product>/<exact-filename>">`
+**Allowed img src patterns** (only literal `ls` output is permitted — and per the render-engine constraint below, the renderer accepts only workspace-relative paths, never absolute ones):
+- `<img src="../public/assets/tool-logos/<exact-filename>">` (tool logos copied from your own asset library)
+- `<img src="../public/assets/demos/<product>/<exact-filename>">` (product demos copied from your own asset library)
 - `<img src="public/ads/assets/lead gen/demo/<exact-filename>">` (project-local cold-email defaults)
 - `<img src="output/photos/jay-database/<exact-filename>">` (Jay avatar photos)
 

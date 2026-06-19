@@ -639,7 +639,7 @@ const zoomScale = interpolate(frame, [0, zoomFrames], [1.15, 1.0], {
 - All tracks normalized to -16 LUFS before import
 - Use `trackDurationSec` in manifest to set loop length
 
-**Library:** 25 curated tracks at `/Users/jayfeldman/Nextcloud/music/Background/`
+**Library:** your own curated royalty-free tracks at `$MUSIC_DIR/Background/` (if available)
 
 ---
 

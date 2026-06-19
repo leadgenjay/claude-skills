@@ -1,0 +1,22 @@
+{
+  "name": "demo-imsg-renderer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-contained Remotion renderer bundled with the demo-imsg skill. Renders an iMessage conversation demo video from a manifest.json.",
+  "scripts": {
+    "render": "tsx render-imessage-demo.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.438",
+    "@remotion/renderer": "^4.0.438",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.438",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "tsx": "^4.19.2"
+  }
+}
