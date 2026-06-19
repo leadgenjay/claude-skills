@@ -75,6 +75,12 @@ The `cold-email-quickstart` skill triggers `db-setup.sh` automatically in **Phas
 ./scripts/lead-report.sh <report-type>                  # CLI reports
 ```
 
+> **`email-guesser.sh` requires verification credentials in `.env`** (in addition to the Turso keys
+> `db-setup.sh` writes). It will abort with a clear message if any are missing. Add your own:
+> `REACHER_URL`, `REACHER_CF_CLIENT_ID`, `REACHER_CF_CLIENT_SECRET`, `REACHER_PROXY_HOST`,
+> `REACHER_PROXY_PORT`, `REACHER_PROXY_USER`, `REACHER_PROXY_PASS`, `N2B_API_TOKEN`. These are your
+> own Reacher / proxy / No2Bounce accounts — never commit them.
+
 ### Report Types
 `summary` | `sources` | `verification` | `campaigns` | `stale` | `pipeline` | `jobs` | `ab-tests` | `replies` | `timeline <lead_id>` | `infrastructure`
 

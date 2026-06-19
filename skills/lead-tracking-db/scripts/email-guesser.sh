@@ -112,17 +112,19 @@ db_write_lead_event() {
 }
 # ─── End database integration ─────────────────────────────────────────
 
-# Reacher proxy endpoint (primary verifier)
-REACHER_URL="https://reacher.nextwave.io"
-REACHER_CF_CLIENT_ID="63fb394068c95e430b776d523386bbee.access"
-REACHER_CF_CLIENT_SECRET="f95b7d2cea600e1097ff578b98c5c962f79bb0a9fc2f8c907044e469e622a851"
-REACHER_PROXY_HOST="r1.proxy4smtp.com"
-REACHER_PROXY_PORT=1081
-REACHER_PROXY_USER="jayleadgenjaycom"
-REACHER_PROXY_PASS="BK9m7EtXP6bJ8Ebt"
+# Reacher proxy endpoint (primary verifier) — secrets loaded from .env via db-query.sh above.
+# Secrets MUST live in .env (gitignored), never hardcoded. Set these in your .env:
+#   REACHER_CF_CLIENT_ID, REACHER_CF_CLIENT_SECRET, REACHER_PROXY_USER, REACHER_PROXY_PASS, N2B_API_TOKEN
+REACHER_URL="${REACHER_URL:-https://reacher.nextwave.io}"
+REACHER_CF_CLIENT_ID="${REACHER_CF_CLIENT_ID:?set REACHER_CF_CLIENT_ID in .env}"
+REACHER_CF_CLIENT_SECRET="${REACHER_CF_CLIENT_SECRET:?set REACHER_CF_CLIENT_SECRET in .env}"
+REACHER_PROXY_HOST="${REACHER_PROXY_HOST:-r1.proxy4smtp.com}"
+REACHER_PROXY_PORT="${REACHER_PROXY_PORT:-1081}"
+REACHER_PROXY_USER="${REACHER_PROXY_USER:?set REACHER_PROXY_USER in .env}"
+REACHER_PROXY_PASS="${REACHER_PROXY_PASS:?set REACHER_PROXY_PASS in .env}"
 
 # No2Bounce (catch-all validator)
-N2B_API_TOKEN="ec8de9bdd70427afc53fcd97c20241fe"
+N2B_API_TOKEN="${N2B_API_TOKEN:?set N2B_API_TOKEN in .env}"
 
 # Args
 INPUT_FILE="${1:?Usage: email-guesser.sh <input.csv> [output.csv]}"
