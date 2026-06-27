@@ -1,0 +1,136 @@
+{
+  "key": "book-a-call",
+  "funnel": "book-a-call",
+  "webhookUrl": "https://YOUR-WEBHOOK-URL.example/your-endpoint",
+  "contactFields": { "phone": true, "phoneCountry": true, "website": true },
+  "questions": [
+    {
+      "id": "interest",
+      "label": "What are you most interested in?",
+      "type": "radio",
+      "required": true,
+      "allowOther": true,
+      "otherPlaceholder": "Tell us what you're after…",
+      "options": [
+        { "value": "lead-gen", "label": "Lead generation" },
+        { "value": "ai-automation", "label": "AI & Automation" },
+        { "value": "other", "label": "Other" }
+      ]
+    },
+    {
+      "id": "monthly_revenue",
+      "label": "What's your current monthly revenue?",
+      "type": "radio",
+      "required": true,
+      "options": [
+        { "value": "lt-5k", "label": "Under $5K/mo" },
+        { "value": "5k-25k", "label": "$5K – $25K/mo" },
+        { "value": "25k-100k", "label": "$25K – $100K/mo" },
+        { "value": "100k-500k", "label": "$100K – $500K/mo" },
+        { "value": "500k-plus", "label": "$500K+/mo" }
+      ]
+    },
+    {
+      "id": "profile",
+      "label": "Which best describes you?",
+      "type": "radio",
+      "required": true,
+      "allowOther": true,
+      "otherPlaceholder": "Describe your situation…",
+      "options": [
+        { "value": "scaling", "label": "I'm trying to scale my business with AI or lead gen" },
+        { "value": "agency", "label": "I run a lead gen or AI automation agency" },
+        { "value": "starting", "label": "I'm getting started and want to launch a lead gen or AI automation agency" },
+        { "value": "other", "label": "Other" }
+      ]
+    },
+    {
+      "id": "journey_stage",
+      "label": "Where are you in your journey?",
+      "type": "radio",
+      "required": true,
+      "options": [
+        { "value": "curious", "label": "Just curious and exploring" },
+        { "value": "looking", "label": "Actively looking for solutions" },
+        { "value": "ready", "label": "Ready to work with you — just have a few questions" }
+      ]
+    },
+    {
+      "id": "solution_type",
+      "label": "What type of solution most resonates?",
+      "type": "radio",
+      "required": false,
+      "allowOther": true,
+      "otherPlaceholder": "Something else…",
+      "options": [
+        { "value": "dwy", "label": "Done-with-you — with support, community & training" },
+        { "value": "dfy", "label": "Fully done-for-you" },
+        { "value": "other", "label": "Other" }
+      ]
+    }
+  ],
+  "consents": [
+    {
+      "id": "invest",
+      "label": "I understand the company offers premium services starting at $1,000. I have at least $1,500 to invest right now, or I can get approved for financing.",
+      "required": true
+    },
+    {
+      "id": "respect",
+      "label": "I understand there are limited slots to speak with our team. I'll show respect and show up to my call at the time and date booked.",
+      "required": true
+    }
+  ],
+  "salespeople": [
+    { "id": "general", "name": "Strategy Team", "role": "Strategy Team", "bookingUrl": "https://YOUR-CALENDAR.example/booking/general" },
+    { "id": "tyler", "name": "Tyler (best leads)", "role": "Senior Growth Strategist", "bookingUrl": "https://YOUR-CALENDAR.example/booking/senior" },
+    { "id": "ian", "name": "Ian (mid)", "role": "Growth Strategist", "bookingUrl": "https://YOUR-CALENDAR.example/booking/mid" },
+    { "id": "jonathan_w", "name": "Jonathan (lower-but-qualified)", "role": "Growth Strategist", "bookingUrl": "https://YOUR-CALENDAR.example/booking/junior" },
+    { "id": "daniel", "name": "Daniel (qualification call)", "role": "Qualification Specialist", "bookingUrl": "https://YOUR-CALENDAR.example/booking/qualifier" }
+  ],
+  "rules": [],
+  "scoring": {
+    "points": {
+      "monthly_revenue": { "lt-5k": 0, "5k-25k": 1, "25k-100k": 2, "100k-500k": 3, "500k-plus": 3 },
+      "journey_stage": { "curious": 0, "looking": 2, "ready": 3 },
+      "profile": { "starting": 0, "other": 1, "scaling": 2, "agency": 2 },
+      "solution_type": { "dwy": 1, "dfy": 1, "other": 0 }
+    },
+    "country": {
+      "answerKey": "__country_iso",
+      "tier1": ["US", "CA", "GB", "AU", "NZ", "IE"],
+      "tier2": ["AE", "AT", "BE", "CH", "DE", "DK", "ES", "FI", "FR", "HK", "IL", "IT", "JP", "NL", "NO", "PL", "PT", "SA", "SE", "SG"],
+      "tier1Points": 5,
+      "tier2Points": 2,
+      "tier3Points": 0
+    },
+    "bands": [
+      { "minScore": 10, "outcome": { "type": "assign", "salespersonId": "tyler" } },
+      { "minScore": 7, "outcome": { "type": "assign", "salespersonId": "ian" } },
+      { "minScore": 3, "outcome": { "type": "assign", "salespersonId": "jonathan_w" } },
+      { "minScore": 0, "outcome": { "type": "disqualify", "reason": "needs_qualification" } }
+    ]
+  },
+  "defaultOutcome": { "type": "assign", "salespersonId": "general" },
+  "disqualified": {
+    "headline": "Let's start with a quick qualification call",
+    "body": "Based on your answers, the best next step is a short qualification call to make sure we're the right fit for where you're at right now. Prefer to move faster on your own? Grab the self-serve option below.",
+    "bookingUrl": "https://YOUR-CALENDAR.example/booking/qualifier",
+    "bookingNote": "A small booking fee holds your slot — fully refunded after you show up on time. It just keeps no-shows out.",
+    "cta": { "label": "Get the self-serve option", "href": "https://YOUR-SITE.example/offer" },
+    "downsellByAnswer": {
+      "questionId": "interest",
+      "map": {
+        "lead-gen": { "label": "Get the lead-gen starter", "href": "https://YOUR-SITE.example/lead-gen-offer" },
+        "ai-automation": { "label": "Explore the automation program", "href": "https://YOUR-SITE.example/automation-offer" }
+      }
+    }
+  },
+  "ghlPrefillKeys": {
+    "interest": "interest",
+    "monthly_revenue": "monthly_revenue",
+    "profile": "profile",
+    "journey_stage": "journey_stage",
+    "solution_type": "solution_type"
+  }
+}

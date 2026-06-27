@@ -1,0 +1,42 @@
+id: lead-routing-form
+type: skill
+name: "Lead Routing Form"
+description: "Interview-driven installer that builds a qualification → routing → calendar booking form and drops it into your website. A lead answers a few questions; a lead-score (or hard rules) routes them to the right salesperson's calendar — or a soft-DQ card with a downsell. Backend-free: it POSTs 4 events (lander_optin / partial_submission / qualified / disqualified) to ONE webhook you supply (n8n/Zapier/Make/GHL/custom). No database, no API keys. Produces a self-contained vanilla embed (any site) OR a Next.js/React drop-in. The same engine that powers Lead Gen Jay's /book-a-call."
+categories:
+  - lgj-exclusive
+  - automation
+  - sales
+  - conversion
+tags:
+  - lead-routing
+  - qualification
+  - calendar
+  - round-robin
+  - booking
+  - lead-scoring
+  - webhook
+  - n8n
+  - interview
+  - installer
+icon: Route
+path: skills/lead-routing-form
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/config-schema.md
+  - references/webhook-contract.md
+  - references/engine/evaluate.ts
+  - references/engine/types.ts
+  - references/engine/countries.ts
+  - references/templates/embed.html
+  - references/templates/book-a-call.example.json
+  - references/templates/engine.golden.json
+  - references/templates/verify-engine.mjs
+  - references/templates/nextjs/config.ts
+  - references/templates/nextjs/qualification-router.tsx
+  - references/templates/nextjs/submit-route.ts
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - reply-claw
+  - lead-tracking-db

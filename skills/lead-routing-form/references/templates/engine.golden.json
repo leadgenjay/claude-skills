@@ -1,0 +1,35 @@
+{
+  "_comment": "Golden routing cases for the book-a-call.example.json config. verify-engine.mjs asserts the JS engine port produces these, and they were cross-checked against references/engine/evaluate.ts. Each case: answers -> expectedScore + expectedOutcome.",
+  "cases": [
+    {
+      "name": "tier1 high-value -> tyler",
+      "answers": { "__country_iso": "US", "monthly_revenue": "100k-500k", "journey_stage": "ready", "profile": "agency", "solution_type": "dfy" },
+      "expectedScore": 14,
+      "expectedOutcome": { "type": "assign", "salespersonId": "tyler" }
+    },
+    {
+      "name": "tier2 mid -> ian",
+      "answers": { "__country_iso": "DE", "monthly_revenue": "25k-100k", "journey_stage": "looking", "profile": "agency", "solution_type": "dwy" },
+      "expectedScore": 9,
+      "expectedOutcome": { "type": "assign", "salespersonId": "ian" }
+    },
+    {
+      "name": "tier3 qualified-lower -> jonathan_w",
+      "answers": { "__country_iso": "IN", "monthly_revenue": "25k-100k", "journey_stage": "ready", "profile": "other", "solution_type": "other" },
+      "expectedScore": 6,
+      "expectedOutcome": { "type": "assign", "salespersonId": "jonathan_w" }
+    },
+    {
+      "name": "no country captured, low engagement -> jonathan_w (band edge >=3)",
+      "answers": { "monthly_revenue": "5k-25k", "journey_stage": "looking" },
+      "expectedScore": 3,
+      "expectedOutcome": { "type": "assign", "salespersonId": "jonathan_w" }
+    },
+    {
+      "name": "all-zero -> disqualify",
+      "answers": { "__country_iso": "PK", "monthly_revenue": "lt-5k", "journey_stage": "curious", "profile": "starting" },
+      "expectedScore": 0,
+      "expectedOutcome": { "type": "disqualify", "reason": "needs_qualification" }
+    }
+  ]
+}

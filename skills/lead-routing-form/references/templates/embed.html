@@ -1,0 +1,396 @@
+<!--
+  Lead Routing Form — self-contained embed (no build step, no dependencies).
+
+  HOW THE SKILL USES THIS FILE
+  ----------------------------
+  1. Replace the ONE token  __ROUTING_CONFIG__  below with the RoutingConfig object
+     produced by the interview (a JSON object — see references/config-schema.md and
+     references/templates/book-a-call.example.json).
+  2. Drop the resulting markup wherever the form should appear, OR paste the <style>,
+     the <div id="lead-routing-form">, and the <script> into the page <body>.
+  3. Theme by overriding the CSS variables on .lrf-root (see :root block).
+
+  The engine (scoreLead / scoreToOutcome / evaluateRouting) is a faithful port of
+  references/engine/evaluate.ts. Keep references/templates/engine.golden.json in agreement
+  if you edit it. The availability balancer is intentionally NOT ported (it needs a backend).
+-->
+<style>
+  .lrf-root {
+    --lrf-accent: #ED0D51;
+    --lrf-accent-press: #c40b45;
+    --lrf-ink: #0f172a;
+    --lrf-muted: #64748b;
+    --lrf-line: #e2e8f0;
+    --lrf-bg: #ffffff;
+    --lrf-soft: #f8fafc;
+    --lrf-radius: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--lrf-ink);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .lrf-card { background: var(--lrf-bg); border: 1px solid var(--lrf-line); border-radius: var(--lrf-radius); padding: 28px 24px; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+  .lrf-progress { height: 4px; background: var(--lrf-line); border-radius: 999px; overflow: hidden; margin-bottom: 22px; }
+  .lrf-progress > i { display: block; height: 100%; background: var(--lrf-accent); transition: width .3s ease; }
+  .lrf-q { font-size: 20px; font-weight: 700; line-height: 1.25; margin: 0 0 16px; }
+  .lrf-sub { color: var(--lrf-muted); font-size: 14px; margin: -8px 0 18px; }
+  .lrf-field { margin-bottom: 14px; }
+  .lrf-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .lrf-input, .lrf-select { width: 100%; box-sizing: border-box; padding: 12px 14px; font-size: 16px; border: 1px solid var(--lrf-line); border-radius: 10px; background: var(--lrf-bg); color: var(--lrf-ink); outline: none; }
+  .lrf-input:focus, .lrf-select:focus { border-color: var(--lrf-accent); }
+  .lrf-phone-row { display: flex; gap: 8px; }
+  .lrf-phone-row .lrf-select { width: auto; flex: 0 0 auto; min-width: 96px; }
+  .lrf-phone-row .lrf-input { flex: 1 1 auto; }
+  .lrf-opt { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box; text-align: left; padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--lrf-line); border-radius: 10px; background: var(--lrf-bg); color: var(--lrf-ink); font-size: 15px; cursor: pointer; transition: border-color .15s, background .15s; }
+  .lrf-opt:hover { border-color: var(--lrf-accent); }
+  .lrf-opt.is-sel { border-color: var(--lrf-accent); background: rgba(237,13,81,.05); }
+  .lrf-opt > .lrf-dot { flex: 0 0 auto; width: 18px; height: 18px; border-radius: 999px; border: 2px solid var(--lrf-line); }
+  .lrf-opt.is-sel > .lrf-dot { border-color: var(--lrf-accent); background: var(--lrf-accent); box-shadow: inset 0 0 0 3px var(--lrf-bg); }
+  .lrf-consent { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; font-size: 14px; color: var(--lrf-ink); cursor: pointer; }
+  .lrf-consent input { margin-top: 3px; width: 18px; height: 18px; flex: 0 0 auto; }
+  .lrf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 14px 18px; font-size: 16px; font-weight: 700; color: #fff; background: var(--lrf-accent); border: none; border-radius: 10px; cursor: pointer; }
+  .lrf-btn:hover { background: var(--lrf-accent-press); }
+  .lrf-btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .lrf-back { background: none; border: none; color: var(--lrf-muted); font-size: 14px; cursor: pointer; padding: 8px 0; margin-top: 6px; }
+  .lrf-err { color: #b91c1c; font-size: 13px; margin-top: 8px; min-height: 16px; }
+  .lrf-cal { width: 100%; border: 0; border-radius: 12px; min-height: 720px; }
+  .lrf-matched { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .lrf-avatar { width: 48px; height: 48px; border-radius: 999px; object-fit: cover; background: var(--lrf-soft); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lrf-muted); }
+  .lrf-matched b { display: block; font-size: 16px; }
+  .lrf-matched span { color: var(--lrf-muted); font-size: 13px; }
+  .lrf-note { background: var(--lrf-soft); border: 1px solid rgba(255,255,255,.18); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--lrf-muted); margin: 12px 0; }
+  .lrf-dq-cta { display: inline-block; margin-top: 14px; padding: 12px 18px; font-weight: 700; color: var(--lrf-accent); border: 1px solid var(--lrf-line); border-radius: 10px; text-decoration: none; }
+  @media (max-width: 520px) { .lrf-card { padding: 20px 16px; } .lrf-q { font-size: 18px; } }
+</style>
+
+<div id="lead-routing-form" class="lrf-root"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===== CONFIG (the interview replaces this single token) ===== */
+  var CONFIG = __ROUTING_CONFIG__;
+
+  /* ===== Country dial-code data (for the optional phone+country field) ===== */
+  var COUNTRIES = [
+    {iso:"US",name:"United States",dialCode:"1"},{iso:"CA",name:"Canada",dialCode:"1"},
+    {iso:"GB",name:"United Kingdom",dialCode:"44"},{iso:"AU",name:"Australia",dialCode:"61"},
+    {iso:"NZ",name:"New Zealand",dialCode:"64"},{iso:"IE",name:"Ireland",dialCode:"353"},
+    {iso:"AE",name:"United Arab Emirates",dialCode:"971"},{iso:"AT",name:"Austria",dialCode:"43"},
+    {iso:"BE",name:"Belgium",dialCode:"32"},{iso:"CH",name:"Switzerland",dialCode:"41"},
+    {iso:"DE",name:"Germany",dialCode:"49"},{iso:"DK",name:"Denmark",dialCode:"45"},
+    {iso:"ES",name:"Spain",dialCode:"34"},{iso:"FI",name:"Finland",dialCode:"358"},
+    {iso:"FR",name:"France",dialCode:"33"},{iso:"HK",name:"Hong Kong",dialCode:"852"},
+    {iso:"IL",name:"Israel",dialCode:"972"},{iso:"IN",name:"India",dialCode:"91"},
+    {iso:"IT",name:"Italy",dialCode:"39"},{iso:"JP",name:"Japan",dialCode:"81"},
+    {iso:"MX",name:"Mexico",dialCode:"52"},{iso:"NL",name:"Netherlands",dialCode:"31"},
+    {iso:"NO",name:"Norway",dialCode:"47"},{iso:"PL",name:"Poland",dialCode:"48"},
+    {iso:"PT",name:"Portugal",dialCode:"351"},{iso:"SA",name:"Saudi Arabia",dialCode:"966"},
+    {iso:"SE",name:"Sweden",dialCode:"46"},{iso:"SG",name:"Singapore",dialCode:"65"},
+    {iso:"ZA",name:"South Africa",dialCode:"27"},{iso:"BR",name:"Brazil",dialCode:"55"},
+    {iso:"AR",name:"Argentina",dialCode:"54"},{iso:"PH",name:"Philippines",dialCode:"63"}
+  ];
+  var DEFAULT_COUNTRY_ISO = "US";
+  function countryByIso(iso) {
+    for (var i = 0; i < COUNTRIES.length; i++) if (COUNTRIES[i].iso === iso) return COUNTRIES[i];
+    return countryByIso(DEFAULT_COUNTRY_ISO);
+  }
+
+  /* ===== Engine — faithful port of references/engine/evaluate.ts ===== */
+  var DEFAULT_COUNTRY_ANSWER_KEY = "__country_iso";
+  function conditionMatches(answers, qid, accepted) {
+    var a = answers[qid];
+    if (a == null || a === "") return false;
+    return accepted.indexOf(a) !== -1;
+  }
+  function ruleMatches(answers, rule) {
+    if (!rule.when || rule.when.length === 0) return false;
+    var mode = rule.matchMode || "all";
+    var res = rule.when.map(function (c) { return conditionMatches(answers, c.questionId, c.in); });
+    return mode === "all" ? res.every(Boolean) : res.some(Boolean);
+  }
+  function countryTierPoints(answers, country) {
+    var iso = answers[country.answerKey || DEFAULT_COUNTRY_ANSWER_KEY];
+    if (iso && country.tier1.indexOf(iso) !== -1) return country.tier1Points;
+    if (iso && country.tier2.indexOf(iso) !== -1) return country.tier2Points;
+    return country.tier3Points;
+  }
+  function scoreLead(answers, scoring) {
+    var total = 0;
+    for (var qid in scoring.points) {
+      if (!Object.prototype.hasOwnProperty.call(scoring.points, qid)) continue;
+      var valuePoints = scoring.points[qid], a = answers[qid];
+      if (a != null && a !== "" && valuePoints[a] != null) total += valuePoints[a];
+    }
+    if (scoring.country) total += countryTierPoints(answers, scoring.country);
+    return total;
+  }
+  function scoreToOutcome(score, scoring, fallback) {
+    for (var i = 0; i < scoring.bands.length; i++) if (score >= scoring.bands[i].minScore) return scoring.bands[i].outcome;
+    return fallback;
+  }
+  function evaluateRouting(answers, config) {
+    for (var i = 0; i < config.rules.length; i++) if (ruleMatches(answers, config.rules[i])) return config.rules[i].outcome;
+    if (config.scoring) return scoreToOutcome(scoreLead(answers, config.scoring), config.scoring, config.defaultOutcome);
+    return config.defaultOutcome;
+  }
+  function resolveSalesperson(config, id) {
+    for (var i = 0; i < config.salespeople.length; i++) if (config.salespeople[i].id === id) return config.salespeople[i];
+    return undefined;
+  }
+
+  /* ===== Helpers ===== */
+  var RESERVED = { country: "__country", countryIso: "__country_iso", phoneCc: "__phone_cc", website: "__website" };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var WEBSITE_RE = /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i;
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function qp(params) { var s = []; for (var k in params) if (params[k]) s.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k])); return s.join("&"); }
+  function composePhone(national, iso, withCountry) {
+    if (!withCountry) return (national || "").trim();
+    var digits = (national || "").replace(/\D/g, "");
+    return digits ? "+" + countryByIso(iso).dialCode + digits : "";
+  }
+  function buildCalendarUrl(bookingUrl, contact, answers, prefillKeys) {
+    var params = {};
+    if (contact.fullName) { params.name = contact.fullName; params.full_name = contact.fullName; }
+    if (contact.email) params.email = contact.email;
+    if (contact.phone) params.phone = contact.phone;
+    if (prefillKeys) for (var aid in prefillKeys) if (answers[aid]) params[prefillKeys[aid]] = answers[aid];
+    var s = qp(params);
+    return s ? bookingUrl + (bookingUrl.indexOf("?") === -1 ? "?" : "&") + s : bookingUrl;
+  }
+  function trackingContext() {
+    var u = {}; try { var p = new URLSearchParams(location.search);
+      u = { utmSource: p.get("utm_source"), utmMedium: p.get("utm_medium"), utmCampaign: p.get("utm_campaign"), utmTerm: p.get("utm_term"), utmContent: p.get("utm_content") }; } catch (e) {}
+    return { pageUrl: location.href, referrer: document.referrer || null, utmSource: u.utmSource || null, utmMedium: u.utmMedium || null, utmCampaign: u.utmCampaign || null, utmTerm: u.utmTerm || null, utmContent: u.utmContent || null };
+  }
+
+  /* ===== Webhook (the 4 events — see references/webhook-contract.md) ===== */
+  function baseData(state, extra) {
+    var d = {
+      fullName: state.contact.fullName, email: state.contact.email,
+      phone: state.contact.phone || null, website: state.answers[RESERVED.website] || null,
+      country: state.answers[RESERVED.country] || null,
+      landingPage: CONFIG.key || "calendar-routing", source: "calendar-routing:" + (CONFIG.key || "unknown")
+    };
+    if (extra) for (var k in extra) d[k] = extra[k];
+    return d;
+  }
+  function fireEvent(event, data, useBeacon) {
+    if (!CONFIG.webhookUrl) return;
+    var body = JSON.stringify({ event: event, timestamp: new Date().toISOString(), data: data });
+    try {
+      if (useBeacon && navigator.sendBeacon) { navigator.sendBeacon(CONFIG.webhookUrl, new Blob([body], { type: "application/json" })); return; }
+      fetch(CONFIG.webhookUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: body, keepalive: true }).catch(function () {});
+    } catch (e) {}
+  }
+
+  /* ===== State ===== */
+  var state = {
+    phase: "contact",      // contact | questions | consents | outcome
+    qIndex: 0,
+    contact: { fullName: "", email: "", phone: "" },
+    countryIso: DEFAULT_COUNTRY_ISO,
+    answers: {},
+    completed: false,
+    contactCaptured: false,
+    partialFired: false
+  };
+  var root = document.getElementById("lead-routing-form");
+  var showPhone = !!(CONFIG.contactFields && CONFIG.contactFields.phone);
+  var showPhoneCountry = !!(CONFIG.contactFields && CONFIG.contactFields.phoneCountry) && showPhone;
+  var showWebsite = !!(CONFIG.contactFields && CONFIG.contactFields.website);
+  var questions = CONFIG.questions || [];
+  var consents = CONFIG.consents || [];
+
+  function totalSteps() { return 1 + questions.length + (consents.length ? 1 : 0); }
+  function currentStep() {
+    if (state.phase === "contact") return 1;
+    if (state.phase === "questions") return 2 + state.qIndex;
+    if (state.phase === "consents") return 1 + questions.length + 1;
+    return totalSteps();
+  }
+
+  /* ===== Partial-abandon beacon ===== */
+  function maybeFirePartial() {
+    if (!state.contactCaptured || state.completed || state.partialFired) return;
+    state.partialFired = true;
+    fireEvent("partial_submission", baseData(state, { answers: state.answers, lastStep: currentStep() }), true);
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") maybeFirePartial(); });
+  window.addEventListener("pagehide", maybeFirePartial);
+
+  /* ===== Render ===== */
+  function card() { var c = el("div", "lrf-card"); var p = el("div", "lrf-progress"); var i = el("i"); i.style.width = Math.round((currentStep() / totalSteps()) * 100) + "%"; p.appendChild(i); c.appendChild(p); return c; }
+  function render() {
+    root.innerHTML = "";
+    if (state.phase === "contact") return renderContact();
+    if (state.phase === "questions") return renderQuestion();
+    if (state.phase === "consents") return renderConsents();
+    return renderOutcome();
+  }
+
+  function renderContact() {
+    var c = card();
+    c.appendChild(el("h3", "lrf-q", "Let's get started"));
+    c.appendChild(el("p", "lrf-sub", "A few quick details so we can match you with the right person."));
+    var err = el("div", "lrf-err");
+
+    function field(labelTxt, node) { var f = el("div", "lrf-field"); var l = el("label"); l.textContent = labelTxt; f.appendChild(l); f.appendChild(node); return f; }
+    var name = el("input", "lrf-input"); name.type = "text"; name.placeholder = "Full name"; name.value = state.contact.fullName; name.autocomplete = "name";
+    var email = el("input", "lrf-input"); email.type = "email"; email.placeholder = "you@company.com"; email.value = state.contact.email; email.autocomplete = "email"; email.inputMode = "email";
+    c.appendChild(field("Full name", name));
+    c.appendChild(field("Email", email));
+
+    var phone, ccSel;
+    if (showPhone) {
+      if (showPhoneCountry) {
+        var row = el("div", "lrf-phone-row");
+        ccSel = el("select", "lrf-select");
+        COUNTRIES.forEach(function (co) { var o = el("option"); o.value = co.iso; o.textContent = co.iso + " +" + co.dialCode; if (co.iso === state.countryIso) o.selected = true; ccSel.appendChild(o); });
+        phone = el("input", "lrf-input"); phone.type = "tel"; phone.placeholder = "Phone"; phone.value = state.contact.phone; phone.autocomplete = "tel"; phone.inputMode = "tel";
+        row.appendChild(ccSel); row.appendChild(phone);
+        c.appendChild(field("Phone", row));
+      } else {
+        phone = el("input", "lrf-input"); phone.type = "tel"; phone.placeholder = "Phone"; phone.value = state.contact.phone; phone.autocomplete = "tel"; phone.inputMode = "tel";
+        c.appendChild(field("Phone", phone));
+      }
+    }
+    var website;
+    if (showWebsite) { website = el("input", "lrf-input"); website.type = "text"; website.placeholder = "yourcompany.com (optional)"; website.value = state.answers[RESERVED.website] || ""; website.autocomplete = "url"; c.appendChild(field("Website", website)); }
+
+    var btn = el("button", "lrf-btn", "Continue");
+    btn.addEventListener("click", function () {
+      var fullName = name.value.trim(), em = email.value.trim();
+      if (!fullName) { err.textContent = "Please enter your name."; return; }
+      if (!EMAIL_RE.test(em)) { err.textContent = "Please enter a valid email."; return; }
+      if (showWebsite && website.value.trim() && !WEBSITE_RE.test(website.value.trim())) { err.textContent = "That website doesn't look right."; return; }
+      state.contact.fullName = fullName; state.contact.email = em;
+      if (showPhoneCountry && ccSel) { state.countryIso = ccSel.value; var co = countryByIso(ccSel.value); state.answers[RESERVED.countryIso] = co.iso; state.answers[RESERVED.country] = co.name; state.answers[RESERVED.phoneCc] = "+" + co.dialCode; }
+      if (showPhone && phone) state.contact.phone = composePhone(phone.value, state.countryIso, showPhoneCountry);
+      if (showWebsite && website && website.value.trim()) state.answers[RESERVED.website] = website.value.trim();
+
+      // Fire lander_optin once — the primary contact-creation event.
+      if (!state.contactCaptured) {
+        state.contactCaptured = true;
+        fireEvent("lander_optin", baseData(state, { tracking: trackingContext() }), false);
+      }
+      state.phase = questions.length ? "questions" : (consents.length ? "consents" : "outcome");
+      if (state.phase === "outcome") finish();
+      render();
+    });
+    c.appendChild(btn); c.appendChild(err);
+    root.appendChild(c);
+  }
+
+  function optionLabel(q, opt) {
+    if (q.adaptiveLabels) {
+      var dep = state.answers[q.adaptiveLabels.dependsOn];
+      var m = dep && q.adaptiveLabels.map[dep];
+      if (m && m[opt.value]) return m[opt.value];
+    }
+    return opt.label;
+  }
+  function renderQuestion() {
+    var q = questions[state.qIndex];
+    var c = card();
+    c.appendChild(el("h3", "lrf-q", q.label));
+    var err = el("div", "lrf-err");
+    var otherWrap;
+    q.options.forEach(function (opt) {
+      var b = el("button", "lrf-opt"); b.type = "button";
+      var dot = el("span", "lrf-dot"); b.appendChild(dot); b.appendChild(el("span", null, optionLabel(q, opt)));
+      if (state.answers[q.id] === opt.value) b.classList.add("is-sel");
+      b.addEventListener("click", function () {
+        state.answers[q.id] = opt.value;
+        if (q.allowOther && opt.value === "other") { if (otherWrap) otherWrap.style.display = "block"; }
+        else { if (otherWrap) otherWrap.style.display = "none"; delete state.answers[q.id + "_other"]; }
+        Array.prototype.forEach.call(c.querySelectorAll(".lrf-opt"), function (x) { x.classList.remove("is-sel"); });
+        b.classList.add("is-sel"); err.textContent = "";
+      });
+      c.appendChild(b);
+    });
+    if (q.allowOther) {
+      otherWrap = el("div", "lrf-field"); otherWrap.style.display = state.answers[q.id] === "other" ? "block" : "none";
+      var oi = el("input", "lrf-input"); oi.type = "text"; oi.placeholder = q.otherPlaceholder || "Tell us more…"; oi.value = state.answers[q.id + "_other"] || "";
+      oi.addEventListener("input", function () { state.answers[q.id + "_other"] = oi.value; });
+      otherWrap.appendChild(oi); c.appendChild(otherWrap);
+    }
+    var btn = el("button", "lrf-btn", "Continue");
+    btn.addEventListener("click", function () {
+      var required = q.required !== false;
+      if (required && (state.answers[q.id] == null || state.answers[q.id] === "")) { err.textContent = "Please pick an option."; return; }
+      if (state.qIndex < questions.length - 1) { state.qIndex++; }
+      else { state.phase = consents.length ? "consents" : "outcome"; if (state.phase === "outcome") finish(); }
+      render();
+    });
+    c.appendChild(btn);
+    if (state.qIndex > 0 || true) { var back = el("button", "lrf-back", "← Back"); back.addEventListener("click", function () { if (state.qIndex > 0) state.qIndex--; else state.phase = "contact"; render(); }); c.appendChild(back); }
+    c.appendChild(err);
+    root.appendChild(c);
+  }
+
+  function renderConsents() {
+    var c = card();
+    c.appendChild(el("h3", "lrf-q", "Before we match you"));
+    var err = el("div", "lrf-err");
+    var boxes = [];
+    consents.forEach(function (con) {
+      var lab = el("label", "lrf-consent");
+      var cb = el("input"); cb.type = "checkbox"; cb.checked = !!state.answers["consent_" + con.id];
+      cb.addEventListener("change", function () { state.answers["consent_" + con.id] = cb.checked ? "true" : ""; err.textContent = ""; });
+      lab.appendChild(cb); lab.appendChild(el("span", null, con.label));
+      boxes.push({ con: con, cb: cb }); c.appendChild(lab);
+    });
+    var btn = el("button", "lrf-btn", "See my match");
+    btn.addEventListener("click", function () {
+      for (var i = 0; i < boxes.length; i++) if (boxes[i].con.required !== false && !boxes[i].cb.checked) { err.textContent = "Please check all boxes to continue."; return; }
+      state.phase = "outcome"; finish(); render();
+    });
+    c.appendChild(btn);
+    var back = el("button", "lrf-back", "← Back"); back.addEventListener("click", function () { state.phase = questions.length ? "questions" : "contact"; if (questions.length) state.qIndex = questions.length - 1; render(); });
+    c.appendChild(back); c.appendChild(err);
+    root.appendChild(c);
+  }
+
+  // finish() computes the outcome and fires qualified/disqualified ONCE.
+  var _outcome = null;
+  function finish() {
+    if (state.completed) return;
+    state.completed = true; // suppress the partial beacon
+    _outcome = evaluateRouting(state.answers, CONFIG);
+    if (_outcome.type === "assign") {
+      var sp = resolveSalesperson(CONFIG, _outcome.salespersonId) || CONFIG.salespeople[0];
+      fireEvent("qualified", baseData(state, { answers: state.answers, outcome: "assign", assignedSalesperson: sp ? sp.id : null, disqualifyReason: null }), false);
+    } else {
+      fireEvent("disqualified", baseData(state, { answers: state.answers, outcome: "disqualify", assignedSalesperson: null, disqualifyReason: _outcome.reason || "needs_qualification" }), false);
+    }
+  }
+
+  function avatar(sp) {
+    if (sp && sp.avatarUrl) { var img = el("img", "lrf-avatar"); img.src = sp.avatarUrl; img.alt = sp.name; return img; }
+    var d = el("div", "lrf-avatar"); var nm = (sp && sp.name) || ""; var parts = nm.trim().split(/\s+/); d.textContent = (parts[0] ? parts[0][0] : "") + (parts[1] ? parts[1][0] : ""); return d;
+  }
+  function renderOutcome() {
+    var c = card();
+    if (_outcome && _outcome.type === "assign") {
+      var sp = resolveSalesperson(CONFIG, _outcome.salespersonId) || CONFIG.salespeople[0];
+      var m = el("div", "lrf-matched"); m.appendChild(avatar(sp)); var info = el("div"); info.appendChild(el("b", null, "You're matched with " + (sp ? sp.name : "our team"))); if (sp && sp.role) info.appendChild(el("span", null, sp.role)); m.appendChild(info); c.appendChild(m);
+      c.appendChild(el("p", "lrf-sub", "Pick a time below — it's confirmed instantly."));
+      var f = el("iframe", "lrf-cal"); f.src = buildCalendarUrl(sp.bookingUrl, state.contact, state.answers, CONFIG.ghlPrefillKeys); f.loading = "lazy"; c.appendChild(f);
+    } else {
+      var dq = CONFIG.disqualified || {};
+      c.appendChild(el("h3", "lrf-q", dq.headline || "Let's start with a quick call"));
+      if (dq.body) c.appendChild(el("p", "lrf-sub", dq.body));
+      if (dq.bookingUrl) { var f2 = el("iframe", "lrf-cal"); f2.src = buildCalendarUrl(dq.bookingUrl, state.contact, state.answers, CONFIG.ghlPrefillKeys); f2.loading = "lazy"; c.appendChild(f2); if (dq.bookingNote) c.appendChild(el("div", "lrf-note", dq.bookingNote)); }
+      var cta = dq.cta;
+      if (dq.downsellByAnswer) { var av = state.answers[dq.downsellByAnswer.questionId]; if (av && dq.downsellByAnswer.map[av]) cta = dq.downsellByAnswer.map[av]; }
+      if (cta) { var a = el("a", "lrf-dq-cta", cta.label); a.href = cta.href; c.appendChild(a); }
+    }
+    root.appendChild(c);
+  }
+
+  render();
+})();
+</script>
