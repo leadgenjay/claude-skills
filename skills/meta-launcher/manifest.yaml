@@ -1,0 +1,27 @@
+id: meta-launcher
+type: skill
+name: "Meta Campaign Launcher"
+description: >
+  Launch Meta (Facebook/Instagram) ad campaigns with structured A/B testing, copy generation, UTM
+  tracking, audience targeting, and safety gates. Creates campaigns, ad sets, creatives, and ads via
+  the Meta Marketing API using your own ad account - always PAUSED until you explicitly approve, with
+  a mandatory pre-flight checklist. Ad sets optimize toward your own custom conversion (Meta
+  Conversions API by default); no Hyros required. Ships a standalone, vendored Meta client.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - automation
+tags:
+  - meta-ads
+  - facebook-ads
+  - campaign
+  - ab-testing
+  - audiences
+  - utm
+  - paid-ads
+icon: Rocket
+path: skills/meta-launcher
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"

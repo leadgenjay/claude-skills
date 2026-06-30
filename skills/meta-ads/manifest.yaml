@@ -1,27 +1,41 @@
 id: meta-ads
 type: skill
-name: "Meta Ads"
-description: "Generate Instagram/Meta feed ad creatives (600x600 and 1080x1350 PNGs) in the locked Lead Gen Jay Meta Ads design style. Locked template library (HandDrawnAd, EditorialAd, StrikeAd, FaceOffAd, FaceOffStampAd, DuelAd, RepetitionAd, TerminalAd, StepListAd, ScreenshotAd) with cream/navy variants. New ads are a one-line component call — no new files per ad."
+name: "Meta Ads Pro System"
+description: >
+  The first-run wizard that takes you from zero to a launched, continuously-optimized Meta
+  (Facebook/Instagram) ad account. One invocation chains the specialist skills with a confirmation
+  gate between every phase: set up perfect tracking (Pixel + Conversions API, no Hyros required) →
+  build the strategy → build custom audiences → build campaigns + ad sets → launch your creative →
+  optimize on a recurring cadence. Everything builds PAUSED; nothing spends until you explicitly
+  approve. Resumable across sessions.
 categories:
   - lgj-exclusive
-  - design
-  - content
+  - paid-ads
+  - automation
 tags:
   - meta-ads
-  - instagram
-  - instagram-ads
   - facebook-ads
-  - lead-gen
-  - brand
-  - creative
-icon: ImagePlus
+  - instagram-ads
+  - paid-ads
+  - conversions-api
+  - audiences
+  - optimization
+  - wizard
+icon: Megaphone
 path: skills/meta-ads
 files:
   - SKILL.md
   - manifest.yaml
-  - references/design-rules.md
-version: "1.0"
-branch: LGJ-exclusive
+  - references/phase-prompts.md
+version: "2.0"
+bundledItems:
+  - meta-ads
+  - meta-ads-tracking
+  - meta-research
+  - meta-launcher
+  - meta-ads-creative
+  - meta-optimize
+  - meta-report
 composesWell:
   - brand-voice
   - autoimprove

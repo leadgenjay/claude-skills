@@ -1,0 +1,28 @@
+id: meta-ads-tracking
+type: skill
+name: "Meta Ads Tracking — Pixel + Conversions API"
+description: >
+  Set up perfect Meta (Facebook/Instagram) ads conversion tracking from scratch — the browser
+  Pixel, client-side standard events, the server-side Conversions API (CAPI), and the custom
+  conversions Meta optimizes toward — with event deduplication so Pixel and CAPI never
+  double-count. Interview-driven (BYO Pixel/Dataset ID, CAPI token, ad account, Page, domain).
+  Hyros is optional, never assumed. The Hyros-free measurement foundation of the Meta Ads Pro
+  System.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - tracking
+tags:
+  - meta-ads
+  - facebook-ads
+  - pixel
+  - conversions-api
+  - capi
+  - tracking
+  - custom-conversions
+icon: Crosshair
+path: skills/meta-ads-tracking
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"

@@ -1,0 +1,26 @@
+id: meta-research
+type: skill
+name: "Meta Ad Research"
+description: >
+  Build your Meta ads strategy from real market data: research competitors, pull + classify their
+  live ads from the Meta Ad Library, and synthesize an intelligence brief (ICP, offer positioning,
+  proven hooks, angles, formats) that your campaigns inherit. Interview-driven and standalone -
+  brings your own (free) Meta Ad Library access and an optional scraper key; writes a local
+  strategy.md. No Hyros.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - research
+tags:
+  - meta-ads
+  - facebook-ads
+  - research
+  - competitor-research
+  - ad-library
+  - strategy
+icon: Search
+path: skills/meta-research
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"

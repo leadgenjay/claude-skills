@@ -1,0 +1,26 @@
+id: meta-optimize
+type: skill
+name: "Meta Ads Optimizer"
+description: >
+  Optimize a live Meta (Facebook/Instagram) ad account on a recurring cadence: pull performance,
+  classify each entity, then kill losers and scale winners through tiered approval gates - logging
+  every change with before/after state so you can revert. Judges winners on your own conversion
+  source (Meta Conversions API custom conversion by default; Hyros optional), never raw CTR or the
+  browser pixel. Ships a standalone, vendored Meta client.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - automation
+tags:
+  - meta-ads
+  - facebook-ads
+  - optimization
+  - scaling
+  - budget
+  - paid-ads
+icon: TrendingUp
+path: skills/meta-optimize
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"

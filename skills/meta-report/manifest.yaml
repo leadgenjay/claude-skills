@@ -1,0 +1,26 @@
+id: meta-report
+type: skill
+name: "Meta Ads Report"
+description: >
+  Deep Meta (Facebook/Instagram) ads performance report: pull your account's delivery breakdowns
+  (placement, device, demographics, creative, destination) and merge them with your real conversion
+  data, then surface patterns and prioritized recommendations with exact entity IDs and dollar
+  amounts. Conversion-source-first (Meta Conversions API custom conversion by default), with an
+  optional Hyros reconciliation section. Standalone; ships its own minimal Meta client.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - analytics
+tags:
+  - meta-ads
+  - facebook-ads
+  - reporting
+  - analytics
+  - breakdowns
+  - paid-ads
+icon: BarChart3
+path: skills/meta-report
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"
