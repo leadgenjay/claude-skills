@@ -1,0 +1,31 @@
+id: youtube-pro-pack
+type: skill
+name: "YouTube Pro System"
+description: "Run your YouTube channel from Claude Code: research viral ideas + 10x outliers, mine competitor comments for content gaps, write teleprompter scripts, then research + generate thumbnails via fal.ai GPT-Image-2. Bundles 6 skills (research, keywords, script, thumbnail, A/B tester, description)."
+categories:
+  - lgj-exclusive
+  - content
+  - youtube
+tags:
+  - youtube
+  - content
+  - video-ideas
+  - thumbnail
+  - scriptwriting
+  - keyword-research
+  - competitor-analysis
+icon: Youtube
+path: skills/youtube-pro-pack
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"
+branch: LGJ-exclusive
+bundledItems:
+  - yt-research
+  - yt-longtail
+  - youtube-script
+  - youtube-thumbnail
+  - youtube-tester
+  - youtube-description
+kind: package
