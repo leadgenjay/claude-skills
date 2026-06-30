@@ -1,0 +1,31 @@
+id: google-ads-tracking
+type: skill
+name: "Google Ads Tracking — Conversions + Customer Match"
+description: >
+  Set up perfect Google Ads conversion tracking from scratch — the Google tag (gtag), client-side
+  conversion events, Enhanced Conversions for web, the server-side / offline conversion import that
+  survives privacy and ad-blockers, and Customer Match audiences via the Data Manager API — so
+  Google's Smart Bidding optimizes against real money. Interview-driven (BYO Customer ID, developer
+  token, OAuth credentials). Hyros is optional, never assumed. The Hyros-free measurement foundation
+  of the Google Ads Pro System.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - tracking
+tags:
+  - google-ads
+  - conversion-tracking
+  - enhanced-conversions
+  - gclid
+  - customer-match
+  - offline-conversions
+  - data-manager-api
+icon: Crosshair
+path: skills/google-ads-tracking
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/developer-api.md
+version: "1.0"
+composesWell:
+  - google-ads

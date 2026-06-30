@@ -1,0 +1,37 @@
+id: google-ads
+type: skill
+name: "Google Ads Pro System"
+description: >
+  The first-run wizard that takes you from zero to a launched, continuously-optimized Google Ads
+  account. One invocation runs six phases with a confirmation gate between each: set up perfect
+  conversion tracking (Enhanced Conversions + offline import, no Hyros required) → build the strategy
+  (Search vs Performance Max) → build Customer Match audiences → build campaigns + ads with generated
+  RSA + PMax copy → launch → optimize + report on a recurring cadence. Everything builds PAUSED;
+  nothing spends until you explicitly approve. Resumable across sessions.
+categories:
+  - lgj-exclusive
+  - paid-ads
+  - automation
+tags:
+  - google-ads
+  - search-ads
+  - performance-max
+  - responsive-search-ads
+  - paid-ads
+  - conversion-tracking
+  - customer-match
+  - wizard
+icon: Megaphone
+path: skills/google-ads
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/phase-prompts.md
+  - references/launch-build.md
+version: "1.0"
+bundledItems:
+  - google-ads
+  - google-ads-tracking
+composesWell:
+  - brand-voice
+  - autoimprove
