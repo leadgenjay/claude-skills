@@ -1,0 +1,31 @@
+id: linkedin-post
+type: skill
+name: LinkedIn Post Writer
+description: >-
+  Draft LinkedIn posts with a scroll-stopping hook and broetry spacing. Ships a
+  data-derived playbook of real top-performing posts plus a review gate that catches
+  AI-tell words, em dashes, markdown, weak hooks, and links-in-body before you post.
+  Optional Apify key refreshes the playbook for your niche. Draft only - you review and post by hand.
+categories:
+  - lgj-exclusive
+  - content
+  - social-media
+tags:
+  - linkedin
+  - social-media
+  - copywriting
+  - content
+  - lead-gen
+  - personal-brand
+icon: Linkedin
+version: "1.0"
+files:
+  - SKILL.md
+  - manifest.yaml
+  - .env.example
+  - references/winning-patterns.md
+  - references/voice-guide.md
+  - config/channels.json
+  - scripts/scrape-top-posts.ts
+  - scripts/check-post-drafts.ts
+  - evals/evals.json

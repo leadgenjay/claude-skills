@@ -1,0 +1,52 @@
+{
+  "skill_name": "linkedin-post",
+  "domain": "copywriting",
+  "evals": [
+    {
+      "id": 1,
+      "name": "topic-default",
+      "prompt": "/linkedin-post topic: how AI rebuilt my cold email stack (3 drafts)",
+      "expected_output": "3 LinkedIn drafts, hook before the fold, broetry spacing, link in first comment",
+      "expectations": [
+        "Exactly 3 drafts produced",
+        "Each draft's first line (hook) is under ~210 characters and stops the scroll",
+        "Broetry spacing: short paragraphs with blank lines between, no wall of text",
+        "No links in the body; any link is in a first comment",
+        "Plain text only, zero markdown (no **bold**, no headings, no markdown bullets)",
+        "3-5 hashtags at the end",
+        "No AI-tell words, no em dashes, no placeholders",
+        "Each post is under 3000 characters"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "topic-led-hook",
+      "prompt": "/linkedin-post topic: the cold email stack math, $400-1200/mo vs $97/mo (3 drafts)",
+      "expected_output": "3 drafts with distinct hook styles (number-led, contrarian, confession), one CTA each",
+      "expectations": [
+        "Exactly 3 drafts produced",
+        "The 3 hooks use distinct styles (not the same opening pattern repeated)",
+        "Each hook fits before the ~210-char fold",
+        "Each post has exactly one clear CTA",
+        "Story then lesson then CTA structure is visible",
+        "No AI-tell words, no em dashes, no placeholders",
+        "Plain text only, no markdown"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "short-confession",
+      "prompt": "/linkedin-post topic: a deal I lost because I replied to a cold email lead 12 hours late (2 drafts)",
+      "expected_output": "2 confession-style drafts, peer-to-peer voice, tight",
+      "expectations": [
+        "Exactly 2 drafts produced",
+        "At least one opens with a personal confession or scene in line 1",
+        "Peer-to-peer operator voice, not guru lecturing",
+        "Under 250 words each",
+        "No AI-tell words, no em dashes, no placeholders",
+        "Jargon defined in the same sentence on first use",
+        "One CTA and 3-5 hashtags each"
+      ]
+    }
+  ]
+}

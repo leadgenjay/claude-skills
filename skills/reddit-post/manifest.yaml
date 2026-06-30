@@ -1,0 +1,31 @@
+id: reddit-post
+type: skill
+name: Reddit Post Writer
+description: >-
+  Draft community-native Reddit posts that earn upvotes, not spam flags. Ships a
+  data-derived playbook of real top-performing posts plus a review gate that catches
+  AI-tell words, em dashes, placeholders, and salesy promo before you post. Optional
+  Apify key refreshes the playbook for your niche. Draft only - you review and post by hand.
+categories:
+  - lgj-exclusive
+  - content
+  - social-media
+tags:
+  - reddit
+  - social-media
+  - copywriting
+  - content
+  - lead-gen
+  - cold-email
+icon: MessageSquare
+version: "1.0"
+files:
+  - SKILL.md
+  - manifest.yaml
+  - .env.example
+  - references/winning-patterns.md
+  - references/voice-guide.md
+  - config/channels.json
+  - scripts/scrape-top-posts.ts
+  - scripts/check-post-drafts.ts
+  - evals/evals.json

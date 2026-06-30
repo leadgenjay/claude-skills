@@ -1,0 +1,36 @@
+{
+  "_comment": "Channels the scrape helper learns from. EDIT THESE TO YOUR NICHE. The example set below is the cold-email / AI-automation / lead-gen space (all public accounts and communities). 'reddit' = subreddit names without the 'r/'. 'linkedin' = full public profile URLs. The skill works without scraping at all (it ships references/winning-patterns.md); this list only matters when you run scripts/scrape-top-posts.ts to refresh that playbook.",
+  "reddit": [
+    "coldEmail",
+    "sales",
+    "B2Bsales",
+    "Emailmarketing",
+    "leadgeneration",
+    "n8n",
+    "nocode",
+    "artificial",
+    "ClaudeAI",
+    "SaaS",
+    "Entrepreneur",
+    "agency",
+    "startups",
+    "smallbusiness",
+    "marketing",
+    "growthhacking",
+    "indiehackers"
+  ],
+  "linkedin": [
+    "https://www.linkedin.com/in/outboundphd/",
+    "https://www.linkedin.com/in/nils-schneider-instantly/",
+    "https://www.linkedin.com/in/patrickdang/",
+    "https://www.linkedin.com/in/michel-lieben/",
+    "https://www.linkedin.com/in/benjamin-douablin/",
+    "https://www.linkedin.com/in/underdogsales/",
+    "https://www.linkedin.com/in/liamottley/",
+    "https://www.linkedin.com/in/nateherk/",
+    "https://www.linkedin.com/in/jordanplatten/",
+    "https://www.linkedin.com/in/richard-illingworth/",
+    "https://www.linkedin.com/in/arnaud-belinga-social-selling-crm-saas/",
+    "https://www.linkedin.com/in/guillaume-moubeche/"
+  ]
+}

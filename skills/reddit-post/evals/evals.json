@@ -1,0 +1,52 @@
+{
+  "skill_name": "reddit-post",
+  "domain": "copywriting",
+  "evals": [
+    {
+      "id": 1,
+      "name": "topic-default-own-sub",
+      "prompt": "/reddit-post topic: how I cut my cold email tool stack cost (target a community I own, 3 drafts)",
+      "expected_output": "3 Reddit drafts, value-first, soft promo allowed only at the very end",
+      "expectations": [
+        "Exactly 3 drafts produced",
+        "Every draft has a Title and a Body",
+        "No AI-tell words (delve, leverage, unlock, elevate, seamless, etc.)",
+        "No em dashes or en dashes anywhere",
+        "No leftover placeholders like [topic], [link], [result]",
+        "Each title has no emoji and is not ALL CAPS clickbait",
+        "Body leads with value or a story, not a pitch",
+        "Any promotional link is in a first comment, never the body lead"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "outside-sub-no-promo",
+      "prompt": "/reddit-post topic: how I cut my cold email tool stack cost (target r/coldEmail, which does NOT allow self-promo, 2 drafts)",
+      "expected_output": "2 pure-value Reddit drafts with zero pitch, no brand push, no links",
+      "expectations": [
+        "Exactly 2 drafts produced",
+        "Zero pitch or brand promotion in body or title",
+        "No outbound or promotional link anywhere (not even in a comment)",
+        "Post delivers a usable takeaway on its own",
+        "No AI-tell words and no em dashes",
+        "First person, practitioner-to-practitioner tone",
+        "Body is 150-400 words of real substance"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "topic-led-story",
+      "prompt": "/reddit-post topic: the AI reply agent that books calls while you sleep (target a community I own, 3 drafts)",
+      "expected_output": "3 story/teardown drafts, light markdown, honest titles",
+      "expectations": [
+        "Exactly 3 drafts produced",
+        "At least one draft opens with a concrete story or scene",
+        "Light markdown only (short paragraphs, at most one list, at most one bold line)",
+        "Titles are specific and honest (no clickbait, no emoji)",
+        "No AI-tell words, no em dashes, no placeholders",
+        "Jargon (sequencer, API) is defined in the same sentence on first use",
+        "Reads like a real practitioner (peer-to-peer, specific numbers/names)"
+      ]
+    }
+  ]
+}
