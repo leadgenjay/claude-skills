@@ -109,6 +109,14 @@ ghl workflows remove --contact-id <contact_id> --workflow-id <workflow_id>
 
 Requires `--experimental` flag and `GHL_FIREBASE_REFRESH_TOKEN` env var.
 
+> ⚠️ **Own-account-only.** The Firebase refresh token is your **entire GHL login**
+> (full account access), not a scoped key — never use a *client's* token or run the
+> internal API against client sub-accounts. To provision workflows for clients, prefer
+> **Snapshots** (build once in the UI, sub-accounts inherit them — no token). The
+> internal API (`backend.leadconnectorhq.com`) is **unofficial**: no SLA, may change
+> without notice; workflows are created as draft. The CLI prints a one-time warning on
+> use (`GHL_SUPPRESS_INTERNAL_WARNING=1` to silence). Treat the token like a password.
+
 ```bash
 # Create workflows from campaign JSON
 ghl --experimental workflows create --name "My Campaign" --from-json campaign.json
