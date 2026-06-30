@@ -22,9 +22,36 @@ Deep API dump: [`reference/openai-ads-api.md`](reference/openai-ads-api.md). CLI
 install the companion **`openai-ads-setup`** skill — it wires `lead_created` / `checkout_started` /
 `order_created` so you can optimize toward real conversions, not just clicks.
 
-## Step 0 — Prerequisites
+## Step 0 — Prerequisites & getting set up
 
-Before any build or API call, verify these. If any are missing, STOP and tell the user where to get
+**First time? You can start from nothing — this walks you through signup, approval, and your API key.**
+Already have an approved account + key? Skim the checklist table and jump to the **Workflow**.
+
+### Getting started from zero
+
+Ask the user which of these they already have, then walk them through ONLY the missing ones — in order:
+
+1. **Sign up for OpenAI Ads.** Go to **`ads.openai.com`** and apply for the Ads beta with the email you
+   want to advertise under. (It's an invite/approval beta — not instant.)
+2. **Wait for approval.** OpenAI reviews new advertisers; you can't build until your account shows
+   **approved**. If it's still pending, stop here and come back once you're in — there's nothing to wire yet.
+3. **Find your ad account id.** Once you're in Ads Manager it's in the URL: `…?act=adacct_…`. That
+   `adacct_…` string is your account id.
+4. **Mint your API key.** Ads Manager → **Settings → API keys** → create a **service-account key**
+   (`sk-svcacct-…`), scoped to that ONE ad account. **You (the operator) paste it** into `.env.local` as
+   `OPENAI_ADS_API_KEY` — it's gitignored, never commit or print it, and always redact `sk-svcacct-…` in any
+   output. *(Claude never writes your key for you — it's a secret; you add it.)*
+5. **Verify.** Run `openai-ads verify` (a read-only `GET /ad_account`). A 200 means key + account are good
+   and you're ready to build.
+6. *(Recommended next)* Install the **`openai-ads-setup`** skill so you measure real conversions, not just
+   clicks — it has the same from-zero walkthrough for your pixel + Conversions API key.
+
+If a step is genuinely blocked (e.g. approval still pending), **STOP** and tell the user exactly what to do —
+never fabricate an account id, key, or placeholder command against a broken setup.
+
+### At-a-glance checklist
+
+Verify these before any build or API call. If any are missing, STOP and tell the user where to get
 each — do NOT generate placeholder commands against a broken setup.
 
 | Requirement | Check | Where to get it |

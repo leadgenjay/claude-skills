@@ -21,3 +21,8 @@ Two skills that chain into a complete workflow for advertising inside ChatGPT:
 Installing this pack installs both skills; each also works standalone. See each skill's `SKILL.md` for
 its **Step 0 prerequisites** — an approved OpenAI Ads account + service-account API key for `openai-ads`;
 a pixel + a `ads.third_party_events.write`-scoped CAPI key for `openai-ads-setup`.
+
+**Starting from nothing?** Each skill's Step 0 has a **"Getting started from zero"** walkthrough that takes
+you through signup, approval, and minting each API key step by step — set up tracking first
+(`openai-ads-setup`: create your pixel + Conversions key), then build (`openai-ads`: sign up + service-account
+key + campaigns). Claude never writes a secret key for you; it walks you to where you mint each one.

@@ -27,7 +27,34 @@ A complete, copy-pasteable worked implementation (Next.js 14 + Supabase + Whop) 
 [`reference/worked-implementation.md`](reference/worked-implementation.md) — adapt the patterns to
 your own stack.
 
-## Step 0 — Prerequisites
+## Step 0 — Prerequisites & getting set up
+
+**First time? Start from nothing — this walks you through creating your pixel and your Conversions API key.**
+Already have a pixel id + a scoped CAPI key? Skim the checklist table and jump to **Step 1**.
+
+### Getting started from zero
+
+Ask the user which of these they already have, then walk them through ONLY the missing ones — in order:
+
+1. **Have an approved OpenAI Ads account first.** Tracking attaches to an Ads account — if you don't have one
+   yet, set it up with the **`openai-ads`** skill's "Getting started from zero" (sign up at `ads.openai.com`,
+   get approved), then come back here.
+2. **Create your pixel (Data Source).** Ads Manager → **Conversions (Beta)** → create a Data Source. This is
+   your pixel — it's how OpenAI ties on-site events back to your ads.
+3. **Copy your Pixel ID.** It's a ~22-character string under Conversions → Data Source. This is **public**
+   (it ships in your site's `<head>`); the operator stores it as `OPENAI_ADS_PIXEL_ID`.
+4. **Mint a Conversions API key (for server-side purchases).** Ads Manager → Conversions → **Conversion keys**
+   → create a key **with the `ads.third_party_events.write` scope**. ⚠️ A plain `sk-svcacct-…` platform key
+   **without** that scope 401s "Missing scopes" — this is the #1 setup trap. **You (the operator) paste it**
+   into `.env.local` as `OPENAI_CONVERSIONS_KEY` (secret — never commit/print; Claude never writes it for you).
+5. **Redeploy** if you're on a serverless host (Vercel/Workers) so the new env vars are actually visible to
+   your functions, then run the `validate_only:true` smoke test in Step 4 — a `{"accepted_events":1}` means
+   key + scope + payload are all good.
+
+If a step is genuinely blocked, **STOP** and tell the user exactly what to do — never hardcode a placeholder
+pixel id or an unscoped key.
+
+### At-a-glance checklist
 
 Verify these before wiring anything. If any is missing, STOP and tell the user where to get it — do NOT
 emit placeholder code against a broken setup.
