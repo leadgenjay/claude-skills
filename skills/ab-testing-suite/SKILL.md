@@ -20,6 +20,18 @@ Confirm each item before doing anything else. **If a required item is missing, S
 
 **Before wiring conversions on any test, read `references/tracking-gotchas.md` and pick a conversion model (§ Conversion Tracking Models below).** Getting this wrong is the single most common way to silently corrupt A/B data.
 
+### Getting started from zero
+
+Nothing set up yet? **Ask the operator what they already have and walk only the gaps.** A true-beginner path:
+
+1. **Supabase** — create a free project at **supabase.com**, then copy `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Settings → API) and the `SUPABASE_SERVICE_ROLE_KEY` (server-only). The operator pastes these into `.env.local` — **never write or print the service-role key.**
+2. **Schema** — run `scripts/setup-supabase.sql` against the project (idempotent). Creates `ab_test_registry` + `ab_test_events`, indexes, RLS, triggers.
+3. **Wire the app** — copy `assets/middleware-handler.ts` + `assets/conversion-tracker.tsx` into the project and integrate per `/ab setup`.
+4. **Optional data-driven ideas** — connect the **Clarity** MCP (heatmaps, rage/dead clicks) and a **PostHog** project (event funnels) so `/ab ideas` is grounded in real behavior, not guesses. PostHog from zero: sign up at **posthog.com** → create a project → copy a **Personal API key** (Settings → Personal API keys) → operator stores it as `POSTHOG_API_KEY` (you never write it). Pairs with the `heatmap-analyzer` skill.
+5. **Validate** — run `scripts/validate-setup.sh`.
+
+Then, **before wiring a single conversion, pick the conversion model** (see § Conversion Tracking Models + `references/tracking-gotchas.md`) — getting it wrong looks identical to working and silently corrupts the data.
+
 ## Commands
 
 | Command | Purpose |

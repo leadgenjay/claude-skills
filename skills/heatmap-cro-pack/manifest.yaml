@@ -1,0 +1,27 @@
+id: heatmap-cro-pack
+type: skill
+name: "Heatmap Conversion Optimization System"
+description: "Run CRO end-to-end: read Microsoft Clarity heatmaps + recordings and score PIE A/B hypotheses (heatmap-analyzer), then run zero-flicker A/B tests on Next.js + Supabase with statistical winner declaration (ab-testing-suite). Two chained skills: diagnose, then experiment."
+categories:
+  - lgj-exclusive
+  - analytics
+  - conversion
+tags:
+  - clarity
+  - heatmaps
+  - ab-testing
+  - cro
+  - conversion
+  - posthog
+  - analytics
+icon: Flame
+path: skills/heatmap-cro-pack
+files:
+  - SKILL.md
+  - manifest.yaml
+version: "1.0"
+branch: LGJ-exclusive
+bundledItems:
+  - heatmap-analyzer
+  - ab-testing-suite
+kind: package

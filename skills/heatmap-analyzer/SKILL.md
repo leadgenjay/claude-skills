@@ -15,6 +15,26 @@ Analyzes Microsoft Clarity analytics (project `qk5hok8gx8` — session recording
 
 Before any query or analysis, verify these. **Only the first two are hard requirements.** If either is missing, STOP and set it up — do NOT fabricate metrics, emit placeholder data, or proceed on an empty Clarity response. The rest are optional; the skill degrades gracefully without them.
 
+### Getting started from zero
+
+New to Clarity (or PostHog)? Don't paste anything yet — **ask the operator what they already have and walk only the gaps.** The numbered path below takes a true beginner from nothing to a working setup; the exact commands live in **Step-by-Step Setup** just below.
+
+**Clarity (required — powers every heatmap query):**
+
+1. Create a free account at **clarity.microsoft.com** and add your site as a new project.
+2. Copy the Clarity tracking snippet and paste it into your site's `<head>`. (LGJ already ships it via `app_settings.global_tracking.customHeadScripts`, project `qk5hok8gx8`.) New properties take a few hours before data shows.
+3. In Clarity → **Settings → Data Export**, generate a new API token (`Data.Export` scope, non-expiring) — this is the **JWT** the MCP needs.
+4. Install the Clarity MCP with that token (see **Step-by-Step Setup → 1** below), then **start a fresh Claude Code session** and confirm `get-clarity-data` is listed.
+
+> The operator pastes the JWT into the `claude mcp add` command themselves — **never write or print the token**; treat it like a password. If they can't get an approved Clarity account or token, STOP and say so rather than fabricating data.
+
+**PostHog (optional — only for event + funnel-sequence analysis, which Clarity can't do):**
+
+1. Sign up at **posthog.com** and create a project.
+2. Copy the **Project API key** (Settings → Project) for the site snippet, and a **Personal API key** (Settings → Personal API keys) for querying.
+3. Install the PostHog MCP (or use the host app's PostHog client). The operator stores the personal key as `POSTHOG_API_KEY` — you never write it.
+4. Use PostHog for `$pageview` sequences, opt-in/purchase events, and multi-step funnels; come back to Clarity for the per-page UX read.
+
 | Requirement | Check | Where to get it |
 |---|---|---|
 | **Clarity MCP server** · required | `claude mcp get clarity` → `Connected`; in a fresh session ask "list MCP tools" → `get-clarity-data` is present | `claude mcp add -s user clarity -- npx -y @microsoft/clarity-mcp-server --clarity_api_token=<JWT>`. JWT: Clarity → Settings → Data Export → new token (`Data.Export` scope, non-expiring). The token is **project-scoped**, so `get-clarity-data` returns that project's data automatically. Add the server BEFORE the session — MCP loads at session start only. |
