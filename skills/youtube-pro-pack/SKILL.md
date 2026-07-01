@@ -9,7 +9,7 @@ description: >
   Use when you want the whole pipeline — idea to published video — not just one piece.
 ---
 
-# YouTube Pro System (YouTube Pack)
+# YouTube Pro Creator System
 
 Six skills that chain into one operator-run YouTube growth engine: **idea → keywords → script → thumbnail → test → describe.** One person runs the whole thing from Claude Code — no editor, no $300/mo research SaaS, no thumbnail designer, no agency.
 
