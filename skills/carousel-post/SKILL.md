@@ -1,6 +1,23 @@
 ---
 name: carousel-post
-description: Generate Instagram carousel posts as AI images via fal.ai (Nano Banana 2 + Flux LoRA). Creates polished, viral-style carousels with Jay photos, light backgrounds, real screenshots, and brand-consistent typography. This skill should be used when the user asks to create an Instagram carousel, carousel post, slide deck for Instagram, or multi-slide social post.
+description: Generate Instagram carousel posts as AI images via fal.ai (GPT-Image-2 + Flux LoRA, NB2 retained as `*2Legacy` fallback). Creates polished, viral-style carousels with Jay photos, light backgrounds, real screenshots, and brand-consistent typography. This skill should be used when the user asks to create an Instagram carousel, carousel post, slide deck for Instagram, or multi-slide social post.
+---
+
+## Step 0 — Prerequisites (operator-only skill)
+
+This is an LGJ operator skill. It runs inside the `social-media-tool` project and drives Jay's own accounts and assets. It is NOT portable to a fresh customer machine. Before any step, verify:
+
+| Requirement | Check | Where to get it |
+|---|---|---|
+| `social-media-tool` project (host) | `test -f lib/fal.ts` | this repo; the skill imports `../lib/fal` (GPT-Image-2 + Flux LoRA helpers) |
+| `FAL_KEY` | `grep -q FAL_KEY .env.local` | fal.ai dashboard |
+| Preview + quality-gate scripts | `test -f scripts/skills/preview-quality-gate.mjs` | bundled in the host project |
+| (publish only) `BLOTATO_API_KEY` | `grep -q BLOTATO_API_KEY ~/.zshrc` | Blotato dashboard |
+| (publish only) `blotato` CLI | `command -v blotato \|\| test -x "$HOME/Documents/Tech & Dev/highlevel-api-docs/agent-harness/.venv/bin/blotato"` | cli-anything GHL harness venv |
+| (delivery only) `gog` CLI + Drive access | `command -v gog` | operator env |
+
+If anything is missing, STOP and tell the user where to get each. Do NOT emit placeholder bash or fabricate paths.
+
 ---
 
 ## Brand System (source of truth)
@@ -16,6 +33,29 @@ Use this skill when the user mentions:
 - "slides for Instagram", "slide deck", "multi-slide"
 - "create slides", "make a carousel"
 - "swipe post", "Instagram swipe"
+
+---
+
+> **Pattern attribution**: The Anti-Slop quick reference below `[h-design]` is
+> adapted from huashu-design by 花叔 (github.com/alchaincyf/huashu-design)
+> under Apache-2.0 personal-use terms.
+
+## Anti AI-Slop Quick Reference `[h-design]`
+
+Apply BEFORE generating any carousel slide. Every element below has a "why it's slop" reason — useful when the brand spec wants something the table bans.
+
+| Category | Avoid | Use instead |
+|---|---|---|
+| **Font** | Inter / Roboto / Arial / system fonts as display | Distinctive display + body pair (Big Shoulders + Manrope is the LGJ default) |
+| **Color** | Purple gradients, ad-hoc invented colors | Brand color (#ED0D51 / #0144F8) or `oklch()` defined harmonious tones |
+| **Container** | Rounded card + colored left-border accent | Honest dividers / no-border with spacing |
+| **Imagery** | SVG-drawn people / faces / objects | Real photo, real screenshot, real logo, or honest gray placeholder |
+| **Icons** | Decorative icon next to every heading | Only icons that **carry differentiating information** — keep meaningful density, kill ornament |
+| **Filler** | Fabricated stats / quotes / "social proof" decorations | White space, or ask the user for real content |
+| **Animation** | Scattered micro-interactions | One well-orchestrated load sequence |
+| **Fake chrome inside the slide** | Drawing your own progress bar / time code / attribution INSIDE the slide art | Slide art holds narrative only; chrome belongs outside the canvas |
+
+**Rule for legitimate exceptions**: only the brand spec or explicit user request can break these. Anti-slop isn't aesthetic puritanism — it's **protecting brand recognition** from AI's mean-converging default.
 
 ---
 
@@ -208,10 +248,48 @@ for (const [i, slide] of slides.entries()) {
 }
 ```
 
+### Step 7.5: Quality Gate & In-Browser Preview
+
+Before presenting the carousel, verify image quality and open the in-browser mockup previewer:
+
+```bash
+# 1. Run quality gate on all slides
+node scripts/skills/preview-quality-gate.mjs \
+  --dir output/carousel/ \
+  --type image \
+  --min-width 1080 \
+  --min-height 1350
+
+# 2. If gate passes, write preview config
+cat > output/carousel/preview.json << 'EOF'
+{
+  "template": "ig-carousel",
+  "handle": "leadgenjay",
+  "avatar": "avatar.png",
+  "slides": [
+    { "src": "slide-01.png" },
+    { "src": "slide-02.png" },
+    { "src": "slide-03.png" }
+  ],
+  "caption": "[CAROUSEL_CAPTION]",
+  "metrics": { "likes": "2,847", "comments": "61" },
+  "aspectRatio": "4:5",
+  "chrome": { "showStatusBar": true, "showBottomNav": true }
+}
+EOF
+
+# 3. Render preview and open in browser
+node scripts/skills/render-preview.mjs \
+  --template ig-carousel \
+  --out output/carousel/preview.html \
+  --config @output/carousel/preview.json \
+  --open
+```
+
 Then:
-1. Open all slides in Preview.app (`open -a Preview output/carousel/`)
+1. Review all slides in the in-browser iPhone mockup — swipe through carousel view
 2. Check against Quality Checklist below
-3. Regenerate any slides that fail checks
+3. Regenerate any slides that fail checks; re-run quality gate and previewer
 
 ---
 
@@ -322,6 +400,7 @@ Clean, centered layout. No clutter. No icons. Generous margins.
 | `myth-busting` | Controversial takes | Bold statement + Jay photo | Myth -> Truth with proof screenshots |
 | `case-study` | Social proof / results | Metric headline + Jay photo | Real dashboard/analytics screenshots |
 | `framework` | Teaching a system | Framework name + Jay photo | Screenshots showing each step in practice |
+| `announcement` | Product/news drops (e.g. a Claude/Anthropic update) | Red "BREAKING NEWS" pill banner + big headline + Jay `excited` photo | Recreated proof graphic (tooltip/announcement card), then stakes → what-I'm-building list → differentiator → urgency → bridge → CTA |
 
 ---
 
@@ -443,6 +522,9 @@ When the headline starts with "POV:", do NOT show the creator's face on the cove
 ### Identity Preservation Rule
 
 NEVER pass a Flux LoRA photo to Nano Banana expecting identity preservation. Nano Banana treats reference images as style/composition guides only — it WILL generate a different person. For CTA slides needing the creator's face:
+
+**GPT-Image-2 update (verified 2026-07-07):** passing the ENTIRE Flux LoRA photo (full upper-body, not a face crop) as the *sole* `image_urls` reference to `editWithNanoBanana` (GPT-Image-2 Edit) preserved Jay's identity well on BOTH the cover and the CTA. The model kept the source face rather than re-rendering it, so this is now the reliable default for photo slides. Still verify: Read the Flux source and the composited slide together, and if the face drifted, fall back to the Sharp compositing below.
+
 1. Generate a dedicated Flux LoRA headshot specifically for the CTA
 2. Either use the Flux LoRA output directly, or composite it programmatically via Sharp
 3. If Nano Banana must be used (for text overlay), accept that the face may not match — prefer option 1 or 2
@@ -451,7 +533,7 @@ NEVER pass a Flux LoRA photo to Nano Banana expecting identity preservation. Nan
 - Generate the CTA background with NO placeholder circle — leave the area blank/white where the headshot will go
 - Composite the headshot at the FULL intended circle size (not smaller)
 - The headshot must fill the entire circle edge-to-edge with zero gap
-- After compositing, visually verify via `open -a Preview` that the headshot fills its circle
+- After compositing, verify the result via quality-gate tool output that the headshot fills its circle (no gaps, no visible placeholder shapes behind the photo)
 
 ### Post-Compositing Verification Rule
 
@@ -481,24 +563,29 @@ This prevents blank/white output from silently corrupted composites. Always incl
 
 ### Pre-Delivery Slide Verification Rule
 
-Before presenting ANY carousel to the user, verify EVERY slide:
-1. Open each slide in Preview.app and visually inspect
-2. Check file size — slides with real screenshots/photos should be 400KB+. A slide under 200KB likely has missing visual content (blank areas, failed composites)
-3. Verify no blank white rectangles where images should be
-4. Verify comparison slides have visual artifacts (not plain text columns)
-5. If ANY slide fails verification, regenerate it before presenting
+Before presenting ANY carousel to the user, verify EVERY slide using the shared quality-gate tool:
 
-Generation scripts should include automated size checks:
-```js
-const stats = fs.statSync(slidePath);
-if (stats.size < 200000) {
-  log("warn", `${filename} is only ${Math.round(stats.size/1024)}KB — likely missing visual content`);
-}
+1. Run `preview-quality-gate.mjs` (Step 7.5) — automatically extracts frames and prints checklist
+2. Review the checklist output: magic bytes valid, dimensions correct, file size >200KB (indicates visual content present)
+3. Inspect extracted frames visually — check for blank white rectangles, missing images, failed composites
+4. Verify comparison slides have visual artifacts (not plain text columns)
+5. If ANY slide fails verification, regenerate it and re-run quality gate before presenting
+
+**Gate scope note (verified 2026-07-07):** the image gate globs ALL PNGs in `--dir`. Keep the slide dir clean — move `*-v2.png` alternates to `output/carousel/alts/` and keep non-slide assets (the square `avatar.png` used by the previewer, any stray `jay-*.png`) OUT of the gated dir. Otherwise the gate reports `too-small-dimensions` for those files even though the eight `slide-0N.png` all pass. Only defects whose `file` is a `slide-` file matter.
+
+The quality-gate tool handles file size validation automatically:
+```
+[quality-gate] slide-02.png: 452 KB ✓ (real visual content present)
+[quality-gate] slide-05.png: 187 KB ⚠ (likely missing visual content)
 ```
 
 ### Dashboard Number Consistency Rule
 
 When a slide headline claims a specific metric (e.g., "1,000 EMAILS"), the dashboard screenshot on that slide MUST show consistent numbers. Add explicit number targets to the Nano Banana prompt (e.g., "showing 1,000+ total sent, 4.1% reply rate"). Never let AI hallucinate random numbers that contradict the headline.
+
+### Embedded UI / Screenshot Text Rule (verified 2026-07-07)
+
+When a slide embeds a realistic screenshot artifact (Google Doc, app tooltip, dashboard, browser chrome) that carries a **title or label**, pin that text explicitly in the prompt and forbid em/en dashes inside it. GPT-Image-2 hallucinates chrome text: it rendered a Google Doc titled "Fable 5 – Build List" (en dash) when the title was left unspecified, which tripped Jay's no-dash rule even though the marketing copy was clean. Specify it, e.g. `The document title bar reads exactly "Fable 5 Build List" (three words, no dash, no colon, no extra punctuation).` During verification, read the embedded chrome text too, not just the headline. Legitimate hyphens inside words (Auto-deployed, re-sale) are fine; the ban is em/en dashes.
 
 ### Output Cleanup Rule
 
@@ -511,12 +598,23 @@ Scripts must clean old slide files from `output/carousel/` before generating a n
 | Function | Model | Use Case |
 |----------|-------|----------|
 | `generateImage()` | Flux LoRA | Jay photos (character-consistent via LoRA) |
-| `generateWithNanoBanana()` | Nano Banana 2 | Text-to-image slides (no references needed) |
-| `editWithNanoBanana()` | Nano Banana 2 Edit | Composite slides (with reference images/screenshots) |
+| `generateWithNanoBanana()` | **GPT-Image-2** (default since 2026-04-26; NB2 via `*2Legacy`) | Text-to-image slides (no references needed) |
+| `editWithNanoBanana()` | **GPT-Image-2 Edit** (default since 2026-04-26; NB2 via `*2Legacy`) | Composite slides (with reference images/screenshots) |
 | `uploadToFalStorage()` | Storage API | Upload local assets as fal.ai URLs |
 | `downloadImage()` | -- | Download generated images to local disk |
 
-All functions imported from `@/lib/fal` (or `../lib/fal.ts` for scripts).
+All functions imported from `@/lib/fal` (or `../lib/fal` for scripts) in the host `social-media-tool` project (see Step 0).
+
+> **Default model: GPT-Image-2 (medium quality)** — bake-off winner 2026-04-26. The `editWithNanoBanana` / `generateWithNanoBanana` exports in `lib/fal.ts` are now thin adapters that route to GPT-Image-2 internally. NB2 remains accessible as `editWithNanoBanana2Legacy` / `generateWithNanoBanana2Legacy` for fallback (e.g., when GPT-Image-2 returns `content_policy_violation`).
+>
+> **Cost:** ~$0.18/slide portrait (4:5) vs prior NB2 ~$0.07. A 10-slide carousel is now ~$1.80 (was ~$0.70). Latency is ~64s/slide (was ~42s).
+>
+> **Gotchas:**
+> - GPT-Image-2 has no `resolution` (1K/2K/4K) — `image_size` is locked via aspect_ratio translation. Carousel callers can keep passing `aspect_ratio: "3:4"` or `"4:5"` — both translate correctly.
+> - `output_format: "webp"` silently translates to `png`.
+> - Reference images with aspect ratio > 3:1 are rejected. Use `lgj-icon.jpeg` (1000×1000), not `lgj-logo.png` (600×200).
+> - **Output size is UNDER the IG spec (verified 2026-07-07).** `aspect_ratio: "4:5"` returns 1024x1280 and `"3:4"` returns portrait_4_3 (~1024x1365). Both are below the quality gate's `--min-width 1080`, so raw GPT-Image-2 slides FAIL the gate. Upscale every final slide to a true IG 1080x1350 (4:5) with Sharp before gating: `sharp(buf).resize(1080, 1350, { fit: "fill", kernel: "lanczos3" }).png()`. 4:5 to 4:5 is a ratio-preserving upscale (no crop, no distortion). Reference implementation: `saveResized()` in `scripts/generate-fable5-carousel.ts`.
+> - **Keep it GPT-Image-2 only.** `editWithNanoBanana`/`generateWithNanoBanana` already route to GPT-Image-2. Do NOT auto-fall-back to `*2Legacy` (NB2) — retry GPT-Image-2 on transient errors and surface a `content_policy_violation` instead of silently downgrading the model. See `editGptImage2Only()` in the Fable 5 script.
 
 ---
 
@@ -524,9 +622,10 @@ All functions imported from `@/lib/fal` (or `../lib/fal.ts` for scripts).
 
 Before presenting the carousel as complete, verify ALL of these:
 
-- [ ] **TEXT VERIFICATION (MANDATORY)**: Read every slide at full resolution. Check every visible word for spelling and coherence. AI generators hallucinate text.
-- [ ] **If text is garbled**: Use Nano Banana 2 Edit to fix the specific text. Pass the slide as reference image with prompt targeting only the text fix.
-- [ ] **Phone mockups/screenshots**: Zoom into any small text areas to verify. Thumbnail checks are NOT sufficient.
+- [ ] **Quality gate passed** — `preview-quality-gate.mjs` returned all slides valid (magic bytes, dimensions ≥1080×1350, file size >200KB)
+- [ ] **TEXT VERIFICATION (MANDATORY)**: Read every slide at full resolution in the in-browser preview. Check every visible word for spelling and coherence. AI generators hallucinate text.
+- [ ] **If text is garbled**: Use Nano Banana 2 Edit to fix the specific text. Pass the slide as reference image with prompt targeting only the text fix. Re-run quality gate and preview.
+- [ ] **In-browser carousel review**: Swipe through all slides in the ig-carousel mockup preview (Step 7.5). Check mobile viewport rendering.
 - [ ] **Image hosting**: Upload slides to fal.ai CDN for Instagram posting (Google Drive URLs fail on Instagram)
 - [ ] **Light background** on every slide (white/off-white, never dark)
 - [ ] **Single background color** per slide (no two-tone layering)
@@ -545,11 +644,11 @@ Before presenting the carousel as complete, verify ALL of these:
 - [ ] **Jay avatar on every non-photo slide** — V8 cartoon avatar present on all inner slides without a real Jay/person photo
 - [ ] **CTA slide has text overlay** with comment trigger or follow CTA
 - [ ] No banned AI words from CLAUDE.md
-- [ ] Readable when squinting on small dim screen
+- [ ] Readable when squinting on small dim screen in mobile mockup
 - [ ] Consistent visual style across all slides
 - [ ] Resolution is 1K (not 2K unless explicitly requested)
 - [ ] All slides saved to `output/carousel/` as `slide-01.png`, `slide-02.png`, etc.
-- [ ] Opened in Preview.app and visually confirmed
+- [ ] `preview.html` and `preview.json` generated and opened in browser
 
 ---
 
@@ -561,6 +660,8 @@ output/carousel/slide-01.png   (cover)
 output/carousel/slide-02.png   (first content slide)
 ...
 output/carousel/slide-NN.png   (CTA slide)
+output/carousel/preview.html   (in-browser mockup, generated by render-preview.mjs)
+output/carousel/preview.json   (config for re-render, written by preview step)
 ```
 
 Reference screenshots saved to:
@@ -568,7 +669,7 @@ Reference screenshots saved to:
 output/carousel/references/    (Playwright captures, resized to max 1000px)
 ```
 
-Open in Preview.app for review: `open -a Preview output/carousel/`
+Review in browser via the in-browser iPhone mockup (Step 7.5): `preview.html` opens automatically with `--open` flag.
 
 ## Google Drive Delivery
 
@@ -576,7 +677,7 @@ After generating and reviewing slides, upload them to Google Drive for Jay to ac
 
 1. Create a carousel folder (if it doesn't already exist) in the shared parent folder:
 ```bash
-export GOG_KEYRING_PASSWORD='bobclawd2026'
+export GOG_KEYRING_PASSWORD="${GOG_KEYRING_PASSWORD:?set in your operator env, do not hardcode}"
 gog drive mkdir "<Carousel Name>" --parent 1mZhMS35V2stGHtid3B1ujNTJ-naIfBuA --account bob@leadgenjay.com
 ```
 
@@ -631,14 +732,33 @@ All carousel subfolders inherit sharing permissions from the parent — no need 
 
 ---
 
-### Step 8: Publish (Optional)
+### Step 8: Caption + Publish to Instagram via Blotato
 
-After delivering slides to Google Drive, ask Jay:
-"Want me to post this carousel to Instagram now?"
+After the slides pass the gate and preview, run the copy + publish chain. Do NOT auto-post — publish only when Jay says to (he explicitly authorized it for the Fable 5 run).
 
-If yes:
-1. Chain to the `/post` skill with the carousel slides from `output/carousel/`
-2. The post skill handles caption writing, hashtags, platform formatting, and Blotato publishing
-3. NEVER auto-post — always wait for explicit Jay approval
+**8a. Caption + hashtags — chain to `short-copy`.**
+Invoke `/short-copy` with the carousel topic. It writes the IG caption + tiered hashtags in Jay's voice AND enforces the DM-trigger gate:
+- Lock the comment-trigger keyword (e.g. `AIA`).
+- Verify it is registered: `node scripts/check-dm-trigger.mjs --keyword <KW> --json` (exit 0 = found; the printed reply preview confirms the auto-DM makes sense; exit 2 = HALT and create it via `/short-trigger` first). A comment CTA with no configured auto-reply loses every lead.
 
-If no or no response: end workflow after Drive delivery.
+**8b. Host the slides on a public CDN.**
+Instagram rejects Google Drive URLs, so upload each `slide-0N.png` to fal.ai storage (`uploadToFalStorage`, in slide order) and collect the CDN URLs. Pattern: `scratchpad`/`upload-fable5.mjs` (loads `FAL_KEY` from `.env.local`, prints comma-joined URLs).
+
+**8c. Publish the carousel via the Blotato CLI.**
+- Binary (operator-only; use your own path): `"$HOME/Documents/Tech & Dev/highlevel-api-docs/agent-harness/.venv/bin/blotato"` — the `blotato` CLI from the cli-anything GHL harness venv. If you installed the harness elsewhere, point at your path or put `blotato` on `PATH`.
+- Key: `BLOTATO_API_KEY` lives in `~/.zshrc` — prefix with `eval "$(grep '^export BLOTATO_API_KEY=' ~/.zshrc)"`.
+- **@leadgen IG account = `12056`** (confirm with `blotato --json accounts list`). Other LGJ IDs: @jaytheai `12866`, consulti.ai `43905` (different brand — do not cross-post).
+- Immediate publish:
+  ```bash
+  blotato --json posts publish \
+    --account 12056 --platform instagram \
+    --text "$(cat caption.txt)" \
+    --media "url1,url2,...,url8"
+  ```
+  Add `--schedule <ISO8601>` to schedule instead. A feed carousel needs NO `--media-type` (that flag is `reel|story` only). Success returns `{ "postSubmissionId": "..." }`.
+- **First-comment hashtags:** the CLI has no first-comment flag, so publish a clean caption (no hashtags) and hand Jay the hashtag block to paste as the first comment (matches his IG convention). Verify at https://app.blotato.com/scheduled.
+
+If Jay wants LinkedIn/X reuse, the same slide URLs publish to those accounts (see `.claude/skills/consulti-content/scripts/schedule-blotato.mjs` for the per-surface arg builders — but that script's brand firewall blocks LGJ IDs, so drive the CLI directly for @leadgen).
+
+**8d. Deliver to Nextcloud (canonical archive).**
+Copy the final slides + caption + `preview.html` to `~/Nextcloud/Carousels/<Topic> <YYYY-MM-DD>/`.
