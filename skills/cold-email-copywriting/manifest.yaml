@@ -1,7 +1,7 @@
 id: cold-email-copywriting
 type: skill
 name: "Cold Email Copywriting"
-description: "Write cold email sequences with copy constraints, spintax, and deliverability rules. Platform-aware formatting for Email Bison and Instantly."
+description: "Write cold email sequences that actually get opened - opens-first subject/first-line rules, the no-hook personality fallback, spintax, deliverability constraints, and a mechanical em-dash (AI-tell) lint. Platform-aware for Email Bison and Instantly."
 categories:
   - lgj-exclusive
   - content
@@ -17,5 +17,7 @@ path: skills/cold-email-copywriting
 files:
   - SKILL.md
   - references/copy-constraints.md
-version: "1.0"
+  - references/open-rate-playbook.md
+  - scripts/lint-copy.mjs
+version: "2.0"
 branch: LGJ-exclusive

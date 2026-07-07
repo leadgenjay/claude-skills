@@ -13,9 +13,10 @@ Build the strategic foundation for a cold email campaign through a 4-phase proce
 
 ## Before You Start
 
-This skill is self-contained — it builds the ICP, offer positioning, and messaging strategy from the discovery interview below (Phase 1). There is no bundled knowledge base.
+**Read the references.** The ICP output format lives in `references/icp-template.md` and the
+discovery structure in `references/context-intake-guide.md`. Read them before generating an ICP.
 
-If the user has supplied materials (transcripts, docs, decks, existing copy), process those first (see Phase 1, Path A). **Do not ask the user for framework, ICP, or reference files, and never report such files as missing** — if you don't have material, go straight to the interview.
+**Optional — query NotebookLM.** The "Cold Email Strategy & Copywriting" notebook (ID: `cold-email-strategy-copywritin`) contains additional source material. Query it for deeper insight on offer positioning, ICP development, and advanced strategies like reverse lead magnets or signal-based outreach. It is a supplement, not required.
 
 ---
 
@@ -89,13 +90,19 @@ Use the template in `references/icp-template.md` for the output format.
 
 **Job Titles** -- Target people with buying authority and implementation power. Founders, CEOs, CMOs, COOs, VPs, Directors. Avoid mid-level employees and technical roles.
 
+> **Tight-ICP rule for hard-sell / no-hook offers.** When the offer is a hard sell, requires a
+> specific decision the buyer can't delegate, or has no lead magnet / unique mechanism / social
+> proof (a relationship or "be your guy" play), go narrow: **Owner / Founder / CEO ONLY** — not
+> CMOs or Directors. Broad, industry-agnostic targeting with mid-org titles is a trap for these
+> offers (it poisons the copy and the reply rate). Pair this with the tight company-size band below.
+
 **Industries** -- Broad categories alone cause massive overlap. Stack a broad filter with specific company keywords. Also consider "blue ocean" industries that get few cold emails (manufacturing, farming, restaurants, trades).
 
 **Product vs. Customer trap:** When building an ICP for a tool, platform, or SaaS, never target the product's own industry. A cold email platform's customers are staffing agencies, cybersecurity firms, and IT services companies, not "SaaS" or "Computer Software" companies. Always ask: "What industry is my CUSTOMER in?"
 
 **Company keywords describe the CUSTOMER, not the product.** If you're selling a cold email tool, don't use "cold email" or "lead generation" as company keywords. Use keywords that describe your customer's business: "staffing", "cybersecurity", "managed services."
 
-**Company Size** -- 3-100 employees is the sweet spot. Below 3 is solopreneurs (no budget). Above 500 is enterprises (rigid, established vendors).
+**Company Size** -- 3-100 employees is the sweet spot. Below 3 is solopreneurs (no budget). Above 500 is enterprises (rigid, established vendors). For hard-sell / no-hook offers (see the tight-ICP rule above), tighten hard to a narrow band such as **20-30 employees max** — small enough that the owner still makes the call and feels the pain personally, big enough to have budget.
 
 **Geography** -- Country/state/city or zip+radius. Scrape one location at a time for deduplication.
 

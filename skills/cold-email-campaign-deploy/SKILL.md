@@ -5,19 +5,6 @@ description: "Deploy cold email campaigns to Email Bison or Instantly. Generates
 
 # Cold Email Campaign Deploy
 
-## Step 0 — Prerequisites
-
-This is a prompt-only skill (no scripts bundled — it teaches Claude how to call the Instantly / Email Bison REST APIs directly). Verify the following before invoking:
-
-| Requirement | Check | Where to get it |
-|---|---|---|
-| `curl`, `jq` | `command -v curl jq` | preinstalled |
-| Sequencer API key | `[ -n "$INSTANTLY_API_KEY" ]` OR `[ -n "$EMAIL_BISON_API_KEY" ]` | Instantly: app → Settings → Integrations → Personal API Key. Bison: <https://send.leadgenjay.com> → Settings → API |
-| Upstream artifacts | files exist in `scripts/campaigns/<name>/` | run `cold-email-strategy`, `cold-email-copywriting`, `cold-email-ab-testing` first |
-| `lead-tracking-db` (optional) | `[ -d ~/.claude/skills/lead-tracking-db ]` | needed only if you want post-deploy domain/mailbox state recorded in the Turso leads DB |
-
-If the sequencer API key is missing OR the required artifacts (`copy/sequence.md` + `ab-testing/variants.md`) aren't in the campaign workspace, stop and tell the user which upstream skill to run — do NOT deploy with incomplete inputs.
-
 Deploy a fully prepared campaign to Email Bison or Instantly. This skill compiles all upstream artifacts into a campaign brief, runs safety checks, and creates the campaign via API in PAUSED state.
 
 **Skill chain:** `cold-email-strategy` -> `cold-email-copywriting` -> `cold-email-ab-testing` -> `cold-email-campaign-deploy` (you are here)
@@ -73,12 +60,13 @@ The brief is the source of truth for this campaign. It captures every decision s
 
 ---
 
-## Pre-Launch Checklist (8 Mandatory Gates)
+## Pre-Launch Checklist (9 Mandatory Gates)
 
 **Every gate must pass before creating the campaign.** If any gate fails, stop and resolve before proceeding.
 
 | # | Gate | Check | Why |
 |---|------|-------|-----|
+| 0 | **Copy read-through (human + lint)** | Run the dash lint (`node .claude/skills/cold-email-copywriting/scripts/lint-copy.mjs <sequence file>`) and confirm it exits 0. Then read each subject line + first line as the prospect: would you open it, or does it smell like a cold email? Confirm the CTA asks for a simple "yes" (gives the fix, not "let me share what we do") and no email body is one solid block of text | Never blindly ship AI-generated copy. Em dashes (the top AI tell) slip past visual scans, so the lint is mandatory. If the copy telegraphs cold outreach or reads as a research flex, it won't get opened and nothing downstream matters. See `cold-email-copywriting/references/open-rate-playbook.md` |
 | 1 | **Email verification** | Lead list verified, bounce target < 3% | Bounces destroy domain reputation faster than anything else |
 | 2 | **Warmup score** | All sender accounts >= 95 warmup score | Sending cold on low-warmup accounts triggers spam detection |
 | 3 | **DNS authentication** | SPF, DKIM, and DMARC configured on all sender domains | Missing auth = emails go to spam |
@@ -87,9 +75,46 @@ The brief is the source of truth for this campaign. It captures every decision s
 | 6 | **Spintax applied** | All emails have spintax on greetings, transitions, CTAs, sign-offs | ESPs detect identical templates across sends |
 | 6.5 | **Spintax format match** | All spintax matches target sequencer format | Mismatched format renders as literal text — Email Bison: `{a\|b}`, Instantly: `{{RANDOM \| a \| b}}` |
 | 7 | **A/B verification gate** | E1 >= 3 variants, E2-E4 >= 2 variants each, total >= 9 steps | Single-variant positions waste sending volume on untested copy |
-| 8 | **Sender signatures** | All sender accounts have signatures configured | Signature token in emails needs a stored value to render |
+| 8 | **Sender signatures** | 100% of attached senders have non-empty `email_signature` (auto-check below) | Signature token in emails needs a stored value to render |
 
-**Ask the user to confirm gates 1-3** (these require checking external systems). Gates 4-8 can be verified from the workspace artifacts and API configuration.
+**Gate 0 is a human read-through** — do it yourself first (as the prospect), then flag anything that reads like a cold email to the user before proceeding. **Ask the user to confirm gates 1-3** (these require checking external systems). Gates 4-8 can be verified from the workspace artifacts and API configuration.
+
+### Gate 8 auto-verification (Email Bison) — run BEFORE activation
+
+This gate is mandatory and must be programmatically verified. Self-attestation alone has shipped campaigns with 0% signature coverage in the past (LGJ `lgj-bootstrap-t1-t4-pilot-1`, 2026-05-13: 0/264 senders had signatures despite the gate being marked "passed").
+
+```bash
+# Replace 669 with the actual campaign ID and use the correct workspace key.
+# This pages through every sender attached to the campaign and counts how
+# many have a non-empty email_signature.
+python3 <<'PY'
+import json, urllib.request, os
+KEY = os.environ['EMAIL_BISON_API_KEY']  # use _LGJ_ or _CONSULTI_ variant per workspace
+BASE = "https://send.leadgenjay.com/api"
+CID = 669  # <-- campaign ID
+
+def fetch(page):
+    req = urllib.request.Request(f"{BASE}/campaigns/{CID}/sender-emails?page={page}&per_page=100",
+        headers={"Authorization": f"Bearer {KEY}"})
+    return json.loads(urllib.request.urlopen(req).read())
+
+p1 = fetch(1)
+senders = list(p1['data'])
+for p in range(2, p1['meta']['last_page']+1):
+    senders.extend(fetch(p)['data'])
+
+without_sig = [s for s in senders if not (s.get('email_signature') or '').strip()]
+print(f"Campaign {CID}: {len(senders)} attached, {len(senders)-len(without_sig)} WITH signature, {len(without_sig)} WITHOUT")
+if without_sig:
+    from collections import Counter
+    print("BLOCKED — missing signatures by display name:",
+          dict(Counter((s.get('name') or '').strip() for s in without_sig)))
+    raise SystemExit(1)
+print("PASS — all attached senders have signatures.")
+PY
+```
+
+**Fail behavior:** Script exits 1. Do NOT activate the campaign. Either (a) `PATCH /sender-emails/signatures/bulk` for the missing IDs, or (b) detach/delete the un-signatured senders, then re-run Gate 8. Only proceed when the script prints `PASS`.
 
 ---
 
@@ -299,7 +324,7 @@ NEXT STEPS (post-deployment, pre-activation):
 2. Verify step count and variant grouping matches the brief
 3. Send a test email to yourself
 4. Verify spintax renders correctly (no literal {a|b|c} in output)
-5. Check sender signatures render (if using {SENDER_EMAIL_SIGNATURE})
+5. Re-run Gate 8 auto-verification (see above) — confirm 100% of attached senders have signatures and that the `{SENDER_EMAIL_SIGNATURE}` token renders in the test email
 6. Upload verified lead list (if not already attached)
 7. Activate when ready
 ```

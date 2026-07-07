@@ -19,7 +19,7 @@ files:
   - manifest.yaml
   - references/api-deployment.md
   - references/campaign-brief-template.md
-version: "2.0"
+version: "2.1"
 branch: LGJ-exclusive
 composesWell:
   - cold-email-ab-testing
