@@ -1,0 +1,37 @@
+id: carousels
+type: skill
+name: "AI Carousel Engine"
+description: "Full Instagram carousel pipeline: guided setup interview, AI slides with YOUR real face preserved from two reference photos (fal.ai GPT-Image-2), hard quality gates, phone-mockup preview, caption + hashtags, Blotato auto-publish or manual handoff. Ships generator + gate + preview + upload + publish scripts; you provide FAL_KEY (Blotato optional)."
+categories:
+  - lgj-exclusive
+  - content
+  - design
+tags:
+  - instagram
+  - carousel
+  - fal-ai
+  - gpt-image-2
+  - social-media
+  - content-creation
+  - blotato
+icon: GalleryHorizontalEnd
+path: skills/carousels
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/setup-interview.md
+  - references/carousel-research.md
+  - evals/evals.json
+  - scripts/generate-carousel.mjs
+  - scripts/preview-quality-gate.mjs
+  - scripts/render-preview.mjs
+  - scripts/upload-slides.mjs
+  - scripts/publish-blotato.mjs
+  - scripts/package.json
+  - scripts/lib/fal.mjs
+  - assets/preview-templates/ig-carousel.html
+postInstall: cd ~/.claude/skills/carousels/scripts && npm install --silent 2>/dev/null || echo "  ⚠  run: cd ~/.claude/skills/carousels/scripts && npm install"
+version: "1.0"
+branch: LGJ-exclusive
+composesWell:
+  - carousel-post

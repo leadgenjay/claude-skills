@@ -5,3 +5,6 @@ package-lock.json
 # Exception: the demo-imsg skill ships a self-contained Remotion renderer whose
 # package.json IS part of the bundle (listed in its manifest files[]). Track it.
 !skills/demo-imsg/renderer/package.json
+
+# carousels skill ships its own scripts/package.json (postInstall installs sharp)
+!skills/carousels/scripts/package.json

@@ -1,0 +1,9 @@
+{
+  "name": "carousels-skill-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Runtime dependencies for the carousels skill scripts (installed by the marketplace postInstall step).",
+  "dependencies": {
+    "sharp": "^0.33.0"
+  }
+}

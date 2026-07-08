@@ -1,0 +1,75 @@
+{
+  "skill_name": "carousels",
+  "domain": "general",
+  "method": "fal-ai-carousel",
+  "grading": "llm",
+  "evals": [
+    {
+      "id": 0,
+      "type": "setup-interview",
+      "prompt": "I just installed this skill. Make me an Instagram carousel about morning routines. (Assume config/config.json does NOT exist yet.)",
+      "assertions": [
+        {"text": "Output starts the setup interview instead of generating — it does NOT attempt slide generation without config", "type": "llm", "weight": 3},
+        {"text": "Output asks for 2 reference photos (cover + headshot) and explains they preserve the user's real face on slides", "type": "llm", "weight": 3},
+        {"text": "Output handles a missing FAL_KEY by walking through fal.ai signup with a per-carousel cost estimate — not by erroring out", "type": "llm", "weight": 3},
+        {"text": "Output treats Blotato as optional with a manual-posting mode — installation does not require it", "type": "llm", "weight": 3},
+        {"text": "Output asks about brand colors/fonts/handle with sensible defaults offered", "type": "llm", "weight": 2},
+        {"text": "Output writes secrets only to config/.env, never into config.json", "type": "deterministic", "weight": 2}
+      ]
+    },
+    {
+      "id": 1,
+      "type": "listicle",
+      "prompt": "Create a 10-slide listicle carousel: 5 Cold Email Mistakes That Kill Your Reply Rate. Target audience: B2B founders. Config exists with handle 'samclient', accent #ED0D51.",
+      "assertions": [
+        {"text": "Output writes a slides.json plan and runs scripts/generate-carousel.mjs (not ad-hoc API code)", "type": "deterministic", "weight": 3},
+        {"text": "Cover slide uses ref PHOTO_COVER and CTA slide uses ref PHOTO_CTA (the client reference photos)", "type": "deterministic", "weight": 3},
+        {"text": "Prompt templates use the light warm background — never dark #0D0D0D, never purple/gradient", "type": "deterministic", "weight": 3},
+        {"text": "No prompt mentions any icon, emoji-style graphic, or abstract symbol", "type": "deterministic", "weight": 3},
+        {"text": "No prompt includes a slide counter like '2/10'", "type": "deterministic", "weight": 2},
+        {"text": "No slide copy exceeds 15 words", "type": "deterministic", "weight": 2},
+        {"text": "No banned AI words in any slide copy (delve, tapestry, leverage, unlock, elevate, etc.)", "type": "deterministic", "weight": 2},
+        {"text": "No em or en dashes anywhere in slide copy or pinned prompt text", "type": "deterministic", "weight": 2},
+        {"text": "Brand footer text uses the config handle '@samclient' — not '@leadgen' or any author handle", "type": "deterministic", "weight": 3},
+        {"text": "Slide copy is presented for approval BEFORE image generation, with the image-fit table (Step 3.5)", "type": "llm", "weight": 2},
+        {"text": "The quality gate + preview steps run before the carousel is presented as done", "type": "llm", "weight": 2},
+        {"text": "The final slide has a CTA with a comment trigger keyword or follow CTA", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 2,
+      "type": "tool-stack",
+      "prompt": "Create a carousel: The 3 Tools I Use to Get 1,000 Leads/Day. 8 slides. Tools are bolt.new, Instantly, and Claude Code. Config exists.",
+      "assertions": [
+        {"text": "Output requires real screenshots of each named tool (user-provided or Playwright-captured) — never fabricated UIs", "type": "llm", "weight": 3},
+        {"text": "No prompt asks the AI to generate or render a company logo", "type": "deterministic", "weight": 3},
+        {"text": "The image-fit table scores each slide's image against its headline with an 80% bar and zero duplicates", "type": "llm", "weight": 3},
+        {"text": "No prompt duplicates a tool name (logo text AND separate name text)", "type": "llm", "weight": 2},
+        {"text": "No slide copy exceeds 15 words; no banned words; no icons; light background", "type": "deterministic", "weight": 2},
+        {"text": "CTA uses comment trigger keyword or follow prompt", "type": "llm", "weight": 2}
+      ]
+    },
+    {
+      "id": 3,
+      "type": "publish-degrade",
+      "prompt": "The carousel passed the gate and preview. Publish it. Config has publish: 'manual' and no BLOTATO_API_KEY.",
+      "assertions": [
+        {"text": "Output uploads slides via scripts/upload-slides.mjs to get public CDN URLs (never Google Drive links)", "type": "deterministic", "weight": 3},
+        {"text": "Output produces a manual posting handoff: ordered slide URLs + clean caption + hashtags-as-first-comment instructions", "type": "llm", "weight": 3},
+        {"text": "Output does NOT error or block on the missing Blotato key", "type": "llm", "weight": 3},
+        {"text": "If the CTA is a comment keyword, output asks the user to confirm it is configured in their DM tool before posting", "type": "llm", "weight": 2},
+        {"text": "Output mentions Blotato as the optional upgrade path for auto-publishing", "type": "llm", "weight": 1}
+      ]
+    },
+    {
+      "id": 4,
+      "type": "regen-single-slide",
+      "prompt": "Slide 4 has a typo in the headline ('Recieve'). Fix it.",
+      "assertions": [
+        {"text": "Output regenerates ONLY slide 4 via generate-carousel.mjs --plan <plan> 4, not the whole set", "type": "deterministic", "weight": 3},
+        {"text": "Output re-runs the quality gate after regeneration", "type": "deterministic", "weight": 2},
+        {"text": "Output re-reads the regenerated slide to verify the spelling fix and style consistency with neighbors", "type": "llm", "weight": 3}
+      ]
+    }
+  ]
+}
