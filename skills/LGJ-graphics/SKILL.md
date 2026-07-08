@@ -117,7 +117,12 @@ import { ShadowDefs, Card, Badge, AvatarDot, N8nNode, BezierConnector } from "..
 
 ### Logo Icons (`logos.tsx`)
 
-30 simplified brand logo icons:
+30 simplified brand logo icons.
+
+**When adding a new tool logo:** Check Nextcloud Tool Logos for the real file as reference first:
+- `~/Nextcloud/Visual assets/Logos/Tool Logos/`
+- `~/Library/CloudStorage/Nextcloud-LGJ@cloud.nextwave.io/Visual assets/Logos/Tool Logos/`
+Copy to `public/logos/` for `.webp` fallback when SVG icons aren't sufficient.
 
 **AI & Dev Tools:** `ClaudeLogo`, `OpenAILogo`, `GitHubLogo`, `VSCodeLogo`, `CursorLogo`, `VercelLogo`, `SupabaseLogo`
 **Automation & Email:** `N8NLogo`, `ZapierLogo`, `MakeLogo`, `GmailLogo`, `OutlookLogo`, `SlackLogo`

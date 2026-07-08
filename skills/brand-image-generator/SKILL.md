@@ -106,6 +106,22 @@ Always append these for professional results:
 - Ignore brand color palette
 - Use a single generation without iteration
 
+### Logo Source Rules
+
+When an image needs a real tool/company logo:
+
+**Logo lookup order — check each, stop at first hit:**
+1. `public/logos/` (project-local, already copied)
+2. Nextcloud canonical source (first path that exists):
+   - `~/Nextcloud/Visual assets/Logos/Tool Logos/`
+   - `~/Library/CloudStorage/Nextcloud-LGJ@cloud.nextwave.io/Visual assets/Logos/Tool Logos/`
+3. Legacy: `public/brand/banner-logos/`, `public/brand/`, `public/ads/assets/`
+
+When found in Nextcloud or legacy, copy to `public/logos/` before use:
+  `mkdir -p public/logos && cp "<source>" public/logos/`
+
+If not found anywhere: download via Playwright or use TEXT ONLY. Never AI-generate logos.
+
 ## Prompt Library by Category
 
 ### Hero Images
