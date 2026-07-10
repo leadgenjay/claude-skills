@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-07-08T01:56:12.085Z",
+  "generatedAt": "2026-07-10T15:59:27.838Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -975,6 +975,37 @@
       "composesWell": [
         "social-proof-builder"
       ]
+    },
+    {
+      "id": "codex-consensus",
+      "type": "command",
+      "name": "codex-consensus",
+      "description": "Use OpenAI Codex (GPT-5.6-sol) as a second brain in Claude Code — codex-review has Sol adversarially review a plan and iterate to consensus; codex-execute dispatches Sol workers to implement it. Prompt-only package orchestrating the Codex CLI; requires ChatGPT-subscription login (codex login).",
+      "categories": [
+        "development",
+        "quality",
+        "productivity"
+      ],
+      "tags": [
+        "codex",
+        "openai",
+        "gpt-5-6",
+        "code-review",
+        "consensus-planning",
+        "multi-agent",
+        "orchestration"
+      ],
+      "icon": "Boxes",
+      "path": "commands/codex-consensus",
+      "files": [
+        "codex-execute.md",
+        "codex-review.md",
+        "command.md",
+        "manifest.yaml"
+      ],
+      "version": "1.0",
+      "kind": "package",
+      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }"
     },
     {
       "id": "commit",
