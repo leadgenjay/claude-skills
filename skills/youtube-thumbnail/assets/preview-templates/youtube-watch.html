@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Watch Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0F0F0F; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #fff; }
+    .yt-navbar { position: sticky; top: 0; height: 56px; background: #0F0F0F; border-bottom: 1px solid #222; display: flex; align-items: center; padding: 0 16px; gap: 16px; z-index: 100; }
+    .yt-logo { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 22px; cursor: pointer; }
+    .yt-logo-triangle { width: 24px; height: 24px; background: #FF0000; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+    .yt-search { flex: 1; max-width: 500px; height: 36px; background: #222; border-radius: 20px; display: flex; align-items: center; padding: 0 16px; gap: 12px; }
+    .yt-search input { flex: 1; background: none; border: none; color: #fff; font-size: 14px; outline: none; }
+    .yt-search input::placeholder { color: #999; }
+    .yt-search-icon { font-size: 18px; color: #999; }
+    .yt-icons-right { display: flex; align-items: center; gap: 16px; font-size: 20px; cursor: pointer; margin-left: auto; }
+    .yt-main { display: flex; max-width: 1280px; margin: 0 auto; padding: 24px; gap: 24px; }
+    .yt-player-col { flex: 1; max-width: 860px; }
+    .yt-thumbnail { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
+    .yt-thumbnail img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .yt-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+    .yt-play-triangle { width: 0; height: 0; border-left: 28px solid #fff; border-top: 18px solid transparent; border-bottom: 18px solid transparent; margin-left: 4px; }
+    .yt-title { font-size: 20px; font-weight: 700; line-height: 1.4; margin-top: 16px; word-wrap: break-word; }
+    .yt-meta-row { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-size: 14px; color: #aaa; }
+    .yt-channel-row { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 12px 0; border-top: 1px solid #222; border-bottom: 1px solid #222; }
+    .yt-channel-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #ED0D51, #6B0A2E); overflow: hidden; flex-shrink: 0; }
+    .yt-channel-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .yt-channel-info { flex: 1; }
+    .yt-channel-name { font-size: 14px; font-weight: 600; }
+    .yt-channel-subs { font-size: 12px; color: #999; }
+    .yt-subscribe-btn { background: #FF0000; color: #fff; border: none; padding: 8px 16px; border-radius: 24px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .yt-engagement-icons { display: flex; gap: 16px; margin-left: auto; }
+    .yt-engagement-icon { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #aaa; cursor: pointer; }
+    .yt-description-box { background: #181818; border-radius: 8px; padding: 16px; margin-top: 16px; font-size: 14px; line-height: 1.5; color: #aaa; }
+    .yt-description-stats { margin-bottom: 12px; }
+    .yt-description-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .yt-sidebar { width: 360px; }
+    .yt-suggested-item { display: flex; gap: 12px; margin-bottom: 16px; cursor: pointer; }
+    .yt-suggested-thumb { width: 168px; height: 94px; background: linear-gradient(135deg, #333, #222); border-radius: 8px; flex-shrink: 0; }
+    .yt-suggested-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .yt-suggested-title { font-size: 13px; font-weight: 500; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .yt-suggested-meta { font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+<script type="application/json" id="preview-config">__PREVIEW_CONFIG__</script>
+
+<div class="yt-navbar">
+  <div style="font-size:20px;cursor:pointer">☰</div>
+  <div class="yt-logo">
+    <div class="yt-logo-triangle"></div>
+    <div>YouTube</div>
+  </div>
+  <div class="yt-search">
+    <input type="text" placeholder="Search">
+    <div class="yt-search-icon">🔍</div>
+  </div>
+  <div class="yt-icons-right">
+    <div>📷</div>
+    <div>🔔</div>
+    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ED0D51,#6B0A2E)"></div>
+  </div>
+</div>
+
+<div class="yt-main">
+  <div class="yt-player-col">
+    <div class="yt-thumbnail">
+      <img id="thumbnail" src="thumbnail.png" alt="">
+      <div class="yt-play-btn"><div class="yt-play-triangle"></div></div>
+    </div>
+
+    <div class="yt-title" id="title">[Video title]</div>
+    <div class="yt-meta-row">
+      <span id="views">12K views</span>
+      <span id="uploadDate">3 days ago</span>
+    </div>
+
+    <div class="yt-channel-row">
+      <div class="yt-channel-avatar">
+        <img id="channelAvatar" src="" alt="" style="background:linear-gradient(135deg,#ED0D51,#6B0A2E)" />
+      </div>
+      <div class="yt-channel-info">
+        <div class="yt-channel-name" id="channel">Lead Gen Jay</div>
+        <div class="yt-channel-subs" id="subs">127K subscribers</div>
+      </div>
+      <button class="yt-subscribe-btn">Subscribe</button>
+      <div class="yt-engagement-icons">
+        <div class="yt-engagement-icon">👍 <span>1.2K</span></div>
+        <div class="yt-engagement-icon">👎</div>
+        <div class="yt-engagement-icon">↗️</div>
+        <div class="yt-engagement-icon">⋯</div>
+      </div>
+    </div>
+
+    <div class="yt-description-box">
+      <div class="yt-description-stats" id="descriptionStats">12K views • 3 days ago</div>
+      <div class="yt-description-text" id="description">[description]</div>
+    </div>
+  </div>
+
+  <div class="yt-sidebar">
+    <div id="suggestions"></div>
+  </div>
+</div>
+
+<script>
+  const config = JSON.parse(document.getElementById('preview-config').textContent);
+
+  // Apply config with sensible defaults
+  const title = config.title || '[Video title]';
+  const channel = config.channel || 'Lead Gen Jay';
+  const subs = config.subs || '127K subscribers';
+  const asset = config.asset || 'thumbnail.png';
+  const views = config.views || '12K views';
+  const uploadDate = config.uploadDate || '3 days ago';
+  const description = config.description || '[description]';
+  const channelAvatar = config.channelAvatar || '';
+
+  document.getElementById('title').textContent = title;
+  document.getElementById('channel').textContent = channel;
+  document.getElementById('subs').textContent = subs;
+  document.getElementById('views').textContent = views;
+  document.getElementById('uploadDate').textContent = uploadDate;
+  document.getElementById('description').textContent = description;
+  document.getElementById('descriptionStats').textContent = `${views} • ${uploadDate}`;
+  document.getElementById('thumbnail').src = asset;
+
+  if (channelAvatar) {
+    document.getElementById('channelAvatar').src = channelAvatar;
+    document.getElementById('channelAvatar').style.background = 'none';
+  }
+
+  // Generate placeholder suggestions
+  const suggestionsContainer = document.getElementById('suggestions');
+  for (let i = 0; i < 5; i++) {
+    const item = document.createElement('div');
+    item.className = 'yt-suggested-item';
+    item.innerHTML = `
+      <div class="yt-suggested-thumb"></div>
+      <div class="yt-suggested-text">
+        <div class="yt-suggested-title">Suggested video title ${i+1}</div>
+        <div class="yt-suggested-meta">Channel Name</div>
+        <div class="yt-suggested-meta">12K views • 3 days ago</div>
+      </div>
+    `;
+    suggestionsContainer.appendChild(item);
+  }
+</script>
+
+</body>
+</html>

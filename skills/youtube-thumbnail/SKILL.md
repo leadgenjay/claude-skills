@@ -1,443 +1,582 @@
-# YouTube Thumbnail - Remix & Body-Swap Pipeline
-
-You are a YouTube thumbnail researcher and generator. You find proven high-performing competitor thumbnails, visually differentiate them, swap Jay's face in, and add bold headlines. You never generate thumbnails from scratch.
-
-## Trigger Words
-
-`thumbnail`, `YouTube thumbnail`, `generate thumbnail`, `remix thumbnail`, `competitor thumbnail`, `body swap thumbnail`, `face-swap thumbnail`, `thumbnail concept`
-
-## Image Safety Rules (READ FIRST)
-
-- NEVER use Read tool to view images larger than 1000px - always resize first
-- ALL downloaded/scraped images: `sips --resampleHeightWidthMax 1000`
-- Claude crashes at 2000px when multiple images are in context
-- Read 5-8 images max per batch during vision analysis
-- Use `open` (Preview.app) for user review, Read tool for Claude analysis only
-- Never generate Jay with specific hand gestures unless explicitly asked
-
-## Cost Estimate
-
-~$2.50-3.30 total per session (research + 5-6 finals)
-
-## Error Handling
-
-- **fal.ai down or timeout:** Wait 30s, retry once. If still failing, save progress (downloaded thumbnails, scored rankings) and tell the user. Do not retry more than twice.
-- **YouTube API quota exceeded:** Fall back to Apify-only discovery. If Apify also fails, ask user to provide competitor video URLs manually.
-- **Zero good thumbnails found:** Broaden search keywords, try related topics, or ask user for specific competitor channels/videos to research.
-- **Body swap fails quality gate after 2 attempts:** Drop that variation, note why, and proceed with passing variations. If ALL fail, regenerate Jay photos with different presets and retry.
-- **Flux LoRA generates bad Jay photo:** Regenerate with same preset (stochastic output). If 2 attempts fail, try a different preset.
-- **Multi-person source thumbnail:** Flag during Step 3 scoring (lower swappability). In Step 7, specify which person to replace in the prompt. If swap quality is poor after 2 attempts, drop that base.
-
+---
+name: youtube-thumbnail
+version: 3.2.0
+description: "Generate YouTube thumbnails using a 6-step AI pipeline with the fal.ai GPT-Image-2 Edit API for remix generation (default since 2026-04-26; NB2 Edit retained as `*2Legacy` fallback). This skill should be used when the user wants to create a YouTube thumbnail, face-swap a thumbnail, remix a source thumbnail, or generate thumbnail variations. Also use when the user mentions 'thumbnail,' 'YouTube thumbnail,' 'face-swap thumbnail,' 'body swap thumbnail,' 'thumbnail concept,' 'generate thumbnail,' 'remix thumbnail,' 'gpt-image-2 thumbnail,' or 'competitor thumbnail.'"
 ---
 
-## 9-Step Workflow
+## Step 0 - Prerequisites
 
-### Step 1: Topic Understanding + Headline Brainstorming
+Before any other operation, verify these are present. If anything is missing, stop and tell the user where to get it. Do not continue with a broken or partial installation.
 
-**Who:** Claude (no tools)
+| Requirement | Check | Where to get it |
+|---|---|---|
+| Installed skill directory | `test -f "${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}/scripts/generate-thumbnail.mjs"` | Install `youtube-thumbnail` from the Lead Gen Jay skills marketplace, or set `YT_THUMBNAIL_SKILL_DIR` to its installed directory |
+| Node.js 20+ | `node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 20 ? 0 : 1)'` | [nodejs.org](https://nodejs.org/) |
+| Bundled Node dependencies | `cd "${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}" && node -e 'import("sharp")'` | Reinstall the skill, or run `npm install` inside the installed skill directory |
+| fal.ai API key | `test -n "$FAL_KEY"` | Create a key at [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys) and export it as `FAL_KEY` |
+| macOS image utility | `command -v sips >/dev/null` | Included with macOS. On another OS, use an equivalent image resizer and preserve originals |
+| Network access | `curl -fsS -o /dev/null https://queue.fal.run/` | Allow HTTPS access to `queue.fal.run` and `rest.alpha.fal.ai` |
 
-1. User provides video topic/title (e.g. "I'm Deleting OpenClaw. Here's What Replaced It.")
-2. Brainstorm 5-8 headline concepts:
-   - 1-3 words each, ALL CAPS, bold, high contrast
-   - Emotional angles: curiosity gap, controversy, result, shock, authority
-   - Examples: "I QUIT", "$50K/MO", "IT'S OVER", "THE TRUTH", "DELETE THIS"
-3. Present headlines for approval - user picks 2-3 favorites
-4. Identify visual elements: logos, products, red X, question marks, arrows, etc.
-
-**Rules:**
-- Max 3 words per headline (2 is ideal)
-- Must be readable at 320px width (mobile)
-- Power words: numbers, money, negatives ("DON'T", "STOP", "NEVER"), absolutes ("EVERY", "ALWAYS")
-
----
-
-### Step 2: Competitor Thumbnail Discovery
-
-**Who:** Claude using YouTube API + Apify MCP
-**Cost:** ~$0.05-0.10
-
-#### A) YouTube API Search (broad discovery)
-
+Resolve the installed skill directory once and reuse it in every command:
 ```bash
-# Extract FAL_KEY for later steps
-FAL_KEY=$(awk -F= '/^FAL_AI=/{print $2}' .env.local)
-
-# Search YouTube for top videos on the topic
-curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q=TOPIC_KEYWORDS&type=video&order=viewCount&maxResults=25&key=${YOUTUBE_API_KEY}" | jq '.items[] | {videoId: .id.videoId, title: .snippet.title}'
-
-# Get view counts for discovered videos
-curl -s "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=VIDEO_ID_1,VIDEO_ID_2,...&key=${YOUTUBE_API_KEY}" | jq '.items[] | {id: .id, title: .snippet.title, views: .statistics.viewCount}'
+export YT_THUMBNAIL_SKILL_DIR="${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}"
+test -f "$YT_THUMBNAIL_SKILL_DIR/SKILL.md" || { echo "youtube-thumbnail skill directory not found"; exit 1; }
 ```
 
-**Thumbnail URL pattern:** `https://i.ytimg.com/vi/{videoId}/maxresdefault.jpg`
-(Fallback: `hqdefault.jpg` if maxres unavailable)
+If anything is missing, STOP. Do not generate placeholder scripts or silently skip face-quality gates.
 
-#### B) Apify Channel Scrape (known competitors)
+# YouTube Thumbnail — Lead Gen Jay
 
-Use `grow_media/youtube-channel-video-scraper` via Apify MCP tools:
-1. `fetch-actor-details` - get input schema for `grow_media/youtube-channel-video-scraper`
-2. `call-actor` - scrape 3-5 competitor channels relevant to the topic
-3. `get-actor-output` - retrieve results, filter by keyword match + high view count
+You are an expert YouTube thumbnail creator for **Lead Gen Jay**. You run a 6-step pipeline: source thumbnails in, remixed + body-swapped + auto-critiqued thumbnails out. All remix generation uses the **fal.ai GPT-Image-2 Edit API** (`openai/gpt-image-2/edit`) — bake-off winner 2026-04-26. NB2 Edit remains accessible via `editWithNanoBanana2Legacy` for fallback when GPT-Image-2 returns `content_policy_violation`.
 
-**Apify token:** `${APIFY_API_TOKEN}`
+---
 
-#### C) Download & Dedupe
+## Jay's Thumbnail Design Preferences
 
+These preferences are learned from real feedback sessions and MUST be followed in all thumbnail generation.
+
+### Background & Color
+- **Dark backgrounds preferred** — solid black (#0D0D0D) is the default. Only use white/light if explicitly requested
+- **Hot pink accent** (#ED0D51) — use sparingly as pill badges, thin underlines, or subtle glow effects. Never as large background blocks behind text
+- **White text on dark backgrounds** — always. Never dark text on colored backgrounds
+
+### Typography
+- **Font hierarchy:** Massive bold headline (Impact-style) > large bold subheadline > small compact subtitle
+- **Subtitle styling:** Small font, thin/clean, inside a colored pill badge (hot pink #ED0D51 rounded pill background)
+- **All text WHITE** on dark backgrounds — no exceptions
+- **Banned combos:** Black text on red/pink background, dark text on any colored background
+
+### Logo Rules
+- **Always use real logo files supplied by the user or found in their configured asset directory** — never AI-generated logos
+- **Never change logo colors** — logos must appear with exact original colors regardless of thumbnail background/scheme
+- **Subtle glow** around logos is OK for emphasis — but keep it soft, not a bright halo
+- Optional operator asset directory: `JAY_THUMBNAIL_ASSET_DIR`. If it is unset or the requested logo is absent, ask the user for the real logo file. Never invent an author-machine path.
+
+### Composition
+- Person on right third, text on left
+- 16:9 aspect ratio, 2K resolution
+- Max 3 focal points, 1/3 of frame clear for text
+- Clean, simple backgrounds — no complex scenes
+- **Jay must fill at least 1/3 of the thumbnail, ideally half** — never small or in the corner
+- **Serious/confident expression** — not smiley. Use the custom serious Jay photo when available
+
+---
+
+## Runtime Setup
+
+Before any generation step:
+
+1. **Load FAL_KEY if the current project keeps it in `.env.local`**:
+```bash
+if [ -z "$FAL_KEY" ] && [ -f .env.local ]; then set -a; source .env.local; set +a; fi
+test -n "$FAL_KEY" || { echo "FAL_KEY is required"; exit 1; }
+```
+
+2. **Output directory**: All generated files go to `output/thumbnails/`
+
+3. **Final delivery**: 1920×1080 PNG (YouTube-spec, max-quality, GPT-Image-2 `quality:"high"`) to `output/thumbnails/` and Downloads. The face-swap command stops at `*-final-native.png` by default so face artifacts can be inspected before upscaling. Upscale only the approved native file with Recraft Crisp Upscale. NEVER run destructive `sips` on the final PNG. Always copy to `*-preview.png` first for preview reads. An operator may additionally copy to a configured cloud-synced asset directory.
+
+**Bundled upscale CLI:** `$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs <input> --out <output> --target WxH` — chains Recraft Crisp Upscale + sharp downscale to exact target. Adds ~$0.04 per call.
+
+---
+
+## The 6-Step Pipeline
+
+### Step 1: Receive Source Thumbnails
+
+User provides 1 or more reference thumbnails (files or URLs).
+
+**If URLs provided:**
 ```bash
 mkdir -p output/thumbnails/research
-
-# Download each thumbnail
-curl -sL "https://i.ytimg.com/vi/{videoId}/maxresdefault.jpg" -o "output/thumbnails/research/{videoId}.jpg"
-
-# Resize all to 1000px max (MANDATORY - prevents context crashes)
-for f in output/thumbnails/research/*.jpg; do
-  sips --resampleHeightWidthMax 1000 "$f"
-done
+curl -o output/thumbnails/research/source-1.jpg "[url]"
 ```
 
-- Merge YouTube API + Apify results, dedupe by videoId
-- Sort by view count descending
-- Download top 20-50 thumbnails to `output/thumbnails/research/`
-- Resize ALL to 1000px max via `sips --resampleHeightWidthMax 1000`
-
----
-
-### Step 3: Vision Analysis + Scoring
-
-**Who:** Claude vision (Read tool on downloaded images)
-
-Score each thumbnail on 5 criteria (1-10 each):
-
-| Criterion | Weight | What to Look For |
-|-----------|--------|-----------------|
-| **Swappability** | 3x | Clear single person in frame, clean separation from bg, good pose for swap, face visible and unobstructed |
-| **Visual Impact** | 2x | High contrast, bold colors, dramatic lighting, eye-catching composition |
-| **Headline Space** | 1x | Clear area for text overlay without covering key elements |
-| **View Performance** | 2x | View count relative to channel size (outlier ratio) |
-| **Differentiation** | 1x | How different from our existing thumbnails? Novel layout/style? |
-
-**Scoring:**
-- Weighted total out of 90 (3x10 + 2x10 + 1x10 + 2x10 + 1x10)
-- Rank all thumbnails by weighted score
-- Note specific swap challenges (multiple people, arms crossing body, text over face)
-
-**Process:**
-- Read 5-8 images at a time (batch to avoid context bloat)
-- Skip thumbnails with no person or only text/graphics
-- Flag thumbnails where the person is partially occluded (lower swappability)
-- Minimum threshold: swappability must score 6+ to qualify (below 6 = skip regardless of other scores)
-
----
-
-### Step 4: Present Top 5 for Approval
-
-**Who:** Claude presents, user approves
-
-For each of the top 5 ranked thumbnails:
-1. Open in Preview.app: `open "output/thumbnails/research/{videoId}.jpg"`
-2. Show:
-   - Source video title + URL (`https://youtube.com/watch?v={videoId}`)
-   - View count
-   - Score breakdown (swappability/impact/space/views/differentiation)
-   - Why this is a good body-swap candidate
-   - Any risks or challenges
-
-User approves 2-4 thumbnails to proceed with. User can reject all and request more research (go back to Step 2 with different keywords).
-
----
-
-### Step 5: Randomization (Visual Differentiation)
-
-**Who:** NB2 /edit endpoint on fal.ai
-**Cost:** ~$0.15 per variation (~$0.30 per approved thumbnail)
-
-For each approved thumbnail, generate 2 randomized variations via NB2 /edit.
-
-**Endpoint:** `https://queue.fal.run/fal-ai/nano-banana-2/edit`
-**Auth:** `Authorization: Key ${FAL_KEY}`
-
-**Request format:**
-```json
-{
-  "prompt": "Remove ALL existing text, logos, watermarks, and text overlays from this YouTube thumbnail completely. The output should have zero visible text - only the person, background elements, and props. Then edit the thumbnail: Keep the person's exact pose, position, and size. Change: [background to dark navy/charcoal], [desk items to different objects], [screen content to different UI], [lighting to come from the left side], [color accents to hot pink #ED0D51]. Keep the overall composition and layout identical.",
-  "image_urls": ["<uploaded_source_url>"],
-  "num_images": 1,
-  "aspect_ratio": "16:9",
-  "resolution": "1K",
-  "output_format": "png",
-  "safety_tolerance": 6
-}
+**For YouTube video URLs**, extract the thumbnail:
+```text
+https://i.ytimg.com/vi/[videoId]/maxresdefault.jpg
 ```
 
-**Upload images to fal.ai storage first** using the same pattern as `scripts/generate-thumbnail.mjs`:
-1. POST to `https://rest.alpha.fal.ai/storage/upload/initiate` with `{"content_type": "image/png", "file_name": "upload.png"}`
-2. PUT binary data to the returned `upload_url`
-3. Use the returned `file_url` in `image_urls`
-
-**What to change per variation:**
-- Background color/scene (dark navy, charcoal, deep blue, warm gray)
-- Color palette (shift hues, keep contrast - always include #ED0D51 accent)
-- Desk items, screen content, small decorative elements
-- Lighting direction (left, right, top, rim)
-
-**What to keep identical:**
-- Person's pose, position, and size
-- Overall composition and spatial layout
-- General thumbnail energy
-
-Download results to `output/thumbnails/randomized/` and resize to 1000px max.
-
-**Expected output:** 2 approved thumbnails x 2 randomizations = 4 randomized bases.
-
----
-
-### Step 6: Generate Fresh Jay Photos
-
-**Who:** Flux LoRA on fal.ai
-**Cost:** ~$0.03 per photo ($0.06-0.09 for 2-3)
-
-Generate 2-3 Jay photos with different expressions to match the emotional angles from Step 1.
-
-**Endpoint:** `https://queue.fal.run/fal-ai/flux-lora`
-
-**Request format:**
-```json
-{
-  "prompt": "<jay_prompt>",
-  "loras": [{"path": "https://v3.fal.media/files/tiger/Cubmr1zZLBb2fzlGo6Yao_pytorch_lora_weights.safetensors", "scale": 1.0}],
-  "image_size": "square_hd",
-  "num_images": 1,
-  "output_format": "png",
-  "num_inference_steps": 28,
-  "guidance_scale": 3.5
-}
-```
-
-**Trigger word:** `jay` (must appear at start of prompt)
-
-**Presets:**
-
-| Preset | Prompt |
-|--------|--------|
-| `confident` | `jay, full body photo standing, looking directly at camera, slight natural smile, arms crossed, clean white background, bright studio lighting, professional casual outfit, calm confident expression, full body visible head to waist, sharp detail` |
-| `intense_closeup` | `jay, extreme closeup portrait, face filling frame, intense serious expression staring directly at camera, dramatic cinematic rim lighting, dark moody background, shallow depth of field, film quality, head and shoulders only` |
-| `excited` | `jay, full body photo standing, looking directly at camera, natural confident smile, holding phone showing results, bright natural lighting, casual professional outfit, clean white background, full body visible head to waist` |
-| `shocked` | `jay, full body photo standing, looking directly at camera, mouth wide open shocked surprised expression, eyes wide, hands up in disbelief, clean white background, bright studio lighting, dramatic reaction, full body visible head to waist` |
-| `pointing` | `jay, full body photo standing, pointing at camera with one hand, looking directly at camera, natural confident smile, clean white background, bright studio lighting, engaging expression, full body visible head to waist` |
-
-**Choose presets based on the emotional angle from Step 1:**
-- Curiosity gap: `confident` + `intense_closeup`
-- Controversy: `shocked` + `intense_closeup`
-- Result/money: `excited` + `confident`
-- Shock: `shocked` + `excited`
-- Authority: `confident` + `pointing`
-
-Download to `output/thumbnails/jay-photos/` and resize to 1000px max.
-
-**Expected output:** 2-3 Jay photos with different expressions.
-
----
-
-### Step 7: Body Swap Jay In via NB2 /edit
-
-**Who:** NB2 /edit on fal.ai
-**Cost:** ~$0.15 per swap
-
-For each randomized base (from Step 5), pick the best-matching Jay photo and swap him in.
-
-**Pairing strategy (1 Jay photo per base):**
-- Serious/authority bases: `confident` or `intense_closeup` Jay
-- Excited/result bases: `excited` or `pointing` Jay
-- Controversial bases: `shocked` Jay
-- Each Jay photo can be reused across multiple bases
-
-**Request format:**
-```json
-{
-  "prompt": "Replace the entire person in the first image with the person from the second reference image. The replacement person should have the same pose, position, and scale as the original person.\n\nCRITICAL RULES:\n1. The replacement person MUST be in the FRONT layer - rendered in front of all props, icons, badges, laptops, screens, and UI elements. Never behind or occluded by any element.\n2. The replacement person MUST be looking directly at the camera with clear eye contact.\n3. The expression must be natural and confident - never exaggerated, cartoonish, or over-the-top.\n\nKeep the background, lighting, composition, text overlays, and all non-person elements exactly the same. The replacement person should look natural in the scene - match the lighting direction, color grading, and shadows to the environment. No artifacts, seams, or color mismatches.",
-  "image_urls": ["<randomized_base_url>", "<jay_photo_url>"],
-  "num_images": 1,
-  "aspect_ratio": "16:9",
-  "resolution": "1K",
-  "output_format": "png",
-  "safety_tolerance": 6
-}
-```
-
-**Process:**
-1. Upload randomized base + Jay photo to fal.ai storage
-2. Submit NB2 /edit with body-swap prompt
-3. Poll for completion (check `/requests/{id}/status`, wait up to 3 min)
-4. Download result
-
-Download to `output/thumbnails/swapped/` and resize to 1000px max.
-
-**Expected output:** 4 swapped thumbnails (1 per randomized base).
-
----
-
-### Logo & Tool Asset Rules
-
-When a thumbnail concept references a specific tool or software (e.g., "I'm Deleting X", "X vs Y", tool comparisons):
-1. **Check `~/Nextcloud/Visual assets/Logos/Tool Logos/` FIRST** — 204 real logos (SVG, PNG, WebP) for tools like Instantly, Claude, n8n, etc.
-2. **Check `~/Nextcloud/Visual assets/Logos/AI logos/`** for AI-specific tools (ChatGPT, Claude, Gemini, etc.)
-3. **AI CANNOT render real logos accurately** — NB2/Gemini will hallucinate wrong logos. Use real logo files composited via Sharp or NB2 Edit reference, never ask AI to generate a company logo from scratch.
-4. **If no real logo file exists**, use text-only (bold company name) or ask the user to provide the logo.
-5. **Never recolor or modify real logos** — use them as-is from the directory.
-
----
-
-### Step 8: Add Headlines + Visual Elements via NB2 /edit
-
-**Who:** NB2 /edit on fal.ai
-**Cost:** ~$0.15 per edit
-
-Generate 1 headline per swapped base. Assign headlines to maximize diversity:
-1. Each approved headline must be used at least once before any headline is repeated
-2. Match headline energy to base energy (shocked face + dramatic headline, confident face + authority headline)
-3. Target 5-6 finals total, not 8-10. Quality over quantity.
-
-**Request format:**
-```json
-{
-  "prompt": "First, remove ALL existing text, logos, and watermarks from this YouTube thumbnail. The ONLY text visible in the final image should be the headline below. Then add bold text \"HEADLINE HERE\" to the thumbnail. Place the text in [position: top-left / top-right / bottom-left / center-top]. Use massive white Impact/Arial Black font with black outline/shadow for maximum readability. The headline must span at least 60% of the image width and fill at least 25% of the image height. No other text, labels, or captions should be visible anywhere in the image. Also add [visual elements: red X over old logo, question marks, arrow pointing to product, etc.]. Do NOT cover or obscure the person's face. The person must remain clearly visible in the front layer.",
-  "image_urls": ["<swapped_thumbnail_url>"],
-  "num_images": 1,
-  "aspect_ratio": "16:9",
-  "resolution": "1K",
-  "output_format": "png",
-  "safety_tolerance": 6
-}
-```
-
-**Text placement rules:**
-- Person on left: text on right (and vice versa)
-- Person centered: text at top or split top-left + top-right
-- Never overlay text on the person's face or body
-- Bold, high-contrast, readable at 320px width
-
-**Visual element targeting rules:**
-- Red X, strikethroughs, and "deleted" indicators go ON the old/deleted tool/product, never on the new replacement
-- Green checkmarks and positive indicators go ON the new tool/replacement
-- Arrows point FROM old TO new, or FROM headline TO the relevant element
-- When the thumbnail concept involves "deleting X", the X/strikethrough goes on X specifically
-
-Download finals to `output/thumbnails/finals/` and resize to 1000px max.
-
-**Expected output:** ~5-6 finals (1 headline per swapped base, headline diversity enforced).
-
----
-
-### Step 9: Quality Gate (Auto-Review Loop)
-
-**Who:** Claude vision (self-review before presenting)
-**Max iterations:** 2 per image (generate -> review -> fix -> re-review)
-
-Before presenting ANY final to the user, read each image and check:
-
-#### Hard Fails (auto-redo via NB2 /edit)
-- Jay NOT in front layer (occluded by props, text, or elements)
-- No eye contact / eyes looking away
-- Garbled or misspelled headline text
-- Jay's face distorted, cartoonish, or uncanny
-- Wrong aspect ratio or severely cropped
-- Any text visible OTHER than the approved headline (remnant source text, competing labels, logo text that wasn't intentionally kept)
-
-#### Soft Fails (attempt NB2 /edit fix, flag if unfixable)
-- Headline partially obscured or hard to read
-- Low contrast between text and background
-- Color palette doesn't match brand (#ED0D51 accent missing)
-- Background artifacts or seams from the swap
-- Expression doesn't match the approved mood
-- Headline smaller than 50% of image width
-
-#### Review Process
-1. Resize to 1000px max -> Read image with vision
-2. Score against hard fail + soft fail checklists
-3. If hard fail -> regenerate with adjusted prompt (retry Step 7 or 8), re-review (max 2 attempts)
-4. If soft fail only -> attempt NB2 /edit fix, re-review once
-5. If passes or max attempts reached -> add to finals queue with quality notes
-
-**CRITICAL:** Read EVERY word of headline text at full resolution. If garbled, use NB2 /edit to fix. Never ship unverified text.
-
-#### Present Finals
-1. Resize all passing finals to 1000px max
-2. Open all in Preview.app: `open output/thumbnails/finals/*.png`
-3. Print summary per final:
-   - Source video title + URL
-   - Headline used
-   - Quality score (pass/soft-fail-fixed/notes)
-   - File path
-4. Flag any images that had soft-fail fixes applied
-
----
-
-## Pipeline Summary
-
-```
-Step 1: Headlines (free)
-  -> 2-3 approved headlines
-
-Step 2: Research (~$0.05-0.10)
-  -> 20-50 competitor thumbnails downloaded
-
-Step 3: Score (free)
-  -> Top 5 ranked by weighted criteria
-
-Step 4: User approval (free)
-  -> 2-4 approved thumbnails
-
-Step 5: Randomize (~$0.60)
-  -> 4 randomized bases (2 per approved)
-
-Step 6: Jay photos (~$0.06-0.09)
-  -> 2-3 Jay photos with different expressions
-
-Step 7: Body swap (~$0.60)
-  -> 4 swapped thumbnails (1 Jay per base)
-
-Step 8: Headlines (~$0.45-0.75)
-  -> ~5-6 finals (1 headline per swap, diversity enforced)
-
-Step 9: Quality gate (~$0.15-0.30 for fixes)
-  -> 4-6 passing finals presented to user
-```
-
-## File Paths
-
-| Path | Purpose |
-|------|---------|
-| `output/thumbnails/research/` | Downloaded competitor thumbnails |
-| `output/thumbnails/randomized/` | Visually differentiated bases |
-| `output/thumbnails/jay-photos/` | Flux LoRA Jay photos |
-| `output/thumbnails/swapped/` | Body-swapped results |
-| `output/thumbnails/finals/` | Final thumbnails with headlines |
-
-## Scripts (Reuse, Don't Recreate)
-
-| Script | What to Reuse |
-|--------|--------------|
-| `scripts/generate-thumbnail.mjs` | Flux LoRA generation, NB2 polling, fal.ai storage upload, face-swap prompt, image download |
-| `scripts/face-swap-thumbnail.mjs` | Quick one-off face-swap utility for single thumbnails |
-
-All fal.ai calls (NB2 /edit, Flux LoRA, storage upload) follow the same pattern as these scripts. Use `curl` or inline Node.js via bash - no new scripts needed.
-
-## API Quick Reference
-
-| API | Endpoint | Auth |
-|-----|----------|------|
-| fal.ai NB2 generate | `https://queue.fal.run/fal-ai/nano-banana-2` | `Authorization: Key ${FAL_KEY}` |
-| fal.ai NB2 /edit | `https://queue.fal.run/fal-ai/nano-banana-2/edit` | `Authorization: Key ${FAL_KEY}` |
-| fal.ai Flux LoRA | `https://queue.fal.run/fal-ai/flux-lora` | `Authorization: Key ${FAL_KEY}` |
-| fal.ai Storage | `https://rest.alpha.fal.ai/storage/upload/initiate` | `Authorization: Key ${FAL_KEY}` |
-| YouTube Data API | `https://www.googleapis.com/youtube/v3/search` | `key=${YOUTUBE_API_KEY}` |
-| Apify | Via MCP tools (`fetch-actor-details`, `call-actor`, `get-actor-output`) | Token: `${APIFY_API_TOKEN}` |
-
-**FAL_KEY extraction:**
+**Resize for analysis** (mandatory — prevents crashes with large images):
 ```bash
-FAL_KEY=$(awk -F= '/^FAL_AI=/{print $2}' .env.local)
+sips --resampleHeightWidthMax 1000 output/thumbnails/research/*.jpg
 ```
 
-**Flux LoRA weights:** `https://v3.fal.media/files/tiger/Cubmr1zZLBb2fzlGo6Yao_pytorch_lora_weights.safetensors`
+**Analyze each source thumbnail:**
+- Composition layout (person placement, text zones)
+- Color palette and contrast
+- What works well (to KEEP)
+- What to change for Jay's brand
 
-**YouTube thumbnail URL:** `https://i.ytimg.com/vi/{videoId}/maxresdefault.jpg`
+Present analysis to user before proceeding.
+
+---
+
+### Step 2: Gather Direction from User
+
+Use `AskUserQuestion` to collect the user's creative direction for each thumbnail. This is conversational — the user may specify some, all, or none of these:
+
+| Input | Required | Rules |
+|-------|----------|-------|
+| **Headline text** | Optional | 3 words max. User may keep original or specify new text |
+| **Background change** | Optional | Dark (#0D0D0D) default. White/light if requested |
+| **Element swaps** | Optional | Screenshots, logos, props to add/remove/replace |
+| **Screenshots/assets** | Optional | Product screens, tool UIs, reference images from Downloads or Nextcloud |
+| **Output name** | Yes | kebab-case, e.g. `cold-email-setup` |
+
+**Logo lookup:** Check the user-provided path first, then `JAY_THUMBNAIL_ASSET_DIR` if configured. If the exact logo is unavailable, ask the user to attach it. Do not substitute an AI-rendered logo.
+
+Confirm inputs before proceeding to generation.
+
+---
+
+### Step 3: Remix via GPT-Image-2 Edit API
+
+**CRITICAL: Always use the fal.ai GPT-Image-2 Edit API for remix generation** (default since 2026-04-26). There is no `nano-banana` CLI tool for this pipeline. You must call the API directly via an inline Node.js script. NB2 Edit (`fal-ai/nano-banana-2/edit`) remains as a documented fallback only when GPT-Image-2 returns `content_policy_violation`.
+
+#### How It Works
+
+1. Upload the source thumbnail (and any reference images like screenshots, logos) to fal.ai storage
+2. Call the `openai/gpt-image-2/edit` endpoint with `image_urls` referencing the uploads
+3. Poll for completion, download 4 variations
+
+#### Prompt Structure — KEEP/CHANGE Format (Mandatory)
+
+```text
+YouTube thumbnail, [background color], 16:9 aspect ratio,
+KEEP EXACTLY:
+1. [person position from source, e.g., "person on right third"]
+2. [text zone placement, e.g., "text zone on upper left"]
+3. [overall 16:9 composition and framing]
+4. [any element that works well from analysis]
+CHANGE:
+1. [background change, e.g., "background to solid black (#0D0D0D)"]
+2. [accent color, e.g., "accent color to hot pink (#ED0D51)"]
+3. [headline text change, e.g., "headline text to 'Codex Channels is INSANE'"]
+4. [element swaps, e.g., "replace Telegram logo with iMessage chat from second reference"]
+clean professional look, 16:9
+```
+
+#### Tested Real-World Examples
+
+**Example 1 — Element swap + text change (white BG):**
+```bash
+YouTube thumbnail, white/light clean background, 16:9 aspect ratio,
+KEEP EXACTLY:
+1. Person on left third in thinking/contemplative pose touching chin
+2. A laptop/computer screen element on center-right area
+3. Overall 16:9 composition layout and framing
+4. Light/white clean background style
+CHANGE:
+1. The headline text to say "Codex Channels" in large bold Impact-style white font with dark stroke/outline at top right, and "is INSANE" below it with "INSANE" in extra large bold text
+2. The computer/laptop screen should show the OpenClaw website (from second reference image) with a large red X overlaid on top of it
+3. Add a small Codex AI orange sunburst logo icon on the right side
+Clean professional YouTube thumbnail look, bold typography, high contrast text
+```
+
+**Example 2 — Background swap + logo replacement (dark BG):**
+```bash
+YouTube thumbnail, dark black faded background, 16:9 aspect ratio,
+KEEP EXACTLY:
+1. Person on right third with hands together/clasped pose
+2. Bold large "STEP-BY-STEP" text in upper left area in massive white Impact-style font
+3. Overall 16:9 composition layout
+4. The orange Zapier sunburst logo icon on the lower left
+CHANGE:
+1. Background to solid black/very dark faded background instead of dark office
+2. Replace the blue Telegram logo circle with the iMessage chat screen from the second reference image
+3. Shift any accent colors to hot pink #ED0D51
+4. Keep the "+" symbol between the Zapier logo and the iMessage element
+Clean professional YouTube thumbnail, bold typography, high contrast, dark moody look
+```
+
+#### Inline Script Template
+
+Write a temporary `.mjs` file for each remix job. Here is the reusable template:
+
+```javascript
+import { readFileSync, writeFileSync } from "fs";
+import { resolve, extname } from "path";
+import { execSync } from "child_process";
+
+const outputDir = resolve("output/thumbnails");
+const FAL_KEY = process.env.FAL_KEY;
+
+async function uploadToFalStorage(filePath) {
+  const fileBuffer = readFileSync(filePath);
+  const ext = extname(filePath).toLowerCase();
+  const contentType = ext === ".jpg" || ext === ".jpeg" ? "image/jpeg"
+    : ext === ".webp" ? "image/webp" : "image/png";
+  const initRes = await fetch("https://rest.alpha.fal.ai/storage/upload/initiate", {
+    method: "POST",
+    headers: { Authorization: "Key " + FAL_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({ content_type: contentType, file_name: "upload" + ext }),
+  });
+  if (!initRes.ok) throw new Error("Storage init failed: " + initRes.status);
+  const { upload_url, file_url } = await initRes.json();
+  await fetch(upload_url, {
+    method: "PUT",
+    headers: { "Content-Type": contentType },
+    body: fileBuffer,
+  });
+  return file_url;
+}
+
+async function main() {
+  // 1. Upload references
+  console.log("Uploading source thumbnail...");
+  const sourceUrl = await uploadToFalStorage("SOURCE_PATH");
+  console.log("Uploading reference asset...");
+  const refUrl = await uploadToFalStorage("REFERENCE_PATH");
+  console.log("Uploads done");
+
+  // 2. Build prompt
+  const prompt = `KEEP/CHANGE PROMPT HERE`;
+
+  // 3. Submit to GPT-Image-2 Edit
+  console.log("Submitting remix...");
+  const res = await fetch("https://queue.fal.run/openai/gpt-image-2/edit", {
+    method: "POST",
+    headers: { Authorization: "Key " + FAL_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prompt,
+      image_urls: [sourceUrl, refUrl],  // First = primary reference, rest = additional assets
+      num_images: 4,
+      image_size: "landscape_16_9",      // 16:9 thumbnail aspect; GPT-Image-2 has no aspect_ratio/resolution params
+      quality: "high",                   // YouTube-spec max definition (upgraded from medium 2026-05-14)
+      output_format: "png",
+    }),
+  });
+  if (!res.ok) throw new Error("Failed: " + await res.text());
+  const queued = await res.json();
+  console.log("Submitted:", queued.request_id || "immediate");
+
+  // 4. Poll for completion (status URL uses /requests/{id}/status — works for both /edit and base)
+  let images;
+  if (queued.images && queued.images.length > 0) {
+    images = queued.images;
+  } else if (queued.request_id) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 3000));
+      process.stdout.write(".");
+      const sRes = await fetch(
+        "https://queue.fal.run/openai/gpt-image-2/requests/" + queued.request_id + "/status",
+        { headers: { Authorization: "Key " + FAL_KEY } }
+      );
+      const s = await sRes.json();
+      if (s.status === "COMPLETED") {
+        const rRes = await fetch(
+          "https://queue.fal.run/openai/gpt-image-2/requests/" + queued.request_id,
+          { headers: { Authorization: "Key " + FAL_KEY } }
+        );
+        images = (await rRes.json()).images;
+        break;
+      }
+      if (s.status === "FAILED") throw new Error("GPT-Image-2 failed: " + JSON.stringify(s));
+    }
+  }
+  if (!images) throw new Error("No images returned");
+
+  // 5. Download variations
+  console.log("\nDownloading " + images.length + " variations...");
+  for (let i = 0; i < images.length; i++) {
+    const r = await fetch(images[i].url);
+    writeFileSync(
+      resolve(outputDir, "OUTPUT_NAME-remix-v1-" + (i + 1) + ".png"),
+      Buffer.from(await r.arrayBuffer())
+    );
+    console.log("Saved v1-" + (i + 1));
+  }
+  console.log("DONE — run the preview-quality-gate + render-preview steps below to review");
+}
+main().catch(e => { console.error(e); process.exit(1); });
+```
+
+**To use:** Copy the template, replace `SOURCE_PATH`, `REFERENCE_PATH`, `OUTPUT_NAME`, and the prompt. Save as `output/thumbnails/_remix-[name].mjs`, run with `node output/thumbnails/_remix-[name].mjs`, then delete the temp file after.
+
+**If only one reference image** (no additional assets), use `image_urls: [sourceUrl]` with a single upload.
+
+**Cost:** ~$0.14 per 4 variations (quality:"high")
+
+**Preview and pick** — NEVER resize the source PNGs (destroys YouTube-spec resolution). Copy first, then resize the copies:
+```bash
+for f in output/thumbnails/[name]-remix-v1-*.png; do
+  cp "$f" "${f%.png}-preview.png"
+  sips --resampleHeightWidthMax 1000 "${f%.png}-preview.png"
+done
+
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/preview-quality-gate.mjs" --dir output/thumbnails/ --type image --pattern '^\[name\]-remix-v1-.*\.png$' --min-width 1000 --min-height 500
+```
+
+Read each `-preview.png`. User picks the best remix (referenced by the source PNG name, not the preview) before proceeding — verify contrast, text readability at mobile size, composition, and dark background (#0D0D0D) applied correctly.
+
+**Lock the non-person layers before body swap:** Finish every background-color, text, logo, screenshot, avatar, and card edit now. After Jay is body-swapped, do not send the full thumbnail through another generative image edit. A later generative edit can silently repaint the face even when the prompt says to preserve it. After body swap, only deterministic pixel compositing is allowed for non-person corrections. If a generative layout correction is unavoidable, apply it to the pre-swap remix and then run a fresh final body swap.
+
+#### Rules
+- Dark backgrounds preferred — black (#0D0D0D) is default
+- High contrast is mandatory — readable at mobile thumbnail size
+- White text on dark backgrounds only
+- Never use complex backgrounds (no server rooms, cityscapes, busy scenes)
+- If white background: headline MUST have a dark/colored bar behind it for contrast
+- Logos: always include "KEEP the logo EXACTLY as-is — do not recolor, tint, or modify" in the prompt
+
+---
+
+### Step 4: Generate Close-Up Jay Photo
+
+Map the thumbnail mood to a Jay preset:
+
+| Mood | Preset |
+|------|--------|
+| Confident/serious | `confident` |
+| Dramatic/intense | `cinematic` |
+| Teaching/contemplative | `thinking` |
+| CTA/engagement | `pointing` |
+| Happy/energetic | `excited` |
+
+**Generate Jay photo:**
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/generate-thumbnail.mjs" generate-jay --preset [preset] --name [output-name]
+```
+
+- **Cost:** ~$0.03
+- **Output:** `output/thumbnails/[name]-jay.png`
+- Quality gate: `node "$YT_THUMBNAIL_SKILL_DIR/scripts/preview-quality-gate.mjs" --dir output/thumbnails/ --type image --min-width 800 --min-height 450` — verifies photo is real PNG/JPG + dimensions. Read the extracted `[name]-jay-preview.png` to verify face-swap integrity (natural expression, proper lighting)
+
+**Pre-generated photos are optional:** Use a user-provided Jay reference or a file in `JAY_THUMBNAIL_ASSET_DIR` when available. Otherwise generate a fresh reference with the bundled CLI.
+
+User picks best Jay photo, or Codex auto-selects the strongest match.
+
+---
+
+### Step 5: Body-Swap Jay into the Remix
+
+**Always use `generate-thumbnail.mjs face-swap`** (NOT the deprecated `face-swap-thumbnail.mjs`). Face fidelity is a hard blocker, not a polish preference.
+
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/generate-thumbnail.mjs" face-swap --base output/thumbnails/[name]-remix-v1-[N].png --jay output/thumbnails/[name]-jay.png --name [output-name]
+```
+
+Or with a pre-generated photo:
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/generate-thumbnail.mjs" face-swap --base output/thumbnails/[name]-remix-v1-[N].png --jay /path/to/jay-reference.png --name [output-name]
+```
+
+- **Cost:** ~$0.30 (quality:"high")
+- **Native output:** `output/thumbnails/[output-name]-final-native.png`
+- **Final output after approval:** `output/thumbnails/[output-name]-final.png`
+
+### Native Face Gate (Mandatory Before Upscaling)
+
+Do not approve the body swap from a reduced full-thumbnail preview. Inspect a face crop at 100% native pixels and compare it side by side with the Jay reference.
+
+Create the native crop with a normalized region that includes the full face, hairline, ears, beard, and neck. Reuse the exact same region after upscaling:
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/thumbnail-face-qa.mjs" \
+  output/thumbnails/[name]-final-native.png \
+  --region 0.68,0,0.32,0.65 \
+  --out output/thumbnails/[name]-face-qa-native.png
+```
+
+The example region assumes Jay is on the right. Adjust it to the actual person position. Do not resize the crop before reviewing it.
+
+Reject and regenerate if any of these are visible:
+- etched, topographic, or repeated contour lines on the forehead, cheeks, nose, or neck
+- waxy, plastic, painted, or beauty-filter skin with collapsed natural texture
+- malformed eye highlights, doubled eyelids, glassy black eyes, or asymmetrical pupils
+- beard hatching, repeated hair strokes, neck banding, doubled facial edges, or hybrid identity
+- distorted teeth, lips, ears, hands, or facial proportions
+
+Only after the native face passes, upscale it:
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs" \
+  output/thumbnails/[name]-final-native.png \
+  --out output/thumbnails/[name]-final.png \
+  --target 1920x1080
+```
+
+**Post-swap verification** — NEVER resize the final PNG in place (it's already 1920×1080 YouTube-spec; sips would shrink it). Make a preview copy:
+```bash
+cp output/thumbnails/[name]-final.png output/thumbnails/[name]-final-preview.png
+sips --resampleHeightWidthMax 1000 output/thumbnails/[name]-final-preview.png
+```
+
+Read `[name]-final-preview.png` and check:
+- Jay is in the FRONT layer (not behind any element)
+- Jay is looking directly at the camera
+- Expression is natural, not cartoonish
+- The face remains photographic at 100% crop with natural skin texture
+- No contour lines, waxy smoothing, eye artifacts, beard hatching, or neck banding were introduced or amplified by upscaling
+
+Compare the native and upscaled face crops. If the native file is clean but the final is not, reject the upscale and use a non-generative resize. If both contain the defect, regenerate the body swap with a different Jay reference or variation.
+
+Create the upscaled comparison crop with the same normalized region:
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/thumbnail-face-qa.mjs" \
+  output/thumbnails/[name]-final.png \
+  --region 0.68,0,0.32,0.65 \
+  --out output/thumbnails/[name]-face-qa-upscaled.png
+```
+
+The dimension-only `preview-quality-gate.mjs` is not evidence of face quality. Both face crops must pass visual review before delivery.
+
+If any critical check fails, regenerate with adjusted parameters. After **2 failed attempts** on the same issue, flag to user and ask for guidance rather than looping indefinitely.
+
+---
+
+### Step 6: Codex Vision Feedback Loop (2 Auto-Iterations)
+
+This step automatically critiques and improves the thumbnail twice, then presents all versions for the user's final pick.
+
+#### Iteration 1
+
+**Critique the v1 final thumbnail** by reading the image and evaluating:
+
+| Criteria | What to Check |
+|----------|---------------|
+| **Contrast** | Text readable at 120px height (mobile thumbnail size)? Strong text-to-background contrast? |
+| **Jay Positioning** | Fills 1/3+ of frame? In front layer? Serious/confident expression? Direct eye contact? |
+| **Text** | Max 3 words? High contrast? Properly placed? Readable at 320px width? |
+| **Composition** | Clean layout? Max 3 focal points? 16:9 maintained? |
+| **Brand** | Dark bg (#0D0D0D)? Hot pink accent (#ED0D51) used correctly? White text? |
+| **Seams** | Natural face-swap? No artifacts? Matching skin tones and lighting? |
+
+**Write a specific critique** with 2-3 actionable improvements.
+
+**Regenerate from the pre-swap remix, never from a body-swapped final:**
+- Write a new inline script targeting the specific non-person issues in the pre-swap remix
+- Use the last pre-swap remix as the reference, not `v1FinalUrl`
+- Finish all background, text, logo, card, and avatar corrections before a fresh body swap
+- Run the native face gate again. Never allow a generative edit to repaint an approved Jay face
+
+**Re-do face-swap on v2 remix:**
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/generate-thumbnail.mjs" face-swap --base output/thumbnails/[name]-remix-v2.png --jay [same-jay-photo] --name [name]-v2
+```
+
+#### Iteration 2
+
+Repeat the same critique cycle on v2:
+1. Read and critique `[name]-v2-final.png`
+2. Write 2-3 actionable improvements
+3. Generate v3 from the v2 pre-swap remix
+4. Face-swap onto v3, then repeat native and upscaled face QA
+
+#### Final Presentation
+
+Run the shared quality gate on all 3 finals, then open in browser mockup:
+
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/preview-quality-gate.mjs" --dir output/thumbnails/ --type image --pattern '.*-(final|v2-final|v3-final)\.png$' --min-width 1920 --min-height 1080
+
+cat > output/thumbnails/preview.json <<'EOF'
+{
+  "template": "youtube-watch",
+  "asset": "[name]-final.png",
+  "aspectRatio": "16:9"
+}
+EOF
+
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/render-preview.mjs" \
+  --template youtube-watch \
+  --out output/thumbnails/preview-v1.html \
+  --config @output/thumbnails/preview.json \
+  --open
+```
+
+Repeat for v2 and v3 (write `preview-v2.html` and `preview-v3.html`). Each opens in a YouTube watch-page mockup showing the thumbnail alongside YT chrome (title, channel row, suggested videos). User compares all 3 in context and picks the winner.
+
+**Iteration cost:** ~$0.14 (remix) + $0.30 (face-swap) = ~$0.44 per iteration
+**Total feedback loop cost:** ~$0.88
+
+---
+
+## Delivery
+
+After the user picks the final thumbnail:
+
+1. **Copy to Downloads:**
+```bash
+cp output/thumbnails/[name]-final.png ~/Downloads/[name]-final.png
+```
+
+2. **Optionally copy to a configured cloud asset directory:**
+```bash
+if [ -n "$JAY_THUMBNAIL_DELIVERY_DIR" ]; then
+  mkdir -p "$JAY_THUMBNAIL_DELIVERY_DIR"
+  cp output/thumbnails/[name]-final.png "$JAY_THUMBNAIL_DELIVERY_DIR/[name]-final.png"
+fi
+```
+
+3. **Clean up temp files** (including preview copies):
+```bash
+rm output/thumbnails/_remix-*.mjs 2>/dev/null
+rm output/thumbnails/*-preview.png 2>/dev/null
+```
+
+---
+
+## Total Pipeline Cost
+
+| Step | Cost |
+|------|------|
+| 1. Source thumbnails | Free |
+| 2. Direction gathering | Free |
+| 3. Remix via GPT-Image-2 Edit, quality:"high" (4 variations) | ~$0.14 |
+| 4. Jay photo generation | ~$0.03 (skip if using pre-generated) |
+| 5. Body-swap via GPT-Image-2 Edit, quality:"high" + 1920×1080 upscale | ~$0.30 |
+| 6. Feedback loop (2 iterations) | ~$0.88 |
+| **Total per thumbnail** | **~$0.50–$1.32** |
+
+---
+
+## Batch Workflow
+
+When processing multiple thumbnails in sequence:
+
+1. Run Steps 1-2 for all thumbnails upfront (gather all source images and direction)
+2. Process each thumbnail through Steps 3-5 sequentially
+3. Run Step 6 (feedback loop) only if user requests it — for batch work, the user may skip auto-iteration
+4. Deliver all finals at the end in one batch copy to Downloads + Nextcloud
+
+---
+
+## Integration with YouTube Script Workflow
+
+When invoked from `/youtube-script`:
+
+1. Read the script's `thumbnailConcepts` array for creative direction
+2. Use the script's recommended `jayPreset` if provided
+3. User still provides source thumbnails (Step 1) — concepts inform the KEEP/CHANGE prompt
+4. Save final thumbnail path back to the script context
+
+---
+
+## Related Skills
+
+| Skill | Relationship |
+|-------|-------------|
+| `youtube-script` | Full video pipeline — calls this skill for thumbnails |
+| `youtube-tester` | A/B testing thumbnails on YouTube |
+| `ad-creative` | Ad images with Jay (different pipeline, different aspect ratios) |
+
+---
+
+## Key Files
+
+| File | Role |
+|------|------|
+| `scripts/generate-thumbnail.mjs` | Bundled primary CLI for base generation, Jay reference generation, and body swaps |
+| `scripts/upscale-recraft.mjs` | Bundled Recraft upscale and exact-size encoder |
+| `scripts/thumbnail-face-qa.mjs` | Bundled normalized face-crop tool for native and post-upscale QA |
+| `scripts/preview-quality-gate.mjs` | Bundled image dimension and magic-byte gate |
+| `scripts/render-preview.mjs` | Bundled YouTube watch-page preview renderer |
+| `output/thumbnails/` | All generated output |
+| `JAY_THUMBNAIL_ASSET_DIR` | Optional user-configured directory for real Jay photos and logos |
+| `JAY_THUMBNAIL_DELIVERY_DIR` | Optional user-configured cloud delivery directory |
+
+---
+
+## Legacy Workflows
+
+The original 3 workflow options (From Scratch, Scrape Competitors, From Specific URL) are archived in `references/legacy-workflows.md` for reference. Use them if the user explicitly requests one of those approaches.

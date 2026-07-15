@@ -1,0 +1,9 @@
+{
+  "name": "youtube-thumbnail-skill-runtime",
+  "version": "3.2.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "sharp": "^0.34.3"
+  }
+}

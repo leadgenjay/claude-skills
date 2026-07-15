@@ -1,7 +1,7 @@
 id: youtube-thumbnail
 type: skill
 name: "YouTube Thumbnail"
-description: "Generate YouTube thumbnails using AI pipeline — concept writing, base generation via Nano Banana, Jay photo via Flux Lora, and body-swap compositing via fal.ai. Supports from-scratch, competitor scrape + remix, and URL-based remix workflows."
+description: "Generate and remix YouTube thumbnails with fal.ai GPT-Image-2, Jay reference generation, body swaps, mandatory native face-crop QA, and verified 1920x1080 delivery."
 categories:
   - lgj-exclusive
   - content
@@ -10,16 +10,28 @@ tags:
   - youtube
   - thumbnail
   - face-swap
-  - nano-banana
+  - gpt-image-2
   - fal-ai
   - flux-lora
+  - face-qa
   - video
 icon: ImagePlus
 path: skills/youtube-thumbnail
 files:
   - SKILL.md
+  - manifest.yaml
+  - package.json
+  - scripts/generate-thumbnail.mjs
+  - scripts/upscale-recraft.mjs
+  - scripts/thumbnail-face-qa.mjs
+  - scripts/preview-quality-gate.mjs
+  - scripts/render-preview.mjs
+  - assets/preview-templates/youtube-watch.html
   - evals/evals.json
-version: "1.2"
+  - references/legacy-workflows.md
+version: "3.2.0"
 composesWell:
   - short-form-script
   - content-research
+postInstall: |
+  cd ~/.claude/skills/youtube-thumbnail && npm install --silent 2>/dev/null || echo "  install dependencies with: cd ~/.claude/skills/youtube-thumbnail && npm install"

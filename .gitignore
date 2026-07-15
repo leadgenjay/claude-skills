@@ -1,5 +1,6 @@
 node_modules/
 package.json
+!skills/youtube-thumbnail/package.json
 package-lock.json
 
 # Exception: the demo-imsg skill ships a self-contained Remotion renderer whose
