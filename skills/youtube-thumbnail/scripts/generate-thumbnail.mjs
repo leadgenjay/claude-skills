@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * YouTube Thumbnail Generator — 4-Step Pipeline
+ * YouTube Thumbnail Generator — 6-Step Pipeline
  *
  * Interactive pipeline:
- *   1. Generate base thumbnail with Nano Banana 2 (generic man, 4 variations)
+ *   1. Generate base thumbnail with GPT-Image-2 (generic person, 4 variations)
  *   2. Pick the best base (interactive pause)
  *   3. Generate matching Jay photo with Flux Lora
  *   4. Face-swap Jay onto the chosen base
@@ -20,8 +20,8 @@
  *   export $(grep FAL_KEY .env.local | xargs)
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
-import { resolve, dirname } from "path";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
+import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { createInterface } from "readline";
 import { execSync } from "child_process";
@@ -46,15 +46,8 @@ if (!FAL_KEY) {
 
 // ─── Endpoints ──────────────────────────────────────────────────
 
-// Default model: GPT-Image-2 (since 2026-04-26). NB2 endpoints retained as
-// `*_LEGACY` constants for fallback when GPT-Image-2 returns content_policy_violation.
 const GPT_IMAGE_2_ENDPOINT = "https://queue.fal.run/openai/gpt-image-2";
 const GPT_IMAGE_2_STATUS_BASE = "https://queue.fal.run/openai/gpt-image-2/requests";
-const NANO_BANANA_ENDPOINT_LEGACY = "https://queue.fal.run/fal-ai/nano-banana-2";
-const NANO_BANANA_STATUS_BASE_LEGACY = "https://queue.fal.run/fal-ai/nano-banana-2/requests";
-// Aliases for back-compat with code below; default path now hits GPT-Image-2.
-const NANO_BANANA_ENDPOINT = GPT_IMAGE_2_ENDPOINT;
-const NANO_BANANA_STATUS_BASE = GPT_IMAGE_2_STATUS_BASE;
 const FLUX_LORA_ENDPOINT = "https://queue.fal.run/fal-ai/flux-lora";
 const FAL_STORAGE_URL = "https://rest.alpha.fal.ai/storage/upload/initiate";
 
@@ -101,6 +94,10 @@ function ask(question) {
 
 async function uploadToFalStorage(filePath) {
   const fileBuffer = readFileSync(filePath);
+  const ext = extname(filePath).toLowerCase();
+  const contentType = ext === ".jpg" || ext === ".jpeg" ? "image/jpeg"
+    : ext === ".webp" ? "image/webp" : "image/png";
+  const uploadExt = ext === ".jpeg" ? ".jpg" : (ext || ".png");
 
   const initRes = await fetch(FAL_STORAGE_URL, {
     method: "POST",
@@ -108,7 +105,7 @@ async function uploadToFalStorage(filePath) {
       Authorization: `Key ${FAL_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ content_type: "image/png", file_name: "upload.png" }),
+    body: JSON.stringify({ content_type: contentType, file_name: `upload${uploadExt}` }),
   });
 
   if (!initRes.ok) {
@@ -120,7 +117,7 @@ async function uploadToFalStorage(filePath) {
 
   const putRes = await fetch(upload_url, {
     method: "PUT",
-    headers: { "Content-Type": "image/png" },
+    headers: { "Content-Type": contentType },
     body: fileBuffer,
   });
 
@@ -156,7 +153,7 @@ async function generateBase(prompt, name, numImages = 4) {
 
   process.stdout.write("  Submitting to GPT-Image-2...");
 
-  const res = await fetch(NANO_BANANA_ENDPOINT, {
+  const res = await fetch(GPT_IMAGE_2_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Key ${FAL_KEY}`,
@@ -322,7 +319,7 @@ async function pollFluxLora(requestId, maxAttempts = 30, intervalMs = 3000) {
 
 // ─── Step 4: Face Swap (GPT-Image-2 /edit) ────────────────────
 
-async function faceSwap(basePath, jayPath, name, index = null, { skipUpscale = false } = {}) {
+async function faceSwap(basePath, jayPath, name, index = null) {
   const suffix = index !== null ? `-final-${index}` : "-final";
   console.log(`\n  Step 4${index !== null ? ` (variation ${index})` : ""}: Face-swapping Jay onto base thumbnail`);
   console.log(`  Base: ${basePath}`);
@@ -378,35 +375,23 @@ Keep the background, lighting, composition, text overlays, and all non-person el
     images = queued.images;
   } else if (queued.request_id) {
     process.stdout.write("  Waiting for body swap");
-    images = await pollNanoBananaEdit(queued.request_id);
+    images = await pollGptImageEdit(queued.request_id);
   } else {
     throw new Error(`Unexpected response: ${JSON.stringify(queued)}`);
   }
 
   const imageUrl = images[0].url;
   const nativeOutputPath = resolve(outputDir, `${name}${suffix}-native.png`);
-  const outputPath = resolve(outputDir, `${name}${suffix}.png`);
   process.stdout.write("  Downloading native body-swap result...");
   await downloadImage(imageUrl, nativeOutputPath);
   console.log(" done");
   console.log(`  Native body-swap saved for face QA: ${nativeOutputPath}`);
 
-  if (skipUpscale) {
-    console.log("  Skipping upscale. Inspect the native face at 100% before continuing.");
-    return nativeOutputPath;
-  }
-
-  console.log("  Chaining Recraft Crisp Upscale → 1920x1080 (YouTube spec)...");
-  execSync(
-    `node "${resolve(SKILL_ROOT, "scripts/upscale-recraft.mjs")}" "${nativeOutputPath}" --out "${outputPath}" --target 1920x1080`,
-    { stdio: "inherit", env: process.env },
-  );
-
-  return outputPath;
+  console.log("  Stopped before upscale. A native face crop must pass review first.");
+  return nativeOutputPath;
 }
 
-async function pollNanoBananaEdit(requestId, maxAttempts = 60, intervalMs = 3000) {
-  // Default poll path: GPT-Image-2 (since 2026-04-26). Function name retained for back-compat.
+async function pollGptImageEdit(requestId, maxAttempts = 60, intervalMs = 3000) {
   const statusUrl = `${GPT_IMAGE_2_STATUS_BASE}/${requestId}/status`;
   const responseUrl = `${GPT_IMAGE_2_STATUS_BASE}/${requestId}`;
   const startTime = Date.now();
@@ -639,10 +624,17 @@ async function cmdFaceSwap(args) {
     process.exit(1);
   }
 
-  const upscale = args.upscale === true;
-  const path = await faceSwap(basePath, jayPath, name, null, { skipUpscale: !upscale });
-  console.log(`\n  ${upscale ? "Final thumbnail" : "Native body-swap for face QA"} saved: ${path}`);
-  openInPreview(path);
+  if (args.upscale) {
+    console.error("--upscale was removed because it bypassed mandatory native face QA. Approve the native crop, then run upscale-recraft.mjs separately.");
+    process.exit(1);
+  }
+  const path = await faceSwap(basePath, jayPath, name);
+  const faceRegion = args["face-region"] || "0.68,0,0.32,0.65";
+  const cropPath = resolve(outputDir, `${name}-face-qa-native.png`);
+  execSync(`node "${resolve(SKILL_ROOT, "scripts/thumbnail-face-qa.mjs")}" "${path}" --region "${faceRegion}" --out "${cropPath}"`, { stdio: "inherit" });
+  console.log(`\n  Native body-swap saved: ${path}`);
+  console.log(`  Mandatory native face crop: ${cropPath}`);
+  openInPreview([path, cropPath]);
 }
 
 async function cmdAddText(args) {
@@ -703,10 +695,10 @@ async function cmdFull(args) {
   console.log("=== YouTube Thumbnail Generator — Full Pipeline ===");
   console.log(`  Name: ${name}`);
   console.log(`  Jay expressions: ${jayExpressions.map(e => e.name).join(", ")}`);
-  console.log(`  Estimated cost: ~$0.76`);
-  console.log(`    Base thumbnails (4x Nano Banana 2): ~$0.32`);
+  console.log(`  Estimated cost: ~$1.31`);
+  console.log(`    Base thumbnails (4x GPT-Image-2): ~$0.56`);
   console.log(`    Jay photos (4x Flux Lora): ~$0.12`);
-  console.log(`    Face swaps (4x Nano Banana 2 edit): ~$0.32`);
+  console.log(`    Body swaps (4x GPT-Image-2 Edit): ~$0.60`);
 
   // Step 2: Generate base thumbnails
   const basePaths = await generateBase(prompt, name, 4);
@@ -746,15 +738,22 @@ async function cmdFull(args) {
   console.log("\n  Running 4 face-swaps...");
   const finalPaths = [];
   for (let i = 0; i < jayPaths.length; i++) {
-    const path = await faceSwap(chosenBase, jayPaths[i], name, i + 1, { skipUpscale: true });
+    const path = await faceSwap(chosenBase, jayPaths[i], name, i + 1);
     finalPaths.push(path);
   }
+
+  const faceRegion = args["face-region"] || "0.68,0,0.32,0.65";
+  const nativeCrops = finalPaths.map((path, i) => {
+    const crop = resolve(outputDir, `${name}-face-qa-native-${i + 1}.png`);
+    execSync(`node "${resolve(SKILL_ROOT, "scripts/thumbnail-face-qa.mjs")}" "${path}" --region "${faceRegion}" --out "${crop}"`, { stdio: "inherit" });
+    return crop;
+  });
 
   console.log("\n  Face-swap results:");
   finalPaths.forEach((p, i) => console.log(`    ${i + 1}. (${jayExpressions[i].name}) ${p}`));
 
   // PAUSE: Pick best face-swap
-  openInPreview(finalPaths);
+  openInPreview(nativeCrops);
   console.log("");
   const swapChoice = await ask("  Inspect each face and neck at 100% native pixels. Which clean face-swap looks best? (1-4): ");
   const swapNum = parseInt(swapChoice, 10);
@@ -763,13 +762,29 @@ async function cmdFull(args) {
   }
   const chosenNative = finalPaths[Math.max(0, Math.min((swapNum || 1) - 1, finalPaths.length - 1))];
   console.log(`  Selected native swap: ${chosenNative}`);
+  const nativeApproved = await ask("  Does the selected native crop pass every face-quality rule? (yes/no): ");
+  if (!/^y(es)?$/i.test(nativeApproved)) {
+    throw new Error("Native face QA rejected. Regenerate the body swap before upscaling.");
+  }
 
-  const chosenFinal = resolve(outputDir, `${name}-selected-final.png`);
+  const chosenFinal = resolve(outputDir, `${name}-approved-upscaled.png`);
   console.log("  Upscaling the approved native swap to 1920x1080...");
   execSync(
     `node "${resolve(SKILL_ROOT, "scripts/upscale-recraft.mjs")}" "${chosenNative}" --out "${chosenFinal}" --target 1920x1080`,
     { stdio: "inherit", env: process.env },
   );
+  const upscaledCrop = resolve(outputDir, `${name}-face-qa-upscaled.png`);
+  execSync(`node "${resolve(SKILL_ROOT, "scripts/thumbnail-face-qa.mjs")}" "${chosenFinal}" --region "${faceRegion}" --out "${upscaledCrop}"`, { stdio: "inherit" });
+  openInPreview([nativeCrops[Math.max(0, Math.min((swapNum || 1) - 1, nativeCrops.length - 1))], upscaledCrop]);
+  const upscaleApproved = await ask("  Did Recraft preserve the clean native face? (yes/no): ");
+  if (!/^y(es)?$/i.test(upscaleApproved)) {
+    console.log("  Replacing Recraft output with non-generative Sharp resize...");
+    execSync(`node "${resolve(SKILL_ROOT, "scripts/upscale-recraft.mjs")}" "${chosenNative}" --out "${chosenFinal}" --target 1920x1080 --mode sharp`, { stdio: "inherit", env: process.env });
+    execSync(`node "${resolve(SKILL_ROOT, "scripts/thumbnail-face-qa.mjs")}" "${chosenFinal}" --region "${faceRegion}" --out "${upscaledCrop}"`, { stdio: "inherit" });
+    openInPreview(upscaledCrop);
+    const sharpApproved = await ask("  Does the non-generative final crop pass face QA? (yes/no): ");
+    if (!/^y(es)?$/i.test(sharpApproved)) throw new Error("Final face QA rejected. Do not deliver this thumbnail.");
+  }
 
   // Step 5: Headline text overlay
   const videoTitle = args.title || prompt;
@@ -803,16 +818,18 @@ async function cmdFull(args) {
   const position = posChoice.toLowerCase() === "right" ? "right" : "left";
 
   const headlinePath = await addHeadlineText(chosenFinal, headline, name, position);
+  const finalPath = resolve(outputDir, `${name}-final.png`);
+  copyFileSync(headlinePath, finalPath);
 
   console.log("\n=== DONE ===");
-  console.log(`  Final thumbnail: ${headlinePath}`);
-  console.log(`\n  Total cost: ~$0.76`);
+  console.log(`  Final thumbnail: ${finalPath}`);
+  console.log(`\n  Estimated total cost: ~$1.31`);
   console.log("");
   console.log("  Next steps:");
   console.log("  1. Verify readability at 320px width (mobile)");
   console.log("  2. Export final at 1280x720px if needed");
 
-  openInPreview(headlinePath);
+  openInPreview(finalPath);
 }
 
 // ─── Main ───────────────────────────────────────────────────────
@@ -838,11 +855,11 @@ async function main() {
       await cmdAddText(args);
       break;
     default:
-      console.log("YouTube Thumbnail Generator — 4-Step Pipeline");
+      console.log("YouTube Thumbnail Generator — 6-Step Pipeline");
       console.log("");
       console.log("Commands:");
       console.log("  full           Run the full interactive pipeline (all 5 steps)");
-      console.log("  generate-base  Generate base thumbnails with Nano Banana 2 (text-to-image)");
+      console.log("  generate-base  Generate base thumbnails with GPT-Image-2");
       console.log("  generate-jay   Generate a Jay photo with Flux Lora");
       console.log("  face-swap      Face-swap Jay and stop at native resolution for mandatory face QA");
       console.log("  add-text       Add headline text overlay to a thumbnail");
@@ -854,7 +871,7 @@ async function main() {
       console.log('  node scripts/generate-thumbnail.mjs generate-base --prompt "A young man..." --name my-thumb');
       console.log("  node scripts/generate-thumbnail.mjs generate-jay --preset excited --name my-thumb");
       console.log("  node scripts/generate-thumbnail.mjs face-swap --base path/base.png --jay path/jay.png --name my-thumb");
-      console.log("  Add --upscale only when intentionally bypassing the separate native face gate");
+      console.log("  Optional: --face-region 0.68,0,0.32,0.65 controls the mandatory native QA crop");
       console.log('  node scripts/generate-thumbnail.mjs add-text --image path/thumb.png --headline "$50K/MONTH" --position left --name my-thumb');
       console.log("");
       console.log(`Jay presets: ${Object.keys(JAY_PRESETS).join(", ")}`);

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Recraft Crisp Upscale CLI — chains after any GPT-Image-2 / nano-banana generation step.
+ * Thumbnail upscale CLI with generative Recraft and non-generative Sharp modes.
  *
  * Usage:
- *   node scripts/upscale-recraft.mjs <input> --out <output> --target WxH [--format png|jpg] [--quality 92]
+ *   node scripts/upscale-recraft.mjs <input> --out <output> --target WxH [--mode recraft|sharp] [--format png|jpg] [--quality 92]
  *
  * Examples:
  *   # YouTube thumbnail (1920x1080)
@@ -24,7 +24,7 @@
  *   - PNG output by default (compressionLevel 9, adaptive filtering)
  *   - Falls back to JPEG when --format jpg (quality 92 default)
  *
- * Environment: FAL_KEY required (load via `export $(grep FAL_KEY .env.local | xargs)`)
+ * Environment: FAL_KEY is required only for the default Recraft mode.
  *
  * Cost: ~$0.04 per upscale (Recraft Crisp Upscale)
  */
@@ -33,10 +33,6 @@ import { resolve, extname } from "path";
 import sharp from "sharp";
 
 const FAL_KEY = process.env.FAL_KEY;
-if (!FAL_KEY) {
-  console.error("FAL_KEY not set. Run: export $(grep FAL_KEY .env.local | xargs)");
-  process.exit(1);
-}
 
 const ENDPOINT = "fal-ai/recraft-crisp-upscale";
 
@@ -54,13 +50,22 @@ function parseArgs(argv) {
 const args = parseArgs(process.argv.slice(2));
 const input = args._[0];
 if (!input) {
-  console.error("Usage: upscale-recraft.mjs <input> --out <output> --target WxH [--format png|jpg] [--quality 92]");
+  console.error("Usage: upscale-recraft.mjs <input> --out <output> --target WxH [--mode recraft|sharp] [--format png|jpg] [--quality 92]");
   process.exit(1);
 }
 const output = args.out || input;
 const targetStr = args.target;
 const format = (args.format || (output.toLowerCase().endsWith(".jpg") || output.toLowerCase().endsWith(".jpeg") ? "jpg" : "png")).toLowerCase();
 const jpegQuality = parseInt(args.quality || "92", 10);
+const mode = String(args.mode || "recraft").toLowerCase();
+if (!["recraft", "sharp"].includes(mode)) {
+  console.error(`Invalid --mode "${mode}". Use recraft or sharp.`);
+  process.exit(1);
+}
+if (mode === "recraft" && !FAL_KEY) {
+  console.error("FAL_KEY not set. It is required for --mode recraft.");
+  process.exit(1);
+}
 
 let targetW = null, targetH = null;
 if (targetStr) {
@@ -132,8 +137,17 @@ async function encodeOutput(buffer, w, h, fmt) {
 
   console.log(`Input:  ${inputPath} (${inputMeta.width}x${inputMeta.height}, ${inputKB} KB)`);
   console.log(`Target: ${targetW && targetH ? `${targetW}x${targetH}` : "native (no resize)"} ${format === "jpg" ? `JPEG q${jpegQuality}` : "PNG"}`);
+  console.log(`Mode:   ${mode}`);
 
   const t0 = Date.now();
+  if (mode === "sharp") {
+    const finalBuffer = await encodeOutput(readFileSync(inputPath), targetW, targetH, format);
+    writeFileSync(outputPath, finalBuffer);
+    const finalMeta = await sharp(finalBuffer).metadata();
+    console.log(`Output: ${outputPath} (${finalMeta.width}x${finalMeta.height}, ${(finalBuffer.length / 1024).toFixed(0)} KB)`);
+    console.log(`Done in ${((Date.now() - t0) / 1000).toFixed(1)}s. Non-generative resize, no fal.ai call.`);
+    return;
+  }
   console.log("Uploading to fal storage...");
   const sourceUrl = await uploadToFalStorage(inputPath);
 

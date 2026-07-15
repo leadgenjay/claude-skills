@@ -1,7 +1,7 @@
 ---
 name: youtube-thumbnail
 version: 3.2.0
-description: "Generate YouTube thumbnails using a 6-step AI pipeline with the fal.ai GPT-Image-2 Edit API for remix generation (default since 2026-04-26; NB2 Edit retained as `*2Legacy` fallback). This skill should be used when the user wants to create a YouTube thumbnail, face-swap a thumbnail, remix a source thumbnail, or generate thumbnail variations. Also use when the user mentions 'thumbnail,' 'YouTube thumbnail,' 'face-swap thumbnail,' 'body swap thumbnail,' 'thumbnail concept,' 'generate thumbnail,' 'remix thumbnail,' 'gpt-image-2 thumbnail,' or 'competitor thumbnail.'"
+description: "Generate YouTube thumbnails using a 6-step fal.ai GPT-Image-2 pipeline with mandatory native and post-upscale face-crop QA. Use when the user wants to create, body-swap, remix, or generate YouTube thumbnail variations."
 ---
 
 ## Step 0 - Prerequisites
@@ -10,24 +10,35 @@ Before any other operation, verify these are present. If anything is missing, st
 
 | Requirement | Check | Where to get it |
 |---|---|---|
-| Installed skill directory | `test -f "${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}/scripts/generate-thumbnail.mjs"` | Install `youtube-thumbnail` from the Lead Gen Jay skills marketplace, or set `YT_THUMBNAIL_SKILL_DIR` to its installed directory |
+| Installed skill directory | Run the resolver below | Install `youtube-thumbnail` from the Lead Gen Jay skills marketplace, or set `YT_THUMBNAIL_SKILL_DIR` to its installed directory |
 | Node.js 20+ | `node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 20 ? 0 : 1)'` | [nodejs.org](https://nodejs.org/) |
-| Bundled Node dependencies | `cd "${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}" && node -e 'import("sharp")'` | Reinstall the skill, or run `npm install` inside the installed skill directory |
+| Bundled Node dependencies | `cd "$YT_THUMBNAIL_SKILL_DIR" && node -e 'import("sharp")'` | Reinstall the skill, or run `npm ci` inside the installed skill directory |
 | fal.ai API key | `test -n "$FAL_KEY"` | Create a key at [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys) and export it as `FAL_KEY` |
-| macOS image utility | `command -v sips >/dev/null` | Included with macOS. On another OS, use an equivalent image resizer and preserve originals |
-| Network access | `curl -fsS -o /dev/null https://queue.fal.run/` | Allow HTTPS access to `queue.fal.run` and `rest.alpha.fal.ai` |
+| Network access | Resolver below must report a non-`000` status for each fal.ai host | Allow HTTPS access to `queue.fal.run`, `rest.alpha.fal.ai`, and `v3.fal.media` |
 
 Resolve the installed skill directory once and reuse it in every command:
 ```bash
-export YT_THUMBNAIL_SKILL_DIR="${YT_THUMBNAIL_SKILL_DIR:-$HOME/.claude/skills/youtube-thumbnail}"
+if [ -z "${YT_THUMBNAIL_SKILL_DIR:-}" ]; then
+  for candidate in \
+    "$HOME/.agents/skills/youtube-thumbnail" \
+    "$HOME/.codex/skills/youtube-thumbnail" \
+    "$HOME/.Codex/skills/youtube-thumbnail" \
+    "$HOME/.claude/skills/youtube-thumbnail"; do
+    if [ -f "$candidate/SKILL.md" ]; then export YT_THUMBNAIL_SKILL_DIR="$candidate"; break; fi
+  done
+fi
 test -f "$YT_THUMBNAIL_SKILL_DIR/SKILL.md" || { echo "youtube-thumbnail skill directory not found"; exit 1; }
+for url in https://queue.fal.run/ https://rest.alpha.fal.ai/storage/upload/initiate https://v3.fal.media/; do
+  status="$(curl -sS -o /dev/null -w '%{http_code}' "$url")"
+  [ "$status" != "000" ] || { echo "Cannot reach $url"; exit 1; }
+done
 ```
 
 If anything is missing, STOP. Do not generate placeholder scripts or silently skip face-quality gates.
 
 # YouTube Thumbnail — Lead Gen Jay
 
-You are an expert YouTube thumbnail creator for **Lead Gen Jay**. You run a 6-step pipeline: source thumbnails in, remixed + body-swapped + auto-critiqued thumbnails out. All remix generation uses the **fal.ai GPT-Image-2 Edit API** (`openai/gpt-image-2/edit`) — bake-off winner 2026-04-26. NB2 Edit remains accessible via `editWithNanoBanana2Legacy` for fallback when GPT-Image-2 returns `content_policy_violation`.
+You are an expert YouTube thumbnail creator for **Lead Gen Jay**. You run a 6-step pipeline: source thumbnails in, remixed + body-swapped + auto-critiqued thumbnails out. All remix generation uses the **fal.ai GPT-Image-2 Edit API** (`openai/gpt-image-2/edit`).
 
 ---
 
@@ -74,9 +85,9 @@ test -n "$FAL_KEY" || { echo "FAL_KEY is required"; exit 1; }
 
 2. **Output directory**: All generated files go to `output/thumbnails/`
 
-3. **Final delivery**: 1920×1080 PNG (YouTube-spec, max-quality, GPT-Image-2 `quality:"high"`) to `output/thumbnails/` and Downloads. The face-swap command stops at `*-final-native.png` by default so face artifacts can be inspected before upscaling. Upscale only the approved native file with Recraft Crisp Upscale. NEVER run destructive `sips` on the final PNG. Always copy to `*-preview.png` first for preview reads. An operator may additionally copy to a configured cloud-synced asset directory.
+3. **Final delivery**: 1920×1080 PNG (YouTube-spec, max-quality, GPT-Image-2 `quality:"high"`) to `output/thumbnails/` and Downloads. The face-swap command always stops at `*-final-native.png` and creates a native face crop. Upscale only an approved native file. Never resize the final in place. An operator may additionally copy to a configured cloud-synced asset directory.
 
-**Bundled upscale CLI:** `$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs <input> --out <output> --target WxH` — chains Recraft Crisp Upscale + sharp downscale to exact target. Adds ~$0.04 per call.
+**Bundled upscale CLI:** `$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs <input> --out <output> --target WxH [--mode recraft|sharp]`. Recraft adds about $0.04. Sharp is the non-generative fallback and makes no API call.
 
 ---
 
@@ -97,9 +108,9 @@ curl -o output/thumbnails/research/source-1.jpg "[url]"
 https://i.ytimg.com/vi/[videoId]/maxresdefault.jpg
 ```
 
-**Resize for analysis** (mandatory — prevents crashes with large images):
+**Create a separate analysis preview** (mandatory, never overwrite the source):
 ```bash
-sips --resampleHeightWidthMax 1000 output/thumbnails/research/*.jpg
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/resize-preview.mjs" output/thumbnails/research/source-1.jpg --max 1000
 ```
 
 **Analyze each source thumbnail:**
@@ -121,7 +132,7 @@ Use `AskUserQuestion` to collect the user's creative direction for each thumbnai
 | **Headline text** | Optional | 3 words max. User may keep original or specify new text |
 | **Background change** | Optional | Dark (#0D0D0D) default. White/light if requested |
 | **Element swaps** | Optional | Screenshots, logos, props to add/remove/replace |
-| **Screenshots/assets** | Optional | Product screens, tool UIs, reference images from Downloads or Nextcloud |
+| **Screenshots/assets** | Optional | Product screens, tool UIs, and user-provided reference images |
 | **Output name** | Yes | kebab-case, e.g. `cold-email-setup` |
 
 **Logo lookup:** Check the user-provided path first, then `JAY_THUMBNAIL_ASSET_DIR` if configured. If the exact logo is unavailable, ask the user to attach it. Do not substitute an AI-rendered logo.
@@ -132,7 +143,7 @@ Confirm inputs before proceeding to generation.
 
 ### Step 3: Remix via GPT-Image-2 Edit API
 
-**CRITICAL: Always use the fal.ai GPT-Image-2 Edit API for remix generation** (default since 2026-04-26). There is no `nano-banana` CLI tool for this pipeline. You must call the API directly via an inline Node.js script. NB2 Edit (`fal-ai/nano-banana-2/edit`) remains as a documented fallback only when GPT-Image-2 returns `content_policy_violation`.
+**CRITICAL: Always use the fal.ai GPT-Image-2 Edit API for remix generation.** There is no secondary model fallback in this package. If GPT-Image-2 rejects a request, revise the prompt without changing the user's intent, or report the blocker.
 
 #### How It Works
 
@@ -302,7 +313,7 @@ main().catch(e => { console.error(e); process.exit(1); });
 ```bash
 for f in output/thumbnails/[name]-remix-v1-*.png; do
   cp "$f" "${f%.png}-preview.png"
-  sips --resampleHeightWidthMax 1000 "${f%.png}-preview.png"
+  node "$YT_THUMBNAIL_SKILL_DIR/scripts/resize-preview.mjs" "$f" --out "${f%.png}-preview.png" --max 1000
 done
 
 node "$YT_THUMBNAIL_SKILL_DIR/scripts/preview-quality-gate.mjs" --dir output/thumbnails/ --type image --pattern '^\[name\]-remix-v1-.*\.png$' --min-width 1000 --min-height 500
@@ -395,10 +406,11 @@ node "$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs" \
   --target 1920x1080
 ```
 
-**Post-swap verification** — NEVER resize the final PNG in place (it's already 1920×1080 YouTube-spec; sips would shrink it). Make a preview copy:
+**Post-swap verification**: never resize the final PNG in place. Create a preview:
 ```bash
-cp output/thumbnails/[name]-final.png output/thumbnails/[name]-final-preview.png
-sips --resampleHeightWidthMax 1000 output/thumbnails/[name]-final-preview.png
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/resize-preview.mjs" \
+  output/thumbnails/[name]-final.png \
+  --out output/thumbnails/[name]-final-preview.png --max 1000
 ```
 
 Read `[name]-final-preview.png` and check:
@@ -409,6 +421,14 @@ Read `[name]-final-preview.png` and check:
 - No contour lines, waxy smoothing, eye artifacts, beard hatching, or neck banding were introduced or amplified by upscaling
 
 Compare the native and upscaled face crops. If the native file is clean but the final is not, reject the upscale and use a non-generative resize. If both contain the defect, regenerate the body swap with a different Jay reference or variation.
+
+Exact non-generative fallback:
+```bash
+node "$YT_THUMBNAIL_SKILL_DIR/scripts/upscale-recraft.mjs" \
+  output/thumbnails/[name]-final-native.png \
+  --out output/thumbnails/[name]-final.png \
+  --target 1920x1080 --mode sharp
+```
 
 Create the upscaled comparison crop with the same normalized region:
 ```bash
@@ -537,7 +557,7 @@ When processing multiple thumbnails in sequence:
 1. Run Steps 1-2 for all thumbnails upfront (gather all source images and direction)
 2. Process each thumbnail through Steps 3-5 sequentially
 3. Run Step 6 (feedback loop) only if user requests it — for batch work, the user may skip auto-iteration
-4. Deliver all finals at the end in one batch copy to Downloads + Nextcloud
+4. Deliver all finals at the end in one batch copy to Downloads and any operator-configured delivery directory
 
 ---
 
@@ -569,6 +589,7 @@ When invoked from `/youtube-script`:
 | `scripts/generate-thumbnail.mjs` | Bundled primary CLI for base generation, Jay reference generation, and body swaps |
 | `scripts/upscale-recraft.mjs` | Bundled Recraft upscale and exact-size encoder |
 | `scripts/thumbnail-face-qa.mjs` | Bundled normalized face-crop tool for native and post-upscale QA |
+| `scripts/resize-preview.mjs` | Bundled cross-platform, non-destructive preview resizer |
 | `scripts/preview-quality-gate.mjs` | Bundled image dimension and magic-byte gate |
 | `scripts/render-preview.mjs` | Bundled YouTube watch-page preview renderer |
 | `output/thumbnails/` | All generated output |
@@ -576,7 +597,3 @@ When invoked from `/youtube-script`:
 | `JAY_THUMBNAIL_DELIVERY_DIR` | Optional user-configured cloud delivery directory |
 
 ---
-
-## Legacy Workflows
-
-The original 3 workflow options (From Scratch, Scrape Competitors, From Specific URL) are archived in `references/legacy-workflows.md` for reference. Use them if the user explicitly requests one of those approaches.

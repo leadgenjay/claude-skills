@@ -12,7 +12,7 @@
 //
 // For --type image:
 //   - For each PNG/JPG matched by --pattern in --dir, verify magic bytes
-//     and minimum dimensions (via `sips`)
+//     and minimum dimensions (via bundled Sharp)
 //
 // On success: prints a JSON object with extracted frame paths + the deterministic
 // checklist Claude should consult before declaring the output ready. Exits 0.
@@ -26,6 +26,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync, execFileSync } from 'node:child_process';
+import sharp from 'sharp';
 
 function parseArgs(argv) {
   const out = {};
@@ -126,15 +127,15 @@ if (args.type === 'video') {
     }
     if (minWidth > 0 || minHeight > 0) {
       try {
-        const wOut = execFileSync('sips', ['-g', 'pixelWidth', '-g', 'pixelHeight', src], { encoding: 'utf-8' });
-        const w = Number((wOut.match(/pixelWidth:\s*(\d+)/) || [])[1] || 0);
-        const h = Number((wOut.match(/pixelHeight:\s*(\d+)/) || [])[1] || 0);
+        const meta = await sharp(src).metadata();
+        const w = Number(meta.width || 0);
+        const h = Number(meta.height || 0);
         if (w < minWidth || h < minHeight) {
           defects.push({ file: f, kind: 'too-small-dimensions', actual: `${w}x${h}`, expected: `>=${minWidth}x${minHeight}` });
           continue;
         }
       } catch (e) {
-        defects.push({ file: f, kind: 'sips-probe-failed', error: e.message });
+        defects.push({ file: f, kind: 'image-probe-failed', error: e.message });
         continue;
       }
     }

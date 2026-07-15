@@ -1,7 +1,7 @@
 id: youtube-thumbnail
 type: skill
 name: "YouTube Thumbnail"
-description: "Generate and remix YouTube thumbnails with fal.ai GPT-Image-2, Jay reference generation, body swaps, mandatory native face-crop QA, and verified 1920x1080 delivery."
+description: "Generate and remix YouTube thumbnails with fal.ai GPT-Image-2, Jay reference generation, body swaps, mandatory native and post-upscale face-crop QA, and verified 1920x1080 delivery."
 categories:
   - lgj-exclusive
   - content
@@ -21,17 +21,24 @@ files:
   - SKILL.md
   - manifest.yaml
   - package.json
+  - package-lock.json
   - scripts/generate-thumbnail.mjs
   - scripts/upscale-recraft.mjs
   - scripts/thumbnail-face-qa.mjs
   - scripts/preview-quality-gate.mjs
+  - scripts/resize-preview.mjs
   - scripts/render-preview.mjs
   - assets/preview-templates/youtube-watch.html
   - evals/evals.json
-  - references/legacy-workflows.md
 version: "3.2.0"
 composesWell:
   - short-form-script
   - content-research
 postInstall: |
-  cd ~/.claude/skills/youtube-thumbnail && npm install --silent 2>/dev/null || echo "  install dependencies with: cd ~/.claude/skills/youtube-thumbnail && npm install"
+  skill_dir="${YT_THUMBNAIL_SKILL_DIR:-$(pwd)}"
+  if [ ! -f "$skill_dir/package.json" ]; then
+    for candidate in "$HOME/.agents/skills/youtube-thumbnail" "$HOME/.codex/skills/youtube-thumbnail" "$HOME/.Codex/skills/youtube-thumbnail" "$HOME/.claude/skills/youtube-thumbnail"; do
+      if [ -f "$candidate/package.json" ]; then skill_dir="$candidate"; break; fi
+    done
+  fi
+  if [ -f "$skill_dir/package-lock.json" ]; then (cd "$skill_dir" && npm ci --omit=dev --silent); else echo "  youtube-thumbnail install directory not found; set YT_THUMBNAIL_SKILL_DIR and run npm ci"; fi
