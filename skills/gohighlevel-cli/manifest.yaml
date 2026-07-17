@@ -1,4 +1,5 @@
 name: gohighlevel-cli
-version: 1.0.0
-description: "CLI interface for GoHighLevel CRM and Marketing API"
+version: 2.1.0
+description: "CLI interface for GoHighLevel CRM/Marketing API — contacts, opportunities, calendars, workflows, conversations, emails, payments, forms, social media, locations, and documents. v2: email reading, workflow creation via internal API."
 categories: [crm, automation]
+postInstall: 'cd "$HOME/.claude/skills/gohighlevel-cli" && bash install.sh'

@@ -1,0 +1,11 @@
+#!/bin/bash
+# GHL CLI wrapper — auto-activates venv and loads .env
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/.venv/bin/activate"
+# Load .env if it exists (export all vars)
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    set -a
+    source "$SCRIPT_DIR/.env"
+    set +a
+fi
+exec cli-anything-gohighlevel "$@"

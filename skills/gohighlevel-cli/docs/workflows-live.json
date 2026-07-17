@@ -1,0 +1,4328 @@
+{
+  "workflows": [
+    {
+      "id": "a38c9d11-71b1-4748-9920-b73b24c0c0ef",
+      "name": "$11K Giveaway - Optin (NEW)",
+      "status": "published",
+      "version": 127,
+      "createdAt": "2023-07-14T22:33:43.583Z",
+      "updatedAt": "2026-05-13T16:22:30.860Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "02a1b9dd-365a-4dbf-a987-5ad8b12f545b",
+      "name": "$97 LTF Copywriting Delivery",
+      "status": "published",
+      "version": 33,
+      "createdAt": "2024-09-28T20:50:11.037Z",
+      "updatedAt": "2025-11-25T19:29:51.233Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "feedc2d1-021f-4a14-93cc-47399b47633a",
+      "name": "$97 LTF Order",
+      "status": "published",
+      "version": 24,
+      "createdAt": "2024-09-28T20:11:35.759Z",
+      "updatedAt": "2025-10-12T16:42:39.222Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7aa73155-19b8-4dc7-8194-9f5e9bb30290",
+      "name": "* New Leads - Intro SMS/WhatsApp",
+      "status": "draft",
+      "version": 31,
+      "createdAt": "2024-10-16T21:25:22.287Z",
+      "updatedAt": "2025-11-25T19:46:40.712Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b2265fa3-ebc3-4be7-86cd-2fa3b3504eb7",
+      "name": "1 on 1 Meeting",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-02-15T16:58:09.592Z",
+      "updatedAt": "2025-09-24T20:31:16.811Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "72cc5a44-1438-4937-8072-13ea58b3d3ab",
+      "name": "1.a Power Dialer",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-02-03T18:05:32.513Z",
+      "updatedAt": "2026-02-04T17:22:50.722Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ef0c8284-9be1-467f-8112-1d2aba0047a0",
+      "name": "14 Days - Unlock Modules (3 Split)",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-09-14T22:22:25.302Z",
+      "updatedAt": "2025-06-26T15:54:35.603Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "64c3dd6e-c919-46e9-9101-34ebb30d527a",
+      "name": "14 Days - Unlock Modules (Not 3 Split)",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-09-07T20:04:07.749Z",
+      "updatedAt": "2025-09-11T19:43:49.525Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c102a5a5-f67d-4417-b41c-a8bfe3e037a3",
+      "name": "3 Step Cold Template",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2024-06-13T15:43:12.118Z",
+      "updatedAt": "2025-10-13T23:55:15.958Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4fdf89f8-a7d6-4301-8cc2-debb4d2dcda2",
+      "name": "50K Agency Owners",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-08-04T19:06:05.907Z",
+      "updatedAt": "2026-02-15T17:45:03.190Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3e567947-dbce-4c73-b14b-d0311cbd4ebe",
+      "name": "AI Automation Insiders Purchase",
+      "status": "published",
+      "version": 22,
+      "createdAt": "2025-12-24T20:27:07.471Z",
+      "updatedAt": "2026-05-22T15:11:18.437Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ec2083d7-c1a0-4967-bcba-fd1f9f0d333a",
+      "name": "AI Automations Module Unlock Optin(offer shut down)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-06-29T22:48:14.321Z",
+      "updatedAt": "2026-05-13T20:44:30.287Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7e2169dd-ad18-4f57-8305-fd04fd0d0f43",
+      "name": "AI Booked Appointment w/ Lead => Update Opportunity (Stage 5)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.288Z",
+      "updatedAt": "2025-11-27T18:59:09.416Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "80157012-637b-4ff1-876e-fc0b9f402d87",
+      "name": "AI Call - Book a Call Trigger",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2024-11-07T10:33:35.459Z",
+      "updatedAt": "2025-11-27T18:58:32.368Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0b5a9df8-b9af-4297-819e-6e5464f28071",
+      "name": "AI Call - Insiders Help Trigger",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-11-07T10:46:38.955Z",
+      "updatedAt": "2025-08-28T18:02:49.111Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e0569dc0-2432-455f-ac0d-1c437a3f584d",
+      "name": "AI Cold Email Copywriting (New Jotform)",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-02-02T17:22:45.555Z",
+      "updatedAt": "2026-05-13T17:57:53.295Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6979297f-9bcd-4acb-a5fd-ba460a007161",
+      "name": "AI Cold Email Copywriting Tool (OLD)",
+      "status": "draft",
+      "version": 46,
+      "createdAt": "2023-10-30T19:35:15.458Z",
+      "updatedAt": "2026-02-15T17:44:35.683Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "02d27dce-f3c7-4275-a4f6-8ba108974561",
+      "name": "AI Commenter - Cancel / Remove License",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-03-02T21:02:32.212Z",
+      "updatedAt": "2025-10-03T23:10:56.087Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4ce0b829-1b3c-4dec-9171-9e091ffe1f57",
+      "name": "AI Commenter - Free Trial",
+      "status": "published",
+      "version": 18,
+      "createdAt": "2024-02-13T16:42:33.001Z",
+      "updatedAt": "2025-10-13T20:42:05.830Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b8681e40-10ef-4c66-a769-d677d8d350b5",
+      "name": "AI Commenter Basic Plan",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2024-02-13T17:23:00.337Z",
+      "updatedAt": "2025-10-13T23:30:34.199Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e2afd02b-5040-4571-b8b5-30593b839b85",
+      "name": "AI Commenter Unlimited - GIVE ACCESS",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-03-07T17:41:18.409Z",
+      "updatedAt": "2025-10-14T00:14:05.946Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c2d206ae-9ca4-4d66-ace1-29daa9eb84c3",
+      "name": "AI Commenter Unlimited Annual",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-02-13T18:47:31.276Z",
+      "updatedAt": "2025-10-13T23:56:10.854Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "dbcc394e-b39b-4c1f-957f-559c03b30aca",
+      "name": "AI Commenter Unlimited Monthly",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-02-13T18:41:26.046Z",
+      "updatedAt": "2025-10-14T00:08:48.955Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0d557ff2-5385-4297-a6f1-0ce4058a10b0",
+      "name": "AI Disqualified => Update Opportunity (Stage 11)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.551Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "01002d3e-d0a1-4f62-8a53-63c3696a5e58",
+      "name": "AI Following Up with Lead => Update Opportunity (Stage 3)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.555Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6fd3c8f0-5e6e-495d-8586-14097138e843",
+      "name": "AI Inbound Call Ended ->Send SMS",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-11-05T14:12:09.308Z",
+      "updatedAt": "2024-11-29T20:51:17.049Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "08ab820b-6efe-4e4f-be4b-e86c6a882056",
+      "name": "AI Message",
+      "status": "draft",
+      "version": 24,
+      "createdAt": "2024-10-16T21:25:22.552Z",
+      "updatedAt": "2025-04-22T21:16:15.661Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4e78a421-9765-4a2d-ac81-0185306759bb",
+      "name": "AI Messaged New Lead => Update Opportunity (Stage 1)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.558Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "35e9f905-2bf6-4800-9c25-887f2eb59247",
+      "name": "AI Qualified Lead => Update Opportunity (Stage 4)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.556Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "12ed1444-50c1-4ff9-8b51-9eadca729b29",
+      "name": "AI Responded => Remove from Database Reactivation Pipeline",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.867Z",
+      "updatedAt": "2025-11-25T19:46:15.678Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "48189144-dc80-41ff-87ab-7f569b3ddf49",
+      "name": "AI Sales Call Screening",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-08-18T19:43:55.528Z",
+      "updatedAt": "2025-08-19T21:10:19.633Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a7f10f4b-4150-4b13-9794-23698be94c11",
+      "name": "AI Setter Router",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2026-05-06T20:22:50.168Z",
+      "updatedAt": "2026-05-06T20:34:39.565Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6793c676-eaf2-40c9-a6bb-6a800942f3b9",
+      "name": "AI Talking to Lead => Update Opportunity (Stage 2)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:22.868Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b5012393-80d7-4858-96c3-730d2422ba3d",
+      "name": "AIA - Agreement Complete",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-12-24T20:26:19.176Z",
+      "updatedAt": "2026-04-22T21:45:47.770Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c8793b5e-f243-452a-97e5-8777114d04a5",
+      "name": "AIA - Agreement Pending",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-12-24T20:26:07.520Z",
+      "updatedAt": "2025-12-24T21:34:19.250Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3d8bedfb-3102-43fe-afa0-32df5cef5ac1",
+      "name": "AIA - Course Intake -> Webhook",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-12-24T20:26:33.664Z",
+      "updatedAt": "2025-12-24T21:24:52.402Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c7ae0e58-6889-4ae0-bb40-0f644ce18688",
+      "name": "AIA - Unified Pipeline \u2014 Email Campaign Router V2",
+      "status": "published",
+      "version": 13,
+      "createdAt": "2026-05-07T17:22:03.975Z",
+      "updatedAt": "2026-05-22T14:57:09.780Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "19222db8-155d-42b5-a04b-825c2a242428",
+      "name": "AIA - Working - Sales Appointment Reminders + Sheet NEW",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2026-05-20T16:23:55.914Z",
+      "updatedAt": "2026-05-20T22:50:23.667Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "caa8b218-f7a7-4a1d-bd7e-29b1262cd40a",
+      "name": "AIA Insiders - Request Feedback",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2025-12-24T20:26:51.205Z",
+      "updatedAt": "2025-12-24T20:27:27.140Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2d04d6a2-7f13-4cf6-995d-9aa9984047df",
+      "name": "AIA Insiders Discount",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-01-19T18:05:13.455Z",
+      "updatedAt": "2026-01-19T18:26:53.226Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b8c064b7-990b-4fa7-b76b-2228f244cbdd",
+      "name": "AIA Insiders Sales Sequence",
+      "status": "published",
+      "version": 41,
+      "createdAt": "2026-03-26T19:37:50.108Z",
+      "updatedAt": "2026-05-22T15:20:54.075Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2f80ac9d-233c-4d25-bf1a-03d272115395",
+      "name": "AIA Sales Sequence",
+      "version": 5,
+      "createdAt": "2026-04-05T18:33:43.058Z",
+      "updatedAt": "2026-04-27T17:10:33.680Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fc345c12-05cf-4231-95d9-1d69fc577c39",
+      "name": "AIA- Nurture Sequence(sequence moved to Kit - This routes to UP now)",
+      "status": "published",
+      "version": 82,
+      "createdAt": "2026-02-05T19:37:58.278Z",
+      "updatedAt": "2026-05-21T14:58:05.602Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2c3eeccd-188e-4d24-82cb-47832d4c0ab6",
+      "name": "Abandoned Cart Recovery - AI Automation Insiders",
+      "status": "published",
+      "version": 30,
+      "createdAt": "2026-03-26T17:57:42.863Z",
+      "updatedAt": "2026-05-22T15:22:23.565Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "26c0d9aa-081e-47d5-a2d9-2ee9783dad79",
+      "name": "Account Change Form Submitted",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2023-07-14T21:50:08.045Z",
+      "updatedAt": "2026-04-30T15:52:22.408Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5ade2432-09f7-4f8c-adb7-bc385f95979c",
+      "name": "Add-on -> Tag (AI Booker)",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2023-07-16T22:24:35.790Z",
+      "updatedAt": "2024-06-15T11:46:28.281Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "57e6bbf7-2baf-44fc-bdeb-8e8bf460fe97",
+      "name": "Add-on -> Tag (Follow ups)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2023-07-16T22:34:12.193Z",
+      "updatedAt": "2024-12-06T19:57:20.448Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "70cd642f-40cf-4581-a47e-65d77bc5444e",
+      "name": "Add-on -> Tag (Platinum Support)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2023-07-16T22:33:17.626Z",
+      "updatedAt": "2024-12-06T19:57:24.911Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f9f24e44-97f6-4091-b40b-462b0825d24f",
+      "name": "Affiliate Application",
+      "status": "published",
+      "version": 33,
+      "createdAt": "2023-12-08T18:40:57.617Z",
+      "updatedAt": "2025-10-12T16:58:58.833Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "08ab5558-fde7-4391-b313-32769c35aaf1",
+      "name": "Affiliate Onboarding Drip - Lead Gen Jay",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2026-03-28T17:42:32.504Z",
+      "updatedAt": "2026-03-28T21:42:03.261Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a4beab3a-39dc-4b66-9cf9-3bf5b0c862ad",
+      "name": "Affiliate Test",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-07-27T13:10:13.556Z",
+      "updatedAt": "2023-08-30T13:50:24.263Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "aa6ab032-d4c3-4b78-9cf8-064a75f09fd9",
+      "name": "Agreement Pending",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-03-30T20:52:40.692Z",
+      "updatedAt": "2025-10-13T22:36:17.627Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "76ce5f26-91bd-46a0-b0c4-2ec0ee46b356",
+      "name": "All Leads -> Enrich N8N",
+      "status": "published",
+      "version": 13,
+      "createdAt": "2025-11-27T19:18:32.294Z",
+      "updatedAt": "2025-12-28T16:33:08.379Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "54ee30cd-dd9a-4e54-8c3c-8ff52b3c1b99",
+      "name": "All Orders - Connect Customer and Team",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-05-14T20:22:59.604Z",
+      "updatedAt": "2025-05-14T20:24:04.983Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "26a53d5c-e0f4-4746-9b63-f4b937f2b5e1",
+      "name": "All Orders ->UTM Tracking + Payment Plan",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2025-01-07T11:11:58.090Z",
+      "updatedAt": "2025-12-17T23:22:44.724Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3d90288b-9daf-4fbe-8f3e-764ec85c50ac",
+      "name": "Appointment Automation - Lead Generation Service",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-07-14T21:50:08.049Z",
+      "updatedAt": "2023-07-14T21:50:11.218Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "887ed7ef-ed0c-4ecb-893d-a25f136c782e",
+      "name": "Appointment Cancel Reschedule -> Web App",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2026-05-18T17:17:03.996Z",
+      "updatedAt": "2026-05-18T19:42:59.261Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a158422f-9085-42e3-95cf-e4e38bb84e1c",
+      "name": "Appointment Cancelled",
+      "status": "published",
+      "version": 18,
+      "createdAt": "2024-02-07T16:05:19.139Z",
+      "updatedAt": "2025-11-27T19:07:07.137Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1a24bd19-b0f8-4bed-a7b5-0c7383ab3551",
+      "name": "Appointment Confirmation + Reminders (Momentum)",
+      "status": "draft",
+      "version": 26,
+      "createdAt": "2024-10-16T21:25:22.870Z",
+      "updatedAt": "2025-11-20T17:37:00.186Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f1965b07-2d4b-43b4-82c1-c3f72c4d51e2",
+      "name": "Appointment Confirmed 2 (Old)",
+      "status": "draft",
+      "version": 11,
+      "createdAt": "2024-10-06T23:48:11.390Z",
+      "updatedAt": "2025-12-12T20:45:51.182Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "43f20c41-2ce6-48fa-8a3c-bfde60316ddf",
+      "name": "Appointment Reminders (Non Sales)",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-12-08T15:11:39.434Z",
+      "updatedAt": "2025-06-07T16:50:36.402Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4fc50b7b-ba8a-4bf0-952a-cd87d7a55a4d",
+      "name": "Appointment Requested (OLD)",
+      "status": "draft",
+      "version": 47,
+      "createdAt": "2024-02-07T15:52:57.485Z",
+      "updatedAt": "2025-12-12T20:46:00.104Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "443ff529-c93f-4df0-936e-b9cbae830bfd",
+      "name": "Appointment Setter Form - Send Info to Salesperson",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-06-25T23:08:16.322Z",
+      "updatedAt": "2025-07-04T02:43:39.451Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2755de5e-8d92-4cc2-a707-67f6abceaf20",
+      "name": "Appointment Setter Meeting Confirmed",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-06-03T01:32:05.816Z",
+      "updatedAt": "2025-06-25T23:07:38.276Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "32f944f8-9433-4387-8410-115f85d11cf9",
+      "name": "BNPL - Elective Denied",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-06-26T23:31:41.975Z",
+      "updatedAt": "2024-07-30T22:41:39.591Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9894c8c3-74c8-4c39-acfb-578ac8836443",
+      "name": "BNPL - Pressure (Hold)",
+      "status": "draft",
+      "version": 19,
+      "createdAt": "2024-06-22T18:45:21.879Z",
+      "updatedAt": "2025-05-11T20:33:37.733Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8a8afd80-1e4a-44d9-ac6b-32d29890eafd",
+      "name": "BNPL Help",
+      "status": "published",
+      "version": 19,
+      "createdAt": "2024-06-05T02:51:41.731Z",
+      "updatedAt": "2025-10-13T21:33:48.981Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a8cc7007-4f03-408e-9aa5-3a8f054bd8d9",
+      "name": "Beehive Webhook test",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-05-15T21:26:57.271Z",
+      "updatedAt": "2026-05-16T15:04:58.460Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "dc6bddd1-ac56-4e10-9e2e-30650887f23a",
+      "name": "Black Friday Test",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-11-22T09:59:49.427Z",
+      "updatedAt": "2025-10-14T00:09:53.535Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8df25d5e-e685-4815-a622-62bed85a7d6c",
+      "name": "Blacklist Alert",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-03-21T02:18:08.224Z",
+      "updatedAt": "2026-04-12T17:39:55.124Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e0bb4279-2591-4b57-ab8b-d375ddc868ce",
+      "name": "Block Booking",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2026-05-01T17:54:47.773Z",
+      "updatedAt": "2026-05-01T17:58:25.871Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8cafffc3-b409-406e-86f9-a744fee9d083",
+      "name": "Bonus - 10K Lead Credits on Consulti",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-17T22:30:00.240Z",
+      "updatedAt": "2026-05-17T22:32:47.530Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b13d88aa-085e-4281-ac7a-f95c62d4544b",
+      "name": "Bonus - 1M+ Pre-Scraped List Voucher",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-17T22:30:19.314Z",
+      "updatedAt": "2026-05-17T22:31:46.222Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bd8eeb71-226b-4bce-a3a1-607417f96794",
+      "name": "Bonus - Early Course Access",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-06-26T16:22:23.038Z",
+      "updatedAt": "2026-05-17T22:28:40.173Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ac595644-406b-406c-8f3e-58a2381bc465",
+      "name": "Bonus - Free Implementation",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-08-30T16:28:40.491Z",
+      "updatedAt": "2025-08-30T16:55:41.545Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bf3ee219-1c38-468d-ad13-2518a72fcedf",
+      "name": "Bonus - Free coaching",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-06-26T16:27:30.390Z",
+      "updatedAt": "2026-05-17T22:28:10.340Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1a5556d7-fb4d-4306-8746-51c282a270b0",
+      "name": "Bonus - GHL 12 Months",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-08-30T16:56:39.508Z",
+      "updatedAt": "2025-08-30T17:09:37.930Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "92960e1a-823e-45a4-8a59-411bf99fe608",
+      "name": "Bonus - Trusted Leads 25K",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-06-26T16:26:14.563Z",
+      "updatedAt": "2026-03-27T01:27:30.824Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "afe495a7-23f5-44b2-9107-010097d198b0",
+      "name": "Bonus Appointment Cancelled",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-04-16T05:01:43.516Z",
+      "updatedAt": "2025-04-18T16:34:00.427Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a2bf86d5-cd8a-432f-b9da-74142ca6c907",
+      "name": "Bonus Coaching - Send Booking Email",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-03-27T04:08:24.611Z",
+      "updatedAt": "2025-05-20T19:31:50.711Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a700a85b-f251-49e9-b00a-98e34acf0179",
+      "name": "Bonus Coaching Booked - Pay Coach",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2025-03-27T04:16:12.552Z",
+      "updatedAt": "2026-03-25T23:11:02.432Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "206a3075-f07b-4893-8e4f-b7977199e7ec",
+      "name": "Bonus Coaching Call - Check Tags and Reject or accept",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-03-27T04:14:48.774Z",
+      "updatedAt": "2025-06-06T14:36:15.889Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4e8cbf87-098c-438e-a1b3-9d0f8d18c549",
+      "name": "Bundle Order - Add to Insiders Purchase Flows",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-02-10T23:38:45.949Z",
+      "updatedAt": "2026-02-10T23:40:24.389Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a52365c3-26af-4d9f-868d-73135a6daaeb",
+      "name": "CATCH ALL OLD VERSION",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-05-06T15:44:27.019Z",
+      "updatedAt": "2026-05-06T15:44:28.313Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "80a03682-9f47-402e-9380-83b8ac037c5d",
+      "name": "CEM 2025 Toolkit Optin",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-07-22T18:43:11.434Z",
+      "updatedAt": "2026-05-13T17:30:51.310Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "aef4ce01-b80f-4df9-b1c4-e526596f8f38",
+      "name": "Call Booked - High Ticket -> Create Deal",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-11-06T23:55:06.526Z",
+      "updatedAt": "2025-11-27T19:08:52.014Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a608e475-ec48-4ce3-a262-bca996c1dee9",
+      "name": "Call Booked - Sales -> Create Deal",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-11-06T23:31:54.046Z",
+      "updatedAt": "2026-04-08T15:17:43.417Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "473d31ee-f811-4075-89bd-4e4c7e98ee03",
+      "name": "Call Dial Complete",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2025-11-26T18:09:18.060Z",
+      "updatedAt": "2025-11-26T18:44:20.508Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "90609481-29f3-4c0f-a9ef-526870eb2800",
+      "name": "Call Funnel - Schedule a Call",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2026-03-17T17:40:38.858Z",
+      "updatedAt": "2026-05-22T15:07:39.813Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6de9a10b-b69f-4a87-85e3-e99fb86ec9d0",
+      "name": "Call Scheduled --> Mark Deal \"Won\"",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-15T21:42:22.077Z",
+      "updatedAt": "2023-12-08T18:39:17.000Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9fd68e66-b0c3-4566-8aad-c9ed20f5bd73",
+      "name": "Cancel Form Complete -> Remove Tag",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-15T21:42:22.076Z",
+      "updatedAt": "2023-12-08T18:39:21.762Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "eae49e2c-a58e-4d8b-9a22-02091ebb30c2",
+      "name": "Case Study Call Booked -> Remove from Nurture",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-12-15T14:12:03.466Z",
+      "updatedAt": "2025-12-08T20:23:43.449Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "61eac1c4-d045-4e34-9b56-b797a738ddf9",
+      "name": "Case Study Nurture",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-15T13:59:41.876Z",
+      "updatedAt": "2024-12-15T14:11:45.541Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "eac117a7-c88f-4bea-b6b5-4febc23cc319",
+      "name": "Case Study Received - Gift?",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-12-15T14:19:48.445Z",
+      "updatedAt": "2026-01-30T20:09:46.755Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ba92f0a1-7bf1-4edf-8fee-2cdbb75fde6f",
+      "name": "Catch All - Add Contacts to Nurture Sequence - OLD",
+      "status": "draft",
+      "version": 28,
+      "createdAt": "2025-06-03T01:55:47.319Z",
+      "updatedAt": "2026-05-06T15:44:34.618Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8becb8bb-60e8-4585-aa31-f56a28e50313",
+      "name": "Catch-all - New Contact Router - V2",
+      "status": "published",
+      "version": 28,
+      "createdAt": "2026-05-05T19:20:55.909Z",
+      "updatedAt": "2026-05-22T15:06:02.381Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "502c94d2-62d9-4d3c-81cc-5589dc8bebc4",
+      "name": "Check Bank Pending Payment",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-07-02T20:58:28.038Z",
+      "updatedAt": "2025-07-02T21:14:42.954Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "61ecac69-d3b4-4a91-ac47-6cea9fb76e7d",
+      "name": "Check Phone Status by Country",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-11-07T13:24:37.736Z",
+      "updatedAt": "2025-06-06T20:39:31.453Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "47727a73-4c0d-460c-939e-228dd4427c61",
+      "name": "Check Phone for iMessage & Wait for Reply",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-06-06T20:40:50.910Z",
+      "updatedAt": "2026-02-14T19:28:32.574Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b027b82b-d562-4382-b543-68b71e64b221",
+      "name": "Choose Adventure Sequence",
+      "status": "draft",
+      "version": 15,
+      "createdAt": "2024-05-09T20:08:36.440Z",
+      "updatedAt": "2024-10-15T15:43:45.647Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cbcddb18-c7b8-4474-8d47-4c3f79029a03",
+      "name": "Clawback Commission - Refund or Dispute",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-03-21T17:13:32.527Z",
+      "updatedAt": "2025-08-06T18:14:24.145Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "304a980e-92f3-427a-b78e-a9503dfdd27e",
+      "name": "Coaching Application -> Yes/No",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-12-21T20:22:18.892Z",
+      "updatedAt": "2025-09-11T15:06:56.515Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1da4076c-8a09-43cd-bf36-2f43f36bb140",
+      "name": "Coaching Call - Check Insiders Status",
+      "status": "published",
+      "version": 16,
+      "createdAt": "2025-02-11T00:55:30.046Z",
+      "updatedAt": "2026-03-12T17:34:41.917Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d10508e7-1dbd-4f12-9a72-09e2689c66e4",
+      "name": "Coaching Call -> Feedback",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-10-17T16:54:22.704Z",
+      "updatedAt": "2025-10-17T16:56:44.969Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "94a47c0d-4a9b-4adb-98a6-5107577547b5",
+      "name": "Coaching Call Booked (Bonus) -> Reminders -> Feedback",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-04-17T21:45:14.146Z",
+      "updatedAt": "2025-06-06T14:36:49.022Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f3a63e42-068c-42a8-b985-f567277c1e2d",
+      "name": "Coaching Call Booked -> Reminders",
+      "status": "published",
+      "version": 13,
+      "createdAt": "2024-12-21T22:27:57.125Z",
+      "updatedAt": "2025-10-17T16:58:10.374Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c70d844c-6968-4d8a-8105-e0b155054f7c",
+      "name": "Coaching Call Paid - Create Manual Affiliate Sale (UPDATE)",
+      "status": "published",
+      "version": 41,
+      "createdAt": "2024-12-21T23:05:19.434Z",
+      "updatedAt": "2025-12-24T15:46:26.712Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e58766bf-d1d7-4cdc-a377-6a9436eef95e",
+      "name": "Coaching Feedback Received",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-12-21T23:59:00.449Z",
+      "updatedAt": "2024-12-30T21:10:49.174Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9219f350-ad88-419f-a991-af6f1ca8d3a8",
+      "name": "Coaching Onboarding Booked -> Set Up ->Add to Affiliate",
+      "status": "published",
+      "version": 24,
+      "createdAt": "2024-12-21T21:29:26.596Z",
+      "updatedAt": "2025-10-03T20:17:27.430Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8ca97d04-72cc-4a91-aca7-623c0587d9df",
+      "name": "Cold Email AB Test Purchase",
+      "status": "published",
+      "version": 20,
+      "createdAt": "2025-06-26T20:46:04.927Z",
+      "updatedAt": "2026-01-20T21:57:11.845Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0c04d053-51c6-471b-ba88-ec519f4a811b",
+      "name": "Cold Email Reply Purchase",
+      "status": "published",
+      "version": 18,
+      "createdAt": "2025-06-25T21:02:05.741Z",
+      "updatedAt": "2026-01-13T18:07:01.556Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ec6875ad-1b07-4993-8846-fdf8f491f7a9",
+      "name": "Confirm Sales Referral - Insiders (Post Sale Form)",
+      "status": "published",
+      "version": 50,
+      "createdAt": "2024-08-26T21:12:46.121Z",
+      "updatedAt": "2026-02-05T19:20:53.227Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "002ad7e9-9281-4739-8cdf-7b37d607b037",
+      "name": "Confirm Sales Referral - Other (Step 2)",
+      "status": "published",
+      "version": 30,
+      "createdAt": "2024-11-04T21:23:10.829Z",
+      "updatedAt": "2026-02-05T19:26:13.681Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "780ae1d2-b837-4f66-bcdb-8bafce74c979",
+      "name": "Consult Interest -> Book a Call",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-03-17T17:30:57.562Z",
+      "updatedAt": "2026-03-17T17:40:48.224Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "37bb6ce0-248f-4912-b146-3044af2ed123",
+      "name": "Consulti Call Booked -> Tag & Webhook",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-12T17:41:10.505Z",
+      "updatedAt": "2026-05-14T17:03:03.223Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4ac5884a-a92a-4b97-b3ee-0576666f07bd",
+      "name": "Consulti Free-Trial Nurture (v1)",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2026-05-12T19:31:05.671Z",
+      "updatedAt": "2026-05-13T15:28:24.036Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8e5ffb16-ba05-4844-8a88-67caac6e9af9",
+      "name": "Contract Template",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2024-03-17T18:43:29.461Z",
+      "updatedAt": "2025-10-13T21:36:38.129Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "43b3eeb6-facf-4dea-b365-ebcef0ec777f",
+      "name": "Copy - BNPL - Pressure",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-08-16T04:57:32.167Z",
+      "updatedAt": "2024-08-31T17:51:36.302Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "19216ca6-7f6c-4857-9b6a-8a349721583f",
+      "name": "Copy - Sales Appointment Reminders + Sheet V2",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2026-05-08T19:19:32.774Z",
+      "updatedAt": "2026-05-11T17:32:56.562Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fc4f1ccb-245e-4bde-8add-e4fcf288b779",
+      "name": "Coupon Redeemed -> Give Bonuses (Labor Day)",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-08-30T17:14:06.118Z",
+      "updatedAt": "2025-08-30T17:21:01.630Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cd7762b1-4912-4e01-8e65-c1f9d1d90325",
+      "name": "Course Abandoned Cart Sequence",
+      "status": "published",
+      "version": 99,
+      "createdAt": "2024-05-15T17:58:40.747Z",
+      "updatedAt": "2026-05-22T15:23:22.155Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c469a081-3d7c-4347-9302-dbe111fb70e2",
+      "name": "Course Agreement Complete (Moved to AIA New)",
+      "status": "draft",
+      "version": 17,
+      "createdAt": "2024-03-30T20:49:20.030Z",
+      "updatedAt": "2025-12-24T21:31:27.741Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b06ce015-5ce2-4eb3-88a1-ef755e2afe8c",
+      "name": "Course Completed",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2023-11-02T18:09:09.294Z",
+      "updatedAt": "2024-02-18T16:51:55.593Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ba2afd88-6ace-458d-b8f0-3e3dead5c621",
+      "name": "Course Feedback Survey",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2023-11-02T17:11:44.531Z",
+      "updatedAt": "2025-10-13T23:32:10.538Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "947f6f89-8dd8-44b5-ab0a-422103476006",
+      "name": "Course Intake -> Send Card (Moved)",
+      "status": "draft",
+      "version": 21,
+      "createdAt": "2024-01-09T09:02:55.990Z",
+      "updatedAt": "2025-08-21T14:23:38.405Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b06da664-4f1b-4a90-8369-ad85447795c7",
+      "name": "Course Intake -> Webhook",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-08-30T21:55:11.760Z",
+      "updatedAt": "2025-08-21T15:41:36.654Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9de2fd79-ab3e-4ab3-af3d-929fed3a2d9f",
+      "name": "Course Interest - Sales Sequence",
+      "status": "published",
+      "version": 96,
+      "createdAt": "2024-05-29T21:08:01.843Z",
+      "updatedAt": "2026-05-19T22:49:28.310Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "30152759-3cfd-406c-9c6b-1632ec94edcb",
+      "name": "Course Interest Clicked (old)",
+      "status": "draft",
+      "version": 77,
+      "createdAt": "2023-12-07T13:34:45.847Z",
+      "updatedAt": "2026-05-12T22:33:19.116Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fb2af6f9-79eb-4943-89fa-f4c8cb7f80c4",
+      "name": "Course Interest Clicked - MISSING SIMPLE",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2024-03-03T01:02:46.062Z",
+      "updatedAt": "2024-03-30T20:51:36.281Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fbaca428-a62d-4d32-a19f-476afa01c2e4",
+      "name": "Course Started -> Affiliate & Feedback",
+      "status": "draft",
+      "version": 30,
+      "createdAt": "2023-11-02T17:45:10.657Z",
+      "updatedAt": "2024-02-18T16:52:05.678Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ed0d9a69-ccac-44fb-a11e-efd0ef1438ac",
+      "name": "Create Course Agreement MANUAL MAKE.COM",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-10-17T17:35:56.149Z",
+      "updatedAt": "2025-05-14T17:15:41.463Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "333aca9d-9199-4673-aed0-2b24825901ec",
+      "name": "Create Stripe Coupon 24 Hr",
+      "status": "published",
+      "version": 29,
+      "createdAt": "2024-05-28T22:11:23.518Z",
+      "updatedAt": "2025-10-13T20:34:31.215Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2ec410a4-24f9-45a4-b2d4-46ccc554e75d",
+      "name": "Custom Project Submission -> Manual Commission",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-12-31T21:04:57.376Z",
+      "updatedAt": "2026-01-30T20:10:58.030Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "17ac4023-e73f-4ab9-9d60-9391af19df66",
+      "name": "Custom Project Terms Signed",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-11-05T01:56:16.249Z",
+      "updatedAt": "2025-11-16T22:48:21.623Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "00804edf-0633-4acb-b647-0c17e3effa3e",
+      "name": "Custom Prompting",
+      "status": "draft",
+      "version": 12,
+      "createdAt": "2024-10-16T21:25:22.872Z",
+      "updatedAt": "2025-11-25T19:44:43.879Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0b5e6bb1-0e57-4c9c-91da-6f7d39bfe71c",
+      "name": "DM \"ENGINE\"",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-11-13T17:27:13.510Z",
+      "updatedAt": "2025-11-16T22:48:12.978Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "33791a88-5e0c-4e70-90fd-f56d55993bd4",
+      "name": "DM Pitch (All IG Comments)",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2025-05-30T17:50:36.254Z",
+      "updatedAt": "2026-04-09T03:46:37.361Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d46d297a-1c83-40fe-8a5f-185e6229bc05",
+      "name": "Database Reactivation Campaign 1",
+      "status": "draft",
+      "version": 8,
+      "createdAt": "2024-10-16T21:25:22.874Z",
+      "updatedAt": "2025-11-25T19:45:34.887Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4d08b396-4d94-4062-a59e-6ca24c18ef93",
+      "name": "Database Reactivation Staging 1",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.162Z",
+      "updatedAt": "2025-11-25T19:45:35.176Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a084e859-2409-4bed-9ed2-3ef98729f435",
+      "name": "Database Reactivation Timer",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.161Z",
+      "updatedAt": "2025-11-25T19:45:35.110Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "87e9aa95-f907-401b-a144-1ab72fafe753",
+      "name": "Deliver 7 Step Template Bump",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-10-14T17:31:16.665Z",
+      "updatedAt": "2024-12-04T21:40:45.664Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1185198c-d7d9-4c94-a562-cf1f26660db6",
+      "name": "Discount Code Activated",
+      "status": "draft",
+      "version": 17,
+      "createdAt": "2024-03-07T20:24:56.632Z",
+      "updatedAt": "2024-06-18T22:09:07.923Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f88137c2-8354-40d7-9212-02a53892d1cb",
+      "name": "Dispute -> Send Agreement & Remove from Workflows",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2024-10-19T16:57:52.430Z",
+      "updatedAt": "2025-06-24T15:32:22.530Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8c6d932b-6907-46c2-a7d6-2c5238e52349",
+      "name": "Double Optin",
+      "status": "published",
+      "version": 12,
+      "createdAt": "2023-12-09T17:30:59.426Z",
+      "updatedAt": "2024-04-02T23:00:03.364Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "faba5841-1f85-4c0d-b8dd-feb6fdcdae1c",
+      "name": "Drip Needs+Nurture to Catch All",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2025-06-07T13:26:43.848Z",
+      "updatedAt": "2025-11-28T19:44:54.265Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a67f87f3-ca45-4840-b126-f20872c21f57",
+      "name": "Easter Sale 2026",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-03-31T20:38:40.610Z",
+      "updatedAt": "2026-03-31T21:04:01.000Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "30d39641-9d69-4590-aad1-6ca8c29014b2",
+      "name": "Easter Sale Add Tag",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-03-31T20:43:28.099Z",
+      "updatedAt": "2026-04-02T17:42:46.116Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "642f7db4-fa44-44d0-bc41-618a32546e1d",
+      "name": "Elective Payment -> Manual Affiliate Commission",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-02-04T03:05:02.689Z",
+      "updatedAt": "2025-10-30T21:44:21.414Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3ddbaac9-23c4-4cc8-aed2-819cd54aae0b",
+      "name": "Email Event - Marked SPAM",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2023-07-15T21:42:22.078Z",
+      "updatedAt": "2026-02-15T19:25:04.654Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b9ad0ac9-8870-4a30-891f-253bcd43bb6c",
+      "name": "Email List Cleaning - Bounced Email",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2023-07-15T21:42:22.078Z",
+      "updatedAt": "2026-02-15T19:25:06.856Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bd80d0d4-1f70-4592-a806-457f04d5ed94",
+      "name": "Email Reply \"Footer\" (Email Footer)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-12-12T15:41:03.710Z",
+      "updatedAt": "2025-11-28T19:45:14.426Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c097bc48-6c0f-418a-81cb-7ffae08ed874",
+      "name": "Email Reply \"MORE\" (cold email template)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-12-19T15:14:17.320Z",
+      "updatedAt": "2025-11-28T19:45:14.426Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "82ed062a-69ef-4cb1-a536-a6c39ba92cc6",
+      "name": "Email Reply \"Secret\" (software vault)",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-12-04T15:16:09.112Z",
+      "updatedAt": "2025-11-28T19:45:14.426Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5b66e221-03d0-4178-a8f0-4b7e3e49f08c",
+      "name": "Email Reply - \"Insider\" (Course Sales)",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2024-12-10T15:17:46.331Z",
+      "updatedAt": "2024-12-10T15:17:46.331Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "21966dfa-1f88-4c13-b330-82fc0f761cc8",
+      "name": "Email Templates - Optin",
+      "status": "published",
+      "version": 14,
+      "createdAt": "2024-05-03T20:35:19.657Z",
+      "updatedAt": "2024-11-07T20:10:29.763Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e7372e26-d4cf-43f5-ac32-bcbe90a1151a",
+      "name": "Engagement Score: Email Click or Reply +3",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-03T01:19:57.637Z",
+      "updatedAt": "2025-06-03T01:21:02.124Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ae93c0eb-453b-4ce1-8bba-a02879b5c304",
+      "name": "Engagement Score: Email Open +1",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-03T01:19:05.086Z",
+      "updatedAt": "2025-06-03T01:19:37.701Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c4d60302-92bf-4a02-862c-7bb85585518e",
+      "name": "Engagement Score: Form Submit +5",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-03T01:15:28.837Z",
+      "updatedAt": "2025-06-03T01:16:46.311Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "83ccdbd1-776e-4438-89e7-6a2138057103",
+      "name": "Engagement Score: Meeting +10",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-03T01:17:53.248Z",
+      "updatedAt": "2025-06-03T01:18:44.837Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "343120a4-acfd-4dc1-af2f-131741174007",
+      "name": "Engagement Score: Page Visit +1",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-06-03T01:12:02.337Z",
+      "updatedAt": "2025-06-03T01:14:55.435Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "079e7aff-7901-46ed-815e-542a8ca8c81e",
+      "name": "FB DM \"Master\" (Event Link)",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-02-03T07:07:27.415Z",
+      "updatedAt": "2025-02-04T03:51:29.088Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a7248a2a-2f95-464b-8da9-dfe67c2f93d1",
+      "name": "FB/IG DM Keywords",
+      "status": "draft",
+      "version": 15,
+      "createdAt": "2024-10-19T00:45:00.802Z",
+      "updatedAt": "2025-11-25T19:45:47.084Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2ac282ea-be89-4d54-9291-62d47bcddda9",
+      "name": "Facebook Comment Trigger",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-04-09T03:39:40.865Z",
+      "updatedAt": "2026-04-09T03:47:39.731Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c5863660-a8d7-45b8-b869-3413f9573b30",
+      "name": "Facebook Group",
+      "status": "published",
+      "version": 21,
+      "createdAt": "2024-01-07T23:26:56.038Z",
+      "updatedAt": "2025-10-13T23:57:07.367Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e083bb21-32c9-4698-9b84-8f0dd7956c9e",
+      "name": "Facebook Messenger Spam => Delete Contact",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:23.165Z",
+      "updatedAt": "2025-11-25T19:46:40.712Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "78371069-c5b9-4af5-846a-9b92e0e1e23a",
+      "name": "Feedback Form Submitted - Send Notification",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-14T21:50:08.050Z",
+      "updatedAt": "2023-12-08T18:39:27.446Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "55ec6b3a-3786-4ee3-8cab-7fa5e53d6cf3",
+      "name": "Finance Me Response in BNPL",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-10-31T01:09:04.369Z",
+      "updatedAt": "2024-10-31T01:11:36.970Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d65692d2-a49a-4aac-bbbf-03297345904f",
+      "name": "Follow Ups (3 Days)",
+      "status": "draft",
+      "version": 9,
+      "createdAt": "2024-10-16T21:25:23.163Z",
+      "updatedAt": "2025-04-22T21:16:24.122Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f4c1e701-5084-469d-8f73-c704435334de",
+      "name": "Free $1 Email Machine Ordered",
+      "status": "draft",
+      "version": 30,
+      "createdAt": "2024-04-09T22:25:29.085Z",
+      "updatedAt": "2025-10-14T23:23:40.068Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fd758590-c287-4609-846a-9cea085ab319",
+      "name": "Free Machine Build Interest",
+      "status": "draft",
+      "version": 13,
+      "createdAt": "2024-04-08T23:05:22.746Z",
+      "updatedAt": "2025-02-13T01:25:33.655Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "91efb8f0-f082-47d2-959a-8e081a9649cb",
+      "name": "Free Skool Membership ->Email->Add to Automation",
+      "status": "published",
+      "version": 25,
+      "createdAt": "2024-05-07T23:07:47.814Z",
+      "updatedAt": "2026-05-13T20:44:58.264Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "03cb2e41-f70d-4c87-a213-779fbb1a632d",
+      "name": "Freedom Sale - Add to Bonuses",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2025-07-04T16:46:11.479Z",
+      "updatedAt": "2025-08-30T17:22:05.533Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1a40372e-93d0-4661-a037-34fcc7c7b89b",
+      "name": "GHL CRM Transfer",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-02-06T22:28:37.369Z",
+      "updatedAt": "2025-02-06T22:55:32.519Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b558d8a9-9ea7-4a9a-bfdb-40cd7dc85c70",
+      "name": "GHL Check for Access TAG WORKAROUND",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-09T17:55:21.092Z",
+      "updatedAt": "2025-06-09T17:58:00.912Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "afbff40d-5260-412e-b16d-0c18ba361e41",
+      "name": "GHL Custom Build Ordered",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2023-12-10T00:27:27.303Z",
+      "updatedAt": "2024-04-16T06:53:48.854Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4691970a-7f46-4b31-a5e9-91de595a3d70",
+      "name": "GHL Interest",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-04-16T06:54:59.939Z",
+      "updatedAt": "2025-10-13T20:41:07.418Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e62ea9ea-8a1c-4ab1-b314-48e50e3c1736",
+      "name": "GHL Nurture / Onboarding (Old)",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-11-22T23:21:56.660Z",
+      "updatedAt": "2025-10-14T00:18:42.903Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b02edfb5-c540-4c42-8eb3-256656a80b4c",
+      "name": "GHL Offboarding Service",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-10-22T23:13:29.699Z",
+      "updatedAt": "2025-10-24T14:41:55.707Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "768836b2-6918-48f5-a265-2d79ebb6ef1b",
+      "name": "GHL Onboarding COurse Invite",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-02-06T17:44:33.939Z",
+      "updatedAt": "2025-08-28T18:53:41.686Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e98f5702-7a44-46a9-9727-0613e0f8eee7",
+      "name": "GHL Purchase Onboarding - Insiders",
+      "status": "published",
+      "version": 22,
+      "createdAt": "2025-02-06T00:32:13.686Z",
+      "updatedAt": "2026-05-05T02:48:06.787Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "19736f17-877c-4773-91df-23e7d240c3a2",
+      "name": "GHL Purchase Onboarding - Saas",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2025-02-06T00:49:27.636Z",
+      "updatedAt": "2026-04-08T16:15:18.812Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "86bb5d55-f015-40b0-82d4-2acaa8284584",
+      "name": "GHL Subaccount to Whitelabel - 14 day wait",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-08-28T18:53:48.853Z",
+      "updatedAt": "2025-10-14T16:52:27.701Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9bdf9d8e-af04-4816-b471-7859b7cfe279",
+      "name": "GHL Subscription Cancel",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-02-06T01:12:53.050Z",
+      "updatedAt": "2026-02-09T19:03:18.334Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "efced7a9-d0ad-4f5b-983a-3cb78a819372",
+      "name": "GHL Subscription Failed",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-02-06T01:25:55.386Z",
+      "updatedAt": "2025-02-06T01:34:44.865Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "84dd8bc0-3a43-478a-8abc-1a7216890793",
+      "name": "GHL VIP support",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-09-13T18:35:28.425Z",
+      "updatedAt": "2024-09-13T19:24:01.304Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7a047963-b7d3-4fbc-ae68-c497fef16b2b",
+      "name": "GHL WA Access Request - Form Submitted",
+      "status": "published",
+      "version": 16,
+      "createdAt": "2025-03-18T19:10:34.180Z",
+      "updatedAt": "2025-12-16T21:13:04.586Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "10d96a80-566b-40ad-82c3-2e5d06707b08",
+      "name": "GHL WA Link Clicked - Check for Access",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-05-04T21:43:09.015Z",
+      "updatedAt": "2025-11-28T19:59:42.487Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "79f3e820-6b20-47ab-9a82-8f7d6d4f6dc1",
+      "name": "GHL Whitelabel Course (FREE)",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-04-24T17:25:43.737Z",
+      "updatedAt": "2025-11-25T20:55:16.541Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c6fbdbb7-4f9c-42d1-b1d1-ee20443d33fd",
+      "name": "GHL Whitelabel Course Purchase",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2025-03-18T17:20:57.484Z",
+      "updatedAt": "2025-10-12T16:44:07.296Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "13a1a868-be7a-4932-a283-5d4a2bed5ad0",
+      "name": "GPT list delivery",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-01-12T00:20:45.466Z",
+      "updatedAt": "2025-10-03T23:16:17.410Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "31d6f0d2-0d3f-4c60-b851-1c288398c11f",
+      "name": "Give Course Access -> Grant Membership Offer",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2023-11-05T16:44:32.077Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6f970cf9-20b6-4fee-8a77-3a4c6612b5de",
+      "name": "Grandfather Pricing Trigger Link",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-04-14T18:21:04.630Z",
+      "updatedAt": "2024-09-24T17:30:26.166Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "72325560-0e00-4d7d-b9ea-45315a38bfcb",
+      "name": "HT - Post Sales Call Follow Up",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2026-05-07T15:50:52.352Z",
+      "updatedAt": "2026-05-07T16:09:32.403Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "882baaa1-bb12-440d-8948-7be39afbe068",
+      "name": "HT Add-on: Additional Offer",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:32:09.210Z",
+      "updatedAt": "2024-12-08T02:32:46.971Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f80747b4-9138-4616-8690-8a25c0634a03",
+      "name": "HT Add-on: Email Guard",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:34:24.193Z",
+      "updatedAt": "2024-12-08T02:34:55.147Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bceeedc9-3258-4787-895c-46683b27fcf2",
+      "name": "HT Add-on: Full Autopilot",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-07T21:40:29.216Z",
+      "updatedAt": "2024-12-07T21:44:20.639Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "923f7f25-7b05-4e2d-b40b-7dfeb6bf84d6",
+      "name": "HT Add-on: LinkedIn Automation",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:33:13.516Z",
+      "updatedAt": "2024-12-08T02:33:55.210Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ec53f74c-e0e0-477d-8e19-e1a0afd50f7c",
+      "name": "HT Add-on: Nurture Sequence",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:28:38.369Z",
+      "updatedAt": "2024-12-08T02:29:16.320Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2710561b-fd2b-49e9-a33f-dce291c729d6",
+      "name": "HT Add-on: Ongoing Management",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:35:23.111Z",
+      "updatedAt": "2024-12-08T02:35:48.867Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d2da5494-ef37-4fcd-a46e-5e6c8ffa6817",
+      "name": "HT Add-on: Website Visitors",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-08T02:30:49.308Z",
+      "updatedAt": "2024-12-08T02:31:27.391Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8cb19080-cecf-412b-a586-c096901b513e",
+      "name": "HT Agreement Sent -> Reminders (Turned off for contract url)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-12-06T03:30:47.286Z",
+      "updatedAt": "2025-09-14T00:00:59.363Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d6a3bd08-48af-40a1-8a91-5b7f6aac4119",
+      "name": "HT Agreement Signed Complete ->Tag",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-12-06T19:18:42.308Z",
+      "updatedAt": "2025-11-17T21:48:08.922Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "13906b2e-7382-42a5-a304-89e45aad51cb",
+      "name": "HT Client Approval Pending -> Reminders",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-12-07T20:41:26.362Z",
+      "updatedAt": "2025-02-27T15:18:27.935Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "63f2c6f9-e76a-4686-b52f-704c3fd87b73",
+      "name": "HT Client Update ->send to Client",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-12-07T01:54:03.539Z",
+      "updatedAt": "2025-10-13T20:49:44.630Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a7158cac-6b5f-45b5-a34b-7c9a2db81b4c",
+      "name": "HT Create Blueprint MANUAL",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-02-13T19:17:44.031Z",
+      "updatedAt": "2025-02-13T19:20:38.464Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2805ff66-d387-466e-bdc0-482961f9edf5",
+      "name": "HT Email Bison Subscription Start",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-12-08T14:50:33.889Z",
+      "updatedAt": "2025-12-24T20:24:49.470Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "feaf64c7-76c5-44ae-b40e-e3a777f4dbad",
+      "name": "HT Feedback Received",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2024-12-06T20:51:18.133Z",
+      "updatedAt": "2025-10-10T17:51:48.275Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bf6179b4-c504-4672-ba25-1348c8c8bbc2",
+      "name": "HT Mailbox Paid",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-11-04T20:42:45.345Z",
+      "updatedAt": "2025-11-04T20:44:36.362Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "800034e2-754e-48fe-9872-d2abf939353f",
+      "name": "HT Ongoing Management -> Manual Commission Request",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-04-20T19:16:56.193Z",
+      "updatedAt": "2026-04-20T19:21:20.418Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f3069628-60c6-461d-be8c-4bf1a7f5430d",
+      "name": "HT Ongoing Management -> Payout Team (Old Automated Split)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2025-12-03T00:15:09.476Z",
+      "updatedAt": "2026-04-20T19:09:56.272Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e61dbda5-c38d-4c30-b25f-88253d600a17",
+      "name": "HT Pending Mailbox Subscription Payment",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-11-04T20:29:27.947Z",
+      "updatedAt": "2026-01-07T17:09:45.818Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "dc98028d-0e81-4839-8b68-9b3ade05ab4e",
+      "name": "HT Post Delivery Success -> Check Ins",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-12-06T21:19:45.167Z",
+      "updatedAt": "2025-10-10T17:51:24.679Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c2239bbc-85b4-4b0a-90d5-b853a0b02ad5",
+      "name": "HT Strategy Call Booked",
+      "status": "published",
+      "version": 15,
+      "createdAt": "2024-12-06T19:26:17.687Z",
+      "updatedAt": "2025-11-17T21:49:13.432Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3defb464-cecf-49ee-97ec-38bee0e4032f",
+      "name": "HT Technical Setup Complete -> Submit Strategy Reminders",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-12-07T17:44:47.145Z",
+      "updatedAt": "2025-10-10T17:53:32.520Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d34be96c-31cc-4e8f-be6d-d2f368895cc2",
+      "name": "Halt ->DND for SMS",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2023-08-22T19:58:57.773Z",
+      "updatedAt": "2025-06-10T16:40:13.878Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "187f405b-766c-4bd7-b205-90bc5b8b9d94",
+      "name": "High Ticket $500 Deposit Purchase",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-10-10T22:12:15.614Z",
+      "updatedAt": "2026-04-14T14:18:48.155Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b7f26bb4-156a-4cdd-b72c-09d582f1b2ba",
+      "name": "High Ticket - Schedule a Call",
+      "status": "published",
+      "version": 19,
+      "createdAt": "2024-06-15T10:39:55.628Z",
+      "updatedAt": "2026-03-03T22:15:09.803Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d67c7e92-8639-4d0a-a361-219ac702f2dc",
+      "name": "High Ticket Booked -> Follow Ups",
+      "status": "published",
+      "version": 14,
+      "createdAt": "2024-06-15T11:46:33.914Z",
+      "updatedAt": "2026-04-21T19:07:53.017Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "41f0c105-78a6-4310-9fb9-6397f78c9f73",
+      "name": "High Ticket Interest",
+      "status": "published",
+      "version": 15,
+      "createdAt": "2024-06-16T15:38:34.133Z",
+      "updatedAt": "2025-05-16T23:13:40.924Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "afc988ef-f711-4f08-a486-b7ba715fb7e6",
+      "name": "High Value Contacts ->Enrich (MOVED)",
+      "status": "draft",
+      "version": 20,
+      "createdAt": "2024-12-10T20:22:28.478Z",
+      "updatedAt": "2025-11-28T19:44:20.359Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "933d1049-c53f-4155-a0e8-14fb3c97a1d1",
+      "name": "High Value Lead to Pipeline",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-01-07T13:37:12.803Z",
+      "updatedAt": "2025-12-26T19:46:43.026Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2561f6cb-9af4-4ad9-9c38-eb95b42d8c2d",
+      "name": "Hot Lead - Loom Video Send",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-05-28T21:18:15.809Z",
+      "updatedAt": "2025-11-10T20:30:38.992Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0ca2b8c8-8c03-491b-b9e9-a400653622ae",
+      "name": "IG DM \"Book\" (E book tool)",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-24T13:18:23.035Z",
+      "updatedAt": "2024-11-21T22:46:48.490Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "32866671-8b2b-4667-91ef-71b9a933c13a",
+      "name": "IG DM \"Clay\"",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-01-12T00:57:55.457Z",
+      "updatedAt": "2025-04-27T19:30:32.888Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "da766199-29e8-4fa3-95cf-5c8b0d1d04db",
+      "name": "IG DM \"Cold3\" (3 step cold sequence)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-24T13:10:42.358Z",
+      "updatedAt": "2025-04-27T19:35:35.260Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8dc1e627-a9cd-4959-91a3-148c7e56882c",
+      "name": "IG DM \"Drip\" (Sales Sequence) STAN",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-10-24T12:36:50.326Z",
+      "updatedAt": "2025-05-11T20:46:28.233Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3f5d56ad-52dd-4f37-900b-f5e8b9dd277e",
+      "name": "IG DM \"GHL IG Workflow\" (GHL GI)",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2025-05-30T19:48:45.548Z",
+      "updatedAt": "2025-05-30T19:48:45.548Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "94870192-a1bf-42f8-b7c9-081eb6dc95dd",
+      "name": "IG DM \"GHL\"",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-10-24T13:13:14.345Z",
+      "updatedAt": "2025-04-27T19:46:20.578Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "68eca707-b08e-4c16-aa59-e9a2ecbea404",
+      "name": "IG DM \"GPT\" (Stan)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-01-12T00:25:59.191Z",
+      "updatedAt": "2025-05-11T20:37:26.477Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0a679f23-a58d-423e-8d65-ed89fbe5290d",
+      "name": "IG DM \"Guard\" STAN",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-11-07T17:28:22.503Z",
+      "updatedAt": "2025-05-11T20:47:29.345Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cd69e2f3-6898-42f6-b713-21d9012ed104",
+      "name": "IG DM \"Insider\" (Course Sales) STAN",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-10-24T12:40:14.538Z",
+      "updatedAt": "2025-05-11T20:48:41.857Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "eb338caa-4073-49ea-86b7-1637fdf8a402",
+      "name": "IG DM \"Leads\" (8 mil leads) STAN",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-24T12:49:10.861Z",
+      "updatedAt": "2025-05-11T20:44:52.794Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6942109f-f009-4d84-bf38-9c80742b10b7",
+      "name": "IG DM \"Machine\" ($97 Offer)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-10-24T12:44:44.444Z",
+      "updatedAt": "2025-09-24T18:09:11.833Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "02784608-dc11-4e59-8bb3-25d63e3510cd",
+      "name": "IG DM \"Master\" (Event Link)",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-02-03T04:48:19.812Z",
+      "updatedAt": "2025-02-17T18:23:58.303Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4728fe38-3500-41fc-b1fe-63960f151f49",
+      "name": "IG DM \"Masterclass\" (7 hr youtube)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-10-24T12:55:28.743Z",
+      "updatedAt": "2025-09-24T18:09:17.673Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8230a706-1953-48c1-82c7-79726780d15a",
+      "name": "IG DM \"Private\" \"Coach\"",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-11-21T22:47:04.557Z",
+      "updatedAt": "2025-09-24T18:09:26.215Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5611bfa0-f8b5-4ba8-8d73-653c2e0e484b",
+      "name": "IG DM \"Rank\"",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-11-11T21:40:20.230Z",
+      "updatedAt": "2025-09-24T18:11:45.123Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a7173aa7-aad1-475f-a355-275fe5eb18c9",
+      "name": "IG DM \"Secret\" (software vault)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-11-13T21:06:54.987Z",
+      "updatedAt": "2025-09-24T18:14:21.539Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "920d7a45-fcd7-4c36-80ae-6f76c2dd1e69",
+      "name": "IG DM \"Tools\"",
+      "status": "draft",
+      "version": 16,
+      "createdAt": "2024-05-25T20:12:58.209Z",
+      "updatedAt": "2025-09-24T18:17:21.792Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8773e040-ab45-4f3a-81dd-ec085fcca4b4",
+      "name": "IG DM \"Voice\"",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-11-08T18:20:22.178Z",
+      "updatedAt": "2025-09-24T18:19:06.585Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0313a84a-0bc4-4535-aabc-613c12d58fc9",
+      "name": "IG DM \"contract\" (Agency contract)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-24T13:05:16.905Z",
+      "updatedAt": "2025-09-24T18:21:02.518Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "64ee9dd6-b642-4ef0-a045-a0c42aba377d",
+      "name": "IG DM \"freedom\" (reading list)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-11-18T19:29:30.116Z",
+      "updatedAt": "2025-07-04T19:45:05.877Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bcc663cb-ca17-413d-881c-64b49c8dff4d",
+      "name": "IG DM \"mini\" (8 mil leads,tools, course)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2025-01-12T00:28:17.033Z",
+      "updatedAt": "2025-09-24T18:24:43.069Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "47144f8c-8858-4004-b390-a34da563f562",
+      "name": "IG DM Comment \"Offer\" (Offer GPT) NEW",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-12-04T00:06:36.429Z",
+      "updatedAt": "2025-09-24T18:29:42.618Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1319c003-fa70-43e8-a88e-b732990995aa",
+      "name": "IG Trigger Link Click (TEST)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-05-25T21:02:39.435Z",
+      "updatedAt": "2024-08-08T16:08:56.335Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "aebff8c0-7749-45f3-8e8f-7343aaebdf64",
+      "name": "Inbound SMS / WhatAp Trigger -> AI on",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2024-12-04T19:39:49.419Z",
+      "updatedAt": "2025-11-25T19:46:44.284Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "aa9c931f-4723-49e1-88c1-3be9b9b0c991",
+      "name": "Insiders - Request Feedback",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-12-15T14:51:16.593Z",
+      "updatedAt": "2025-08-12T22:18:12.044Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a84463a6-cb2d-439f-a067-34edd274586e",
+      "name": "Insiders 2.0 SALES PUSH!",
+      "status": "draft",
+      "version": 16,
+      "createdAt": "2024-09-15T17:08:09.033Z",
+      "updatedAt": "2024-12-02T21:06:53.917Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9db8b95a-8c11-4c3a-96b0-dd36838d48b6",
+      "name": "Insiders 2.0 Waitlist",
+      "status": "published",
+      "version": 12,
+      "createdAt": "2024-08-31T17:23:08.492Z",
+      "updatedAt": "2025-10-13T21:49:58.947Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ddb02158-3332-4203-ad23-4311806965ea",
+      "name": "Insiders Access for High Ticket",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-11-12T20:37:39.226Z",
+      "updatedAt": "2025-05-11T19:30:08.609Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "966438a0-682b-45b2-ae0c-4d1acdb9d8e5",
+      "name": "Insiders Course Purchase Onboarding",
+      "status": "published",
+      "version": 147,
+      "createdAt": "2023-07-24T19:36:21.875Z",
+      "updatedAt": "2026-05-22T15:17:59.645Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "52f0f8f0-363d-463a-b286-fad6aaf51983",
+      "name": "Insiders Implementation Upsell",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2025-07-31T20:43:36.581Z",
+      "updatedAt": "2026-03-02T19:23:59.275Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "66b2e101-a118-42f1-99ae-b89bdcacf16b",
+      "name": "Insiders Interest Sequence Beginner - 2nd July 2025 KJ",
+      "status": "draft",
+      "version": 24,
+      "createdAt": "2025-07-02T11:22:34.808Z",
+      "updatedAt": "2026-03-17T17:19:57.633Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e06a9586-40a0-45d9-adab-e79b68ed92f4",
+      "name": "Insiders Welcome Bag Delivered",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-09-05T17:21:05.033Z",
+      "updatedAt": "2025-10-14T00:11:09.135Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "227899a6-4ef5-49e9-85f8-b3f6d41b17af",
+      "name": "Instagram Auto-Reply - MASTER",
+      "status": "published",
+      "version": 28,
+      "createdAt": "2026-04-02T03:33:30.562Z",
+      "updatedAt": "2026-05-14T23:40:32.506Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "045c79b6-1338-4311-ba8f-efae3c1a4ccd",
+      "name": "Instagram Initial Follow Up",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2026-04-09T03:10:25.733Z",
+      "updatedAt": "2026-04-09T03:43:06.280Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ca290e8f-03bb-4b98-b026-8758972dd7eb",
+      "name": "Instantly -> Copywriting AI Lead Magnet",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2025-01-20T15:09:56.484Z",
+      "updatedAt": "2026-05-13T18:44:09.384Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "684c3a6e-a656-4ef7-860c-e6c45dbc0f71",
+      "name": "Intake Complete (HT Custom Buildout)",
+      "status": "published",
+      "version": 26,
+      "createdAt": "2023-07-14T21:50:08.054Z",
+      "updatedAt": "2025-10-13T20:57:13.885Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d728086b-2a66-41ed-a38f-8b46934c2a1a",
+      "name": "Invalid Email",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-03-27T16:19:32.943Z",
+      "updatedAt": "2024-03-27T16:21:27.761Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "df3bb38d-78aa-41e3-9808-219e161e3b09",
+      "name": "Jordan - Booked Call Adds to Pipeline",
+      "status": "draft",
+      "version": 15,
+      "createdAt": "2025-06-05T21:00:12.748Z",
+      "updatedAt": "2025-11-28T19:45:42.056Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f177da6a-2345-4f60-943e-e4012cf34266",
+      "name": "July 4 Sale - IG Facebook CommentReply",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2025-07-04T16:41:38.746Z",
+      "updatedAt": "2025-08-30T17:22:45.126Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ae8c80c2-1afa-4e3f-9ff0-d804d85c027c",
+      "name": "KPI Reporting",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-11-04T01:54:51.075Z",
+      "updatedAt": "2025-11-28T19:45:47.498Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c3f4af85-e6ec-4104-9826-1f78d5afe538",
+      "name": "LG - Unified Pipeline \u2014 Email Campaign Router V2",
+      "status": "published",
+      "version": 15,
+      "createdAt": "2026-05-07T17:22:19.570Z",
+      "updatedAt": "2026-05-19T21:48:27.203Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "be63b9e9-6b2f-40b6-a4df-ba82a27ee5d5",
+      "name": "LG - Working - Sales Appointment Reminders + Sheet NEW",
+      "status": "published",
+      "version": 20,
+      "createdAt": "2026-05-14T16:30:03.759Z",
+      "updatedAt": "2026-05-21T16:12:28.716Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b30eea4d-bf05-4af5-bf0d-d9151e8a0377",
+      "name": "LGJ CRM Purchase & Setup",
+      "status": "published",
+      "version": 49,
+      "createdAt": "2023-11-06T17:46:00.457Z",
+      "updatedAt": "2025-02-06T00:31:27.122Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "888d6621-0a88-4084-9fdb-fc43094a3e3d",
+      "name": "LGJ Course Purchase - Tampa Entrepreneurs",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-11-15T16:31:44.596Z",
+      "updatedAt": "2026-02-15T17:38:25.689Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8c56668a-bc74-4385-a0a1-9462ba851936",
+      "name": "LGJ E-Book Purchase & Setup",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2023-11-22T21:17:10.212Z",
+      "updatedAt": "2025-10-13T21:34:26.010Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "453b7445-a150-4ae4-849c-71a07fe1a22d",
+      "name": "LGJ Email Setup - EASY MODE (Amin)",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-05-22T21:04:13.059Z",
+      "updatedAt": "2026-02-15T17:38:25.689Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b306f342-fac5-4bb5-9fb4-930810402f1b",
+      "name": "LGJ Email Setup - Setup Form Submitted (Amin)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2024-02-21T14:17:07.180Z",
+      "updatedAt": "2026-02-15T17:38:25.689Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "78c085c3-6959-437b-a6b9-69ce93186c75",
+      "name": "LGJ Email Setup Purchase (Amin)",
+      "status": "draft",
+      "version": 23,
+      "createdAt": "2023-11-01T15:30:35.361Z",
+      "updatedAt": "2026-02-15T17:38:25.689Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8a78e722-78be-4dca-a046-40035512557d",
+      "name": "LGJ Team Coaching - Paid by LGJ Add Commission",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-04-07T18:21:10.177Z",
+      "updatedAt": "2026-04-28T18:53:52.848Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "116f9050-fb08-4227-a019-7142450ddbb1",
+      "name": "LGJ Welcome/Nurture Sequence 2026",
+      "status": "published",
+      "version": 27,
+      "createdAt": "2025-12-30T17:36:05.938Z",
+      "updatedAt": "2026-05-21T14:55:35.037Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1155b5f7-926b-4303-a544-909a37cb5cb3",
+      "name": "LTF Coaching Booked - Pay Coach",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-06-30T14:30:55.958Z",
+      "updatedAt": "2025-06-30T14:33:05.472Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "dc615f2b-e65d-45cc-b499-e9d0ac6ec57c",
+      "name": "LTF Coaching Upsell",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2025-06-30T14:00:10.493Z",
+      "updatedAt": "2025-08-13T02:15:57.607Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e193d5fd-3ba8-4402-9ced-0969014d93e6",
+      "name": "LTF Complete - Ask for Review",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-08-13T02:18:29.421Z",
+      "updatedAt": "2025-08-13T02:34:08.465Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "aff46236-fb4f-4282-b369-617082cbfb40",
+      "name": "LTF Implementation Upsell",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-06-30T14:22:08.935Z",
+      "updatedAt": "2026-03-02T19:23:39.767Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b6da6868-c1f1-4727-ac15-da7799e344e8",
+      "name": "LTF Mailbox Tracking",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2025-02-23T20:23:16.317Z",
+      "updatedAt": "2026-04-13T00:10:43.080Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9a38b5eb-1efd-417a-a256-53b395358424",
+      "name": "Late to Appointment Reminders",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:23.164Z",
+      "updatedAt": "2025-11-25T19:45:52.736Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b65de696-fca7-4429-b2a8-6a240db0926c",
+      "name": "Lead Cancelled Appointment => Update Opportunity (Stage 7)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.430Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "437d527c-27cf-4eac-95bd-717ad84c80cf",
+      "name": "Lead Created - Sheet Tracking",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-05-20T23:05:47.429Z",
+      "updatedAt": "2025-05-21T15:12:45.002Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "19b240c5-a359-47e0-a70f-521aa8f6db77",
+      "name": "Lead Database Access",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-09-24T15:01:06.195Z",
+      "updatedAt": "2026-05-05T02:48:04.788Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cf90e4b3-28b2-412d-bf41-091ccc877835",
+      "name": "Lead Database Access (MANUAL)",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-10-24T19:18:24.234Z",
+      "updatedAt": "2024-10-24T19:18:57.981Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e84a456e-5e25-44ca-b754-e6550e76e4c4",
+      "name": "Lead Database Create User",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-05-15T19:39:07.545Z",
+      "updatedAt": "2025-05-16T16:39:49.590Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fb68d1b7-1d71-4a42-aa13-6ed2cd64ade1",
+      "name": "Lead Dropped Off => Update Opportunity (Stage 8)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.432Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "53165733-6d1e-42ca-9b46-82cf2a8a9226",
+      "name": "Lead Gen Tools Optin",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-14T21:50:08.050Z",
+      "updatedAt": "2023-07-16T14:52:20.618Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d2f406fe-7d03-444c-943e-e03b2b328e2d",
+      "name": "Lead Generation New Chat",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2023-07-14T21:50:08.040Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2b9081ac-f5d5-4e18-a3c9-78d65927c546",
+      "name": "Lead List",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-05-15T15:56:04.226Z",
+      "updatedAt": "2024-06-18T22:09:16.764Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "eb373847-896a-4c8f-84a1-99ae74ce6362",
+      "name": "Lead Machine Survey (moved)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2023-10-22T18:29:31.009Z",
+      "updatedAt": "2025-05-16T23:17:16.432Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "04217cc7-9b8e-4352-9f8c-dbe5ad30a73d",
+      "name": "Lead No Showed to Appointment => Update Opportunity (Stage 6)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.433Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8692f019-1d1b-436a-83c3-7453136611fd",
+      "name": "Lead Opted-Out => Update Opportunity (Stage 9)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.435Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d6bf2da2-507f-4307-9af3-0b3d039309e6",
+      "name": "Lead Wasn't Interested => Update Opportunity (Stage 10)",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-10-16T21:25:23.436Z",
+      "updatedAt": "2025-11-25T19:46:11.034Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e6e7ee7d-cb71-4fc3-a3a3-8c53d72cd6fe",
+      "name": "LinkedIn Comment Trigger - Send Reply",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-10-07T02:06:10.428Z",
+      "updatedAt": "2025-10-07T19:09:22.391Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "99d44b78-1e28-4806-8799-476f0f0d116f",
+      "name": "LinkedIn Top Voice - Delivery",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-11-08T18:39:47.718Z",
+      "updatedAt": "2025-10-13T21:45:58.795Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7218d2f3-95c9-4340-bee4-36c27f5518ea",
+      "name": "Linkedin Sales Nav Purchase (Form)",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2025-09-03T20:29:02.179Z",
+      "updatedAt": "2026-05-05T02:48:08.905Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "86d683b2-278a-434b-8787-fef89b78e7af",
+      "name": "Linkedin Sales Nav Purchase (Moved to Form)",
+      "status": "draft",
+      "version": 40,
+      "createdAt": "2025-02-11T03:37:45.042Z",
+      "updatedAt": "2025-09-16T18:12:36.253Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "13fbbdc9-ea75-481e-a7c6-6d4eb9c904d9",
+      "name": "Linkedin sales nav - quarter renewal",
+      "status": "draft",
+      "version": 11,
+      "createdAt": "2025-02-11T20:00:14.566Z",
+      "updatedAt": "2025-10-12T16:51:12.399Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1a9a55cc-2c00-49e7-ba42-71bfa6bc48f4",
+      "name": "Live Chat Notification",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-04-06T17:29:30.550Z",
+      "updatedAt": "2024-10-25T16:28:27.258Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9be4f6ae-c57f-491d-a0c7-ac4b522f4d5d",
+      "name": "Low Quality Booked Call Filter Email",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-08-20T18:39:34.081Z",
+      "updatedAt": "2025-08-20T19:05:37.212Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0c71698d-9fd7-4730-b2d0-94d9524eeaa7",
+      "name": "MAKE Mailbox Service Agreement",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-12-05T17:45:53.273Z",
+      "updatedAt": "2025-05-14T17:16:25.763Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "63dfec1d-0ea6-4ea9-a7c5-9586fa585e42",
+      "name": "Machine Complete -> How to Operate",
+      "status": "published",
+      "version": 55,
+      "createdAt": "2023-07-30T19:19:48.209Z",
+      "updatedAt": "2026-05-21T02:22:03.160Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a1490d4f-5677-4a05-ad23-2a6e7e97e1dd",
+      "name": "Mailbox Infrastructure Onboarding",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2025-02-13T01:26:07.595Z",
+      "updatedAt": "2025-10-09T18:51:45.350Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ce5fb91d-8eaf-4983-9072-0446fa6d695b",
+      "name": "Mailbox Setup - Check for Instantly Commission",
+      "status": "published",
+      "version": 27,
+      "createdAt": "2024-10-16T20:31:53.415Z",
+      "updatedAt": "2026-05-05T02:48:01.888Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "349bfd87-6f62-47df-ae54-cd304635f6d2",
+      "name": "Mailbox Setup Complete (New Jotform)",
+      "status": "published",
+      "version": 30,
+      "createdAt": "2024-06-29T18:44:59.687Z",
+      "updatedAt": "2025-12-17T20:00:52.630Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f959e642-5876-4187-8f7c-be220d084e1a",
+      "name": "Mailbox Setup Intake Form - 2 (old)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2024-05-06T19:08:13.020Z",
+      "updatedAt": "2024-09-28T20:09:30.592Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5338fd30-105c-4727-9f3e-3f939bcf5c9a",
+      "name": "Mailbox Setup Intake Form EASY MODE (old)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2024-05-22T21:14:39.326Z",
+      "updatedAt": "2024-09-28T20:10:07.342Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4f582d99-5886-4f80-ad90-a843c96cbd92",
+      "name": "Mailbox Setup Intake Form Submitted (Old)",
+      "status": "draft",
+      "version": 27,
+      "createdAt": "2024-04-23T18:39:33.489Z",
+      "updatedAt": "2024-09-28T20:10:14.127Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9e34971c-5097-4f53-9297-077f13e54f7c",
+      "name": "Mailbox subscription started -GOOGLE",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-07-30T15:47:42.186Z",
+      "updatedAt": "2025-11-24T21:26:28.633Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "585d6236-6554-4634-be6f-43c93e7ac5b0",
+      "name": "Marketing Promotion Email SMS",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-07-24T13:39:35.756Z",
+      "updatedAt": "2025-08-30T17:48:06.287Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1ba0eaea-5870-4d6d-a55b-054723ce94c0",
+      "name": "Masterclass Opt In (UPDATE)",
+      "status": "published",
+      "version": 18,
+      "createdAt": "2025-01-16T10:13:11.952Z",
+      "updatedAt": "2025-02-26T00:44:47.940Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cf7da66c-1ba9-45e6-b43a-4d324727f832",
+      "name": "Meeting Feedback Received",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-05-23T21:51:01.677Z",
+      "updatedAt": "2025-02-09T03:24:20.058Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2b34974d-4091-4ca2-9836-b8545628bbd0",
+      "name": "Mirror Email 1 Nurture Sequence (Beginners) KJ (HELPER)",
+      "status": "draft",
+      "version": 13,
+      "createdAt": "2025-06-07T12:31:40.290Z",
+      "updatedAt": "2025-11-28T19:44:54.265Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "34b7a271-4534-4150-b760-85de41991618",
+      "name": "Mirror Email 2 Nurture Sequence (Beginners) KJ (HELPER)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2025-06-07T12:35:22.631Z",
+      "updatedAt": "2025-11-28T19:44:54.265Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "738ee5d0-ae44-41bc-8c09-bba4604ed6ea",
+      "name": "Mirror Email 3 Nurture Sequence (Beginners) KJ (HELPER)",
+      "status": "draft",
+      "version": 9,
+      "createdAt": "2025-06-07T12:38:21.475Z",
+      "updatedAt": "2025-11-28T19:44:54.265Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ec57123f-f10c-482c-b27a-d1381e721647",
+      "name": "Missed Call Text-Back",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:23.733Z",
+      "updatedAt": "2025-11-25T19:46:40.712Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "230ef1b6-d88b-478f-9029-cf77c7b64f3d",
+      "name": "Momentum AI Trigger -> Sheet",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-09-27T12:37:29.113Z",
+      "updatedAt": "2026-01-30T21:14:35.607Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "21975f4a-9c67-4f24-9007-97614a49fe0f",
+      "name": "Money Owed Reminders",
+      "status": "draft",
+      "version": 8,
+      "createdAt": "2024-10-02T15:11:57.358Z",
+      "updatedAt": "2025-10-12T16:57:26.306Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0abc3c69-c54f-41c3-81ff-0eca64abcf2f",
+      "name": "N8N Setup Complete - Send Link",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-10-09T19:34:20.105Z",
+      "updatedAt": "2025-10-12T16:52:56.039Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "133c381e-ee21-49c0-97dc-c89be1b23308",
+      "name": "N8N Setup Form Purchase (Automated)",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-12-29T22:50:42.881Z",
+      "updatedAt": "2025-12-30T15:10:46.944Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b069e7ab-cdf3-45d7-9a22-41b5395d1240",
+      "name": "N8N Setup Form Purchase (OLD)",
+      "status": "draft",
+      "version": 20,
+      "createdAt": "2025-09-13T21:02:14.660Z",
+      "updatedAt": "2025-12-29T22:50:28.414Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "08cabdaf-3fac-4f70-9297-5b067bee7a2e",
+      "name": "N8N Support ADd-On",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-09-13T23:14:06.783Z",
+      "updatedAt": "2025-09-13T23:24:34.319Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d49c4d95-1cc4-4d69-9df3-c025c24b9661",
+      "name": "NEW Course Interest - Segmented",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2024-09-07T15:59:17.119Z",
+      "updatedAt": "2024-09-08T07:25:14.448Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e45a900d-be42-40ef-916e-252f8e072fc1",
+      "name": "NEW Nurture Sequence (Biz Owners)",
+      "status": "draft",
+      "version": 38,
+      "createdAt": "2024-09-10T06:17:01.915Z",
+      "updatedAt": "2025-11-28T19:44:54.265Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0f52326f-ab32-4e51-bee5-8897dcff76ec",
+      "name": "NEW Nurture Sequence (LG Agency and New Biz Owners)",
+      "status": "draft",
+      "version": 34,
+      "createdAt": "2024-09-04T14:26:09.342Z",
+      "updatedAt": "2025-05-21T18:00:24.255Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a52a9631-89cb-41d9-8d7b-1afb1526d45d",
+      "name": "New Affiliate Sale",
+      "status": "published",
+      "version": 18,
+      "createdAt": "2023-12-12T02:28:58.673Z",
+      "updatedAt": "2024-09-14T18:32:35.339Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b1c3156f-66e4-4a91-a499-4d4f23ac555e",
+      "name": "New Order - High Ticket Custom Buildout",
+      "status": "published",
+      "version": 66,
+      "createdAt": "2023-07-14T21:50:08.038Z",
+      "updatedAt": "2026-05-22T15:14:05.029Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "da50fd1c-8a5a-4887-a7b4-bc63ef08159c",
+      "name": "New Sales Call -> Update Salesperson Email + Web App",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-02-07T21:35:54.284Z",
+      "updatedAt": "2026-05-18T19:34:24.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1ddc268a-a21d-468a-8315-0bfebd6ed4bc",
+      "name": "New Workflow : 1713206238578",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2024-04-15T18:37:18.798Z",
+      "updatedAt": "2024-04-15T18:37:29.465Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "86412a12-158e-4e97-9f87-62c0ff3031e5",
+      "name": "New Workflow : 1718235431744",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-06-12T23:37:12.064Z",
+      "updatedAt": "2024-06-12T23:39:53.405Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f2af1c44-2dc1-4377-81cb-0c7ba44d0a3d",
+      "name": "New Workflow : 1718485357105",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-06-15T21:02:37.271Z",
+      "updatedAt": "2024-06-15T21:03:05.245Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e444aefe-e2b1-4c5d-845f-8238735c8de7",
+      "name": "New Workflow : 1747712317899",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2025-05-20T03:38:38.066Z",
+      "updatedAt": "2025-05-20T03:39:09.533Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ccfbfef6-66bd-4ced-a92e-0f26cfc652c1",
+      "name": "New Workflow : 1751294888369",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2025-06-30T14:48:08.637Z",
+      "updatedAt": "2025-08-03T23:04:18.191Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2f99fa76-2002-4801-8959-4a8a447aac48",
+      "name": "New Workflow : 1759258357480",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2025-09-30T18:52:37.738Z",
+      "updatedAt": "2025-09-30T18:52:37.738Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b91c347f-9d26-429c-8c30-87d274a9b808",
+      "name": "New Workflow : 1763334922646",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2025-11-16T23:15:22.818Z",
+      "updatedAt": "2025-11-16T23:17:06.397Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "40e2b65e-0f4b-4440-8354-337fa5d8eb1b",
+      "name": "New Workflow : 1763335314360",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2025-11-16T23:21:54.492Z",
+      "updatedAt": "2025-11-16T23:22:35.743Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f7f97772-a1ed-4118-93ab-6447d9ec4e6a",
+      "name": "No Show Reactivation",
+      "status": "draft",
+      "version": 11,
+      "createdAt": "2024-10-16T21:25:23.735Z",
+      "updatedAt": "2025-11-25T19:45:52.769Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7d0cd5c4-08bd-4106-826f-b2f7d1b313c2",
+      "name": "No-show recipe",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-07-14T21:50:08.054Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "22a6f4fc-9226-4a43-a8c2-b281eab15912",
+      "name": "Number Validation - Enable DND",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-08-21T14:10:18.639Z",
+      "updatedAt": "2024-11-07T13:23:19.093Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5dae2053-54c4-4a9b-bb4b-37f03233c5b4",
+      "name": "Nurture Sequence - Segmented (OLD)",
+      "status": "draft",
+      "version": 47,
+      "createdAt": "2024-05-27T18:38:24.895Z",
+      "updatedAt": "2025-05-21T18:00:32.502Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c058589b-a223-4d18-9e10-4486fb7fb98a",
+      "name": "Nurture Sequence Beginner - 16th May 2025 KJ (OLD)",
+      "status": "draft",
+      "version": 50,
+      "createdAt": "2025-05-16T09:11:25.627Z",
+      "updatedAt": "2026-03-17T16:23:36.464Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "17866165-c9ce-46b1-93e8-d28b3a0ca0a9",
+      "name": "OLD - Sales Appointment Reminders + Sheet NEW",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2026-05-11T17:29:29.812Z",
+      "updatedAt": "2026-05-21T16:13:16.890Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "5c9df84c-3a99-48b7-bfa7-38adcdd72027",
+      "name": "ONETIME: ADD BREVO",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2026-03-11T22:31:46.510Z",
+      "updatedAt": "2026-03-17T16:28:40.344Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bdbc62f1-be09-47da-ab61-c0de8b564362",
+      "name": "Onboarding - Complete Form Before Appointment",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-07-14T21:50:08.051Z",
+      "updatedAt": "2023-07-14T21:50:10.042Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e690d3c9-ecf0-48f3-8796-ef37382d74cf",
+      "name": "Onboarding Form Complete - Notify Writer",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-14T21:50:08.033Z",
+      "updatedAt": "2023-08-30T13:50:31.911Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7a06e3e8-bd9f-4635-80f3-059ca6256524",
+      "name": "Optin - Freedom Book List",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-11-18T19:36:22.486Z",
+      "updatedAt": "2025-10-13T21:14:36.367Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d259e870-2e8f-46b6-b7d1-9ee245a602b8",
+      "name": "Optin - Recommended Tools List",
+      "status": "published",
+      "version": 14,
+      "createdAt": "2024-05-25T20:57:09.990Z",
+      "updatedAt": "2025-10-14T00:06:40.662Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "af48ae2e-aa71-432a-a328-50d527a86eed",
+      "name": "Paid; Onboarding Email",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-07-14T21:50:08.048Z",
+      "updatedAt": "2023-07-14T21:50:09.826Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9d7d38ac-1a55-4137-b058-bec2bff9b106",
+      "name": "PayPal Subscription Cancelled",
+      "status": "published",
+      "version": 13,
+      "createdAt": "2024-06-02T15:49:39.638Z",
+      "updatedAt": "2026-01-24T20:57:51.995Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d0890a2f-55fe-4649-b565-e4c3fa32eaa7",
+      "name": "Payment Failed - AI Commenter",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2024-02-13T18:59:06.376Z",
+      "updatedAt": "2025-10-14T00:05:59.980Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0f346781-8733-4a0d-b73d-47c8e5d4786e",
+      "name": "Payment Failed - GHL Account (Moved to New)",
+      "status": "draft",
+      "version": 14,
+      "createdAt": "2023-11-06T17:44:49.388Z",
+      "updatedAt": "2025-05-14T17:18:35.510Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3f9e6ec3-ddc9-4e40-b76d-9c3f95f20efc",
+      "name": "Payment Failed - Insiders  Elective",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-09-23T20:32:36.947Z",
+      "updatedAt": "2024-12-13T20:32:24.752Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6a41d7e8-ab2f-4d7a-b0bd-ef2a1dfc488f",
+      "name": "Payment Failed - Insiders Payment Plan (Moved)",
+      "status": "draft",
+      "version": 16,
+      "createdAt": "2024-01-04T06:53:18.231Z",
+      "updatedAt": "2025-05-14T17:30:05.213Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bde9a359-eec4-4f64-9177-c26471465b51",
+      "name": "Payment Failed - Linkedin SN (MOved)",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-02-11T18:37:21.037Z",
+      "updatedAt": "2025-05-14T17:18:23.430Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "91c9f58b-806d-4ddc-b0e8-97927c2d7d01",
+      "name": "Payment Failed - Mailbox Service",
+      "status": "published",
+      "version": 15,
+      "createdAt": "2024-05-06T21:55:31.140Z",
+      "updatedAt": "2025-05-14T17:37:13.436Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e9ff734f-701b-47b2-b9b7-1d66a4884624",
+      "name": "Payment Success",
+      "status": "published",
+      "version": 15,
+      "createdAt": "2023-12-03T22:21:27.406Z",
+      "updatedAt": "2026-01-10T19:42:41.186Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3df9e7b2-f40a-40de-a700-0971681ea3fb",
+      "name": "Payment Success - AI Commenter",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-02-13T19:24:28.974Z",
+      "updatedAt": "2025-05-14T17:30:12.047Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1dfc672e-80ff-485f-bdd1-7787c2c2054c",
+      "name": "Payment Verification in Stripe",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-02-02T23:14:57.066Z",
+      "updatedAt": "2025-02-02T23:37:45.826Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4ea0a56b-6fc3-4e6c-a154-cc5e848edc99",
+      "name": "Personalized emails with ChatGPT 4o",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-06-14T21:11:58.260Z",
+      "updatedAt": "2025-10-13T20:42:34.294Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3efdb9e3-f516-47ed-a57f-2bb37210474b",
+      "name": "Post Call - Add to Nurture Sequence",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-05-29T18:59:20.667Z",
+      "updatedAt": "2026-05-09T16:58:25.685Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "61383880-db28-4de7-9e80-e315e478661b",
+      "name": "Post Call Form Incomplete - Notify Management",
+      "status": "published",
+      "version": 12,
+      "createdAt": "2025-05-20T23:14:02.199Z",
+      "updatedAt": "2025-12-12T20:50:07.568Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "90f54609-d3c8-46db-a59e-4072094b6204",
+      "name": "Post Call Form Submitted -> Update Tracking Sheet",
+      "status": "published",
+      "version": 12,
+      "createdAt": "2025-06-08T00:54:10.608Z",
+      "updatedAt": "2026-05-18T19:35:01.093Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6cba1313-c6cb-4cd8-969e-c615890cb055",
+      "name": "Post Call v2 - Tag for Catch All (DRAFT - DO NOT ACTIVATE)",
+      "version": 2,
+      "createdAt": "2026-04-23T01:20:07.663Z",
+      "updatedAt": "2026-04-23T01:20:38.372Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2cba1ec4-ca8c-4f26-b7d9-9d85580d88fa",
+      "name": "Post Sale Form - Sheet Tracking (Step 2)",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2025-05-21T14:57:27.690Z",
+      "updatedAt": "2026-02-05T19:18:45.923Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1c693453-40dc-4a25-aba4-ae34b444fc26",
+      "name": "Post Sale Form - Step 1 Orchestrator",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-02-05T19:10:46.860Z",
+      "updatedAt": "2026-05-18T19:35:13.754Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "67fb1480-a6a1-4f73-826e-30fd9ceac3d2",
+      "name": "Post-Call Sales - AIA (Branch C)",
+      "version": 3,
+      "createdAt": "2026-05-22T17:23:50.450Z",
+      "updatedAt": "2026-05-22T17:23:52.865Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ef7309b6-acba-4f97-991a-47f2582c9161",
+      "name": "Post-Call Sales - HTBO (Branch A)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2026-05-22T17:23:50.451Z",
+      "updatedAt": "2026-05-23T14:34:40.282Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4dc0d028-6270-4bae-96ef-e851463cdcba",
+      "name": "Post-Call Sales - LGI (Branch B)",
+      "version": 3,
+      "createdAt": "2026-05-22T17:23:50.447Z",
+      "updatedAt": "2026-05-22T17:23:52.850Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3e8d59b8-0728-4797-9096-6454f7dd3d63",
+      "name": "Post-Purchase Nurture (v1)",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2026-05-13T17:45:37.053Z",
+      "updatedAt": "2026-05-13T17:50:17.981Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8a4a0386-114f-4b57-be1f-d55c1d6a1b31",
+      "name": "Qualify Leads TEST MAKE",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2025-02-16T22:25:29.307Z",
+      "updatedAt": "2025-06-08T00:46:57.082Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8373404f-1944-4484-8ff4-b1c5dd69dce7",
+      "name": "Questionnaire Complete - Send 7 step email template",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-05-11T17:17:38.112Z",
+      "updatedAt": "2024-10-15T15:48:48.196Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8cae3ec6-8dfa-4c47-ae0e-433d2b54fcea",
+      "name": "Raek - High Value Leads",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-05-17T20:52:40.566Z",
+      "updatedAt": "2025-05-20T19:31:41.260Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "42afe14c-9bea-4912-a84a-b1e4bca22762",
+      "name": "Rank Jacking - Delivery",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-11-11T21:54:56.939Z",
+      "updatedAt": "2025-10-13T20:36:50.990Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "53e26702-b44b-48c7-8d87-8972599e0b99",
+      "name": "Re Engagement Sequence",
+      "status": "published",
+      "version": 32,
+      "createdAt": "2024-09-02T08:27:22.289Z",
+      "updatedAt": "2025-05-15T17:08:41.032Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b86f40aa-0699-463e-940c-8af4f3fb1729",
+      "name": "Re-Activation Form Submitted -> Send Email",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2025-04-27T16:13:04.916Z",
+      "updatedAt": "2025-10-12T16:51:08.274Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f5eb0260-6fc4-4db9-ad02-c326ee26209c",
+      "name": "Re-Entry Expiry \u2014 AIA Cart (30d)",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-05-05T22:52:59.312Z",
+      "updatedAt": "2026-05-05T22:55:58.151Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "187aa684-a899-481f-94d2-1dd9335844a3",
+      "name": "Re-Entry Expiry \u2014 AIA Nuture (60d)",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2026-05-05T22:53:21.124Z",
+      "updatedAt": "2026-05-22T16:03:36.451Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e31137ac-b0c8-4af1-9a08-6efbcee91b15",
+      "name": "Re-Entry Expiry \u2014 AIA Sales (60d)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-05T22:49:44.934Z",
+      "updatedAt": "2026-05-05T22:52:04.946Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d5c35a02-8fcc-481a-842c-df9cea3bcac6",
+      "name": "Re-Entry Expiry \u2014 LG Cart (30d)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-05T22:54:12.131Z",
+      "updatedAt": "2026-05-05T22:59:25.014Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "59c37fed-58e9-4e0c-a3b1-1fc202d5ac4e",
+      "name": "Re-Entry Expiry \u2014 LG Nurture (60d)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-05T22:54:37.040Z",
+      "updatedAt": "2026-05-05T23:00:33.322Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b0a4adf2-9825-4a78-bc22-e77dead8bc57",
+      "name": "Re-Entry Expiry \u2014 LG Sales (60d)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2026-05-05T22:53:38.641Z",
+      "updatedAt": "2026-05-05T22:58:22.768Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "70897450-77d6-4a89-af5a-f74b1a0aaa75",
+      "name": "Referral Tracking - Andrew Kroeze",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2025-01-31T23:04:41.440Z",
+      "updatedAt": "2025-12-17T22:18:20.913Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2780f114-e6b3-4dff-b69d-e511c84905b7",
+      "name": "Referral Tracking - Aviv Glazer (Panda Match)",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2025-02-17T17:59:51.312Z",
+      "updatedAt": "2025-12-17T22:18:17.078Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8a1d86b0-ac7d-41d4-8df0-e4f18dab9379",
+      "name": "Referral Tracking - Joel Erway (Inspired)",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2025-03-03T15:49:21.660Z",
+      "updatedAt": "2025-03-03T15:49:21.660Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0723cbab-04b4-4748-a18e-66c00b3ab8c5",
+      "name": "Refund - Process Decision Now",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-07-24T20:03:22.176Z",
+      "updatedAt": "2026-01-09T22:21:09.146Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "99bb7f65-7c80-40f9-bdba-546ec0e9a0f8",
+      "name": "Refund / Dispute: Remove Access to Software",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-05-04T20:38:57.509Z",
+      "updatedAt": "2025-05-20T19:27:52.769Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e36a38e3-bca0-4689-97e0-f321d3fcf3a9",
+      "name": "Refund / Remove Access",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-11-27T14:37:55.497Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ba8b3cf5-b746-400f-9173-ac41b6545e2c",
+      "name": "Refund Approved (Notify and Automation)",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-08-06T18:06:33.439Z",
+      "updatedAt": "2025-08-06T18:13:37.652Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "719d64b7-0ef3-4288-ace6-10f49efcc6a8",
+      "name": "Refund Request - Course",
+      "status": "published",
+      "version": 40,
+      "createdAt": "2024-01-07T17:30:58.707Z",
+      "updatedAt": "2025-08-03T23:15:55.771Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1639cf0b-95ad-43c3-b6fa-f2780a59e8db",
+      "name": "Refund Request - Other",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2025-01-10T20:18:49.984Z",
+      "updatedAt": "2026-01-09T22:22:21.479Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b5ac6315-122f-4655-9055-dfd602954654",
+      "name": "Remove Access After 1 Year",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2023-12-23T20:22:34.815Z",
+      "updatedAt": "2024-03-30T20:51:44.331Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b31cd8b3-2684-4501-ae5d-84ed270eb494",
+      "name": "Remove DND for SMS",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-05-28T13:37:15.153Z",
+      "updatedAt": "2024-05-28T13:37:43.345Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d74ddbdc-8377-47ca-9810-521743e8c658",
+      "name": "Remove Tags / Campaigns",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:23.739Z",
+      "updatedAt": "2025-11-25T19:46:40.712Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a0461d81-3c58-419c-8a91-ee64d0beaee1",
+      "name": "Remove from Push",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-09-22T17:04:42.849Z",
+      "updatedAt": "2024-10-10T17:34:53.407Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "564268f5-213e-4977-8f6a-0b6153c10dfa",
+      "name": "Reply JI Interest",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-03-13T15:51:52.001Z",
+      "updatedAt": "2025-03-13T15:56:35.298Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "87ed7329-0d08-43c3-aeb3-8ae9174ed244",
+      "name": "Reply JI Purchase",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2025-03-07T14:10:21.304Z",
+      "updatedAt": "2025-09-24T20:21:16.408Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b18ac7f9-79a7-4076-9e96-6f1e1a929073",
+      "name": "Reply Vault in Nurture",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-05-30T16:03:29.638Z",
+      "updatedAt": "2025-05-30T16:15:08.552Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "86c2d796-20da-455d-9f1a-0659a25b79be",
+      "name": "Reply in Billing Automation",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-05-14T17:38:14.535Z",
+      "updatedAt": "2025-05-14T17:42:14.246Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "23583d9a-3f4e-4f5b-85c7-f6277d036a3d",
+      "name": "Reply to Comment + Send Message",
+      "status": "draft",
+      "version": 8,
+      "createdAt": "2024-10-16T21:25:23.737Z",
+      "updatedAt": "2024-12-04T19:33:37.233Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "05339a71-57a4-49ee-a381-742fda23aaed",
+      "name": "Reply to LinkedIn Sales Nav automation -> Send to team",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2025-04-27T16:17:11.487Z",
+      "updatedAt": "2025-05-11T18:46:51.020Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c670b97b-6638-4f9f-9c9a-7eebbbdad2f0",
+      "name": "Reply to Nurture & Sales Sequence - Notify Daniel",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-06-03T01:24:43.658Z",
+      "updatedAt": "2026-01-07T19:48:47.017Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9a5d516c-033a-4f00-8403-fac6fda17f73",
+      "name": "Reply to Operations Sequence",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-05-11T18:47:44.299Z",
+      "updatedAt": "2025-05-14T17:59:51.409Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c90623c0-4357-45ab-9b57-70c3b71307d3",
+      "name": "Reply to Re Engagement 1",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2024-09-04T19:18:49.958Z",
+      "updatedAt": "2025-10-14T00:02:07.156Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "eb60d391-17f9-4895-814a-85829a73e463",
+      "name": "Reply to Re Engagement 3",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2024-09-05T09:05:33.360Z",
+      "updatedAt": "2025-10-14T16:56:18.561Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e10d5558-cc66-4c4e-befd-a72f89557ee9",
+      "name": "Reply to Re Engagement 4",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-09-05T09:05:43.355Z",
+      "updatedAt": "2025-10-14T00:11:58.784Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b3f75b77-8462-48b7-a828-a9d4fddb956b",
+      "name": "Reply to Re Engagement 5",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-09-05T09:05:55.660Z",
+      "updatedAt": "2025-10-13T23:26:58.199Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d5e2e3a0-ccff-454c-bb53-cc0c70d721e3",
+      "name": "Reset Contact",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:23.740Z",
+      "updatedAt": "2025-11-25T19:44:43.877Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8fa8f5ec-2d48-4798-8f2b-8c13814f0928",
+      "name": "Review Nurture Sequence",
+      "status": "published",
+      "version": 9,
+      "createdAt": "2024-04-24T22:13:28.730Z",
+      "updatedAt": "2025-10-13T21:37:24.683Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "772ad0a4-5aad-4a3e-9e36-1631bfc6fbc0",
+      "name": "Review Submitted -> Verify Proof",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2024-04-24T21:19:47.594Z",
+      "updatedAt": "2025-11-08T20:36:36.093Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "24b55de6-9ee2-41b8-887e-cc0a2327a4aa",
+      "name": "SDR Bulldog",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2025-07-29T20:07:26.266Z",
+      "updatedAt": "2025-11-28T19:45:27.098Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "16c9466c-5afe-4222-877e-d3899b7a88df",
+      "name": "SMS to Notification",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2023-08-23T07:56:13.045Z",
+      "updatedAt": "2025-02-23T19:48:53.501Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a8692636-aa7a-4a23-b4c7-0dfe5e580e3c",
+      "name": "Sales Appointment Reminders + Sheet OLD",
+      "status": "published",
+      "version": 46,
+      "createdAt": "2024-11-07T00:36:02.439Z",
+      "updatedAt": "2026-05-12T22:35:01.867Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0506725a-d890-4b3d-a561-1856e1bceabc",
+      "name": "Sales Pipeline Tasks",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-11-06T21:37:55.516Z",
+      "updatedAt": "2024-11-07T03:27:34.272Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "88c4af21-a87c-4165-998e-db53bb51c19d",
+      "name": "Sales Tracking - Orders to Sheet",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2025-05-20T22:26:49.806Z",
+      "updatedAt": "2025-12-09T20:33:00.963Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6b61598f-c9a7-4a8b-85e8-2ce1a00ac9f3",
+      "name": "Salesperson Commission Notification",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-02-04T03:15:07.796Z",
+      "updatedAt": "2025-02-04T03:23:37.856Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8298a3f6-3fbe-496e-b59e-7606b987a030",
+      "name": "Scheduled Demo Call - Remove Workflow & Assign User",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2023-07-14T21:50:08.053Z",
+      "updatedAt": "2023-08-30T13:50:38.247Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7d794cf2-19e2-4955-b9f4-91fb5ca39e9a",
+      "name": "Secret Software Vault - Delivery",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-11-13T21:19:08.870Z",
+      "updatedAt": "2025-10-13T21:15:26.756Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "668782f6-4200-46df-9497-3d5c9e31a5b3",
+      "name": "Segment - Simple",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-05-27T17:49:29.757Z",
+      "updatedAt": "2024-05-27T17:53:42.636Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "89fff678-e94e-48e5-b3dc-c6fe55bf5566",
+      "name": "Send AI Research Before Sales Call",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2025-02-16T22:50:16.401Z",
+      "updatedAt": "2025-02-16T22:54:17.345Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b570ba02-24a4-4354-9263-7781220b3a5c",
+      "name": "Send Custom Agreement",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2025-11-05T01:50:28.093Z",
+      "updatedAt": "2025-12-25T21:42:58.838Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7539f921-7121-4bfa-851c-79a30eefc8d8",
+      "name": "Send Manual Message",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.041Z",
+      "updatedAt": "2025-04-22T21:16:41.462Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1fc7a433-0e64-455f-a461-4e20c7d833c8",
+      "name": "Send Membership Login Details",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2023-11-05T16:45:42.184Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "29eb3f1d-eee3-4fca-8515-0f61ee3f53ee",
+      "name": "Send Service Agreement - REFUND",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-06-03T18:42:39.913Z",
+      "updatedAt": "2025-05-14T17:30:36.542Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "756d4699-5c28-47df-8ec0-08202310a65a",
+      "name": "Set Last Communication Type & Source",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.038Z",
+      "updatedAt": "2025-11-25T19:44:43.991Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "c606ae58-60df-4653-9fa2-e76714e0721a",
+      "name": "Social Proof Software Access",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-09-13T22:32:45.701Z",
+      "updatedAt": "2024-09-14T22:41:21.678Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "691f7f21-26fc-458d-91e0-0f2fe0c8488a",
+      "name": "Software Service Agreement MAKE",
+      "status": "published",
+      "version": 2,
+      "createdAt": "2024-11-12T17:41:29.886Z",
+      "updatedAt": "2025-05-14T17:30:48.904Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "670702c7-3c82-4d8a-a652-7c7d73ad3b05",
+      "name": "Software Subscription Cancel",
+      "status": "published",
+      "version": 33,
+      "createdAt": "2024-03-21T20:17:24.621Z",
+      "updatedAt": "2026-05-20T20:34:16.104Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9407141b-827c-4a52-bacd-05ec27ff334f",
+      "name": "Software Vault Access",
+      "status": "published",
+      "version": 11,
+      "createdAt": "2024-09-13T23:19:16.731Z",
+      "updatedAt": "2025-12-03T20:16:33.485Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "0c4583c2-a56c-4ac7-bf8b-08d4a9f58a7e",
+      "name": "Software Vault Access (MANUAL)",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-10-31T01:17:09.379Z",
+      "updatedAt": "2025-06-25T14:58:04.807Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "58b84731-b3e4-4e49-9ec6-ed8a5a8e37e7",
+      "name": "Spam Comment / DM -> ?",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2024-10-24T12:18:46.699Z",
+      "updatedAt": "2024-10-24T12:24:46.379Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6ef7c600-3192-4249-9feb-eaf8e947d5f4",
+      "name": "Standard Optin 12-9-23",
+      "status": "published",
+      "version": 16,
+      "createdAt": "2023-12-09T17:42:22.874Z",
+      "updatedAt": "2024-05-25T20:12:37.252Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "82638043-0528-40d9-8b65-a6c0fcc5be06",
+      "name": "Standard Optin 4-16-24 (old)",
+      "status": "draft",
+      "version": 10,
+      "createdAt": "2024-04-16T06:37:20.689Z",
+      "updatedAt": "2024-10-15T15:43:36.940Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3e2ba3c7-4778-4f1b-939a-13ef7a46c2a8",
+      "name": "Standard Optin Sequence",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2023-11-02T20:35:59.670Z",
+      "updatedAt": "2024-04-02T23:00:09.987Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e8398a83-e670-4330-bab1-82b8040c0fba",
+      "name": "Subscription Activated ALL",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2025-05-14T17:52:28.998Z",
+      "updatedAt": "2026-05-05T02:48:03.298Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6c086663-a748-41c8-a63b-a45fabc8848d",
+      "name": "Subscription Cancel - Linkedin SN",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2025-02-18T17:34:55.043Z",
+      "updatedAt": "2025-02-18T17:42:00.591Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "92df93aa-57a9-4c41-b27d-82867fd4db08",
+      "name": "Subscription Failed Payment - All Products",
+      "status": "published",
+      "version": 14,
+      "createdAt": "2025-05-14T16:25:47.263Z",
+      "updatedAt": "2025-08-27T19:43:24.725Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4e77a063-99a8-41dc-954a-4c5f741f17e2",
+      "name": "Subscription Failed Payment - Whop",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2026-01-10T19:09:46.459Z",
+      "updatedAt": "2026-01-30T20:11:03.918Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d5b798a2-58f7-484f-915c-976fa316742a",
+      "name": "TEST",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2025-11-08T23:14:19.549Z",
+      "updatedAt": "2025-11-08T23:22:09.175Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "2dd777ec-ad10-4a3d-9263-835e807a5ae0",
+      "name": "Tampa Entrepreneur\u00a0Event Optin",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2024-11-14T17:13:45.360Z",
+      "updatedAt": "2025-10-13T20:27:18.839Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "80691204-fca1-4b97-b3c0-99acff7cc35b",
+      "name": "Testimonial Claim Gift OLD",
+      "status": "draft",
+      "version": 11,
+      "createdAt": "2024-02-16T14:26:49.088Z",
+      "updatedAt": "2026-05-17T15:26:26.288Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "001cec6c-a1b2-4b1c-8d1a-f61c9c72173c",
+      "name": "Testimonial Nurture Sequence",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-02-18T17:19:39.361Z",
+      "updatedAt": "2024-04-24T22:11:52.545Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "341adee7-0ba0-483f-82f9-820afe2c5379",
+      "name": "Testing Spintax",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2026-05-05T20:40:33.857Z",
+      "updatedAt": "2026-05-22T14:50:04.283Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "23859b0f-7c99-41ac-a674-38696946aa04",
+      "name": "Thinkific -> Course Purchase",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2024-05-24T19:17:34.235Z",
+      "updatedAt": "2025-05-21T15:37:52.267Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "b5439dea-02aa-4750-921e-e5575f38e9cd",
+      "name": "Tool: AI Booking Error",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2024-10-16T21:25:24.034Z",
+      "updatedAt": "2025-11-25T19:44:31.181Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1e3a59eb-8598-4dff-90ab-4860045a8d19",
+      "name": "Tool: AI Off -> Update Button",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.039Z",
+      "updatedAt": "2025-11-25T19:46:57.720Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "75447eac-7e7e-45db-aa86-1f13dab35dbd",
+      "name": "Tool: AI Off or On",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.036Z",
+      "updatedAt": "2025-11-25T19:46:57.262Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "86f8fe8d-b648-44ac-aea3-3790f695a820",
+      "name": "Tool: Appointment Interest => Update Business Focus",
+      "status": "draft",
+      "version": 3,
+      "createdAt": "2025-01-19T23:53:13.727Z",
+      "updatedAt": "2025-11-25T19:44:31.260Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "3844f31b-16ae-48c1-8f1f-15f5a8ae200a",
+      "name": "Tool: DND On (SMS / WhatsApp) => Opt-Out Tag",
+      "status": "draft",
+      "version": 8,
+      "createdAt": "2024-10-16T21:25:24.383Z",
+      "updatedAt": "2025-11-25T19:44:31.244Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "661fa169-bdd3-416f-8f25-ef2c70e2c20c",
+      "name": "Tool: Delete \"Guest\" Contacts After 30 Days",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-25T00:50:23.736Z",
+      "updatedAt": "2025-11-25T19:44:31.122Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "80ee2f10-9d7a-4320-8e67-2e2b42195c21",
+      "name": "Tool: Inbound Message => Turn AI On",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.384Z",
+      "updatedAt": "2025-11-25T19:44:31.290Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "263b597d-09e5-4955-9244-e3a7c2a3419f",
+      "name": "Tool: Lead Cancelled Appointment => Add Tag",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-10-16T21:25:24.386Z",
+      "updatedAt": "2025-11-25T19:44:31.097Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "97f703af-4190-428f-924c-0bfefb24f0be",
+      "name": "Tool: Lead Qualification Check",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-10-16T21:25:24.388Z",
+      "updatedAt": "2025-11-25T19:44:31.247Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fc889e26-4ab0-47dd-85fa-320ccd107492",
+      "name": "Tool: LiveChat Contact Info Given => No Appointment Booked",
+      "status": "draft",
+      "version": 7,
+      "createdAt": "2024-10-16T21:25:24.390Z",
+      "updatedAt": "2025-11-25T19:44:31.195Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7d5cdabb-be2e-43a8-82a3-fff0703d8776",
+      "name": "Tool: LiveChat Name Updater",
+      "status": "draft",
+      "version": 6,
+      "createdAt": "2024-10-16T21:25:24.679Z",
+      "updatedAt": "2025-11-25T19:44:20.637Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "766ae808-a2b2-42cc-ac28-3aa3327bb564",
+      "name": "Tool: Name Secured => Update Opportunity",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2024-10-16T21:25:24.683Z",
+      "updatedAt": "2025-11-25T19:44:31.135Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "233c8e55-9c7b-439c-a747-182ee20ebaa3",
+      "name": "Top Performing Drip Sequence (MERGED)",
+      "status": "draft",
+      "version": 26,
+      "createdAt": "2024-11-08T03:01:24.863Z",
+      "updatedAt": "2026-02-15T17:45:29.357Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "29d72f5d-3fe1-4527-892e-ccdbd15ceacb",
+      "name": "TrustPilot Review",
+      "status": "published",
+      "version": 24,
+      "createdAt": "2024-04-24T16:54:59.364Z",
+      "updatedAt": "2025-08-14T14:51:37.285Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "ad93c284-5ebb-4043-84ad-b939153aa2af",
+      "name": "Trusted Leads Upsell Order",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-07-16T20:53:25.235Z",
+      "updatedAt": "2025-12-24T20:24:08.378Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "4ed11132-43b5-4b6b-a6d1-934b8fd0e883",
+      "name": "Trying to Pay - Help Them! (MOVED)",
+      "status": "draft",
+      "version": 18,
+      "createdAt": "2024-01-07T23:37:00.393Z",
+      "updatedAt": "2025-02-09T18:32:31.882Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d25f2a40-bbd2-49a2-9463-315f60775c5d",
+      "name": "Twilio Error -> Enable DND for phone",
+      "status": "published",
+      "version": 10,
+      "createdAt": "2023-07-25T17:51:24.880Z",
+      "updatedAt": "2024-11-07T13:23:34.304Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "839b0809-f851-44d9-8470-12c73bec4833",
+      "name": "UNLOCK MODULES (MANUAL)",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-09-14T22:36:33.417Z",
+      "updatedAt": "2024-09-14T22:39:23.222Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "03fbac0b-74da-467b-b074-7eb980ba1100",
+      "name": "UPDATE 11/2/23",
+      "status": "draft",
+      "version": 2,
+      "createdAt": "2023-11-02T17:22:48.224Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "cdcbf51c-69b5-4bbc-a536-465226e573a9",
+      "name": "Unified Pipeline \u2014 Email Campaign Router V2",
+      "status": "draft",
+      "version": 30,
+      "createdAt": "2026-05-05T14:40:58.680Z",
+      "updatedAt": "2026-05-12T17:39:39.668Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "6525f450-8f48-48ef-8c5a-ebbd7ec671ec",
+      "name": "Unlock Modules - Grandfather",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-09-24T19:52:32.721Z",
+      "updatedAt": "2024-09-29T17:48:54.661Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "bcdfc570-d281-470f-b65e-c64712644373",
+      "name": "Unlock Modules Early",
+      "status": "published",
+      "version": 17,
+      "createdAt": "2024-09-07T18:40:06.180Z",
+      "updatedAt": "2026-02-03T18:17:24.153Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d43b484e-170e-4ce8-a287-02b04d027ff3",
+      "name": "Unsubbed -> DND",
+      "version": 14,
+      "createdAt": "2024-09-06T14:51:46.101Z",
+      "updatedAt": "2026-05-03T21:27:58.203Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d34901aa-dce6-4615-bd1c-8e6e6731509a",
+      "name": "Update Email Preferences",
+      "status": "published",
+      "version": 4,
+      "createdAt": "2024-08-22T19:47:23.592Z",
+      "updatedAt": "2025-02-23T19:55:09.699Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "fc05e8bb-b6ed-4ef1-a5c2-72c12bc1a9e6",
+      "name": "Validate Phone (International) OLD",
+      "status": "draft",
+      "version": 26,
+      "createdAt": "2024-02-29T19:14:53.481Z",
+      "updatedAt": "2024-11-07T13:32:37.531Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a2d8c06d-b55e-4b86-9f50-973e4f8a3347",
+      "name": "Validate Phone (OLD)",
+      "status": "draft",
+      "version": 9,
+      "createdAt": "2024-05-27T15:18:01.822Z",
+      "updatedAt": "2024-11-07T13:23:52.267Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "30ace83f-a7ec-4683-bed3-07843cb4e0e8",
+      "name": "WF1 - Course Interest (2026 rewrite)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2026-05-22T17:17:52.531Z",
+      "updatedAt": "2026-05-22T19:58:39.495Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "98fc4aa7-e63b-4cdd-a362-d6aa0836924a",
+      "name": "WF5 - High Ticket Interest (2026 rewrite)",
+      "version": 3,
+      "createdAt": "2026-05-22T17:20:37.011Z",
+      "updatedAt": "2026-05-22T17:20:39.512Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "7e74eb61-9909-42ea-9059-0c6c63bf4faf",
+      "name": "Waitlist - AI Commenter",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-01-23T22:13:41.780Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "76ec43ed-e021-4615-a325-2ef4a808c5dd",
+      "name": "Waitlist AICommenter",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-02-13T20:22:30.833Z",
+      "updatedAt": "2025-10-13T21:11:02.019Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "9325427a-1936-4ccb-b9db-f6ffaece7db6",
+      "name": "Waitlist Sales",
+      "status": "draft",
+      "version": 5,
+      "createdAt": "2023-12-02T18:30:19.641Z",
+      "updatedAt": "2024-03-13T15:43:45.748Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "e653900f-2003-44c9-b7ac-dfd0c5d7149c",
+      "name": "Weekly Report AI report (off)",
+      "status": "draft",
+      "version": 4,
+      "createdAt": "2024-10-16T21:25:24.685Z",
+      "updatedAt": "2025-06-06T17:02:32.943Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "065dd108-cd01-4e58-b34e-f627552f2437",
+      "name": "WhatsApp Notification Email",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2024-06-18T22:12:54.879Z",
+      "updatedAt": "2025-02-23T19:51:01.892Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "11a8186b-78de-409b-862d-b8b98324d076",
+      "name": "Whop Payment -> Manual Commission (HT)",
+      "status": "published",
+      "version": 7,
+      "createdAt": "2025-12-16T20:50:01.710Z",
+      "updatedAt": "2026-01-29T23:39:12.725Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "1eaf4eb9-4009-41a1-82bf-536661c040f0",
+      "name": "Whop Payment -> Manual Commission (Insiders)",
+      "status": "published",
+      "version": 8,
+      "createdAt": "2025-12-16T19:46:05.979Z",
+      "updatedAt": "2026-01-30T22:07:09.903Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "8ebf44e6-1cd7-40df-9af2-a55e8f66c40f",
+      "name": "[NEW] DND OFF -> Beehiiv Resub Sync",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-05-03T21:28:37.955Z",
+      "updatedAt": "2026-05-20T22:37:07.200Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "a7a3c2cc-ff78-47a7-9b54-2d660fa4d5a5",
+      "name": "[NEW] DND ON -> Beehiiv Unsub Sync",
+      "status": "published",
+      "version": 5,
+      "createdAt": "2026-05-03T21:28:37.395Z",
+      "updatedAt": "2026-05-20T22:35:42.299Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "071871eb-ec6b-4f02-b15f-7018e3a0c0fa",
+      "name": "mailbox - payment fail",
+      "status": "published",
+      "version": 3,
+      "createdAt": "2024-07-16T19:33:42.875Z",
+      "updatedAt": "2024-07-16T19:36:59.162Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "f0febd47-bd19-466e-8ed2-4d551852d06a",
+      "name": "mailbox - payment success",
+      "status": "published",
+      "version": 6,
+      "createdAt": "2024-07-16T19:26:41.298Z",
+      "updatedAt": "2024-07-26T15:39:59.188Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    },
+    {
+      "id": "d224a628-d1e6-479b-95e6-69b3afadadd7",
+      "name": "z_backup - AI Message",
+      "status": "draft",
+      "version": 1,
+      "createdAt": "2024-10-21T18:21:39.810Z",
+      "updatedAt": "2024-10-21T18:21:39.810Z",
+      "locationId": "YB8rMdFShcHGcZGW87mA"
+    }
+  ],
+  "traceId": "806f816b-88ef-48ec-8189-2a91150c8edc"
+}
