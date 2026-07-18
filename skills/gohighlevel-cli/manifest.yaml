@@ -1,5 +1,74 @@
-name: gohighlevel-cli
-version: 2.1.0
-description: "CLI interface for GoHighLevel CRM/Marketing API — contacts, opportunities, calendars, workflows, conversations, emails, payments, forms, social media, locations, and documents. v2: email reading, workflow creation via internal API."
-categories: [crm, automation]
+id: gohighlevel-cli
+type: skill
+name: "GoHighLevel CLI"
+description: "Build and manage GoHighLevel from the command line: contacts, workflows, native forms, round-robin calendars, two-step funnels, landing pages, conversations, payments, and real-preview visual QA."
+categories:
+  - lgj-exclusive
+  - automation
+  - development
+  - conversion
+tags:
+  - gohighlevel
+  - ghl
+  - crm
+  - workflows
+  - funnels
+  - landing-pages
+  - calendars
+  - automation
+icon: Building2
+path: skills/gohighlevel-cli
+files:
+  - .env.example
+  - .gitignore
+  - README.md
+  - SKILL.md
+  - builders/_email_sequences_parser.py
+  - builders/consulti-nurture-builder.py
+  - builders/email-sequences-doc-builder.py
+  - builders/post-purchase-nurture-builder.py
+  - builders/wf1-course-interest-builder.py
+  - builders/wf5-ht-interest-builder.py
+  - builders/wf6-post-call-sales-builder.py
+  - cli_anything/blotato/__init__.py
+  - cli_anything/blotato/__main__.py
+  - cli_anything/blotato/blotato_cli.py
+  - cli_anything/blotato/utils/__init__.py
+  - cli_anything/blotato/utils/blotato_client.py
+  - cli_anything/gohighlevel/__init__.py
+  - cli_anything/gohighlevel/__main__.py
+  - cli_anything/gohighlevel/core/__init__.py
+  - cli_anything/gohighlevel/gohighlevel_cli.py
+  - cli_anything/gohighlevel/skills/SKILL.md
+  - cli_anything/gohighlevel/utils/__init__.py
+  - cli_anything/gohighlevel/utils/form_survey_builder.py
+  - cli_anything/gohighlevel/utils/funnel_page_builder.py
+  - cli_anything/gohighlevel/utils/ghl_client.py
+  - cli_anything/gohighlevel/utils/ghl_internal_client.py
+  - cli_anything/gohighlevel/utils/landing_page_design.py
+  - cli_anything/gohighlevel/utils/repl_skin.py
+  - cli_anything/gohighlevel/utils/workflow_builder.py
+  - cli_anything/nextcloud/__init__.py
+  - cli_anything/nextcloud/__main__.py
+  - cli_anything/nextcloud/nextcloud_cli.py
+  - cli_anything/nextcloud/utils/__init__.py
+  - cli_anything/nextcloud/utils/nc_client.py
+  - docs/funnel-page-internal-api.md
+  - docs/get-firebase-token.md
+  - docs/how-it-works.excalidraw
+  - docs/how-it-works.png
+  - docs/landing-page-design-system.md
+  - docs/landing-page-spec.md
+  - docs/reference-funnel-patterns.md
+  - docs/workflows-live.json
+  - docs/workflows-map.md
+  - ./ghl
+  - install.sh
+  - manifest.yaml
+  - setup.py
+  - tests/test_form_survey_safety.py
+version: "2.2.0"
+branch: LGJ-exclusive
 postInstall: 'cd "$HOME/.claude/skills/gohighlevel-cli" && bash install.sh'
+composesWell:
+  - browser-automation

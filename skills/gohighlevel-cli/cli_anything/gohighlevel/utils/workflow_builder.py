@@ -34,27 +34,52 @@ VERIFIED_ACTIONS = frozenset([
     "facebook_conversion_api", "stripe_one_time_charge",
     "update_appointment_status", "membership_grant_offer",
     "membership_revoke_offer",
+    # Custom marketplace action: iMessage. Jay's preferred SMS-channel node
+    # for LGJ workflows -- use imessage_step() instead of sms_step() (2026-06-30).
+    "send_i_message",
 ])
 
 
 # ── Email Formatter ───────────────────────────────────────────────────────
 
 def dm_email(text: str) -> str:
-    """Convert plain text to Dan Martell style HTML email."""
-    lines = text.strip().split("\n")
-    html_parts = []
-    for line in lines:
-        line = line.strip()
+    """Convert plain text (**bold** / *italic*) to GHL-safe HTML.
+
+    UNIFORM Arial 16 on EVERY fragment. GHL's email editor overrides a
+    <p>-level font-family to its Verdana default, AND resets <strong>/<em> to
+    Verdana even inside an arial span -- so bold/italic rendered in a different
+    font from the body (Jay 2026-07-03). Fix: the font lives on <span>s, and
+    bold/italic are spans carrying the SAME font-family plus font-weight /
+    font-style (no <strong>/<em> element at all). Blank source lines become
+    <br/> spacers (the old formatter dropped them, giving cramped copy).
+    """
+    font = "font-size: 16px; font-family: Arial, sans-serif; color: rgb(13, 13, 13)"
+
+    def span(t: str, extra: str = "") -> str:
+        return f'<span style="{font}{extra}">{t}</span>'
+
+    def inline(line: str) -> str:
+        out, pos = [], 0
+        for m in re.finditer(r"\*\*(.+?)\*\*|\*(.+?)\*", line):
+            if m.start() > pos:
+                out.append(span(line[pos:m.start()]))
+            if m.group(1) is not None:
+                out.append(span(m.group(1), "; font-weight: bold"))
+            else:
+                out.append(span(m.group(2), "; font-style: italic"))
+            pos = m.end()
+        if pos < len(line):
+            out.append(span(line[pos:]))
+        return "".join(out) if out else span(line)
+
+    parts = []
+    for raw in text.strip().split("\n"):
+        line = raw.strip()
         if not line:
+            parts.append("<br/>")
             continue
-        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
-        line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
-        html_parts.append(
-            f'<p style="margin:0 0 12px 0;line-height:1.75;'
-            f'font-size:16px;font-family:arial,helvetica,sans-serif;'
-            f'color:#000;">{line}</p>'
-        )
-    return "".join(html_parts)
+        parts.append(f'<p style="margin:0px; line-height: 1.5;">{inline(line)}</p>')
+    return re.sub(r">\s+<", "><", "".join(parts))
 
 
 # ── Step Builders ─────────────────────────────────────────────────────────
@@ -67,6 +92,35 @@ def sms_step(name: str, body: str, **kw: Any) -> dict:
     return {
         "id": _uid(), "type": "sms", "name": f"SMS: {name}",
         "attributes": {"body": body, "attachments": []}, **kw,
+    }
+
+
+def imessage_step(name: str, message: str,
+                  addresses: str = "{{contact.phone_raw}}", **kw: Any) -> dict:
+    """Send iMessage (custom marketplace action `send_i_message`).
+
+    Jay's preferred text channel for LGJ workflows -- use this instead of
+    sms_step(). `addresses` MUST be the contact phone WITH country code (+1):
+    use {{contact.phone_raw}} (raw E.164), NOT {{contact.phone}}.
+    """
+    return {
+        "id": _uid(), "type": "send_i_message", "name": f"iMessage: {name}",
+        "attributes": {
+            "__dynamicAttachments__": {},
+            "addresses": addresses,
+            "message": message,
+            "lead_owner_email": "",
+            "voiceMemoUrl": "",
+            "mediaUrl": "",
+            "audioAttachmentUrl": "",
+            "enableAiVoiceMemo": False,
+            "type": "send_i_message",
+            "__customInputs__": {},
+        },
+        # Top-level fields present on live send_i_message nodes (captured from
+        # the Booking-Pending reminder 2026-07-03). Required for the marketplace
+        # action to render/execute correctly.
+        "isMarketplaceAction": True, "version": "3.2", **kw,
     }
 
 
@@ -125,10 +179,127 @@ def ai_step(name: str, prompt: str, model: str = "gpt-4o", **kw: Any) -> dict:
     }
 
 
+# ── Branch / Condition / Goal Builders ───────────────────────────────────
+# GHL If/Else + Goal nodes. Schemas reverse-engineered from live LGJ
+# workflows (2026-07-03): the branch structure mirrors
+# builders/reply-notify-gate-builder.py; the workflow_goal shape was captured
+# from the wf6 HTBO post-call workflow. Branch graphs are NOT linear — wire
+# them yourself (parentKey/next) and build via CampaignBuilder with the
+# workflow-def flag `"graph": True` (or a direct PUT) so the linear linker /
+# canvas positioner does not clobber the wiring.
+
+
+def _pos(x: int, y: int) -> dict:
+    return {"position": {"x": x, "y": y}}
+
+
+def tag_condition(values: list[str], has: bool = True) -> list[dict]:
+    """If/Else condition: contact HAS (has=True) / does NOT have any of `values`."""
+    return [{
+        "conditionType": "contact_detail", "conditionSubType": "tags",
+        "conditionOperator": "index-of-true" if has else "index-of-false",
+        "conditionValue": values,
+        "__conditionId": _uid(), "ifElseNodeId": "", "isWait": False,
+    }]
+
+
+def field_condition(field_id: str, value: str, operator: str = "contain") -> list[dict]:
+    """If/Else condition on a contact custom field (by field id)."""
+    return [{
+        "conditionType": "contact_detail", "conditionSubType": field_id,
+        "conditionOperator": operator, "conditionValue": value,
+        "__conditionId": _uid(), "ifElseNodeId": "", "isWait": False,
+    }]
+
+
+def if_else_nodes(name: str, branch_name: str, conditions: list[dict],
+                  x: int = 400, y: int = 0, yes_id: Optional[str] = None,
+                  no_id: Optional[str] = None,
+                  segment_operator: str = "and") -> tuple:
+    """Build one GHL If/Else split as THREE templates.
+
+    Returns (cond_id, [cond_node, branch_yes, branch_no], yes_id, no_id).
+
+    A GHL branch is a `condition-node` holding the YES branch definition plus
+    two anchor nodes (`branch-yes` / `branch-no`). To attach children: set each
+    child's `parentKey` to the anchor id (yes_id for the match path, no_id for
+    the else path) and the anchor's `next` to that first child's id; chain
+    further children linearly via next/parentKey. All three nodes plus every
+    child go flat into `templates`.
+    """
+    cid = _uid()
+    yes_id = yes_id or _uid()
+    no_id = no_id or _uid()
+    cond = {
+        "id": cid, "order": 0,
+        "attributes": {
+            "currentRecipeType": "CUSTOM",
+            "branches": [{
+                "id": yes_id, "name": branch_name,
+                "segments": [{"__segmentId": _uid(), "operator": segment_operator,
+                              "conditions": conditions}],
+                "operator": "and", "showErrors": False,
+                "branchNameError": "Branch name cannot be empty!",
+            }],
+            "operator": "and", "if": True, "conditionName": name,
+            "version": 2, "noneBranchName": "None",
+        },
+        "name": name, "type": "if_else", "cat": "conditions",
+        "next": [yes_id, no_id], "comments": [], "nodeType": "condition-node",
+        "advanceCanvasMeta": _pos(x, y),
+    }
+    yes = {
+        "id": yes_id, "parent": cid, "order": 1,
+        "attributes": {"if": False, "conditionName": name,
+                       "operator": "and", "branches": []},
+        "name": branch_name, "type": "if_else", "cat": "conditions",
+        "sibling": [no_id], "comments": [], "nodeType": "branch-yes",
+        "parentKey": cid, "advanceCanvasMeta": _pos(x - 150, y + 150),
+    }
+    no = {
+        "id": no_id, "parent": cid, "order": 1,
+        "attributes": {"else": True},
+        "name": "None", "type": "if_else", "cat": "conditions",
+        "sibling": [yes_id], "comments": [], "nodeType": "branch-no",
+        "parentKey": cid, "advanceCanvasMeta": _pos(x + 150, y + 150),
+    }
+    return cid, [cond, yes, no], yes_id, no_id
+
+
+def goal_step(name: str, tags: list[str], goal_condition: str = "add_contact_tag",
+              action: str = "exit", **kw: Any) -> dict:
+    """A `workflow_goal` exit step: leave the workflow when `goal_condition`
+    fires (default: any of `tags` added). Shape captured from a live workflow.
+    """
+    return {
+        "id": _uid(), "type": "workflow_goal", "name": name,
+        "attributes": {
+            "op": "or",
+            "segments": [{
+                "conditions": [{
+                    "goal_condition": goal_condition,
+                    "extras": {"tags": tags},
+                    "id": _uid(),
+                }],
+                "op": "or",
+            }],
+            "type": "workflow_goal",
+            "action": action,
+        }, **kw,
+    }
+
+
 # ── Step Linker ───────────────────────────────────────────────────────────
 
 def link_steps(steps: list[dict]) -> list[dict]:
-    """Auto-link steps with next/parentKey and set order."""
+    """Auto-link LINEAR steps with next/parentKey and set order.
+
+    If any step carries a `nodeType` (an if_else condition-node / branch
+    anchor), the list is a pre-wired branch graph — return it unchanged rather
+    than clobbering its explicit next/parentKey wiring.
+    """
+    if any(s.get("nodeType") for s in steps):
+        return steps
     linked = []
     for i, step in enumerate(steps):
         step = {**step}
@@ -202,7 +373,9 @@ class CampaignBuilder:
         if errors:
             self.stats["errors"].extend(errors)
 
-        # Resolve folder: reuse existing if folder_id given, else create.
+        # Resolve folder: reuse existing if folder_id given, else look up a
+        # folder of the same name (POST always creates, so folder_name alone
+        # spawned a DUPLICATE folder on every run -- Jay 2026-07-03), else create.
         if not folder_id:
             if not folder_name:
                 self.stats["errors"].append(
@@ -210,11 +383,19 @@ class CampaignBuilder:
                 )
                 self.stats["end_time"] = time.time()
                 return self.stats
-            folder = self.client.request(
-                "POST", f"/workflow/{self.loc}",
-                {"name": folder_name, "type": "directory"},
-            )
-            folder_id = folder.get("id") if folder else None
+            listing = self.client.request("GET", f"/workflow/{self.loc}/directory")
+            rows = listing.get("rows", []) if isinstance(listing, dict) else []
+            existing = next(
+                (r for r in rows if r.get("type") == "directory"
+                 and r.get("name") == folder_name), None)
+            if existing:
+                folder_id = existing.get("id") or existing.get("_id")
+            else:
+                folder = self.client.request(
+                    "POST", f"/workflow/{self.loc}",
+                    {"name": folder_name, "type": "directory"},
+                )
+                folder_id = folder.get("id") if folder else None
             if not folder_id:
                 self.stats["errors"].append("Failed to create campaign folder")
                 self.stats["end_time"] = time.time()
@@ -302,10 +483,18 @@ class CampaignBuilder:
                             trigger_data.pop(k, None)
                         trigger_list = [trigger_data]
 
+                    # Branch graphs ("graph": True) carry their own
+                    # advanceCanvasMeta / next / parentKey wiring — preserve it
+                    # (setdefault) instead of overwriting with a linear x-lane.
+                    graph_mode = bool(wf_def.get("graph"))
                     steps_with_meta = []
                     for idx, step in enumerate(wf_def["templates"]):
                         s = {**step}
-                        s["advanceCanvasMeta"] = {"position": {"x": 400 + idx * 300, "y": 0}}
+                        default_meta = {"position": {"x": 400 + idx * 300, "y": 0}}
+                        if graph_mode:
+                            s.setdefault("advanceCanvasMeta", default_meta)
+                        else:
+                            s["advanceCanvasMeta"] = default_meta
                         s.setdefault("cat", "")
                         s.setdefault("order", idx)
                         steps_with_meta.append(s)

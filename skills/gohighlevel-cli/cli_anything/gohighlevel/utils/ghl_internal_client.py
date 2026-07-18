@@ -17,7 +17,6 @@ import urllib.request
 from typing import Any, Optional
 
 BASE_URL = "https://backend.leadconnectorhq.com"
-FIREBASE_API_KEY = "AIzaSyB_w3vXmsI7WeQtrIOkjR6xTRVN5uOieiE"
 CTX = ssl.create_default_context()
 
 CHROME_UA = (
@@ -84,7 +83,17 @@ class TokenManager:
         # 2. Try Firebase refresh token
         refresh_token = os.environ.get("GHL_FIREBASE_REFRESH_TOKEN", "").strip()
         if refresh_token:
-            token = self._refresh_firebase(refresh_token)
+            firebase_web_key = os.environ.get("GHL_FIREBASE_API_KEY", "").strip()
+            if not firebase_web_key:
+                print(
+                    "Error: GHL_FIREBASE_REFRESH_TOKEN is set but "
+                    "GHL_FIREBASE_API_KEY is missing.\n"
+                    "Run the no-network DevTools helper in "
+                    "docs/get-firebase-token.md and paste both values into .env.",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+            token = self._refresh_firebase(refresh_token, firebase_web_key)
             if token:
                 self._token = token
                 self._token_time = time.time()
@@ -92,7 +101,8 @@ class TokenManager:
             print(
                 "Error: Firebase refresh token is set but token refresh failed.\n"
                 "The refresh token may be revoked or expired.\n"
-                "Get a new one with the DevTools snippet in docs/get-firebase-token.md.",
+                "Run the no-network DevTools helper in "
+                "docs/get-firebase-token.md to refresh both setup values.",
                 file=sys.stderr,
             )
             sys.exit(1)
@@ -107,7 +117,7 @@ class TokenManager:
         print(
             "Error: No Firebase token available for internal API.\n"
             "Set GHL_FIREBASE_REFRESH_TOKEN (preferred) or GHL_FIREBASE_TOKEN.\n"
-            "Get the refresh token with the DevTools snippet in docs/get-firebase-token.md.",
+            "Run the no-network DevTools helper in docs/get-firebase-token.md.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -118,12 +128,32 @@ class TokenManager:
         self._token_time = 0
         return self.get_token()
 
-    def _refresh_firebase(self, refresh_token: str) -> Optional[str]:
+    def get_user_id(self) -> Optional[str]:
+        """Extract the logged-in user's id from the Firebase JWT claims.
+
+        The internal funnel-delete endpoint requires a userId; it is carried in
+        the token's `user_id`/`sub` claim, so no extra API call is needed.
+        """
+        import base64
+
+        token = self.get_token()
+        try:
+            payload = token.split(".")[1]
+            payload += "=" * (-len(payload) % 4)
+            claims = json.loads(base64.urlsafe_b64decode(payload))
+            return claims.get("user_id") or claims.get("sub")
+        except Exception:
+            return None
+
+    def _refresh_firebase(
+        self, refresh_token: str, firebase_web_key: str
+    ) -> Optional[str]:
         """Exchange Firebase refresh token for a fresh ID token."""
         try:
             body = f"grant_type=refresh_token&refresh_token={refresh_token}"
             req = urllib.request.Request(
-                f"https://securetoken.googleapis.com/v1/token?key={FIREBASE_API_KEY}",
+                "https://securetoken.googleapis.com/v1/token"
+                f"?key={firebase_web_key}",
                 data=body.encode(),
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
                 method="POST",
@@ -150,20 +180,36 @@ class InternalGHLClient:
     def call_count(self) -> int:
         return self._call_count
 
-    def request(self, method: str, path: str, body: dict[str, Any] | None = None) -> Optional[dict]:
-        """Make an API request with auto-retry on 401."""
+    def request(
+        self,
+        method: str,
+        path: str,
+        body: dict[str, Any] | None = None,
+        extra_headers: dict[str, str] | None = None,
+    ) -> Optional[dict]:
+        """Make an API request with auto-retry on 401.
+
+        extra_headers merges into the default header set. The forms/surveys/
+        funnels internal services require {"Version": "2021-07-28"}; the workflow
+        endpoints do not, so it is opt-in per call rather than always sent.
+        """
         token = self.token_mgr.get_token()
-        result = self._do_request(method, path, body, token)
+        result = self._do_request(method, path, body, token, extra_headers)
 
         # Retry on auth failure
         if result is None:
             token = self.token_mgr.force_refresh()
-            result = self._do_request(method, path, body, token)
+            result = self._do_request(method, path, body, token, extra_headers)
 
         return result
 
     def _do_request(
-        self, method: str, path: str, body: dict | None, token: str
+        self,
+        method: str,
+        path: str,
+        body: dict | None,
+        token: str,
+        extra_headers: dict[str, str] | None = None,
     ) -> Optional[dict]:
         self._call_count += 1
         safe_token = token.encode("ascii", "ignore").decode("ascii").strip()
@@ -175,6 +221,8 @@ class InternalGHLClient:
             "Accept": "application/json",
             "User-Agent": CHROME_UA,
         }
+        if extra_headers:
+            headers.update(extra_headers)
         url = f"{BASE_URL}{path}"
         data = json.dumps(body, ensure_ascii=False).encode("utf-8") if body else None
         req = urllib.request.Request(url, data=data, headers=headers, method=method)
@@ -196,3 +244,132 @@ class InternalGHLClient:
             "POST", f"/workflow/{self.location_id}/tags/create", {"tag": tag}
         )
         return bool(result and not result.get("_error"))
+
+    # -- Forms / surveys / funnels (require the Version header) --------------
+    # These services live behind backend.leadconnectorhq.com and reject the
+    # workflow header set; they need token-id + Version together.
+
+    _V = {"Version": "2021-07-28"}
+
+    def create_form(self, name: str, form_data: dict | None = None) -> Optional[dict]:
+        """Create a form with its full content in one POST. Returns the form dict.
+
+        Unlike surveys, forms accept complete formData at create time — there is
+        no update-by-id route, so re-POSTing would create a duplicate.
+        """
+        body = {"locationId": self.location_id, "name": name}
+        if form_data is not None:
+            body["formData"] = form_data
+        r = self.request("POST", "/forms/", body, extra_headers=self._V)
+        return (r or {}).get("form") if isinstance(r, dict) else r
+
+    def get_form(self, form_id: str) -> Optional[dict]:
+        r = self.request("GET", f"/forms/{form_id}", extra_headers=self._V)
+        return (r or {}).get("form") if isinstance(r, dict) else r
+
+    def delete_form(self, form_id: str) -> bool:
+        r = self.request("DELETE", f"/forms/{form_id}", extra_headers=self._V)
+        return bool(r and not (isinstance(r, dict) and r.get("_error")))
+
+    def create_survey(self, name: str) -> Optional[dict]:
+        """Create an empty survey shell, then wait until it is readable.
+
+        The survey shell is NOT immediately readable/writable after create — a
+        subsequent update_survey call races the backend and only partially
+        persists. We poll get_survey until the record propagates (usually one
+        retry) so the follow-up content write lands cleanly.
+        """
+        r = self.request("POST", "/surveys/", {"locationId": self.location_id, "name": name},
+                         extra_headers=self._V)
+        survey = (r or {}).get("survey") if isinstance(r, dict) else r
+        if not survey or not survey.get("_id"):
+            return survey
+        survey_id = survey["_id"]
+        for _ in range(10):
+            if self.get_survey(survey_id):
+                break
+            time.sleep(0.5)
+        return survey
+
+    def update_survey(self, survey_id: str, name: str, form_data: dict) -> Optional[dict]:
+        """Push full formData to a survey. Body must NOT include locationId."""
+        return self.request("POST", f"/surveys/{survey_id}",
+                            {"name": name, "formData": form_data}, extra_headers=self._V)
+
+    def get_survey(self, survey_id: str) -> Optional[dict]:
+        r = self.request("GET", f"/surveys/{survey_id}", extra_headers=self._V)
+        return (r or {}).get("survey") if isinstance(r, dict) else r
+
+    def delete_survey(self, survey_id: str) -> bool:
+        r = self.request("DELETE", f"/surveys/{survey_id}", extra_headers=self._V)
+        return bool(r and not (isinstance(r, dict) and r.get("_error")))
+
+    def create_funnel(self, name: str, funnel_type: str = "funnel") -> Optional[dict]:
+        """Create a funnel shell. Add pages with create_funnel_step_page()."""
+        return self.request("POST", "/funnels/funnel/create",
+                            {"locationId": self.location_id, "name": name, "type": funnel_type},
+                            extra_headers=self._V)
+
+    def delete_funnel(self, funnel_id: str, user_id: str | None = None) -> bool:
+        uid = user_id or self.token_mgr.get_user_id()
+        r = self.request("POST", "/funnels/funnel/delete",
+                        {"locationId": self.location_id, "funnelId": funnel_id, "userId": uid},
+                        extra_headers=self._V)
+        return bool(r and not (isinstance(r, dict) and r.get("_error")))
+
+    def list_funnel_pages(self, funnel_id: str, limit: int = 20) -> Optional[dict]:
+        """List page records for a funnel (metadata only)."""
+        return self.request(
+            "GET",
+            f"/funnels/page?locationId={self.location_id}&funnelId={funnel_id}&limit={limit}&offset=0",
+            extra_headers=self._V,
+        )
+
+    def get_funnel_page(self, page_id: str) -> Optional[dict]:
+        """Fetch a page record, including signed draft/live content URLs."""
+        return self.request("GET", f"/funnels/page/{page_id}", extra_headers=self._V)
+
+    def get_funnel(self, funnel_id: str) -> Optional[dict]:
+        """Fetch one funnel record, including global-section artifact metadata."""
+        result = self.request("GET", f"/funnels/funnel/fetch/{funnel_id}", extra_headers=self._V)
+        if isinstance(result, dict) and isinstance(result.get("data"), dict):
+            return result["data"]
+        return result
+
+    def save_global_sections(self, funnel_id: str, sections: list,
+                             version: int) -> Optional[dict]:
+        """Store a new global-section artifact for a funnel."""
+        return self.request("POST", f"/funnels/builder/global-sections/{funnel_id}",
+                            {"version": version, "sectionData": sections},
+                            extra_headers=self._V)
+
+    def create_funnel_step_page(self, funnel_id: str, step: dict) -> Optional[dict]:
+        """Create a step and its initial blank page in one operation."""
+        return self.request("POST", "/funnels/funnel/create-step",
+                            {"step": step, "funnelId": funnel_id},
+                            extra_headers=self._V)
+
+    def save_funnel_page(
+        self,
+        page_id: str,
+        funnel_id: str,
+        page_data: dict,
+        *,
+        page_version: int = 1,
+        publish: bool = False,
+        manual_save: bool = True,
+        meta: dict | None = None,
+    ) -> Optional[dict]:
+        """Save full builder-v2 page data as a draft or live version."""
+        body = {
+            "funnelId": funnel_id,
+            "pageData": page_data,
+            "pageVersion": page_version,
+            "pageType": "live" if publish else "draft",
+            "manualSave": manual_save,
+            "integrations": {},
+        }
+        if meta is not None:
+            body["meta"] = meta
+        return self.request("POST", f"/funnels/builder/autosave/{page_id}", body,
+                            extra_headers=self._V)
