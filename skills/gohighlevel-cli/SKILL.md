@@ -1,6 +1,6 @@
 ---
 name: "gohighlevel-cli"
-description: "CLI interface for GoHighLevel CRM/Marketing API — contacts, opportunities, calendars, workflows, conversations, emails, payments, forms, social media, locations, documents. v2: email reading, workflow creation via internal API."
+description: "Build and manage GoHighLevel from the command line: contacts, opportunities, workflows, forms, calendars, funnels, landing pages, conversations, email, payments, locations, and real-preview page QA."
 triggers:
   - gohighlevel
   - ghl cli
@@ -14,13 +14,38 @@ triggers:
   - ghl emails
   - ghl create workflow
   - ghl read emails
+  - ghl funnels
+  - ghl landing page
+  - ghl form builder
 ---
 
-# GoHighLevel CLI v2
+## Step 0 — Prerequisites
 
-Command-line interface for the GoHighLevel CRM and Marketing API — for you or Claude Code to drive your CRM from the terminal. Contacts, opportunities, calendars, workflows, conversations, emails, payments, forms, social media, locations, and documents. Built with the CLI-Anything framework (Click + interactive REPL).
+Before any operation, work from the installed `gohighlevel-cli` skill folder
+and verify the requirements below. If any required check fails, stop and tell
+the user how to fix it. Do not generate placeholder commands or continue with
+partial credentials.
 
-**v2 additions:** Email reading via conversations, workflow creation via internal API (`--experimental`), workflow enrollment, version routing fix.
+| Requirement | Check | Where to get it |
+|---|---|---|
+| Python 3.10+ | `python3 -c 'import sys; assert sys.version_info >= (3,10)'` | [python.org/downloads](https://www.python.org/downloads/) |
+| Installed CLI wrapper | `test -x ./ghl && ./ghl --help >/dev/null` | Re-run `bash install.sh` in this skill folder |
+| Public API credentials for public commands | `grep -Eq '^GHL_API_KEY=.+$' .env && grep -Eq '^GHL_LOCATION_ID=.+$' .env` | GHL Settings -> Private Integrations and the location URL |
+| Browser setup values for `--experimental` commands | `grep -Eq '^GHL_FIREBASE_API_KEY=.+$' .env && grep -Eq '^GHL_FIREBASE_REFRESH_TOKEN=.+$' .env` | Run the no-network helper in `docs/get-firebase-token.md` |
+
+The fourth row is required only for workflow, form, survey, and funnel builder
+commands that use `--experimental`. If anything required for the requested
+operation is missing, STOP.
+
+# GoHighLevel CLI v2.2
+
+Command-line interface for GoHighLevel that lets you or Claude Code build and
+manage CRM data, automations, forms, calendars, and complete funnel pages from
+the terminal. Built with the CLI-Anything framework (Click + interactive REPL).
+
+**v2.2 additions:** native form and calendar creation, two-step funnel building,
+draft backup before replacement, reusable landing-page templates, and a blocking
+real-preview visual QA gate.
 
 ## Install (60 seconds)
 
@@ -71,6 +96,10 @@ All three live in the `.env` file next to the `ghl` wrapper; the wrapper auto-lo
 | `payments` | transactions, orders, invoices, create-invoice | LIVE |
 | `locations` | get, search, tags, custom-fields, custom-values, set-custom-value | LIVE |
 | `forms` | list, submissions | NEEDS SCOPE |
+| `forms` | create, delete | EXPERIMENTAL |
+| `surveys` | list, create, delete | EXPERIMENTAL |
+| `funnels` | templates, init-template, lint, preview | LOCAL |
+| `funnels` | list, create, pages, export-page, create-page, set-content, delete | EXPERIMENTAL |
 | `social` | accounts, posts, create-post | NEEDS SCOPE |
 | `documents` | list, send, templates, send-template | NEEDS SCOPE |
 
@@ -97,6 +126,44 @@ Always use `--json` for programmatic output:
 `--json` works on most read commands and pipes cleanly into `jq`.
 
 ## Key Patterns
+
+### Funnel and Landing-Page Builds (Mandatory Completion Gate)
+
+The CLI can create the native form, calendar, funnel, and page content for a
+complete two-step lead-generation funnel. Use built-in templates as the base,
+then keep the result in draft until the user explicitly approves publishing.
+
+```bash
+# Create the native assets
+./ghl --experimental forms create --from-json form.json
+./ghl --json calendars create --from-json calendar.json
+
+# Build and validate the page specs locally
+./ghl funnels templates
+./ghl funnels init-template optin --theme modern --output step-1.json
+./ghl funnels lint step-1.json
+./ghl funnels preview step-1.json --output step-1-preview.html
+
+# Back up and write the actual GHL drafts
+./ghl --experimental funnels export-page <page-id> --output backup.json
+./ghl --experimental funnels set-content <page-id> --from-json step-1.json
+```
+
+`set-content` automatically backs up the current draft before replacement.
+Never add `--publish` without explicit user authorization.
+
+For every landing page, the real served GHL draft is the source of truth. Wait
+for native forms, calendars, and fonts to settle, then personally inspect
+full-page captures at 1440x900, 768x1024, and 393x852. Run every CTA, form, and
+calendar path twice without submitting a lead or booking a call. Check for
+literal escaped markup, horizontal overflow, mobile/WebKit failures, and
+above-fold conversion controls. Local `funnels preview`, DOM snapshots, lint
+scores, and worker prose are supporting evidence only.
+
+Default page typography is Inter 700 for headlines and Roboto 400/500 for body
+copy. True single-column sections center every child block; native field labels
+remain left-aligned for usability. See `docs/landing-page-design-system.md` and
+`docs/reference-funnel-patterns.md` for the complete guardrails.
 
 ### Email Reading (Conversation Filtering)
 
@@ -216,6 +283,9 @@ gohighlevel-cli/            (this skill folder)
         └── utils/
             ├── ghl_client.py          # Public API client (bearer token, version routing)
             ├── ghl_internal_client.py # Internal API client (Firebase JWT) [EXPERIMENTAL]
+            ├── form_survey_builder.py # Native form/survey payload builder
+            ├── funnel_page_builder.py # Compact spec -> GHL builder content
+            ├── landing_page_design.py # Templates, themes, lint, local preview
             ├── workflow_builder.py    # Step builders + CampaignBuilder [EXPERIMENTAL]
             └── repl_skin.py           # Interactive REPL (prompt-toolkit)
 ```

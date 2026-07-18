@@ -1,17 +1,22 @@
 ---
 name: "cli-anything-gohighlevel"
-description: "CLI interface for GoHighLevel CRM/Marketing API — contacts, opportunities, calendars, workflows, conversations, emails, payments, forms, social media, locations"
+description: "CLI interface for GoHighLevel CRM/Marketing API - contacts, opportunities, calendars, workflows, conversations, email, payments, forms, surveys, funnels, landing pages, social media, and locations."
 triggers:
   - gohighlevel
   - ghl cli
   - ghl contacts
   - ghl workflows
   - ghl calendars
+  - ghl funnels
+  - ghl landing page
 ---
 
 # cli-anything-gohighlevel
 
-CLI interface for the GoHighLevel (GHL) CRM and Marketing API. Manage contacts, pipeline opportunities, calendars, workflows, conversations, emails, payments, forms, social media posts, and locations from the command line or interactive REPL.
+CLI interface for the GoHighLevel (GHL) CRM and Marketing API. Manage contacts,
+pipeline opportunities, calendars, workflows, conversations, forms, surveys,
+funnels, landing pages, email, payments, social posts, and locations from the
+command line or interactive REPL.
 
 ## Prerequisites
 
@@ -65,12 +70,14 @@ cli-anything-gohighlevel
 |-------|-------------|--------------|
 | `contacts` | Contact management | list, get, create, update, delete, search, add-tag, remove-tag |
 | `opportunities` | Pipeline deals | list, get, create, update, delete, pipelines |
-| `calendars` | Scheduling | list, get, slots, appointments, book, groups |
-| `workflows` | Automation workflows | list |
+| `calendars` | Scheduling | list, get, slots, appointments, book, groups, create, update, delete |
+| `workflows` | Automation workflows | list, enroll, remove; create/build (`--experimental`) |
 | `conversations` | Messaging (SMS, email, chat) | list, get, messages, send |
 | `emails` | Email campaigns/templates | list-campaigns |
 | `payments` | Financial operations | transactions, orders, invoices, create-invoice |
-| `forms` | Form management | list, submissions |
+| `forms` | Form management | list, submissions, create, delete |
+| `surveys` | Survey management | list, create, delete |
+| `funnels` | Funnel and landing-page building | templates, init-template, lint, preview, list, pages, export-page, create-page, set-content |
 | `social` | Social media posting | accounts, posts, create-post |
 | `locations` | Sub-account management | get, search, tags, custom-fields, custom-values |
 
@@ -84,7 +91,7 @@ cli-anything-gohighlevel
 - API base URL: `https://services.leadconnectorhq.com`
 - API version header: `2021-07-28`
 
-## Workflow creation (experimental — unofficial internal API)
+## Builders (experimental - unofficial internal API)
 
 The public API is read-only for workflows (`workflows list` only). Creating/updating
 workflows requires the `--experimental` flag, which uses GHL's **unofficial** internal
@@ -98,6 +105,16 @@ API (`backend.leadconnectorhq.com`) authenticated with `GHL_FIREBASE_REFRESH_TOK
 - The internal API has no SLA and may change/break without notice. Workflows are
   created as draft. The CLI prints a one-time warning on use
   (`GHL_SUPPRESS_INTERNAL_WARNING=1` to silence).
+
+The same guarded internal path can create native forms, surveys, calendars, and
+complete funnel pages. `funnels set-content` backs up the current draft before
+replacement. Keep pages draft-only until the user explicitly approves publishing.
+
+Before calling a landing page complete, test the real served GHL draft after
+fonts and native embeds settle. Personally inspect 1440x900, 768x1024, and
+393x852 captures; exercise every form, CTA, and calendar path twice without
+submitting or booking; and pass overflow/WebKit checks. Local previews and lint
+scores are not visual proof.
 
 ## Examples
 
@@ -116,6 +133,15 @@ ghl --json opportunities list --status open
 
 # Get available calendar slots
 ghl calendars slots <calendar_id> --start 2026-03-25 --end 2026-03-30
+
+# Create a native form and calendar
+ghl --experimental forms create --from-json form.json
+ghl --json calendars create --from-json calendar.json
+
+# Create and validate a two-step funnel draft
+ghl funnels init-template optin --theme modern --output step-1.json
+ghl funnels lint step-1.json
+ghl --experimental funnels set-content <page-id> --from-json step-1.json
 
 # Send SMS in conversation
 ghl conversations send <conversation_id> --type SMS --message "Thanks for your interest!"

@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name="cli-anything",
-    version="1.1.0",
+    version="2.2.0",
     description="CLI interfaces for GoHighLevel, Nextcloud, and Blotato APIs",
     author="Lead Gen Jay",
     packages=find_namespace_packages(include=["cli_anything.*"]),

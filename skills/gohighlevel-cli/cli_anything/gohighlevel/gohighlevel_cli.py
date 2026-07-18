@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import json
 import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
 
 import click
 import requests
@@ -46,6 +49,26 @@ def _loc(ctx: click.Context) -> str:
     return ctx.obj.get("location_id") or api._get_location_id()
 
 
+def _merge_fields(body: dict, fields: tuple[str, ...]) -> dict:
+    """Merge repeatable --field key=value overrides into body.
+
+    Each value is parsed as JSON when possible (so `isActive=true` -> bool,
+    `slotDuration=30` -> int, `teamMembers=[{...}]` -> list) and falls back to
+    a plain string otherwise.
+    """
+    for item in fields:
+        if "=" not in item:
+            raise click.BadParameter(f"--field must be key=value, got: {item!r}")
+        key, _, raw = item.partition("=")
+        key = key.strip()
+        try:
+            value = json.loads(raw)
+        except (ValueError, json.JSONDecodeError):
+            value = raw
+        body[key] = value
+    return body
+
+
 # ---------------------------------------------------------------------------
 # Main CLI Group
 # ---------------------------------------------------------------------------
@@ -54,7 +77,7 @@ def _loc(ctx: click.Context) -> str:
 @click.option("--json", "use_json", is_flag=True, help="Output as JSON")
 @click.option("--location-id", envvar="GHL_LOCATION_ID", default=None, help="GHL Location/Sub-account ID")
 @click.option("--experimental", is_flag=True, help="Enable experimental commands (UNOFFICIAL internal GHL API — own-account-only, uses your full Firebase session token)")
-@click.version_option("2.0.0", prog_name="cli-anything-gohighlevel")
+@click.version_option("2.2.0", prog_name="cli-anything-gohighlevel")
 @click.pass_context
 def cli(ctx, use_json, location_id, experimental):
     """GoHighLevel CLI — manage contacts, workflows, calendars, and more."""
@@ -76,7 +99,7 @@ def repl(ctx):
     """Interactive REPL mode."""
     try:
         from cli_anything.gohighlevel.utils.repl_skin import ReplSkin
-        skin = ReplSkin("gohighlevel", version="1.0.0")
+        skin = ReplSkin("gohighlevel", version="2.2.0")
         skin.print_banner()
         pt_session = skin.create_prompt_session()
 
@@ -523,6 +546,150 @@ def calendars_groups(ctx):
         _handle_error(e)
 
 
+@calendars.command("create")
+@click.option("--name", default=None, help="Calendar name")
+@click.option("--calendar-type", default=None,
+              type=click.Choice([
+                  "round_robin", "event", "class_booking",
+                  "collective", "service_booking", "personal",
+              ]),
+              help="Calendar type (GHL defaults to round_robin if omitted)")
+@click.option("--description", default=None, help="Calendar description")
+@click.option("--group-id", default=None, help="Calendar group ID")
+@click.option("--slug", default=None, help="Booking widget slug")
+@click.option("--team-member", "team_members", multiple=True,
+              help="Team member user ID (repeatable)")
+@click.option("--slot-duration", default=None, type=int, help="Slot duration value")
+@click.option("--slot-duration-unit", default=None,
+              type=click.Choice(["mins", "hours"]), help="Slot duration unit")
+@click.option("--active/--inactive", "is_active", default=None,
+              help="Set the calendar active or inactive")
+@click.option("--from-json", "json_file", default=None, type=click.Path(exists=True),
+              help="Load the request body from a JSON file (base; options override it)")
+@click.option("--field", "fields", multiple=True,
+              help="Any other body field as key=value (JSON value if parseable, repeatable)")
+@click.pass_context
+def calendars_create(ctx, name, calendar_type, description, group_id, slug,
+                     team_members, slot_duration, slot_duration_unit,
+                     is_active, json_file, fields):
+    """Create a calendar.
+
+    Common fields are exposed as options; use --from-json for a full payload
+    and --field key=value for anything not covered (e.g. openHours,
+    availabilities, notifications).
+    """
+    try:
+        body: dict = {}
+        if json_file:
+            with open(json_file) as f:
+                body = json.load(f)
+        if name is not None:
+            body["name"] = name
+        if calendar_type is not None:
+            body["calendarType"] = calendar_type
+        if description is not None:
+            body["description"] = description
+        if group_id is not None:
+            body["groupId"] = group_id
+        if slug is not None:
+            body["slug"] = slug
+        if team_members:
+            body["teamMembers"] = [{"userId": uid, "priority": 1.0} for uid in team_members]
+        if slot_duration is not None:
+            body["slotDuration"] = slot_duration
+        if slot_duration_unit is not None:
+            body["slotDurationUnit"] = slot_duration_unit
+        if is_active is not None:
+            body["isActive"] = is_active
+        _merge_fields(body, fields)
+        body.setdefault("locationId", _loc(ctx))
+        if not body.get("name"):
+            raise click.UsageError("Calendar name is required (--name or via --from-json).")
+        data = api.post("/calendars/", data=body)
+        _output(ctx, data, "Calendar Created")
+    except Exception as e:
+        _handle_error(e)
+
+
+@calendars.command("update")
+@click.argument("calendar_id")
+@click.option("--name", default=None, help="Calendar name")
+@click.option("--description", default=None, help="Calendar description")
+@click.option("--group-id", default=None, help="Calendar group ID")
+@click.option("--slug", default=None, help="Booking widget slug")
+@click.option("--team-member", "team_members", multiple=True,
+              help="Team member user ID (replaces the team list, repeatable)")
+@click.option("--slot-duration", default=None, type=int, help="Slot duration value")
+@click.option("--slot-duration-unit", default=None,
+              type=click.Choice(["mins", "hours"]), help="Slot duration unit")
+@click.option("--active/--inactive", "is_active", default=None,
+              help="Set the calendar active or inactive")
+@click.option("--from-json", "json_file", default=None, type=click.Path(exists=True),
+              help="Load the request body from a JSON file (base; options override it)")
+@click.option("--field", "fields", multiple=True,
+              help="Any other body field as key=value (JSON value if parseable, repeatable)")
+@click.pass_context
+def calendars_update(ctx, calendar_id, name, description, group_id, slug,
+                     team_members, slot_duration, slot_duration_unit,
+                     is_active, json_file, fields):
+    """Update a calendar by ID (only the fields you pass are changed)."""
+    try:
+        body: dict = {}
+        if json_file:
+            with open(json_file) as f:
+                body = json.load(f)
+        if name is not None:
+            body["name"] = name
+        if description is not None:
+            body["description"] = description
+        if group_id is not None:
+            body["groupId"] = group_id
+        if slug is not None:
+            body["slug"] = slug
+        if team_members:
+            body["teamMembers"] = [{"userId": uid, "priority": 1.0} for uid in team_members]
+        if slot_duration is not None:
+            body["slotDuration"] = slot_duration
+        if slot_duration_unit is not None:
+            body["slotDurationUnit"] = slot_duration_unit
+        if is_active is not None:
+            body["isActive"] = is_active
+        _merge_fields(body, fields)
+        if not body:
+            raise click.UsageError("Nothing to update — pass at least one field.")
+        data = api.put(f"/calendars/{calendar_id}", data=body)
+        _output(ctx, data, "Calendar Updated")
+    except Exception as e:
+        _handle_error(e)
+
+
+@calendars.command("delete")
+@click.argument("calendar_id")
+@click.option("--yes", "-y", is_flag=True, help="Skip the confirmation prompt")
+@click.pass_context
+def calendars_delete(ctx, calendar_id, yes):
+    """Delete a calendar by ID.
+
+    WARNING: GHL does NOT audit-log calendar-object deletions, so a deleted
+    calendar cannot be recovered from the audit trail — recovery requires
+    escalating to GHL Support. Use with care.
+    """
+    try:
+        if not yes:
+            click.confirm(
+                f"Delete calendar {calendar_id}? GHL does not audit-log calendar "
+                "deletions — this is unrecoverable except via GHL Support. Continue?",
+                abort=True,
+            )
+        data = api.delete(f"/calendars/{calendar_id}")
+        _output(ctx, data, "Calendar Deleted")
+    except click.Abort:
+        click.echo("Aborted.", err=True)
+        sys.exit(1)
+    except Exception as e:
+        _handle_error(e)
+
+
 # ===========================================================================
 # WORKFLOWS
 # ===========================================================================
@@ -622,17 +789,19 @@ def workflows_create(ctx, name, folder, json_file):
 
 @workflows.command("create-step")
 @click.option("--type", "step_type", required=True,
-              type=click.Choice(["email", "sms", "wait", "tag", "webhook", "ai"]))
+              type=click.Choice(["email", "sms", "imessage", "wait", "tag", "webhook", "ai", "goal"]))
 @click.option("--name", required=True, help="Step name")
 @click.option("--output-file", "out_file", required=True, type=click.Path(),
               help="JSON file to append step to")
 @click.option("--subject", default=None, help="Email subject (email type)")
-@click.option("--body", default=None, help="Message body (email/sms type)")
+@click.option("--body", default=None, help="Message body (email/sms/imessage type)")
 @click.option("--from-name", default="", help="Sender name (email type)")
+@click.option("--addresses", default="{{contact.phone_raw}}",
+              help="iMessage recipient, phone WITH +1 country code (imessage type)")
 @click.option("--value", default=None, type=int, help="Wait value (wait type)")
 @click.option("--unit", default="days", type=click.Choice(["minutes", "hours", "days"]),
               help="Wait unit (wait type)")
-@click.option("--tags", default=None, help="Comma-separated tags (tag type)")
+@click.option("--tags", default=None, help="Comma-separated tags (tag type; or exit tags for goal type)")
 @click.option("--remove-tags", is_flag=True, help="Remove tags instead of add (tag type)")
 @click.option("--url", default=None, help="Webhook URL (webhook type)")
 @click.option("--method", default="POST", help="HTTP method (webhook type)")
@@ -640,7 +809,8 @@ def workflows_create(ctx, name, folder, json_file):
 @click.option("--model", default="gpt-4o", help="AI model (ai type)")
 @click.pass_context
 def workflows_create_step(ctx, step_type, name, out_file, subject, body, from_name,
-                          value, unit, tags, remove_tags, url, method, prompt, model):
+                          value, unit, tags, remove_tags, url, method, prompt, model,
+                          addresses):
     """Build a workflow step and append to a JSON file (experimental).
 
     Use repeatedly to build up a workflow step-by-step, then pass the
@@ -660,6 +830,11 @@ def workflows_create_step(ctx, step_type, name, out_file, subject, body, from_na
                 click.echo("Error: --body required for sms step", err=True)
                 sys.exit(1)
             step = wb.sms_step(name, body)
+        elif step_type == "imessage":
+            if not body:
+                click.echo("Error: --body required for imessage step", err=True)
+                sys.exit(1)
+            step = wb.imessage_step(name, body, addresses)
         elif step_type == "wait":
             if value is None:
                 click.echo("Error: --value required for wait step", err=True)
@@ -680,6 +855,12 @@ def workflows_create_step(ctx, step_type, name, out_file, subject, body, from_na
                 click.echo("Error: --prompt required for ai step", err=True)
                 sys.exit(1)
             step = wb.ai_step(name, prompt, model)
+        elif step_type == "goal":
+            # Terminal exit step: leave the workflow when any of --tags is added.
+            if not tags:
+                click.echo("Error: --tags required for goal step (comma-separated exit tags)", err=True)
+                sys.exit(1)
+            step = wb.goal_step(name, [t.strip() for t in tags.split(",")])
         else:
             click.echo(f"Error: Unknown step type: {step_type}", err=True)
             sys.exit(1)
@@ -1112,6 +1293,581 @@ def forms_submissions(ctx, form_id, limit, page):
         _handle_error(e)
 
 
+@forms.command("create")
+@click.option("--from-json", "json_file", required=True, type=click.Path(exists=True),
+              help="Form spec JSON (see utils/form_survey_builder.py for the shape)")
+@click.pass_context
+def forms_create(ctx, json_file):
+    """Create a form with full content — sections, columns, fields (experimental).
+
+    The spec JSON needs a "name" and a "fields" list. Each field is a compact
+    dict: {"type": "text", "tag": "first_name", "label": "First Name", "width": 50}.
+    Use {"kind": "header", "text": "..."} for section dividers and
+    {"kind": "html", "html": "..."} for content blocks. "width" (25/33/50/100)
+    controls columns. Built and verified end-to-end via the internal API.
+    """
+    _require_experimental(ctx)
+    try:
+        from cli_anything.gohighlevel.utils import form_survey_builder as fsb
+
+        with open(json_file) as f:
+            spec = json.load(f)
+        payload = fsb.build_form_payload(spec)
+        client = _get_internal_client(ctx)
+        form = client.create_form(payload["name"], payload["formData"])
+        if not form or (isinstance(form, dict) and form.get("_error")):
+            click.echo(f"Error creating form: {form}", err=True)
+            sys.exit(1)
+        summary = fsb.count_summary(payload, is_survey=False)
+        if ctx.obj["json"]:
+            click.echo(json.dumps(form, indent=2, default=str))
+        else:
+            click.echo(f"Created form '{payload['name']}' ({form.get('_id')}) — {summary}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@forms.command("delete")
+@click.argument("form_id")
+@click.option("--yes", "-y", is_flag=True, help="Skip the confirmation prompt")
+@click.pass_context
+def forms_delete(ctx, form_id, yes):
+    """Delete a form (experimental, internal API)."""
+    _require_experimental(ctx)
+    try:
+        if not yes:
+            click.confirm(
+                f"Delete form {form_id}? This permanently removes the native GHL form. Continue?",
+                abort=True,
+            )
+        client = _get_internal_client(ctx)
+        ok = client.delete_form(form_id)
+        click.echo("Deleted." if ok else "Delete failed.", err=not ok)
+        if not ok:
+            sys.exit(1)
+    except click.Abort:
+        click.echo("Aborted.", err=True)
+        sys.exit(1)
+    except Exception as e:
+        _handle_error(e)
+
+
+# ===========================================================================
+# SURVEYS (experimental — internal API)
+# ===========================================================================
+
+@cli.group()
+@click.pass_context
+def surveys(ctx):
+    """Surveys — list, create, delete. Create/delete require --experimental."""
+    pass
+
+
+@surveys.command("list")
+@click.option("--limit", default=20)
+@click.pass_context
+def surveys_list(ctx, limit):
+    """List surveys (experimental, internal API)."""
+    _require_experimental(ctx)
+    try:
+        client = _get_internal_client(ctx)
+        data = client.request("GET", f"/surveys/?locationId={_loc(ctx)}&limit={limit}",
+                              extra_headers={"Version": "2021-07-28"})
+        _output(ctx, data, "Surveys")
+    except Exception as e:
+        _handle_error(e)
+
+
+@surveys.command("create")
+@click.option("--from-json", "json_file", required=True, type=click.Path(exists=True),
+              help="Survey spec JSON (see utils/form_survey_builder.py for the shape)")
+@click.pass_context
+def surveys_create(ctx, json_file):
+    """Create a multi-slide survey with fields and styled buttons (experimental).
+
+    The spec JSON needs a "name" and a "slides" list; each slide has a "name",
+    optional "button" (label string), and a "fields" list using the same compact
+    field shape as forms. Two-step under the hood (create shell, then push the
+    FULL formData envelope) because the survey service silently drops incomplete
+    payloads.
+    """
+    _require_experimental(ctx)
+    try:
+        from cli_anything.gohighlevel.utils import form_survey_builder as fsb
+
+        with open(json_file) as f:
+            spec = json.load(f)
+        payload = fsb.build_survey_payload(spec)
+        client = _get_internal_client(ctx)
+
+        shell = client.create_survey(payload["name"])
+        if not shell or (isinstance(shell, dict) and shell.get("_error")):
+            click.echo(f"Error creating survey shell: {shell}", err=True)
+            sys.exit(1)
+        survey_id = shell.get("_id")
+        client.update_survey(survey_id, payload["name"], payload["formData"])
+        time.sleep(0.5)  # let the write settle before verifying
+
+        # Verify content actually persisted (survey service can silently no-op)
+        check = client.get_survey(survey_id)
+        slides = (check or {}).get("formData", {}).get("slides", []) if isinstance(check, dict) else []
+        if not slides:
+            click.echo(
+                f"Warning: survey {survey_id} was created but its content did not persist. "
+                "The payload likely miss a required field key.", err=True)
+            sys.exit(1)
+        summary = fsb.count_summary(payload, is_survey=True)
+        if ctx.obj["json"]:
+            click.echo(json.dumps(check, indent=2, default=str))
+        else:
+            click.echo(f"Created survey '{payload['name']}' ({survey_id}) — {summary}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@surveys.command("delete")
+@click.argument("survey_id")
+@click.option("--yes", "-y", is_flag=True, help="Skip the confirmation prompt")
+@click.pass_context
+def surveys_delete(ctx, survey_id, yes):
+    """Delete a survey (experimental, internal API)."""
+    _require_experimental(ctx)
+    try:
+        if not yes:
+            click.confirm(
+                f"Delete survey {survey_id}? This permanently removes the native GHL survey. Continue?",
+                abort=True,
+            )
+        client = _get_internal_client(ctx)
+        ok = client.delete_survey(survey_id)
+        click.echo("Deleted." if ok else "Delete failed.", err=not ok)
+        if not ok:
+            sys.exit(1)
+    except click.Abort:
+        click.echo("Aborted.", err=True)
+        sys.exit(1)
+    except Exception as e:
+        _handle_error(e)
+
+
+# ===========================================================================
+# FUNNELS (experimental — internal builder API)
+# ===========================================================================
+
+@cli.group()
+@click.pass_context
+def funnels(ctx):
+    """Funnels and builder-v2 landing pages (experimental internal API)."""
+    pass
+
+
+@funnels.command("templates")
+@click.pass_context
+def funnels_templates(ctx):
+    """List the built-in, design-system landing-page templates."""
+    from cli_anything.gohighlevel.utils import landing_page_design as design
+    rows = [{"template": key, "description": value}
+            for key, value in design.TEMPLATE_INFO.items()]
+    if ctx.obj["json"]:
+        click.echo(json.dumps({"templates": rows, "themes": design.THEMES}, indent=2))
+    else:
+        _output(ctx, rows, "Landing-page templates")
+        click.echo("\nThemes: " + ", ".join(design.THEMES))
+
+
+@funnels.command("init-template")
+@click.argument("template", type=click.Choice([
+    "vsl", "vsl-application", "sales-letter", "roadmap", "application",
+    "membership", "pricing", "optin", "calendar", "intake",
+]))
+@click.option("--theme", default="otter",
+              type=click.Choice(["otter", "editorial", "modern", "warm"]), show_default=True)
+@click.option("--output", required=True, type=click.Path(dir_okay=False))
+def funnels_init_template(template, theme, output):
+    """Create an editable compact JSON spec from a polished template."""
+    from pathlib import Path
+    from cli_anything.gohighlevel.utils import landing_page_design as design
+    path = Path(output)
+    if path.exists():
+        raise click.ClickException(f"refusing to overwrite existing file: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(design.template_spec(template, theme), indent=2) + "\n",
+                    encoding="utf-8")
+    click.echo(f"Created {template} template ({theme}) at {path}")
+
+
+@funnels.command("lint")
+@click.argument("json_file", type=click.Path(exists=True, dir_okay=False))
+@click.option("--strict", is_flag=True, help="Fail on warnings and informational findings too")
+@click.pass_context
+def funnels_lint(ctx, json_file, strict):
+    """Score a compact page spec and flag design/conversion problems."""
+    from cli_anything.gohighlevel.utils import landing_page_design as design
+    with open(json_file) as f:
+        report = design.lint_spec(json.load(f), strict=strict)
+    if ctx.obj["json"]:
+        click.echo(json.dumps(report, indent=2))
+    else:
+        click.echo(f"Design score: {report['score']}/100")
+        click.echo(" · ".join(f"{k}: {v}" for k, v in report["summary"].items()))
+        for issue in report["issues"]:
+            click.echo(f"[{issue['severity'].upper()}] {issue['code']} {issue['path']}: {issue['message']}")
+    if not report["passed"]:
+        raise click.exceptions.Exit(1)
+
+
+@funnels.command("preview")
+@click.argument("json_file", type=click.Path(exists=True, dir_okay=False))
+@click.option("--output", required=True, type=click.Path(dir_okay=False))
+def funnels_preview(json_file, output):
+    """Render a local responsive HTML preview before touching GHL."""
+    from cli_anything.gohighlevel.utils import landing_page_design as design
+    with open(json_file) as f:
+        path = design.render_preview(json.load(f), output)
+    click.echo(f"Rendered preview to {path}")
+
+
+@funnels.command("list")
+@click.option("--limit", default=50)
+@click.option("--type", "funnel_type", default="funnel",
+              type=click.Choice(["funnel", "website"]))
+@click.pass_context
+def funnels_list(ctx, limit, funnel_type):
+    """List funnels or websites (experimental, internal API)."""
+    _require_experimental(ctx)
+    try:
+        client = _get_internal_client(ctx)
+        path = (f"/funnels/funnel/list?locationId={_loc(ctx)}"
+                f"&limit={limit}&offset=0&type={funnel_type}")
+        data = client.request("GET", path, extra_headers={"Version": "2021-07-28"})
+        _output(ctx, data, f"Funnels ({funnel_type})")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("create")
+@click.option("--name", required=True, help="Funnel name")
+@click.option("--type", "funnel_type", default="funnel",
+              type=click.Choice(["funnel", "website"]))
+@click.pass_context
+def funnels_create(ctx, name, funnel_type):
+    """Create an empty funnel shell (experimental)."""
+    _require_experimental(ctx)
+    try:
+        client = _get_internal_client(ctx)
+        r = client.create_funnel(name, funnel_type)
+        if not r or (isinstance(r, dict) and r.get("_error")):
+            click.echo(f"Error creating funnel: {r}", err=True)
+            sys.exit(1)
+        if ctx.obj["json"]:
+            click.echo(json.dumps(r, indent=2, default=str))
+        else:
+            click.echo(f"Created funnel shell '{name}' ({r.get('id')}).")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("pages")
+@click.argument("funnel_id")
+@click.option("--limit", default=20, type=click.IntRange(1, 20), show_default=True)
+@click.pass_context
+def funnels_pages(ctx, funnel_id, limit):
+    """List a funnel's page records."""
+    _require_experimental(ctx)
+    try:
+        _output(ctx, _get_internal_client(ctx).list_funnel_pages(funnel_id, limit), "Pages")
+    except Exception as e:
+        _handle_error(e)
+
+
+def _page_data_from_spec(spec, page_id, funnel_id, location_id):
+    """Accept raw pageData or expand the compact page-builder spec."""
+    import copy
+    candidate = spec.get("pageData", spec)
+    sections = candidate.get("sections") if isinstance(candidate, dict) else None
+    is_raw = bool(sections and isinstance(sections[0], dict)
+                  and "metaData" in sections[0] and "elements" in sections[0])
+    if is_raw:
+        data = copy.deepcopy(candidate)
+        for section in data["sections"]:
+            section["pageId"] = page_id
+            section["funnelId"] = funnel_id
+            section["locationId"] = location_id
+        return data
+    if "sections" not in spec:
+        raise ValueError("page spec needs 'sections' or 'pageData'")
+    from cli_anything.gohighlevel.utils import funnel_page_builder as fpb
+    return fpb.build_page_data(spec, page_id=page_id, funnel_id=funnel_id,
+                               location_id=location_id)
+
+
+def _download_page_data(client, page_id, page_type="draft"):
+    page = client.get_funnel_page(page_id)
+    versions = [v for v in (page or {}).get("versionHistory", [])
+                if v.get("pageType") == page_type]
+    if not versions:
+        raise ValueError(f"page has no {page_type!r} version")
+    response = requests.get(versions[0]["pageDownloadUrl"], timeout=30)
+    response.raise_for_status()
+    return response.json()
+
+
+def _write_page_backup(page_id, page_data, output=None):
+    """Persist a recoverable draft snapshot before replacing builder content."""
+    if output:
+        path = Path(output)
+    else:
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        path = Path.cwd() / ".ghl-backups" / f"{page_id}-{stamp}-draft.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(page_data, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+@funnels.command("export-page")
+@click.argument("page_id")
+@click.option("--output", required=True, type=click.Path(dir_okay=False))
+@click.option("--version", "page_type", default="draft",
+              type=click.Choice(["draft", "live"]))
+@click.pass_context
+def funnels_export_page(ctx, page_id, output, page_type):
+    """Download a page's complete builder-v2 JSON for backup or reuse."""
+    _require_experimental(ctx)
+    try:
+        data = _download_page_data(_get_internal_client(ctx), page_id, page_type)
+        with open(output, "w") as f:
+            json.dump(data, f, indent=2)
+            f.write("\n")
+        click.echo(f"Exported {page_type} page data to {output}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("elements")
+@click.argument("page_id")
+@click.option("--version", "page_type", default="draft",
+              type=click.Choice(["draft", "live"]))
+@click.pass_context
+def funnels_elements(ctx, page_id, page_type):
+    """List every native element id and type stored on a page."""
+    _require_experimental(ctx)
+    try:
+        data = _download_page_data(_get_internal_client(ctx), page_id, page_type)
+        result = []
+        for section in data.get("sections", []):
+            for node in section.get("elements", []):
+                if node.get("type") == "element":
+                    result.append({"id": node.get("id"), "type": node.get("meta"),
+                                   "title": node.get("title"), "container": section.get("id")})
+        for node in data.get("popups", []):
+            if node.get("type") == "element":
+                result.append({"id": node.get("id"), "type": node.get("meta"),
+                               "title": node.get("title"), "container": "popup"})
+        if ctx.obj["json"]:
+            click.echo(json.dumps(result, indent=2, default=str))
+        else:
+            _output(ctx, result, "Elements")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("export-element")
+@click.argument("page_id")
+@click.argument("element_id")
+@click.option("--output", required=True, type=click.Path(dir_okay=False))
+@click.option("--version", "page_type", default="draft",
+              type=click.Choice(["draft", "live"]))
+@click.pass_context
+def funnels_export_element(ctx, page_id, element_id, output, page_type):
+    """Export one native node for reuse as a compact-spec native element."""
+    _require_experimental(ctx)
+    try:
+        data = _download_page_data(_get_internal_client(ctx), page_id, page_type)
+        nodes = [node for section in data.get("sections", []) for node in section.get("elements", [])]
+        nodes.extend(data.get("popups", []))
+        node = next((n for n in nodes if n.get("id") == element_id), None)
+        if not node:
+            raise ValueError(f"element not found: {element_id}")
+        with open(output, "w") as f:
+            json.dump({"type": "native", "node": node}, f, indent=2)
+            f.write("\n")
+        click.echo(f"Exported {node.get('meta')} element to {output}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("export-global-sections")
+@click.argument("funnel_id")
+@click.option("--output", required=True, type=click.Path(dir_okay=False))
+@click.pass_context
+def funnels_export_global_sections(ctx, funnel_id, output):
+    """Download a funnel's shared header/footer section artifact."""
+    _require_experimental(ctx)
+    try:
+        funnel = _get_internal_client(ctx).get_funnel(funnel_id)
+        url = (funnel or {}).get("globalSectionsDownloadUrl") or (funnel or {}).get("globalSectionsUrl")
+        if not url:
+            raise ValueError("funnel has no global-sections artifact")
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        with open(output, "w") as f:
+            json.dump(response.json(), f, indent=2)
+            f.write("\n")
+        click.echo(f"Exported global sections to {output}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("set-global-sections")
+@click.argument("funnel_id")
+@click.option("--from-json", "json_file", required=True, type=click.Path(exists=True))
+@click.option("--yes", is_flag=True, help="Confirm replacing shared sections for every page in this funnel")
+@click.pass_context
+def funnels_set_global_sections(ctx, funnel_id, json_file, yes):
+    """Replace a funnel's shared sections from an exported JSON artifact."""
+    _require_experimental(ctx)
+    if not yes:
+        raise click.ClickException("set-global-sections affects every page; rerun with --yes")
+    try:
+        with open(json_file) as f:
+            sections = json.load(f)
+        if not isinstance(sections, list):
+            raise ValueError("global-sections JSON must be a list")
+        client = _get_internal_client(ctx)
+        funnel = client.get_funnel(funnel_id) or {}
+        version = int(funnel.get("globalSectionVersion") or 0) + 1
+        result = client.save_global_sections(funnel_id, sections, version)
+        if not result or (isinstance(result, dict) and result.get("_error")):
+            raise RuntimeError(f"global-section save failed: {result}")
+        _output(ctx, result, "Global sections")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("create-page")
+@click.argument("funnel_id")
+@click.option("--from-json", "json_file", required=True, type=click.Path(exists=True))
+@click.option("--publish", is_flag=True, help="Create a live version as well as a draft")
+@click.pass_context
+def funnels_create_page(ctx, funnel_id, json_file, publish):
+    """Create a step/page and populate it from compact or raw builder JSON."""
+    _require_experimental(ctx)
+    try:
+        import uuid
+        from cli_anything.gohighlevel.utils import funnel_page_builder as fpb
+        with open(json_file) as f:
+            spec = json.load(f)
+        name = spec.get("name", "Landing Page")
+        path = spec.get("path", "/landing-page")
+        if not path.startswith("/"):
+            path = "/" + path
+        step = {"id": str(uuid.uuid4()), "name": name, "url": path, "pages": [],
+                "type": spec.get("pageType", "optin_funnel_page"), "split": False,
+                "control_traffic": 100, "sequence": int(spec.get("sequence", 1))}
+        client = _get_internal_client(ctx)
+        created = client.create_funnel_step_page(funnel_id, step)
+        page = (created or {}).get("page") or ((created or {}).get("data") or {}).get("page")
+        page_id = (page or {}).get("_id")
+        if not page_id:
+            raise RuntimeError(f"page creation did not return an id: {created}")
+        # GHL returns the new page id before its page record is consistently
+        # readable.  Saving immediately can otherwise fail with a misleading
+        # "Page does not exist or is deleted" response.
+        for _ in range(10):
+            page_record = client.get_funnel_page(page_id)
+            if page_record and not page_record.get("_error"):
+                break
+            time.sleep(0.5)
+        else:
+            raise RuntimeError(f"new page did not become available: {page_id}")
+        page_data = _page_data_from_spec(spec, page_id, funnel_id, _loc(ctx))
+        saved = client.save_funnel_page(page_id, funnel_id, page_data, page_version=2,
+                                        publish=False, meta=spec.get("seo"))
+        if not saved or saved.get("_error"):
+            raise RuntimeError(f"draft page save failed: {saved}")
+        if publish:
+            live_saved = client.save_funnel_page(
+                page_id, funnel_id, page_data, page_version=2,
+                publish=True, meta=spec.get("seo"),
+            )
+            if not live_saved or live_saved.get("_error"):
+                raise RuntimeError(f"live page save failed: {live_saved}")
+        result = {"funnelId": funnel_id, "stepId": step["id"], "pageId": page_id,
+                  "name": name, "published": publish, "save": saved}
+        if ctx.obj["json"]:
+            click.echo(json.dumps(result, indent=2, default=str))
+        else:
+            click.echo(f"Created {'live' if publish else 'draft'} page '{name}' ({page_id}) — "
+                       f"{fpb.count_summary(page_data)}")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("set-content")
+@click.argument("page_id")
+@click.option("--from-json", "json_file", required=True, type=click.Path(exists=True))
+@click.option("--backup-output", type=click.Path(dir_okay=False),
+              help="Draft backup path (default: .ghl-backups/<page>-<UTC>-draft.json)")
+@click.option("--publish", is_flag=True, help="Save as the live version")
+@click.pass_context
+def funnels_set_content(ctx, page_id, json_file, backup_output, publish):
+    """Back up the draft, then replace full builder content."""
+    _require_experimental(ctx)
+    try:
+        from cli_anything.gohighlevel.utils import funnel_page_builder as fpb
+        with open(json_file) as f:
+            spec = json.load(f)
+        client = _get_internal_client(ctx)
+        page = client.get_funnel_page(page_id)
+        if not page or page.get("_error"):
+            raise ValueError(f"page not found: {page_id}")
+        funnel_id = page["funnelId"]
+        backup_path = _write_page_backup(
+            page_id, _download_page_data(client, page_id, "draft"), backup_output,
+        )
+        click.echo(f"Backed up current draft to {backup_path}", err=bool(ctx.obj["json"]))
+        page_data = _page_data_from_spec(spec, page_id, funnel_id, _loc(ctx))
+        result = client.save_funnel_page(
+            page_id, funnel_id, page_data,
+            page_version=int(page.get("pageVersion") or 1) + 1,
+            publish=publish, meta=spec.get("seo"),
+        )
+        if not result or result.get("_error"):
+            raise RuntimeError(f"page save failed: {result}")
+        if ctx.obj["json"]:
+            click.echo(json.dumps(result, indent=2, default=str))
+        else:
+            click.echo(f"Saved {'live' if publish else 'draft'} page {page_id} — "
+                       f"{fpb.count_summary(page_data)}. Visual verification on the real GHL preview is still required.")
+    except Exception as e:
+        _handle_error(e)
+
+
+@funnels.command("delete")
+@click.argument("funnel_id")
+@click.option("--yes", "-y", is_flag=True, help="Skip the confirmation prompt")
+@click.pass_context
+def funnels_delete(ctx, funnel_id, yes):
+    """Delete a funnel (experimental, internal API)."""
+    _require_experimental(ctx)
+    try:
+        if not yes:
+            click.confirm(
+                f"Delete funnel {funnel_id}? This permanently removes the funnel and its pages. Continue?",
+                abort=True,
+            )
+        client = _get_internal_client(ctx)
+        ok = client.delete_funnel(funnel_id)
+        click.echo("Deleted." if ok else "Delete failed.", err=not ok)
+        if not ok:
+            sys.exit(1)
+    except click.Abort:
+        click.echo("Aborted.", err=True)
+        sys.exit(1)
+    except Exception as e:
+        _handle_error(e)
+
+
 # ===========================================================================
 # SOCIAL MEDIA
 # ===========================================================================
@@ -1244,6 +2000,43 @@ def locations_custom_values(ctx):
     try:
         data = api.get(f"/locations/{_loc(ctx)}/customValues")
         _output(ctx, data, "Custom Values")
+    except Exception as e:
+        _handle_error(e)
+
+
+@locations.command("set-custom-value")
+@click.option("--name", required=True, help="Custom value name (created if it doesn't exist)")
+@click.option("--value", required=True, help="Value to set")
+@click.pass_context
+def locations_set_custom_value(ctx, name, value):
+    """Create or update a location custom value by name.
+
+    Looks up the custom value by (case-insensitive) name: PUTs the new value if
+    it exists, else POSTs to create it. Returns the id + `fieldKey` merge tag
+    (e.g. {{ custom_values.blast_message }}). Used by the /sms-blast skill to set
+    the dynamic blast message before firing.
+    """
+    try:
+        loc = _loc(ctx)
+        data = api.get(f"/locations/{loc}/customValues")
+        existing = next(
+            (cv for cv in (data.get("customValues") or [])
+             if (cv.get("name") or "").strip().lower() == name.strip().lower()),
+            None,
+        )
+        if existing:
+            res = api.put(f"/locations/{loc}/customValues/{existing['id']}",
+                          {"name": name, "value": value})
+            action = "updated"
+        else:
+            res = api.post(f"/locations/{loc}/customValues",
+                           {"name": name, "value": value})
+            action = "created"
+        cv = (res.get("customValue") if isinstance(res, dict) else None) or res
+        summary = {"action": action}
+        if isinstance(cv, dict):
+            summary.update({k: cv.get(k) for k in ("id", "name", "fieldKey", "value")})
+        _output(ctx, summary, f"Custom Value {action}")
     except Exception as e:
         _handle_error(e)
 
