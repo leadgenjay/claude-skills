@@ -103,6 +103,40 @@ def _classes(spec: dict[str, Any], *names: str) -> None:
     spec["customClass"] = list(dict.fromkeys([*current, *names]))
 
 
+def _is_logo(spec: dict[str, Any]) -> bool:
+    if str(spec.get("role", "")).lower() == "logo":
+        return True
+    classes = spec.get("customClass", [])
+    class_text = " ".join(classes) if isinstance(classes, list) else str(classes)
+    identity = " ".join(str(spec.get(key, "")) for key in ("url", "alt", "title"))
+    return "logo" in f"{class_text} {identity}".lower()
+
+
+def _is_media_block(spec: dict[str, Any]) -> bool:
+    if spec.get("type") == "video":
+        return True
+    if spec.get("type") != "customCode":
+        return False
+    classes = spec.get("customClass", [])
+    class_text = " ".join(classes) if isinstance(classes, list) else str(classes)
+    payload = f"{spec.get('role', '')} {class_text} {spec.get('html', '')}".lower()
+    return "video" in payload
+
+
+def _number(value: Any) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    text = str(value or "0").strip().lower()
+    for suffix in ("px", "rem", "em"):
+        if text.endswith(suffix):
+            text = text[:-len(suffix)]
+            break
+    try:
+        return float(text)
+    except ValueError:
+        return 0.0
+
+
 def _design_css(t: dict[str, Any]) -> str:
     return f"""
 html{{scroll-behavior:smooth}}body{{margin:0;background:{t['surface']};color:{t['body']};-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}}
@@ -114,6 +148,8 @@ html{{scroll-behavior:smooth}}body{{margin:0;background:{t['surface']};color:{t[
 .hl_page-preview--content .lp-single-column>.inner>.column>.inner{{align-items:center;text-align:center}}
 .hl_page-preview--content .lp-single-column ul{{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;text-align:left}}
 .hl_page-preview--content .lp-single-column form,.hl_page-preview--content .lp-single-column iframe{{margin-left:auto;margin-right:auto}}
+.hl_page-preview--content .lp-logo,.hl_page-preview--content .lp-centered-image{{display:block!important;margin-left:auto!important;margin-right:auto!important;text-align:center!important}}
+.hl_page-preview--content .lp-logo img,.hl_page-preview--content .lp-centered-image img{{display:block!important;margin-left:auto!important;margin-right:auto!important}}
 .hl_page-preview--content .lp-eyebrow{{text-transform:uppercase;letter-spacing:.14em}}
 .hl_page-preview--content .lp-grid{{display:flex;gap:24px;align-items:stretch}}.hl_page-preview--content .lp-grid>.inner{{display:flex;gap:24px;align-items:stretch;width:100%}}.hl_page-preview--content .lp-grid>.inner>*,.hl_page-preview--content .lp-grid>.column{{flex:1 1 0;width:auto!important;min-width:0}}
 .hl_page-preview--content .lp-card{{border:1px solid {t['line']};border-radius:20px;box-shadow:0 12px 35px rgba(0,45,98,.07);overflow:hidden}}
@@ -124,6 +160,10 @@ html{{scroll-behavior:smooth}}body{{margin:0;background:{t['surface']};color:{t[
 .hl_page-preview--content .lp-button:focus-visible{{outline:3px solid {t['ink']};outline-offset:3px}}
 .hl_page-preview--content .lp-media-frame{{border-radius:22px;overflow:hidden;box-shadow:0 24px 65px rgba(0,45,98,.16)}}
 .hl_page-preview--content .lp-form-card,.hl_page-preview--content .lp-calendar-card{{background:{t['surface']};border:1px solid {t['line']};border-radius:22px;padding:12px;box-shadow:0 22px 60px rgba(0,45,98,.12)}}
+.hl_page-preview--content .lp-form-card .ghl-footer{{height:76px!important;min-height:76px!important;background:{t['surface']}!important;border-top:1px solid {t['line']}!important;box-shadow:none!important}}
+.hl_page-preview--content .lp-form-card .ghl-footer-buttons{{height:76px!important;min-height:76px!important;padding:12px 16px!important;align-items:center!important;justify-content:center!important}}
+.hl_page-preview--content .lp-form-card .ghl-btn-placeholder{{display:none!important}}
+.hl_page-preview--content .lp-form-card .ghl-footer-back,.hl_page-preview--content .lp-form-card .ghl-footer-next{{height:52px!important;min-height:52px!important;margin:0!important;align-self:center!important}}
 .hl_page-preview--content .lp-proof{{filter:grayscale(1);opacity:.72}}
 .hl_page-preview--content .lp-icon{{width:48px;height:48px;border-radius:14px;background:{t['soft']};display:grid;place-items:center;color:{t['primary']};margin-bottom:18px}}
 .hl_page-preview--content .lp-icon svg{{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}}
@@ -223,6 +263,7 @@ def apply_design_system(source: dict[str, Any]) -> dict[str, Any]:
                         el.setdefault("lineHeight", 1.6)
                         el.setdefault("color", t["body"])
                         el.setdefault("iconColor", t["primary"])
+                        el.setdefault("marginBottom", 20)
                     elif kind == "button":
                         if "backgroundColor" in el and "background" not in el:
                             el["background"] = el["backgroundColor"]
@@ -240,8 +281,19 @@ def apply_design_system(source: dict[str, Any]) -> dict[str, Any]:
                         _classes(el, "lp-button")
                     elif kind == "image":
                         el.setdefault("alt", "")
+                        if _is_logo(el):
+                            el["role"] = "logo"
+                            el["align"] = "center"
+                            el.setdefault("marginBottom", 24)
+                            _classes(el, "lp-logo")
+                        elif el.get("align") == "center":
+                            el.setdefault("marginBottom", 20)
+                            _classes(el, "lp-centered-image")
                     elif kind == "video":
+                        el.setdefault("marginBottom", 24)
                         _classes(el, "lp-media-frame")
+                    elif kind == "customCode" and _is_media_block(el):
+                        el.setdefault("marginBottom", 24)
                     elif kind == "form":
                         _classes(el, "lp-form-card")
                     elif kind == "calendar":
@@ -254,7 +306,7 @@ def _text(kind: str, text: str, **kw: Any) -> dict[str, Any]:
 
 
 def _button(text: str, **kw: Any) -> dict[str, Any]:
-    button = {"type": "button", "text": text, "action": "visit-website", "url": "#primary-action"}
+    button = {"type": "button", "text": text, "action": "url", "url": "#primary-action"}
     button.update(kw)
     if button.get("scrollToElement"):
         button.update({"action": "scroll-to-element", "url": ""})
@@ -469,7 +521,7 @@ def _optin_template() -> dict[str, Any]:
 
 def _calendar_template() -> dict[str, Any]:
     return {"name": "Calendar Booking", "path": "/book", "sections": [
-        {"name": "Booking Hero", "align": "center", "maxWidth": 850, "rows": [{"columns": [{"elements": [_text("paragraph", "FREE 30-MINUTE PR STRATEGY SESSION", role="eyebrow", align="center"), _text("heading", "Leave With a Clearer Path to Credible Media Coverage", align="center"), _text("paragraph", "Choose a time below. We will review your goals, identify your strongest story, and outline the right next step.", align="center", fontSize=20), _button("Choose My Time", scrollToElement="booking-calendar")]}]}]},
+        {"name": "Booking Hero", "align": "center", "maxWidth": 850, "rows": [{"columns": [{"elements": [_text("paragraph", "FREE 30-MINUTE PR STRATEGY SESSION", role="eyebrow", align="center"), _text("heading", "Leave With a Clearer Path to Credible Media Coverage", align="center"), _text("paragraph", "Choose a time below. We will review your goals, identify your strongest story, and outline the right next step.", align="center", fontSize=20)]}]}]},
         {"id": "booking-calendar", "name": "Calendar", "compact": True, "paddingTop": 24, "maxWidth": 980, "rows": [{"columns": [{"customClass": ["lp-calendar-card"], "paddingTop": 20, "paddingBottom": 20, "paddingLeft": 20, "paddingRight": 20, "elements": [{"type": "calendar", "calendarId": "REPLACE_WITH_GHL_CALENDAR_ID", "name": "Strategy calendar"}]}]}]},
         {"name": "Expectations", "background": "#F3F7FA", "rows": [{"columns": [
             {"width": 33.33, "elements": [_icon("calendar"), _text("subHeading", "Pick a Time", fontSize=24), _text("paragraph", "Choose the slot that works best for your schedule.", fontSize=16)]},
@@ -514,6 +566,15 @@ def lint_spec(source: dict[str, Any], *, strict: bool = False) -> dict[str, Any]
     embeds = 0
     trust = 0
     action_targets: set[str] = set()
+    calendar_section_ids = {
+        str(section.get("id"))
+        for section in sections
+        if section.get("id") and any(
+            el.get("type") == "calendar"
+            for row in section.get("rows", []) for col in row.get("columns", [])
+            for el in col.get("elements", [])
+        )
+    }
     for si, section in enumerate(sections):
         sp = f"sections[{si}]"
         section_elements = [el for row in section.get("rows", []) for col in row.get("columns", [])
@@ -530,7 +591,8 @@ def lint_spec(source: dict[str, Any], *, strict: bool = False) -> dict[str, Any]
                 add("error", "grid.width", f"{sp}.rows[{ri}]", "Column widths should total 100%.")
             for ci, col in enumerate(cols):
                 surface = col.get("background") or section.get("background") or "#FFFFFF"
-                for ei, el in enumerate(col.get("elements", [])):
+                elements = col.get("elements", [])
+                for ei, el in enumerate(elements):
                     path = f"{sp}.rows[{ri}].columns[{ci}].elements[{ei}]"
                     kind = el.get("type", "paragraph")
                     if kind == "heading":
@@ -563,11 +625,18 @@ def lint_spec(source: dict[str, Any], *, strict: bool = False) -> dict[str, Any]
                             add("error", "cta.target-size", path, "Primary controls must be at least 48px tall.")
                         if el.get("text", "").strip().lower() in {"submit", "click here", "learn more"}:
                             add("warning", "cta.generic", path, "Use an action-and-benefit CTA instead of generic button copy.")
+                        if (el.get("action") == "scroll-to-element"
+                                and str(el.get("scrollToElement", "")) in calendar_section_ids):
+                            add("error", "cta.calendar-redundant", path,
+                                "Remove the jump button when the embedded calendar is the primary action; place the calendar directly after the booking copy.")
                     elif kind == "image":
                         visuals += 1
                         images += 1
                         if not el.get("alt"):
                             add("warning", "media.alt", path, "Meaningful images need concise alt text; decorative images should use alt=''.")
+                        if _is_logo(el) and el.get("align") != "center":
+                            add("error", "media.logo-center", path,
+                                "Brand logos must be explicitly centered; use role='logo' or a logo-identifying alt/URL together with align='center'.")
                     elif kind in {"video", "logoShowcase"}:
                         visuals += 1
                         trust += kind == "logoShowcase"
@@ -601,6 +670,12 @@ def lint_spec(source: dict[str, Any], *, strict: bool = False) -> dict[str, Any]
                         if ratio is not None and ratio < threshold:
                             add("error", "color.contrast", path,
                                 f"Text contrast is {ratio:.2f}:1; use at least {threshold:.1f}:1 for this size.")
+                    if ei < len(elements) - 1:
+                        following = elements[ei + 1]
+                        gap = _number(el.get("marginBottom", 0)) + _number(following.get("marginTop", 0))
+                        if (_is_logo(el) or _is_media_block(el) or kind == "image") and gap < 12:
+                            add("error", "spacing.element-collapse", path,
+                                "Add at least 12px of explicit vertical space after a logo, image, or primary media block so adjacent content does not touch it.")
         name = section.get("name", "").lower()
         if any(word in name for word in ("proof", "trust", "result", "testimonial")):
             trust += 1
@@ -620,7 +695,10 @@ def lint_spec(source: dict[str, Any], *, strict: bool = False) -> dict[str, Any]
         add("warning", "cta.competing", "sections", "Buttons lead to multiple destinations; landing pages should keep one action path.")
     if sections:
         first = json.dumps(sections[0])
-        if not any(k in first for k in ('"type": "button"', '"type": "form"', '"type": "calendar"', '"type": "survey"')):
+        second = json.dumps(sections[1]) if len(sections) > 1 else ""
+        calendar_follows_hero = '"type": "calendar"' in second
+        if (not any(k in first for k in ('"type": "button"', '"type": "form"', '"type": "calendar"', '"type": "survey"'))
+                and not calendar_follows_hero):
             add("error", "hero.cta", "sections[0]", "The primary action must be visible above the fold.")
         if visuals == 0:
             add("info", "media.none", "sections", "Consider one explanatory visual, product image, or video; avoid decoration for its own sake.")

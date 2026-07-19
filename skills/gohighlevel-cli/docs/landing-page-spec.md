@@ -34,8 +34,8 @@ editor.
 |---|---|
 | `heading`, `subHeading`, `paragraph` | `text` or `html`, `fontSize`, `mobileFontSize`, `color`, `align` |
 | `bulletList` | `items[]` or `html`, font/color/icon fields |
-| `button` | `text`, `subText`, `action`, `url`, `newTab`, `scrollToElement`, color/font fields |
-| `image` | `url`, `alt`, `width`, `link`, `newTab` |
+| `button` | `text`, `subText`, `action`, `url`, `newTab`, `scrollToElement`, color/font fields; URL actions use `action: "url"` |
+| `image` | `url`, `alt`, `width`, `link`, `newTab`, `role`, `align`, `marginBottom` |
 | `video` | `url`, `videoType`, `autoplay`, `controls`, `thumbnail`, `width` |
 | `divider` | `width`, `height`, `color`, `align` |
 | `form`, `survey`, `calendar` | matching `formId`, `surveyId`, or `calendarId`; `name`, `action`, `redirectUrl` |
@@ -82,3 +82,9 @@ source of truth; the local `funnels preview` is advisory. Before finishing, use
 and above-fold opt-in gates, then open the real preview. Default fonts are Inter
 700 headlines and Roboto 400/500 body/UI. True single-column rows center every
 child block and copy. Never use `--publish` without explicit user authorization.
+
+Use `role: "logo"` plus `align: "center"` for brand marks and keep at least 12px
+of explicit vertical space after images/media. If a calendar is the primary
+action, place it directly after the booking copy instead of adding a scroll
+button. For native surveys, inspect both the first step and a later step with
+Back + Continue controls; the `.ghl-footer` geometry changes as controls appear.

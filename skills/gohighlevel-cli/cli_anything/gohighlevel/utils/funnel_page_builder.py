@@ -59,6 +59,25 @@ def _spacing(spec: dict[str, Any], default: int = 0) -> dict[str, Any]:
     }
 
 
+def _default_margin_bottom(spec: dict[str, Any], kind: str) -> Any:
+    """Preserve explicit rhythm while preventing compact elements from touching."""
+    if "marginBottom" in spec:
+        return spec["marginBottom"]
+    if kind == "heading":
+        return 20
+    if kind in {"subHeading", "subheading", "paragraph"}:
+        return 16
+    if kind in {"image", "bulletList", "video"}:
+        return 20
+    if kind == "customCode":
+        role = str(spec.get("role", "")).lower()
+        classes = " ".join(spec.get("customClass", [])) if isinstance(spec.get("customClass"), list) else str(spec.get("customClass", ""))
+        markup = str(spec.get("html", ""))
+        if "video" in f"{role} {classes} {markup}".lower():
+            return 24
+    return 0
+
+
 def _css_length(value: Any, default_unit: str = "px") -> str:
     text = str(value)
     return text if any(text.endswith(u) for u in ("px", "%", "em", "rem", "vh", "vw")) else f"{text}{default_unit}"
@@ -146,6 +165,11 @@ def _section_css(section_id: str, section_spec: dict[str, Any], nodes: list[dict
                     f"@media(max-width:480px){{.{node_id}{{font-size:{_css_length(mobile)}!important}}}}",
                     f"@media(min-width:481px){{.{node_id}{{font-size:{_css_length(desktop)}!important}}}}",
                 ])
+            elif node.get("meta") == "image":
+                align = val("textAlign", "center")
+                rules.append(f".{nid}{{text-align:{align}}}")
+                if align == "center":
+                    rules.append(f".{nid} img{{display:block;margin-left:auto;margin-right:auto}}")
     return "".join(rules)
 
 
@@ -190,7 +214,7 @@ def _text_element(spec: dict[str, Any], meta: str) -> dict[str, Any]:
             "customClass": _v(spec.get("customClass", [])),
         },
         "wrapper": {"marginTop": _v(spec.get("marginTop", 0), "px"),
-                    "marginBottom": _v(spec.get("marginBottom", 0), "px")},
+                    "marginBottom": _v(_default_margin_bottom(spec, meta), "px")},
         "customCss": [], "mobileStyles": {},
     }
 
@@ -378,7 +402,7 @@ def _element(spec: dict[str, Any]) -> dict[str, Any]:
             "extra": {"nodeId": f"c{eid}", "visibility": _visibility(spec),
                       "customClass": _v(spec.get("customClass", []))},
             "wrapper": {"marginTop": _v(spec.get("marginTop", 0), "px"),
-                        "marginBottom": _v(spec.get("marginBottom", 0), "px")},
+                        "marginBottom": _v(_default_margin_bottom(spec, kind), "px")},
             "customCss": [], "mobileStyles": None}
     if kind == "image":
         base["class"] = {"imageRadius": _v("img-none"), "imageBorder": _v("img-border-none"),
@@ -391,6 +415,7 @@ def _element(spec: dict[str, Any]) -> dict[str, Any]:
                                   "url": spec.get("url", ""), "altText": spec.get("alt", ""),
                                   "compression": True, "placeholderBase64": "", "servingUrl": "", "imageMeta": ""}),
                               "theme": _v("none")})
+        base["wrapper"]["textAlign"] = _v(spec.get("align", "center"))
     elif kind == "divider":
         base["extra"]["dividerProperties"] = _v({"width": str(spec.get("width", "60%")),
             "height": str(spec.get("height", "2px")), "borderStyle": "solid",

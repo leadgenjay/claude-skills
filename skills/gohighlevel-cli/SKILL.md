@@ -165,6 +165,21 @@ copy. True single-column sections center every child block; native field labels
 remain left-aligned for usability. See `docs/landing-page-design-system.md` and
 `docs/reference-funnel-patterns.md` for the complete guardrails.
 
+Treat GHL builder metadata as intent, not rendered proof. Mark brand images with
+`role: "logo"`, set `align: "center"`, and preserve runtime CSS that centers both
+the wrapper and `<img>`. Keep at least 12px of explicit vertical space after any
+logo, image, or primary media block (20–24px is the normal rhythm). When an
+embedded calendar is the primary action, place it directly after the booking
+copy and omit a redundant jump button. Compact URL buttons must use
+`action: "url"`; `visit-website` is not a valid compact action.
+
+Native multi-step surveys require a rendered footer check. GHL can keep
+`.ghl-footer` at 50px while the padded child contains a 52px button, and an
+invisible `.ghl-btn-placeholder` can steal width. The design system normalizes
+the footer/buttons and hides that placeholder. Verify the first slide and a
+later Back + Continue slide in the real preview; a clean first screen alone is
+not sufficient.
+
 ### Email Reading (Conversation Filtering)
 
 Emails in GHL flow through the Conversations API, not a separate inbox. Three-step workflow:

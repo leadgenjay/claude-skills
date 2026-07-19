@@ -71,6 +71,9 @@ The themes vary color and composition while keeping the approved default fonts:
   roughly 68 characters.
 - Card padding is 28–36px. Grid gaps are 24px. A heading normally receives
   16–20px before the next element.
+- Logos, images, and primary media blocks need at least 12px of explicit space
+  before the following element; 20–24px is the normal default. Do not rely on a
+  parent gap that the GHL renderer may discard.
 - Compact proof bars and connected pricing grids can break the section-padding
   rule, but must opt in with `"compact": true`.
 - Use one border, one radius family, and one shadow language. More decoration
@@ -82,6 +85,10 @@ Jay's binding rule for a true single-column page/section is stricter: center the
 column and every child block—image/logo, heading, paragraph, button, proof group,
 and embed wrapper. Center a bullet list as a block while preserving a shared left
 edge inside the list. Native form/calendar field labels may remain left-aligned.
+
+For logos, centering metadata is not enough. Mark the image with `role: "logo"`,
+set `align: "center"`, and emit runtime CSS that centers both the image wrapper
+and the rendered `<img>`. Confirm the rendered pixel geometry in the real draft.
 
 Center alignment works for a short, singular idea: VSLs, booking heroes, compact
 opt-ins, pricing introductions, and final CTAs. Keep the centered copy narrow.
@@ -237,6 +244,19 @@ Four sections: clear outcome hero, calendar, three expectations, trust. Tell the
 visitor how long the call lasts, who it is for, what to prepare, and what they
 leave with.
 
+The embedded calendar is the CTA. Put it directly after the booking copy and do
+not add a button whose only job is to scroll to the calendar.
+
+### Native survey footer geometry
+
+GHL may render `.ghl-footer` at 50px while `.ghl-footer-buttons` has padding and
+contains a 52px CTA. The result is a white bar with the button hanging below the
+card. An invisible `.ghl-btn-placeholder` can also consume half the footer width.
+Within `.lp-form-card`, keep the footer and button row at 76px, use 12px × 16px
+row padding, hide the placeholder, and hold visible Back/Continue buttons at
+52px with zero margin. Verify both the first survey slide and a later slide that
+shows Back + Continue; the DOM changes after progression.
+
 ### Onboarding/intake
 
 Four sections: welcome, preparation checklist, intake form, next steps. This is a
@@ -266,6 +286,9 @@ expectations, privacy context, and no promotional popup.
 - missing risk, price, timing, or next-step microcopy on high-friction CTAs;
 - excessive length for low-friction funnel types;
 - unexplained timers, evergreen deadline risk, and undefined expiry behavior.
+- logos that are not explicitly centered at runtime;
+- collapsed spacing after logos, images, or primary media;
+- redundant jump buttons when the embedded calendar is already the action.
 
 Use `--strict` when a build should fail on every warning and informational note.
 The linter complements visual review; it cannot judge whether a photo feels real,
@@ -287,6 +310,8 @@ a claim is credible, or the overall composition has emotional resonance.
    must visually inspect every PNG; lint/DOM/worker prose does not count.
 9. Run every CTA/form/calendar path twice. Fill forms and advance calendars only;
    never submit a contact or finalize a booking unless explicitly authorized.
+   For native surveys, inspect the first slide and a later Back + Continue slide;
+   confirm every footer button remains fully contained and centered.
 10. Check console/network errors, literal escaped markup, font resolution, brand
     CTA color, single-column centering, intermediate breakpoints, and tablet stack.
 11. Run the project's WebKit/mobile-overflow harness against that real preview.

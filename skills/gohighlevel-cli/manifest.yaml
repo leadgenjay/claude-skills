@@ -67,7 +67,9 @@ files:
   - manifest.yaml
   - setup.py
   - tests/test_form_survey_safety.py
-version: "2.2.0"
+  - tests/test_funnel_page_builder.py
+  - tests/test_landing_page_design.py
+version: "2.3.0"
 branch: LGJ-exclusive
 postInstall: 'cd "$HOME/.claude/skills/gohighlevel-cli" && bash install.sh'
 composesWell:

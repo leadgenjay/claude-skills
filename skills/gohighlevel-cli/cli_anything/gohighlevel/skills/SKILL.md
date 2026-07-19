@@ -116,6 +116,13 @@ fonts and native embeds settle. Personally inspect 1440x900, 768x1024, and
 submitting or booking; and pass overflow/WebKit checks. Local previews and lint
 scores are not visual proof.
 
+Rendered GHL geometry can diverge from builder metadata. Explicitly center logos
+at both wrapper and `<img>` level, preserve 12px or more after images/media, and
+do not add a scroll button when the embedded calendar is already the primary
+action. Native surveys need an additional footer gate: hide the invisible
+`.ghl-btn-placeholder`, keep the footer tall enough for 52px controls plus
+padding, and inspect both the first step and a later Back + Continue step.
+
 ## Examples
 
 ```bash
