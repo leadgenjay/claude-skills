@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-07-10T15:59:27.838Z",
+  "generatedAt": "2026-07-23T20:25:26.484Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -747,6 +747,35 @@
         "hero-section-designer",
         "social-proof-builder"
       ]
+    },
+    {
+      "id": "listmonk-email-marketing",
+      "type": "skill",
+      "name": "Listmonk Email Marketing",
+      "description": "Run your whole email program on your own dedicated Listmonk instance with Claude. Ghost Ink writes campaign copy and injects it into your branded email HTML, then builds, tests, sends, and reports — staying CAN-SPAM and deliverability compliant.",
+      "categories": [
+        "content",
+        "automation"
+      ],
+      "tags": [
+        "email-marketing",
+        "listmonk",
+        "newsletter",
+        "campaigns",
+        "deliverability",
+        "ghost-ink"
+      ],
+      "icon": "Mail",
+      "path": "skills/listmonk-email-marketing",
+      "files": [
+        "README.md",
+        "SKILL.md",
+        "manifest.yaml",
+        "reference/ghost-ink.md",
+        "reference/rules-and-deliverability.md",
+        "scripts/listmonk.mjs"
+      ],
+      "version": "1.0"
     },
     {
       "id": "live-test",
