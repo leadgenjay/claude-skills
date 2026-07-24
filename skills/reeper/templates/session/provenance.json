@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "{{SOURCE}}",
+    "commit": null,
+    "license": null
+  },
+  "mappings": []
+}

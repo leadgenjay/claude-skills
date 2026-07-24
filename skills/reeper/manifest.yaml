@@ -1,0 +1,17 @@
+name: reeper
+description: Safely adapt an external GitHub repository into an existing project instead of blindly copying its architecture. Evidence-first source and target analysis, a conflict matrix, one-question-at-a-time interview, a hard Integration Contract approval gate before any code changes, isolated implementation, and contract-based verification.
+categories:
+  - development
+  - planning
+tags:
+  - repository-import
+  - code-migration
+  - integration
+  - refactoring
+  - conflict-resolution
+  - codebase-analysis
+icon: GitMerge
+version: "0.1.0"
+composesWell:
+  - brainstorming
+  - skill-creator
