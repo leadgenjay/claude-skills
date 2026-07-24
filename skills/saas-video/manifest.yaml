@@ -1,0 +1,29 @@
+id: saas-video
+type: skill
+name: SaaS Product Demo Videos (Remotion)
+description: >-
+  Build deterministic SaaS product-demo animations (MP4 / looping GIF / square) from
+  your app's REAL React components with Remotion — not screenshot rebuilds. Ships the
+  showcase doctrine (6 rules that stop a demo ever depicting the product failing), a
+  mandatory 13-frame QA gate, real-component mount recipe, and copy-pasteable camera /
+  row-stagger / cursor / square-reframe patterns. Prompt-only — you supply the app.
+version: "1.0"
+icon: Clapperboard
+branch: LGJ-exclusive
+categories:
+  - lgj-exclusive
+  - marketing
+  - design
+tags:
+  - remotion
+  - product-demo
+  - video
+  - animation
+  - react
+  - marketing-assets
+  - gif
+files:
+  - SKILL.md
+  - references/remotion-rules.md
+  - references/real-component-mounting.md
+  - references/reference-implementation.md
