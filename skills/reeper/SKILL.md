@@ -61,6 +61,17 @@ The workflows reference the subagents in `agents/` as a preference, not a requir
 - Python 3.10 or newer
 - Optional: Node/npm for Repomix (`npx repomix@latest`) when packing a large remote repository
 
+## Optional `/reeper` command
+
+To invoke this as a slash command instead of by description, install the one-file router. Claude Code resolves a top-level command only from `~/.claude/commands/<name>.md`, so it cannot ship inside this skill directory:
+
+```bash
+curl -sL https://raw.githubusercontent.com/leadgenjay/Reeper/main/commands/reeper.md \
+  -o ~/.claude/commands/reeper.md
+```
+
+Then `/reeper <repo-url> [goal]`, `/reeper resume`, or `/reeper skillify <path>`.
+
 ## Related
 
 This skill is the single-skill build of the Reeper Claude Code plugin. The plugin form adds namespaced commands (`/reeper:import`, `/reeper:resume`, `/reeper:skillify`) and registers the four subagents automatically:
