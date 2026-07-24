@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-07-23T20:41:09.106Z",
+  "generatedAt": "2026-07-24T20:11:24.882Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -841,6 +841,63 @@
         "design-motion-principles",
         "LGJ-graphics",
         "frontend-design"
+      ]
+    },
+    {
+      "id": "reeper",
+      "type": "skill",
+      "name": "reeper",
+      "description": "Safely adapt an external GitHub repository into an existing project instead of blindly copying its architecture. Evidence-first source and target analysis, a conflict matrix, one-question-at-a-time interview, a hard Integration Contract approval gate before any code changes, isolated implementation, and contract-based verification.",
+      "categories": [
+        "development",
+        "planning"
+      ],
+      "tags": [
+        "repository-import",
+        "code-migration",
+        "integration",
+        "refactoring",
+        "conflict-resolution",
+        "codebase-analysis"
+      ],
+      "icon": "GitMerge",
+      "path": "skills/reeper",
+      "files": [
+        "SKILL.md",
+        "agents/reeper-conflict-analyst.md",
+        "agents/reeper-source-analyst.md",
+        "agents/reeper-target-analyst.md",
+        "agents/reeper-verification-auditor.md",
+        "manifest.yaml",
+        "references/artifact-contract.md",
+        "references/conflict-resolution.md",
+        "references/interview-taxonomy.md",
+        "references/packaging.md",
+        "references/security.md",
+        "references/workflow.md",
+        "scripts/new_session.py",
+        "scripts/repo_fingerprint.py",
+        "scripts/safe_clone.sh",
+        "scripts/scaffold_skill.py",
+        "scripts/validate_session.py",
+        "templates/session/conflict-matrix.md",
+        "templates/session/decisions.md",
+        "templates/session/intake.md",
+        "templates/session/integration-contract.md",
+        "templates/session/plan.md",
+        "templates/session/provenance.json",
+        "templates/session/source-profile.md",
+        "templates/session/target-profile.md",
+        "templates/session/tasks.md",
+        "templates/session/verification.md",
+        "workflows/import.md",
+        "workflows/resume.md",
+        "workflows/skillify.md"
+      ],
+      "version": "0.1.0",
+      "composesWell": [
+        "brainstorming",
+        "skill-creator"
       ]
     },
     {
