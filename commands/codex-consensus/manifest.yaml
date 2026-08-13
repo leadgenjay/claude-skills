@@ -13,7 +13,7 @@ tags:
   - multi-agent
   - orchestration
 icon: Boxes
-version: "1.0"
+version: "1.1"
 kind: package
 # Installs the Codex CLI if missing. Failure is non-fatal: the command files still
 # land on disk; Step 0 in each command re-checks and tells the user how to install.
