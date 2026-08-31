@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-08-13T18:42:49.374Z",
+  "generatedAt": "2026-08-31T19:08:26.650Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -373,35 +373,6 @@
         "icon-set-creator",
         "frontend-design",
         "hero-section-designer"
-      ]
-    },
-    {
-      "id": "canvas-design",
-      "type": "skill",
-      "name": "canvas-design",
-      "description": "Create beautiful visual art in PNG and PDF using design philosophy. Posters, infographics, social media graphics, and marketing collateral with original designs.",
-      "categories": [
-        "design",
-        "creative"
-      ],
-      "tags": [
-        "visual-design",
-        "poster",
-        "pdf",
-        "infographic",
-        "typography"
-      ],
-      "icon": "PenTool",
-      "path": "skills/canvas-design",
-      "files": [
-        "SKILL.md",
-        "manifest.yaml"
-      ],
-      "version": "1.0",
-      "composesWell": [
-        "brand-image-generator",
-        "icon-set-creator",
-        "LGJ-graphics"
       ]
     },
     {
