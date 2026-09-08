@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-08-31T19:14:10.237Z",
+  "generatedAt": "2026-09-08T18:48:32.625Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1005,10 +1005,10 @@
       ]
     },
     {
-      "id": "codex-consensus",
+      "id": "codex-bridge",
       "type": "command",
-      "name": "codex-consensus",
-      "description": "Use OpenAI Codex (GPT-5.6-sol) as a second brain in Claude Code — codex-review has Sol adversarially review a plan and iterate to consensus; codex-execute dispatches Sol workers to implement it. Prompt-only package orchestrating the Codex CLI; requires ChatGPT-subscription login (codex login).",
+      "name": "Codex Bridge",
+      "description": "Use OpenAI Codex as a second brain in Claude Code. codex-review iterates a plan to consensus, then gpt-6-astra ratifies risky approvals; codex-execute routes items across the luna/terra/sol ladder by risk and runs them in parallel. Ships the dispatcher that keeps the review model read-only.",
       "categories": [
         "development",
         "quality",
@@ -1017,23 +1017,25 @@
       "tags": [
         "codex",
         "openai",
-        "gpt-5-6",
         "code-review",
         "consensus-planning",
         "multi-agent",
-        "orchestration"
+        "orchestration",
+        "cost-routing"
       ],
       "icon": "Boxes",
-      "path": "commands/codex-consensus",
+      "path": "commands/codex-bridge",
       "files": [
         "codex-execute.md",
         "codex-review.md",
         "command.md",
-        "manifest.yaml"
+        "manifest.yaml",
+        "scripts/assert-review-produced.sh",
+        "scripts/codex-dispatch.sh"
       ],
-      "version": "1.1",
+      "version": "2.0",
       "kind": "package",
-      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }"
+      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }\nchmod +x \"$HOME\"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true\n"
     },
     {
       "id": "commit",
