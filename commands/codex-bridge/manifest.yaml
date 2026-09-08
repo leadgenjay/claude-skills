@@ -1,0 +1,28 @@
+name: Codex Bridge
+description: Use OpenAI Codex as a second brain in Claude Code. codex-review iterates a plan to consensus, then gpt-6-astra ratifies risky approvals; codex-execute routes items across the luna/terra/sol ladder by risk and runs them in parallel. Ships the dispatcher that keeps the review model read-only.
+categories:
+  - development
+  - quality
+  - productivity
+tags:
+  - codex
+  - openai
+  - code-review
+  - consensus-planning
+  - multi-agent
+  - orchestration
+  - cost-routing
+icon: Boxes
+version: "2.0"
+kind: package
+# Two steps, both non-fatal on failure — the command files still land on disk and
+# Step 0 in each one re-checks and says what is missing.
+#   1. Install the Codex CLI if absent. Login (codex login → "Sign in with
+#      ChatGPT") is interactive and stays a Step 0 prereq.
+#   2. Restore the executable bit on the bundled scripts. install.sh fetches every
+#      file with `curl -o`, which writes 644, so a shebanged script would otherwise
+#      be "Permission denied". The commands invoke them as `bash <path>` regardless,
+#      so this is convenience rather than a dependency.
+postInstall: |
+  command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo "  ⚠  install the Codex CLI manually with npm install -g @openai/codex"; }
+  chmod +x "$HOME"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true
