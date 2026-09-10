@@ -1,5 +1,5 @@
 name: notes
-description: Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.
+description: Interactive markdown review toolkit. Open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.
 categories:
   - productivity
   - content
