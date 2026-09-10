@@ -1,12 +1,12 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-08T18:48:32.625Z",
+  "generatedAt": "2026-09-10T13:27:19.991Z",
   "items": [
     {
       "id": "LGJ-graphics",
       "type": "skill",
       "name": "LGJ-graphics",
-      "description": "Lead Gen Jay brand illustration style system — flat SVG with floating UI elements, 30 brand logos, shared component library, Framer Motion animations, and consistent design tokens.",
+      "description": "Lead Gen Jay brand illustration style system, built on flat SVG with floating UI elements, 30 brand logos, shared component library, Framer Motion animations, and consistent design tokens.",
       "categories": [
         "design",
         "illustration",
@@ -1063,7 +1063,7 @@
       "id": "notes",
       "type": "command",
       "name": "notes",
-      "description": "Interactive markdown review toolkit — open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.",
+      "description": "Interactive markdown review toolkit. Open any file in the claude-review web UI to leave inline comments, then have Claude address each thread with edits or replies. Bundles /notes, /cr-review, and /cr-address. Currently macOS Apple Silicon only.",
       "categories": [
         "productivity",
         "content"
