@@ -1,0 +1,46 @@
+{
+  "description": "Curated competitor ad reference images for visual comparison grading. Each ad type maps to 2 reference images from output/ads/research/ that represent professional quality for that category.",
+  "base_path": "output/ads/research/",
+  "ad_types": {
+    "comparison": {
+      "references": ["lemlist_newway_card1.jpg", "lemlist_newway_card2.jpg"],
+      "visual_qualities": "Bold split layout, clear visual contrast between sides, strong headline dominance, professional typography"
+    },
+    "feature-grid": {
+      "references": ["instantly_firstname.jpg", "listkit_10.jpg"],
+      "visual_qualities": "Varied card sizing, clean grid layout, real dashboard feel, professional iconography"
+    },
+    "social-proof": {
+      "references": ["clickfunnels_occ_v1.jpg", "clickfunnels_occ_v2.jpg"],
+      "visual_qualities": "Strong testimonial treatment, realistic device mockups, screenshot-as-proof patterns"
+    },
+    "minimal-text": {
+      "references": ["hormozi_29.jpg", "hormozi_17.jpg"],
+      "visual_qualities": "Bold headline-dominant layout, minimal clutter, strong visual hierarchy, confident spacing"
+    },
+    "founder-proof": {
+      "references": ["miner_0.jpg", "listkit_14.jpg"],
+      "visual_qualities": "Person + proof combination, natural photo integration, credibility markers"
+    },
+    "screenshot-social-proof": {
+      "references": ["listkit_22.jpg", "replyio_2.jpg"],
+      "visual_qualities": "Screenshot-as-element pasted look, realistic platform UI, drop shadow treatment"
+    },
+    "device-mockup": {
+      "references": ["instantly_sc_10.jpg", "instantly_sc_12.jpg"],
+      "visual_qualities": "Realistic device frame, clean screen content, professional product showcase"
+    }
+  },
+  "scoring_dimensions": [
+    {"name": "visual_hierarchy", "description": "Headline dominance, eye flow, information layering"},
+    {"name": "professional_polish", "description": "Looks like a real Meta ad vs obvious AI generation tells"},
+    {"name": "typography_quality", "description": "Font rendering, spacing, text legibility"},
+    {"name": "layout_sophistication", "description": "Composition, spacing, element arrangement"},
+    {"name": "scroll_stopping_power", "description": "Feed scroll-stop effectiveness at mobile size"}
+  ],
+  "thresholds": {
+    "pass": 4.0,
+    "improve": 3.0,
+    "redo": 0
+  }
+}
