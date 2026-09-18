@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-10T13:29:21.744Z",
+  "generatedAt": "2026-09-18T15:24:20.689Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1002,6 +1002,50 @@
       "version": "1.1",
       "composesWell": [
         "social-proof-builder"
+      ]
+    },
+    {
+      "id": "ultraskill",
+      "type": "skill",
+      "name": "Ultraskill",
+      "description": "One front door for making creative output and the skills that produce it better. Picks a pathway from the session: polish one finished creative and regenerate it; heal a skill by tracing blatant defects in its output back to the rules that allowed them; learn a skill through an eval-driven mutation loop until its pass rate stops rising; or create a skill with skill-creator and then improve it. One skill in place of the three it replaced.",
+      "categories": [
+        "productivity",
+        "quality"
+      ],
+      "tags": [
+        "skill-improvement",
+        "self-healing",
+        "defect-detection",
+        "creative-quality",
+        "mutation",
+        "closed-loop",
+        "evals",
+        "autoresearch"
+      ],
+      "icon": "HeartPulse",
+      "path": "skills/ultraskill",
+      "files": [
+        "SKILL.md",
+        "evals/templates/copywriting.evals.json",
+        "evals/templates/general.evals.json",
+        "evals/templates/graphic-design.evals.json",
+        "manifest.yaml",
+        "references/assertion-patterns.md",
+        "references/banned-words.md",
+        "references/blatant-defect-catalog.md",
+        "references/create.md",
+        "references/defect-to-skill-mapping.md",
+        "references/graphic-ad-references.json",
+        "references/heal.md",
+        "references/learn.md",
+        "references/mutation-strategies.md",
+        "references/polish.md",
+        "scripts/score_report.py"
+      ],
+      "version": "2.0",
+      "composesWell": [
+        "improve"
       ]
     },
     {
