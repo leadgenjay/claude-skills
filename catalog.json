@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-18T15:24:20.689Z",
+  "generatedAt": "2026-09-23T17:25:37.529Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -294,6 +294,42 @@
       ]
     },
     {
+      "id": "agent-control",
+      "type": "skill",
+      "name": "Agent Control",
+      "description": "Connect Claude Code over SSH to the server running your own self-hosted Hermes agent (Docker, Linux or macOS), then check its health, fix what broke, manage cron jobs, skills and config, and review what it sent. Read-only snapshot and masker scripts included; every change asks first.",
+      "categories": [
+        "automation",
+        "development"
+      ],
+      "tags": [
+        "hermes",
+        "hermes-agent",
+        "ssh",
+        "vps",
+        "docker",
+        "ai-agent",
+        "devops",
+        "cron"
+      ],
+      "icon": "Server",
+      "path": "skills/agent-control",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references/connect.md",
+        "references/gotchas.md",
+        "references/manage.md",
+        "references/review.md",
+        "scripts/hermes-snapshot.sh",
+        "scripts/mask-excerpts.py"
+      ],
+      "version": "1.1",
+      "composesWell": [
+        "hetzner-vps"
+      ]
+    },
+    {
       "id": "animation-designer",
       "type": "skill",
       "name": "animation-designer",
@@ -508,6 +544,42 @@
       ]
     },
     {
+      "id": "easy-api-doppler",
+      "type": "skill",
+      "name": "Easy API Doppler",
+      "description": "Stop pasting API keys into your AI session. Put secrets in Doppler once, then hand Claude the name, not the value. The set command refuses an empty clipboard, a variable name pasted as a value, and a clipboard that changed mid-flow. Plus a transcript scanner, .env importer and macOS button.",
+      "categories": [
+        "developer-tools",
+        "productivity"
+      ],
+      "tags": [
+        "doppler",
+        "secrets",
+        "api-keys",
+        "env",
+        "security",
+        "vercel",
+        "claude-code",
+        "devops"
+      ],
+      "icon": "KeyRound",
+      "path": "skills/easy-api-doppler",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references/gotchas.md",
+        "references/vercel-sync.md",
+        "scripts/add-key-to-doppler.applescript",
+        "scripts/doppler-import.sh",
+        "scripts/doppler-set.sh",
+        "scripts/install-button.sh",
+        "scripts/scan-transcripts.sh",
+        "scripts/vercel-sync-check.sh"
+      ],
+      "version": "1.1",
+      "postInstall": "command -v doppler >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install dopplerhq/cli/doppler || echo \"  install the Doppler CLI: https://docs.doppler.com/docs/install-cli\"; }\n"
+    },
+    {
       "id": "frontend-design",
       "type": "skill",
       "name": "frontend-design",
@@ -596,6 +668,42 @@
         "conversion-copywriting",
         "frontend-design",
         "LGJ-graphics"
+      ]
+    },
+    {
+      "id": "hetzner-vps",
+      "type": "skill",
+      "name": "Hetzner VPS",
+      "description": "Guided end-to-end Hetzner Cloud VPS deployment. Walks you through account and billing setup, creating a Read-and-Write API token, an interview about what the box is for, a live price quote for your chosen region before anything bills, provisioning behind a firewall from first boot, hardening, and a verified SSH login. Prompt-only, no bundled scripts. Every API shape was verified against a live account.",
+      "categories": [
+        "infrastructure",
+        "automation"
+      ],
+      "tags": [
+        "hetzner",
+        "vps",
+        "cloud-server",
+        "ssh",
+        "cloud-init",
+        "docker",
+        "devops",
+        "provisioning"
+      ],
+      "icon": "Server",
+      "path": "skills/hetzner-vps",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "references/account-and-api-key.md",
+        "references/gotchas.md",
+        "references/hardening-and-ssh.md",
+        "references/provisioning.md",
+        "references/sizing-and-pricing.md",
+        "references/teardown.md"
+      ],
+      "version": "1.1",
+      "composesWell": [
+        "n8n-self-hosting"
       ]
     },
     {
