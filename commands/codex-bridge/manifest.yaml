@@ -13,7 +13,7 @@ tags:
   - orchestration
   - cost-routing
 icon: Boxes
-version: "2.0"
+version: "2.1"
 kind: package
 # Two steps, both non-fatal on failure — the command files still land on disk and
 # Step 0 in each one re-checks and says what is missing.
@@ -24,5 +24,5 @@ kind: package
 #      be "Permission denied". The commands invoke them as `bash <path>` regardless,
 #      so this is convenience rather than a dependency.
 postInstall: |
-  command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo "  ⚠  install the Codex CLI manually with npm install -g @openai/codex"; }
+  command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex@latest || echo "  ⚠  install the Codex CLI manually with npm install -g @openai/codex"; }
   chmod +x "$HOME"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true

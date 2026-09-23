@@ -14,9 +14,9 @@ Before any other operation, verify these are present. If any are missing, stop a
 
 | Requirement | Check | Where to get it |
 |---|---|---|
-| Codex CLI installed | `codex --version` succeeds (≥ 0.130; **≥ 0.153.4** for the `gpt-6-astra` ratification gate) | `npm install -g @openai/codex` (the installer attempts this automatically) |
+| Codex CLI installed | `codex --version` succeeds (need **≥ 0.156.1**: the `gpt-6-sol` and `gpt-6-luna` models return a 400 on older versions) | `npm install -g @openai/codex@latest` or `codex update` (the installer attempts this automatically) |
 | Logged in via **ChatGPT subscription** (Plus/Pro/Team) | `codex login status` reports logged in | Run `codex login` and choose **"Sign in with ChatGPT"**. Model usage bills to the ChatGPT subscription — no OpenAI API key or API credits needed. |
-| Access to `gpt-5.6-sol` | `codex exec --skip-git-repo-check -m gpt-5.6-sol "Reply with exactly: OK"` returns OK | GPT-5.6 models require a current ChatGPT plan. If the model is rejected, ask the user which available model to use instead — never downgrade silently. |
+| Access to `gpt-6-sol` | `codex exec --skip-git-repo-check -m gpt-6-sol "Reply with exactly: OK"` returns OK | GPT-5.6 models require a current ChatGPT plan. If the model is rejected, ask the user which available model to use instead — never downgrade silently. |
 | Bundled scripts present | `ls ~/.claude/commands/codex-bridge/scripts/` lists `codex-dispatch.sh` and `assert-review-produced.sh` | Reinstall the package. Both are load-bearing, not optional helpers. |
 
 If anything is missing, STOP. Do NOT generate placeholder bash.

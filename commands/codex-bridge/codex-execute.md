@@ -18,9 +18,9 @@ Before any other operation, verify these are present. If any are missing, stop a
 
 | Requirement | Check | Where to get it |
 |---|---|---|
-| Codex CLI installed | `codex --version` succeeds (need ≥ 0.130) | `npm install -g @openai/codex` (the installer attempts this automatically) |
+| Codex CLI installed | `codex --version` succeeds (need **≥ 0.156.1**: the `gpt-6-sol` and `gpt-6-luna` models return a 400 on older versions) | `npm install -g @openai/codex@latest` or `codex update` (the installer attempts this automatically) |
 | Logged in via **ChatGPT subscription** (Plus/Pro/Team) | `codex login status` reports logged in | Run `codex login` and choose **"Sign in with ChatGPT"**. Model usage bills to the ChatGPT subscription — no OpenAI API key or API credits needed. |
-| Access to the ladder models | `codex exec --skip-git-repo-check -m gpt-5.6-sol "Reply with exactly: OK"` returns OK; repeat for `gpt-5.6-terra` and `gpt-5.6-luna` | GPT-5.6 models require a current ChatGPT plan. **Probe all three before dispatching** — a rung that is unavailable must be collapsed into the one above it deliberately, and said out loud, not discovered mid-run. Never downgrade silently. |
+| Access to the ladder models | `codex exec --skip-git-repo-check -m gpt-6-sol "Reply with exactly: OK"` returns OK; repeat for `gpt-5.6-terra` and `gpt-6-luna` | GPT-5.6 models require a current ChatGPT plan. **Probe all three before dispatching** — a rung that is unavailable must be collapsed into the one above it deliberately, and said out loud, not discovered mid-run. Never downgrade silently. |
 | Bundled scripts present | `ls ~/.claude/commands/codex-bridge/scripts/` lists `codex-dispatch.sh` | Reinstall the package. `codex-dispatch.sh` is the only sanctioned way this command starts a writing worker — it is not an optional helper. |
 | Git repository (strongly recommended) | `git rev-parse HEAD` succeeds | Workers edit files; git gives the rollback point and the review base. If this is not a repo, confirm with the user before dispatching write-enabled workers. |
 
@@ -67,9 +67,9 @@ Set `OUT=.omc/codex/exec-<slug>` (a literal slug, never `/tmp`) and put every pr
 
   | Model | Units per launch |
   |---|---|
-  | `gpt-5.6-luna` | 1 |
+  | `gpt-6-luna` | 1 |
   | `gpt-5.6-terra` | 2 |
-  | `gpt-5.6-sol` | 3 |
+  | `gpt-6-sol` | 3 |
   | `gpt-6-astra` | 6 — **review/ratification only, never dispatched here** |
 
   ⚠️ **These weights are proxies derived from the published model priority ordering, not billing data.** They are good enough to stop a runaway and are *not* good enough to report a cost to anyone. Never present a unit count as money.
@@ -135,9 +135,9 @@ Record per item, in the exec log: `tier`, `confidence` (high/low), and **one lin
 
 | Tier | Model | Units |
 |---|---|---|
-| `low` | `gpt-5.6-luna` | 1 |
+| `low` | `gpt-6-luna` | 1 |
 | `medium` | `gpt-5.6-terra` | 2 |
-| `high` | `gpt-5.6-sol` | 3 |
+| `high` | `gpt-6-sol` | 3 |
 
 **`gpt-6-astra` is never on this ladder.** It reviews and ratifies; it does not write code. `scripts/codex-dispatch.sh` refuses it a write sandbox, and refuses a missing `--model` rather than defaulting — because defaulting is the whole bug (§ 4).
 
@@ -175,7 +175,7 @@ For each work item, at **the model its § 3b tier selected** — parallel-safe i
 ```bash
 OUT=.omc/codex/exec-<slug>
 bash <scripts-dir>/codex-dispatch.sh \
-  --model <gpt-5.6-luna|gpt-5.6-terra|gpt-5.6-sol> \
+  --model <gpt-6-luna|gpt-5.6-terra|gpt-6-sol> \
   --prompt-file "$OUT/item-1-prompt.md" \
   --out "$OUT/out-item-1.txt" --cwd .
 ```
@@ -199,7 +199,7 @@ Run each dispatch via Bash with `run_in_background: true` and a 10-minute ceilin
 ```bash
 OUT=.omc/codex/exec-<slug>
 node "<companion path from § 1>" task --background --write \
-  --model <gpt-5.6-luna|gpt-5.6-terra|gpt-5.6-sol> \
+  --model <gpt-6-luna|gpt-5.6-terra|gpt-6-sol> \
   --prompt-file "$OUT/item-1-prompt.md" --cwd .
 ```
 
@@ -243,9 +243,9 @@ Worker reports are **ADVISORY**. After all items finish, verify independently:
 1. `git status --short` plus the FULL diff against the recorded base (`git diff <base-HEAD>`). Judge it like a contributor PR: correctness, spec fidelity, style match with the surrounding code, and nothing touched outside each item's scope. **When you find a defect, re-read the whole function it sits in before moving on.** Defects cluster, and the moment you have just recorded one is the moment you are most likely to stop reading that block — in a measured head-to-head this accounted for two of the three defects both reviewers missed.
 2. Run each item's PROOF command yourself and read the output. A worker's pasted output never counts as proof.
 3. Fire a final review of the combined result against the pre-run base.
-   - Companion mode: `node "<companion path>" review --background --model gpt-5.6-sol --base <base-HEAD>`.
+   - Companion mode: `node "<companion path>" review --background --model gpt-6-sol --base <base-HEAD>`.
      ⚠️ **`--background` does not background it.** The review handler parses the flag and then runs in the foreground regardless, so this call BLOCKS for the full review — 10–20 minutes on a large diff. Give it a generous `timeout:` and expect to wait; do not read the silence as a hung job and kill it.
-   - Plain-CLI mode: the same prompt-file pattern as the review command, with `-m gpt-5.6-sol -s read-only`, asking it to review `git diff <base-HEAD>` against the plan and tag findings CRITICAL/HIGH/MEDIUM/LOW.
+   - Plain-CLI mode: the same prompt-file pattern as the review command, with `-m gpt-6-sol -s read-only`, asking it to review `git diff <base-HEAD>` against the plan and tag findings CRITICAL/HIGH/MEDIUM/LOW.
 
    `--model` / `-m` is mandatory here too: unpinned, this "final Sol review" silently runs — and bills — as whatever the config names. Surface findings **verbatim** (the banner rule applies). CRITICAL/HIGH → AskUserQuestion: fix via another worker (Recommended) / fix manually / accept. A fix worker is dispatched at **the tier of the item the finding is against**, not the tier of whatever ran last — and a finding the review caught is evidence the original tier was too low, so re-classify before re-dispatching rather than sending the same tier back at the same problem.
 4. If a worktree was used and verification passed, **stop here — do not move anything into the real tree yet.** Commit *inside the worktree* so nothing is lost (that commit is local to the isolation and reaches no branch anybody uses), then go to § 7. The cherry-pick into the real tree, the proof re-run there, and the `worktree remove` all happen **after** the human answers the commit gate.
