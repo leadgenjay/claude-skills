@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-23T17:25:37.529Z",
+  "generatedAt": "2026-09-23T21:35:20.247Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1185,9 +1185,9 @@
         "scripts/assert-review-produced.sh",
         "scripts/codex-dispatch.sh"
       ],
-      "version": "2.0",
+      "version": "2.1",
       "kind": "package",
-      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }\nchmod +x \"$HOME\"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true\n"
+      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex@latest || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }\nchmod +x \"$HOME\"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true\n"
     },
     {
       "id": "commit",
