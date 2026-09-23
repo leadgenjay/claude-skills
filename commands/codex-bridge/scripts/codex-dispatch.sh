@@ -32,7 +32,8 @@
 set -uo pipefail
 
 # Models permitted to WRITE. gpt-6-astra is deliberately absent and must stay so.
-WRITE_ALLOWLIST="gpt-5.6-luna gpt-5.6-terra gpt-5.6-sol"
+# There is no gpt-6-terra yet, so the middle tier stays on gpt-5.6-terra.
+WRITE_ALLOWLIST="gpt-6-luna gpt-5.6-terra gpt-6-sol"
 REVIEW_ONLY_MODELS="gpt-6-astra"
 
 model=""; prompt_file=""; out_file=""; err_file=""; cwd="."; resume_id=""; dry_run=0

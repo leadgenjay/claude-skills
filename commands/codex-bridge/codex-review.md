@@ -14,9 +14,9 @@ Before any other operation, verify these are present. If any are missing, stop a
 
 | Requirement | Check | Where to get it |
 |---|---|---|
-| Codex CLI installed | `codex --version` succeeds (need ≥ 0.130 for the loop, **≥ 0.153.4 for any Astra mode**) | `npm install -g @openai/codex` (the installer attempts this automatically) |
+| Codex CLI installed | `codex --version` succeeds (need **≥ 0.156.1**: the `gpt-6-sol` and `gpt-6-luna` models return a 400 on older versions) | `npm install -g @openai/codex@latest` or `codex update` (the installer attempts this automatically) |
 | Logged in via **ChatGPT subscription** (Plus/Pro/Team) | `codex login status` reports logged in | Run `codex login` and choose **"Sign in with ChatGPT"**. Model usage bills to the ChatGPT subscription — no OpenAI API key or API credits needed. |
-| Access to `gpt-5.6-sol` | `codex exec --skip-git-repo-check -m gpt-5.6-sol "Reply with exactly: OK"` returns OK | GPT-5.6 models require a current ChatGPT plan. If the model is rejected, ask the user which model to use instead — never downgrade silently. |
+| Access to `gpt-6-sol` | `codex exec --skip-git-repo-check -m gpt-6-sol "Reply with exactly: OK"` returns OK | GPT-5.6 models require a current ChatGPT plan. If the model is rejected, ask the user which model to use instead — never downgrade silently. |
 | Access to `gpt-6-astra` (**optional** — ratification only) | `codex exec --skip-git-repo-check -m gpt-6-astra "Reply with exactly: OK"` returns OK | Not on every plan. If it is rejected or the CLI is below 0.153.4, say so once and run in `--no-astra` mode. Do **not** substitute another model as ratifier — a ratifier that is the same model as the reviewer is not a second opinion. |
 | Bundled scripts present | `ls ~/.claude/commands/codex-bridge/scripts/` lists `assert-review-produced.sh` and `codex-dispatch.sh` | Reinstall the package. They ship with it; they are not optional helpers. |
 
@@ -49,9 +49,9 @@ Parse flags: `--max-rounds N` (default 3), `--strict` (reject on ANY unresolved 
 
 | Flag | Primary reviewer | Approver | When |
 |---|---|---|---|
-| *(none)* | `gpt-5.6-sol` | Sol, **ratified by `gpt-6-astra`** when a risk trigger fires | Default |
+| *(none)* | `gpt-6-sol` | Sol, **ratified by `gpt-6-astra`** when a risk trigger fires | Default |
 | `--astra` | `gpt-6-astra` | Astra alone; Sol is not run | The user asked for the strongest reviewer end to end |
-| `--no-astra` | `gpt-5.6-sol` | Sol alone | Astra is unavailable, or the user explicitly waived ratification |
+| `--no-astra` | `gpt-6-sol` | Sol alone | Astra is unavailable, or the user explicitly waived ratification |
 
 `--astra` and `--no-astra` are mutually exclusive; if both appear, stop and ask rather than guessing. In `--astra` mode Astra inherits Sol's mechanics wholesale — pinned `-m gpt-6-astra` every round, `-s read-only` on the first call and `-c sandbox_mode="read-only"` on every resume, prompt via stdin, produced-content assertion, convergence check. It is a substitution of model, not of method.
 
@@ -128,14 +128,14 @@ Run it with **`run_in_background: true`**, then poll for the verdict file. Do NO
 
 ```bash
 OUT=.omc/plans/codex-review-<slug>
-codex exec --skip-git-repo-check -m gpt-5.6-sol -s read-only \
+codex exec --skip-git-repo-check -m gpt-6-sol -s read-only \
   -c project_doc_max_bytes=0 --json \
   -o "$OUT/r1-verdict.txt" - <"$OUT/r1-prompt.md" 2>"$OUT/r1.err" | grep '"type":"thread.started"'
 ```
 
 Four things in that command are load-bearing:
 
-- **`-m gpt-5.6-sol`** (or the mode's model). See § 1 — omitting it selects the config default, not Sol.
+- **`-m gpt-6-sol`** (or the mode's model). See § 1 — omitting it selects the config default, not Sol.
 - **Prompt via stdin (`- <"$OUT/r1-prompt.md"`)** — this avoids shell-quoting bugs AND sidesteps a silent hang: `codex exec` reads stdin in addition to the prompt argument, so under a non-TTY driver (Claude Code's Bash tool) it otherwise blocks forever at ~0% CPU waiting for stdin EOF.
 - **A unique `-o` path per round, under the run directory.** A fixed path like `/tmp/codex-verdict.txt` is shared by every concurrent session on the machine, and a stale read looks exactly like a fresh one.
 - **stderr to a file, never `2>/dev/null` or `2>&1`.** Discarding it turns a config-parse failure into a silent "the review produced nothing," because the only symptom you see is `grep` finding no `thread.started`.
@@ -182,7 +182,7 @@ Grep the LAST line of the verdict file for the token.
   OUT=.omc/plans/codex-review-<slug>
   THREAD_ID=<the id echoed by round 1>
   codex exec resume --skip-git-repo-check "$THREAD_ID" \
-    -m gpt-5.6-sol \
+    -m gpt-6-sol \
     -c sandbox_mode="read-only" -c project_doc_max_bytes=0 --json \
     -o "$OUT/r2-verdict.txt" \
     "I revised the plan. Re-review <PLAN_PATH> — check whether your prior findings are addressed and flag anything new. Same rules. End with VERDICT: APPROVE or VERDICT: ITERATE." \
