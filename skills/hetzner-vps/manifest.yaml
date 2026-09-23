@@ -1,0 +1,34 @@
+id: hetzner-vps
+type: skill
+version: "1.1"
+name: Hetzner VPS
+icon: Server
+description: >-
+  Guided end-to-end Hetzner Cloud VPS deployment. Walks you through account and billing setup,
+  creating a Read-and-Write API token, an interview about what the box is for, a live price quote
+  for your chosen region before anything bills, provisioning behind a firewall from first boot,
+  hardening, and a verified SSH login. Prompt-only, no bundled scripts. Every API shape was
+  verified against a live account.
+categories:
+  - infrastructure
+  - automation
+tags:
+  - hetzner
+  - vps
+  - cloud-server
+  - ssh
+  - cloud-init
+  - docker
+  - devops
+  - provisioning
+composesWell:
+  - n8n-self-hosting
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/account-and-api-key.md
+  - references/sizing-and-pricing.md
+  - references/provisioning.md
+  - references/hardening-and-ssh.md
+  - references/teardown.md
+  - references/gotchas.md

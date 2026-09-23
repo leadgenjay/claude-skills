@@ -1,0 +1,19 @@
+id: agent-control
+type: skill
+name: "Agent Control"
+description: "Connect Claude Code over SSH to the server running your own self-hosted Hermes agent (Docker, Linux or macOS), then check its health, fix what broke, manage cron jobs, skills and config, and review what it sent. Read-only snapshot and masker scripts included; every change asks first."
+categories: [automation, development]
+tags: [hermes, hermes-agent, ssh, vps, docker, ai-agent, devops, cron]
+icon: Server
+path: skills/agent-control
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/connect.md
+  - references/manage.md
+  - references/review.md
+  - references/gotchas.md
+  - scripts/hermes-snapshot.sh
+  - scripts/mask-excerpts.py
+version: "1.1"
+composesWell: [hetzner-vps]
