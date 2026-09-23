@@ -1,0 +1,22 @@
+id: easy-api-doppler
+type: skill
+name: "Easy API Doppler"
+description: "Stop pasting API keys into your AI session. Put secrets in Doppler once, then hand Claude the name, not the value. The set command refuses an empty clipboard, a variable name pasted as a value, and a clipboard that changed mid-flow. Plus a transcript scanner, .env importer and macOS button."
+categories: [developer-tools, productivity]
+tags: [doppler, secrets, api-keys, env, security, vercel, claude-code, devops]
+icon: KeyRound
+path: skills/easy-api-doppler
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/gotchas.md
+  - references/vercel-sync.md
+  - scripts/scan-transcripts.sh
+  - scripts/doppler-import.sh
+  - scripts/doppler-set.sh
+  - scripts/vercel-sync-check.sh
+  - scripts/add-key-to-doppler.applescript
+  - scripts/install-button.sh
+version: "1.1"
+postInstall: |
+  command -v doppler >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install dopplerhq/cli/doppler || echo "  install the Doppler CLI: https://docs.doppler.com/docs/install-cli"; }
