@@ -151,17 +151,41 @@ test('crash between the audience add and the status write: reconcile leaves exac
   assert.deepEqual(patchesTo(second.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
 });
 
-test('crash after pushing, before the add: back to approved; a second time: push_failed', () => {
+test('an add with no answer puts the row back as it was, uncounted, and stops the batch', () => {
   const home = makeHome();
-  // Run 1: the audience add gets no answer at all (no mock entry), which kills the run.
-  const first = runPush(home, ['push'], [
+  // The audience add gets no answer at all (no mock entry for it).
+  const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
-    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    approvedRows([prospect(1), prospect(2)]), welcomes([welcomeRow(1), welcomeRow(2)]), claimOk,
+    { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'approved' }] },
   ]);
-  assert.notEqual(first.status, 0);
-  assert.deepEqual(patchesTo(first.log, 'id=eq.1', 'status=eq.approved'), [{ status: 'pushing', push_attempts: 1 }]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.approved'), [{ status: 'pushing', push_attempts: 1 }]);
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'approved', push_attempts: 0 }], 'pre-claim state');
+  assert.equal(patchesTo(res.log, 'id=eq.2').length, 0, 'the rest of the batch is not touched');
+  assert.equal(audienceAdds(res.log).length, 1);
+  const alerts = reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).filter((a) => a.kind === 'push_error');
+  assert.equal(alerts.length, 1);
+  assert.match(alerts[0].body, /stopped at p1/);
+  assert.match(res.stdout, /Batch stopped at p1/);
+});
 
-  // Run 2: reconcile finds it absent from the audience with 1 attempt → approved; it is retried and dies again.
+test('an HTTP 5xx on the add stops the batch the same way', () => {
+  const res = runPush(makeHome(), ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1, { push_attempts: 1 }), prospect(2)]), welcomes([welcomeRow(1), welcomeRow(2)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience/multiple`)}$`, status: 502, body: { status: 'fail' } },
+    { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'approved' }] },
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'approved', push_attempts: 1 }]);
+  assert.equal(patchesTo(res.log, 'id=eq.2').length, 0);
+  assert.equal(audienceAdds(res.log).length, 1);
+});
+
+test('a real crash leaves pushing: reconcile sends it back to approved once, then push_failed', () => {
+  const home = makeHome();
+  // Run 2: reconcile finds it absent from the audience with 1 attempt → approved; the retried add gets no answer.
   const second = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
@@ -171,8 +195,8 @@ test('crash after pushing, before the add: back to approved; a second time: push
     approvedRows([prospect(1, { push_attempts: 1 })]),
     claimOk,
   ]);
-  assert.notEqual(second.status, 0);
-  assert.deepEqual(patchesTo(second.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'approved' }]);
+  assert.equal(second.status, 0, second.stderr);
+  assert.deepEqual(patchesTo(second.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'approved' }, { status: 'approved', push_attempts: 1 }]);
   assert.deepEqual(patchesTo(second.log, 'id=eq.1', 'status=eq.approved'), [{ status: 'pushing', push_attempts: 2 }]);
 
   // Run 3: absent again with 2 attempts → push_failed with an alert, never re-added.
@@ -187,8 +211,7 @@ test('crash after pushing, before the add: back to approved; a second time: push
   assert.equal(third.status, 0, third.stderr);
   assert.deepEqual(patchesTo(third.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'push_failed' }]);
   assert.deepEqual(reqs(third.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).map((a) => a.kind), ['push_failed', 'awaiting_start']);
-  // Runs 1 and 2 each tried one add that never got an answer (the simulated crash); run 3 tries none.
-  assert.deepEqual([first, second, third].map((r) => audienceAdds(r.log).map((e) => e.status)), [[null], [null], []]);
+  assert.equal(audienceAdds(third.log).length, 0);
 });
 
 test('running campaign: a later batch is added while the fingerprint is unchanged', () => {
@@ -629,12 +652,12 @@ test('a read-back answered with an HTTP error still counts as a mismatch', () =>
 
 // ---- Aimfox refusing the add (failedReason), one outcome per documented code ----------------------
 
-const refusedPush = (addMock, attempts = 0) => runPush(makeHome(), ['push'], [
+const refusedPush = (addMock, attempts = 0, over = {}, removal = { body: { status: 'ok' } }) => runPush(makeHome(), ['push'], [
   stateRow([]), campaignGet(PAUSED), pushingRows([]),
-  approvedRows([prospect(1, { push_attempts: attempts })]), welcomes([welcomeRow(1)]),
+  approvedRows([prospect(1, { push_attempts: attempts, ...over })]), welcomes([welcomeRow(1)]),
   { ...claimOk, body: [{ status: 'pushing', push_attempts: attempts + 1 }] },
   addMock,
-  { method: 'DELETE', urlPattern: rx(`${C}/audience/`), body: { status: 'ok' } },
+  { method: 'DELETE', urlPattern: rx(`${C}/audience/`), ...removal },
   { method: 'PATCH', urlPattern: rx('/rest/v1/li_messages?'), body: [{ id: 101 }] },
   { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ id: 1 }] },
 ]);
@@ -655,29 +678,66 @@ test('add refused as alreadyConnected: the prospect is rejected as already a con
   assert.match(res.stdout, /Aimfox would not add 1 already connected \(rejected\), 0 in another campaign/);
 });
 
-test('add refused as locked: left approved with the attempt counted, reported as in another campaign', () => {
-  const res = refusedPush(addFailed(1, 'locked'));
+test('add refused as locked: left approved, counted apart from the crash budget, reported as in another campaign', () => {
+  const res = refusedPush(addFailed(1, 'locked'), 1);
   assert.equal(res.status, 0, res.stderr);
   const r = afterRefusal(res);
-  assert.deepEqual(r.row, [{ status: 'approved' }], 'push_attempts keeps the claimed count');
+  assert.deepEqual(r.row, [{ status: 'approved', push_attempts: 1, dnc_reason: 'aimfox locked 1' }],
+    'push_attempts back to its pre-claim value; the lock is counted on its own');
   assert.match(res.stdout, /p1: in another Aimfox campaign; left approved to retry later/);
   assert.match(res.stdout, /1 in another campaign \(left approved\)/);
   assert.ok(!r.alerts.includes('push_failed'));
 });
 
 test('locked on the third push: rejected as in another Aimfox campaign', () => {
-  const second = refusedPush(addFailed(1, 'locked'), 1);
-  assert.deepEqual(afterRefusal(second).row, [{ status: 'approved' }], 'second push still retries');
-  const third = refusedPush(addFailed(1, 'locked'), 2);
+  const second = refusedPush(addFailed(1, 'locked'), 0, { dnc_reason: 'aimfox locked 1' });
+  assert.deepEqual(afterRefusal(second).row, [{ status: 'approved', push_attempts: 0, dnc_reason: 'aimfox locked 2' }]);
+  const third = refusedPush(addFailed(1, 'locked'), 0, { dnc_reason: 'aimfox locked 2' });
   assert.equal(third.status, 0, third.stderr);
-  assert.deepEqual(afterRefusal(third).row, [{ status: 'rejected', icp_reason: 'in another Aimfox campaign' }]);
+  assert.deepEqual(afterRefusal(third).row, [{ status: 'rejected', icp_reason: 'in another Aimfox campaign', dnc_reason: null }]);
   assert.match(third.stdout, /1 still in another campaign after 3 pushes \(rejected\)/);
+  // Three crash-style attempts already on the row do not make one lock reject it.
+  assert.deepEqual(afterRefusal(refusedPush(addFailed(1, 'locked'), 3)).row[0].status, 'approved');
 });
 
-test('every refusal first takes the lead out of this campaign by urn, else public id', () => {
+test('every refusal first takes the lead out of this campaign by public id when no urn is stored', () => {
   for (const reason of ['alreadyConnected', 'locked', 'blocked', 'miningFailed']) {
     assert.deepEqual(afterRefusal(refusedPush(addFailed(1, reason))).removals, [`${C}/audience/p1`], reason);
   }
+});
+
+test('a refusal removes by the stored urn when there is one', () => {
+  const r = afterRefusal(refusedPush(addFailed(1, 'alreadyConnected'), 0, { aimfox_lead_urn: 'ACoAAold' }));
+  assert.deepEqual(r.removals, [`${C}/audience/ACoAAold`]);
+});
+
+test('a refusal whose removal fails raises push_error naming the prospect and campaign; a 404 does not', () => {
+  const failed = refusedPush(addFailed(1, 'alreadyConnected'), 0, {}, { status: 500, body: { status: 'fail' } });
+  assert.equal(failed.status, 0, failed.stderr);
+  const a = reqs(failed.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).find((x) => x.kind === 'push_error');
+  assert.ok(a, 'alerted');
+  assert.equal(a.prospect_id, 1);
+  assert.match(a.body, new RegExp(`p1: .*campaign ${CAMPAIGN} failed .*may still be enrolled`));
+  assert.deepEqual(afterRefusal(failed).row, [{ status: 'rejected', icp_reason: 'already a connection (Aimfox: alreadyConnected)' }]);
+
+  const absent = refusedPush(addFailed(1, 'alreadyConnected'), 0, {}, { status: 404, body: { status: 'fail' } });
+  assert.ok(!afterRefusal(absent).alerts.includes('push_error'), 'not in the campaign is no loss');
+});
+
+test('an add answered with no profile and no reason, and no match in the audience, alerts for a manual check', () => {
+  const res = runPush(makeHome(), ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    addResult(),
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}$`, body: audienceBody([audienceRow(9)]) },
+    { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'push_failed' }] },
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'push_failed' }], 'not returned to approved');
+  const a = reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).find((x) => x.kind === 'push_unmatched');
+  assert.ok(a, 'push_unmatched alert');
+  assert.match(a.body, /may be enrolled .*remove it by hand/);
+  assert.match(res.stdout, /1 added but unmatched \(check by hand\)/);
 });
 
 test('a changed vanity URL: the lone added profile is taken even though its public id differs', () => {
@@ -727,19 +787,20 @@ test('an HTTP 400 refusal with an error code is handled like a failedReason', ()
     body: { status: 'fail', error: { code: 400, message: 'The Target is Locked', type: 'Bad Request', data: 'locked' } },
   });
   assert.equal(res.status, 0, res.stderr);
-  assert.deepEqual(afterRefusal(res).row, [{ status: 'approved' }]);
+  assert.deepEqual(afterRefusal(res).row, [{ status: 'approved', push_attempts: 0, dnc_reason: 'aimfox locked 1' }]);
 });
 
-test('an HTTP 400 with an undocumented code is not a per-profile refusal', () => {
+test('an HTTP 400 with an undocumented code is not a per-profile refusal: row restored, batch stopped', () => {
   const res = refusedPush({
     method: 'POST', urlPattern: `${rx(`${C}/audience/multiple`)}$`, status: 400,
     body: { status: 'fail', error: { code: 400, message: 'Campaign is archived', type: 'Bad Request', data: 'campaignArchived' } },
-  });
+  }, 2);
   const r = afterRefusal(res);
-  assert.equal(r.row.length, 0, 'not rejected, approved, do-not-contact or push_failed as a refusal');
+  assert.deepEqual(r.row, [{ status: 'approved', push_attempts: 2 }], 'pre-claim state, attempt not counted');
   assert.equal(r.removals.length, 0);
-  assert.ok(r.alerts.includes('push_error'));
+  assert.deepEqual(r.alerts.filter((k) => k === 'push_error'), ['push_error']);
   assert.match(res.stdout, /0 other \(push_failed\)/);
+  assert.match(res.stdout, /stopped early on an Aimfox error/);
 });
 
 test('a failedReason keyed by a profile URL form still matches this profile', () => {
