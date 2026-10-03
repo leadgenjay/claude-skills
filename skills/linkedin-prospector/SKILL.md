@@ -80,7 +80,8 @@ The first command creates an empty list/connect campaign using the sole account 
 `--account <id>`). The second repairs the specified inactive campaign; ACTIVE and RUNNING states are refused. These
 prospector setup commands write directly. They clear the primary connection note, keep exactly
 one message with complete text `{{CUSTOM.welcome_message}}` and delay `1`, then run the existing
-campaign checks on a fresh v2 read. Delay units are not confirmed. A failed final read or check
+campaign checks on a fresh v2 read. The delay is in hours (the web app's default is 24), so `1`
+means one hour after acceptance. A failed final read or check
 is a failure, even when earlier writes succeeded; inspect the returned campaign id before retrying.
 
 No audience is added and campaign state is never changed. The user still presses Start in
