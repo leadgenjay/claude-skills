@@ -39,6 +39,9 @@ const SCRIPT = fileURLToPath(import.meta.url);
 export const MIN_CREATOR_POSTS = 3;
 export const DISCOVERY_POSTS_PER_KEYWORD = 50;
 export const PUSH_BATCH_SIZE = 25;
+// harvestapi~linkedin-post-search input schema: authorUrls has maxItems 10 (live 2026-10-03; a run
+// with 46 was refused with HTTP 400). scrape-commenters stage 1 runs once per chunk of this size.
+export const AUTHOR_URLS_PER_RUN = 10;
 export const WELCOME_MAX_FAILURES = 2;
 // Pushes refused as "locked" (in another Aimfox campaign) before the prospect is rejected.
 export const LOCKED_MAX_ATTEMPTS = 3;
@@ -392,30 +395,45 @@ async function cmdScrapeCommenters({ dryRun }) {
 
   const units1 = creators.length * postsPerCreator;
   const units2Max = topPosts * commentsPerPost;
-  out(`Stage 1 ${formatEstimate({ actor: POST_SEARCH_ACTOR, units: units1, unitPriceUsd: POST_SEARCH_PRICE_PER_POST_USD })}`);
+  const chunks = [];
+  for (let i = 0; i < creators.length; i += AUTHOR_URLS_PER_RUN) chunks.push(creators.slice(i, i + AUTHOR_URLS_PER_RUN));
+  out(`Stage 1 ${formatEstimate({ actor: POST_SEARCH_ACTOR, units: units1, unitPriceUsd: POST_SEARCH_PRICE_PER_POST_USD })}, `
+    + `in ${chunks.length} run(s) of at most ${AUTHOR_URLS_PER_RUN} creators`);
   out(`Stage 2 ${formatEstimate({ actor: POST_COMMENTS_ACTOR, units: units2Max, unitPriceUsd: COMMENT_WITH_PROFILE_PRICE_USD })} (at most)`);
   out(`Total at most $${(estimateCost(units1, POST_SEARCH_PRICE_PER_POST_USD) + estimateCost(units2Max, COMMENT_WITH_PROFILE_PRICE_USD)).toFixed(2)}`);
   if (dryRun) return 0;
 
   const creatorByPublicId = new Map(creators.map((c) => [normalizePublicId(c.profile_url), c]));
-  const run1 = await runActor({
-    step: 'scrape-commenters:posts',
-    actor: POST_SEARCH_ACTOR,
-    input: postSearchInput({ authorUrls: creators.map((c) => c.profile_url), maxPosts: postsPerCreator }),
-    units: units1,
-    unitPriceUsd: POST_SEARCH_PRICE_PER_POST_USD,
-  });
-  if (!run1.ok) {
-    printCapHelp(run1.reason, units1, POST_SEARCH_PRICE_PER_POST_USD, cfg);
-    return 1;
+  // Stage 1, one run per chunk of creators. A chunk the spend cap refuses stops new chunks; the
+  // posts already collected still go to stage 2.
+  const items1 = [];
+  let capStopped = false;
+  for (const [i, chunk] of chunks.entries()) {
+    const units = chunk.length * postsPerCreator;
+    const run1 = await runActor({
+      step: 'scrape-commenters:posts',
+      actor: POST_SEARCH_ACTOR,
+      input: postSearchInput({ authorUrls: chunk.map((c) => c.profile_url), maxPosts: postsPerCreator }),
+      units,
+      unitPriceUsd: POST_SEARCH_PRICE_PER_POST_USD,
+    });
+    if (!run1.ok) {
+      printCapHelp(run1.reason, units, POST_SEARCH_PRICE_PER_POST_USD, cfg);
+      out(`Stage 1 stopped at run ${i + 1} of ${chunks.length}: the spend cap refused it. `
+        + `Continuing with the posts from the ${i} run(s) already done.`);
+      capStopped = true;
+      break;
+    }
+    items1.push(...run1.items);
   }
   // One row per post_url: a duplicate would break the upsert and could take two top-post slots.
-  const posts = [...new Map(run1.items.map(postFromItem)
+  const posts = [...new Map(items1.map(postFromItem)
     .filter((p) => p.postUrl && creatorByPublicId.has(p.authorPublicId))
     .map((p) => [p.postUrl, p])).values()];
   if (!posts.length) {
-    out('The creators had no recent posts in the results; nothing to scrape.');
-    return 0;
+    out(capStopped ? 'No posts were collected before the spend cap stopped stage 1; nothing to scrape.'
+      : 'The creators had no recent posts in the results; nothing to scrape.');
+    return capStopped ? 1 : 0;
   }
   const storedPosts = await insert('li_posts', posts.map((p) => ({
     creator_id: creatorByPublicId.get(p.authorPublicId).id,
@@ -428,11 +446,14 @@ async function cmdScrapeCommenters({ dryRun }) {
 
   const picked = [...posts].sort((a, b) => b.comments - a.comments).slice(0, topPosts);
   const units2 = picked.length * commentsPerPost;
+  // The post-comments actor reads its input maxItems as comments PER POST (live input schema,
+  // 2026-10-03), so the input carries commentsPerPost; the run's own caps stay at the total.
   const run2 = await runActor({
     step: 'scrape-commenters:comments',
     actor: POST_COMMENTS_ACTOR,
-    input: postCommentsInput({ postUrls: picked.map((p) => p.postUrl), maxItems: units2 }),
+    input: postCommentsInput({ postUrls: picked.map((p) => p.postUrl), maxItems: commentsPerPost }),
     units: units2,
+    inputMaxItems: commentsPerPost,
     unitPriceUsd: COMMENT_WITH_PROFILE_PRICE_USD,
   });
   if (!run2.ok) {

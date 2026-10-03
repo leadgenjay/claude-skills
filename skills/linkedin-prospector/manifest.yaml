@@ -52,6 +52,7 @@ files:
   - tests/prospector/no-campaign-state-change.test.mjs
   - tests/prospector/pipeline.test.mjs
   - tests/prospector/push.test.mjs
+  - tests/prospector/scrape-runs.test.mjs
   - tests/prospector/spend.test.mjs
   - tests/prospector/sync.test.mjs
   - tests/prospector/validate.test.mjs

@@ -104,7 +104,12 @@ export function chargedUsd(run, itemCount, unitPriceUsd) {
 // reserveSpend prints the actor, unit price, units and estimate before deciding.
 // Apify enforces the caps itself (maxItems and maxTotalChargeUsd on the run), and cost and items
 // are read from THIS run's record. A run still going at the deadline is aborted and never re-run.
-export async function runActor({ step, actor, input, units, unitPriceUsd, deadlineMs = RUN_DEADLINE_MS, waitSecs = WAIT_SECS }) {
+// inputMaxItems sets only the maxItems field of the actor's INPUT, for an actor that reads it as
+// something other than a run total (post-comments: comments per post). The run's own maxItems and
+// maxTotalChargeUsd (the platform caps) always stay at units and the estimate.
+export async function runActor({
+  step, actor, input, units, unitPriceUsd, inputMaxItems = units, deadlineMs = RUN_DEADLINE_MS, waitSecs = WAIT_SECS,
+}) {
   if (!Number.isInteger(units) || units <= 0) throw new Error(`runActor: units must be a positive integer, got ${units}`);
   const estUsd = estimateCost(units, unitPriceUsd);
 
@@ -119,9 +124,16 @@ export async function runActor({ step, actor, input, units, unitPriceUsd, deadli
   let run;
   try {
     run = (await apify('POST', `/acts/${actor}/runs?maxItems=${units}&maxTotalChargeUsd=${estUsd}`,
-      { ...input, maxItems: units }))?.data;
+      { ...input, maxItems: inputMaxItems }))?.data;
   } catch (err) {
-    await settleFailed(null, String(err.message ?? err));
+    // An HTTP 4xx answer to the start means Apify refused the request (bad input, bad token): no run
+    // exists and nothing was charged, so the reservation settles at 0. No answer, a timeout or a 5xx
+    // may still have started a run, so those count at the estimate.
+    if (err instanceof ApifyError && err.status >= 400 && err.status < 500) {
+      await settleSpend(reservation.runId, 0, String(err.message ?? err)).catch(() => {});
+    } else {
+      await settleFailed(null, String(err.message ?? err));
+    }
     throw err;
   }
   if (!run?.id) {
