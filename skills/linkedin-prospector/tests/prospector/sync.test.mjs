@@ -86,6 +86,16 @@ test('a prospect with last_inbound_at moves to replied and, with steps left, is 
   assert.match(res.stdout, /1 replied lead\(s\) removed from the campaign/);
 });
 
+test('a replied prospect with no urn anywhere is removed by its public id', () => {
+  const home = makeHome();
+  const res = run(home, ['sync'], syncMocks({
+    prospects: [pushedRow(1, { status: 'accepted', aimfox_lead_urn: null, last_inbound_at: '2026-10-03T08:00:00Z' })],
+    audience: [audienceRow(1, { urn: null, state: 'message' })],
+  }));
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(reqs(res.log, 'DELETE', `${C}/audience/`).map((e) => e.url), [`${C}/audience/p1`]);
+});
+
 test('a replied prospect absent from the audience moves to replied with no removal call', () => {
   const home = makeHome();
   const res = run(home, ['sync'], syncMocks({
@@ -159,7 +169,7 @@ test('a label do-not-contact matched by public id stores the audience urn first,
     { status: 'do_not_contact', dnc_reason: 'Aimfox label: not interested' },
   ]);
   assert.equal(reqs(res.log, 'DELETE', `${C}/audience/u3`).length, 1);
-  assert.deepEqual(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).map(bodyOf), [{ urn: 'u3' }]);
+  assert.deepEqual(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).map((e) => [e.url, e.body]), [[`${AIMFOX}/blacklist/u3`, undefined]]);
 });
 
 test('an audience body without `audience` stops sync and changes nothing', () => {
@@ -192,7 +202,7 @@ test('sync turns an Aimfox "not interested" label into do-not-contact, one lead 
   assert.deepEqual(reqs(res.log, 'PATCH', '/rest/v1/li_prospects?', 'id=eq.3').map(bodyOf),
     [{ status: 'do_not_contact', dnc_reason: 'Aimfox label: not interested' }]);
   assert.equal(reqs(res.log, 'DELETE', `${C}/audience/u3`).length, 1);
-  assert.deepEqual(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).map(bodyOf), [{ urn: 'u3' }]);
+  assert.deepEqual(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).map((e) => [e.url, e.body]), [[`${AIMFOX}/blacklist/u3`, undefined]]);
   assert.match(res.stdout, /2 lead\(s\) checked for labels, 0 label check\(s\) failed, 1 marked do-not-contact, 1 pushed prospect\(s\) not in the Aimfox audience/);
 });
 

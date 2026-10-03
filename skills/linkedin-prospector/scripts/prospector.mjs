@@ -764,6 +764,7 @@ async function pushOne(campaignId, row, body) {
       customVariables: { [aimfox.WELCOME_VARIABLE]: body },
     });
   } catch (e) {
+    if (e instanceof aimfox.AimfoxAddRefused) return addRefused(row, e.reason);
     if (!(e instanceof aimfox.AimfoxError) || isAuthError(e)) throw e; // no answer: stop, the next run reconciles
     await alert('push_error', `${row.public_id}: Aimfox refused the audience add (${e.message}). The next push reconciles it.`, row.id);
     return 'error';
@@ -775,10 +776,34 @@ async function pushOne(campaignId, row, body) {
     await alert('push_error', `${row.public_id}: added to Aimfox but its lead id could not be found. The next push reconciles it.`, row.id);
     return 'error';
   }
-  if (!aimfox.AUDIENCE_ADD_TAKES_VARIABLES) {
-    await aimfox.setCustomVariables(campaignId, entry.urn, { [aimfox.WELCOME_VARIABLE]: body });
-  }
   return verifyAndFinish(campaignId, current, entry.urn, body);
+}
+
+// Aimfox answered that it would not add this profile; the code says why. Returns the tally key.
+async function addRefused(row, reason) {
+  const where = `id=eq.${row.id}&status=eq.pushing`;
+  if (reason === 'alreadyConnected') {
+    // A blank invite cannot go to an existing connection, so this prospect is out of the funnel.
+    await update('li_prospects', where, { status: 'rejected', icp_reason: 'already a connection (Aimfox: alreadyConnected)' });
+    out(`${row.public_id}: already a connection, rejected`);
+    return 'already_connected';
+  }
+  if (reason === 'locked') {
+    // In another Aimfox campaign right now: back to approved, with the attempt not counted, to retry later.
+    await update('li_prospects', where, { status: 'approved', push_attempts: row.push_attempts ?? 0 });
+    out(`${row.public_id}: in another Aimfox campaign; left approved to retry later`);
+    return 'locked';
+  }
+  if (reason === 'blocked') {
+    // Blocked in Aimfox (its blacklist): never contact them, and drop the unsent welcome.
+    await update('li_prospects', where, { status: 'do_not_contact', dnc_reason: 'blocked in Aimfox (blacklist)' });
+    await update('li_messages', `prospect_id=eq.${row.id}&status=eq.draft`, { status: 'dropped' });
+    out(`${row.public_id}: blocked in Aimfox, marked do-not-contact`);
+    return 'blocked';
+  }
+  await update('li_prospects', where, { status: 'push_failed' });
+  await alert('push_failed', `${row.public_id}: Aimfox would not add this profile (${reason}). It will not be pushed again.`, row.id);
+  return 'refused';
 }
 
 async function pushBatch(campaignId) {
@@ -786,7 +811,7 @@ async function pushBatch(campaignId) {
   const rows = await select('li_prospects',
     `status=eq.approved&select=id,public_id,profile_url,status,push_attempts,aimfox_lead_urn&order=id&limit=${PUSH_BATCH_SIZE}`);
   const welcomes = await welcomeRows(rows.map((r) => r.id));
-  const tally = { pushed: 0, push_failed: 0, skipped: 0, error: 0 };
+  const tally = { pushed: 0, push_failed: 0, skipped: 0, error: 0, already_connected: 0, locked: 0, blocked: 0, refused: 0 };
   for (const row of rows) {
     try {
       assertContactable(row);
@@ -812,7 +837,9 @@ async function pushBatch(campaignId) {
     }
     tally[await pushOne(campaignId, row, w.body)]++;
   }
-  out(`Batch: ${tally.pushed} pushed, ${tally.push_failed} failed read-back, ${tally.error} errors, ${tally.skipped} skipped.`);
+  out(`Batch: ${tally.pushed} pushed, ${tally.push_failed} failed read-back, ${tally.error} errors, ${tally.skipped} skipped; `
+    + `Aimfox would not add ${tally.already_connected} already connected (rejected), ${tally.locked} in another campaign `
+    + `(left approved), ${tally.blocked} blocked (do-not-contact), ${tally.refused} other (push_failed).`);
   return { ...tally, selected: rows.length };
 }
 
@@ -1003,7 +1030,8 @@ async function cmdSync() {
     // Second guard on top of Aimfox's own stop on reply: anyone who replied and is still in the
     // audience with steps left is removed, every run until it works (the remove is idempotent).
     // Someone already out of the audience, or whose sequence is over, has nothing left to fire.
-    const urn = entry ? (p.aimfox_lead_urn ?? entry.urn) : null;
+    // Aimfox removes by urn or by public identifier (docs.aimfox.com).
+    const urn = entry ? (p.aimfox_lead_urn ?? entry.urn ?? p.public_id) : null;
     if (p.last_inbound_at && urn && entry.state !== 'done' && entry.state !== 'cancelled') {
       try {
         await aimfox.removeFromAudience(campaignId, urn);

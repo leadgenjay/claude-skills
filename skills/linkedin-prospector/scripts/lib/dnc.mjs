@@ -54,19 +54,24 @@ export async function markDoNotContact(prospectId, reason, { aimfox, campaignId 
 
   const result = { prospect, aimfoxRemoved: false, aimfoxBlacklisted: false };
   const urn = prospect.aimfox_lead_urn;
-  if (!urn) {
+  // Aimfox removes by urn or public identifier, and blacklists by urn or profile URL (docs.aimfox.com),
+  // so a prospect pushed without a stored urn is still reached through its public id.
+  const publicId = urn ? null : (MAYBE_IN_AIMFOX.includes(before.status) ? prospect.public_id : null);
+  if (!urn && !publicId) {
     if (MAYBE_IN_AIMFOX.includes(before.status)) {
       await alert('dnc_aimfox_unknown',
-        `${prospect.public_id} is now do_not_contact but has no Aimfox lead id, so it could not be removed `
-        + 'from the campaign or blacklisted. Remove and blacklist them in Aimfox by hand.', prospectId);
+        `${prospect.public_id ?? `prospect ${prospectId}`} is now do_not_contact but has no Aimfox lead id or public id, so it `
+        + 'could not be removed from the campaign or blacklisted. Remove and blacklist them in Aimfox by hand.', prospectId);
     }
     return result;
   }
+  const blacklistTarget = urn
+    ?? { profileUrl: prospect.profile_url || `https://www.linkedin.com/in/${publicId}` };
 
   const api = aimfox ?? await import('./aimfox.mjs');
   const campaign = campaignId ?? loadConfig().aimfox_campaign_id;
   if (campaign) {
-    const removed = await attempt(() => api.removeFromAudience(campaign, urn));
+    const removed = await attempt(() => api.removeFromAudience(campaign, urn ?? publicId));
     result.aimfoxRemoved = removed.ok;
     if (!removed.ok) {
       await alert('dnc_aimfox_remove_failed',
@@ -78,7 +83,7 @@ export async function markDoNotContact(prospectId, reason, { aimfox, campaignId 
       `${prospect.public_id} is do_not_contact but no aimfox_campaign_id is configured, so they were not `
       + 'removed from any campaign. Remove them by hand.', prospectId);
   }
-  const blacklisted = await attempt(() => api.addToBlacklist(urn));
+  const blacklisted = await attempt(() => api.addToBlacklist(blacklistTarget));
   result.aimfoxBlacklisted = blacklisted.ok;
   if (!blacklisted.ok) {
     await alert('dnc_aimfox_blacklist_failed',

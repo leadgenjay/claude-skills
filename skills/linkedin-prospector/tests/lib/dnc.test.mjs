@@ -15,8 +15,8 @@ function fakeAimfox({ failRemove = false, failBlacklist = false } = {}) {
       if (failRemove) throw new Error('Aimfox returned 500');
       return { ok: true };
     },
-    async addToBlacklist(urn) {
-      calls.push(['blacklist', urn]);
+    async addToBlacklist(target) {
+      calls.push(['blacklist', target]);
       if (failBlacklist) return { ok: false, error: 'Aimfox returned 422' };
       return { ok: true };
     },
@@ -83,8 +83,18 @@ test('Aimfox failures keep the flag and write an alert for each', async () => {
   assert.match(env.needsYou(), /removing them from Aimfox campaign c failed: Aimfox returned 500/);
 });
 
-test('a pushed prospect with no Aimfox id alerts instead of calling Aimfox', async () => {
-  env = setupEnv(mocks({ status: 'pushing' }, { ...dncRow, aimfox_lead_urn: null }));
+test('a pushed prospect with no urn is removed by public id and blacklisted by profile URL', async () => {
+  env = setupEnv(mocks({ status: 'pushing' }, { ...dncRow, aimfox_lead_urn: null, profile_url: null }));
+  const aimfox = fakeAimfox();
+  const res = await markDoNotContact(7, 'stop', { aimfox, campaignId: 'c' });
+  assert.deepEqual(aimfox.calls, [['remove', 'c', 'jane-doe'], ['blacklist', { profileUrl: 'https://www.linkedin.com/in/jane-doe' }]]);
+  assert.equal(res.aimfoxRemoved, true);
+  assert.equal(res.aimfoxBlacklisted, true);
+  assert.equal(env.needsYou(), '');
+});
+
+test('a pushed prospect with neither urn nor public id alerts instead of calling Aimfox', async () => {
+  env = setupEnv(mocks({ status: 'pushing' }, { ...dncRow, aimfox_lead_urn: null, public_id: null }));
   const aimfox = fakeAimfox();
   await markDoNotContact(7, 'stop', { aimfox, campaignId: 'c' });
   assert.deepEqual(aimfox.calls, []);
@@ -102,10 +112,11 @@ test('push_failed and pushing leads with an Aimfox id are still removed and blac
   env = null;
 });
 
-test('a push_failed lead with no Aimfox id alerts for a manual check', async () => {
-  env = setupEnv(mocks({ status: 'push_failed' }, { ...dncRow, aimfox_lead_urn: null }));
-  await markDoNotContact(7, 'stop', { aimfox: fakeAimfox(), campaignId: 'c' });
-  assert.match(env.needsYou(), /dnc_aimfox_unknown/);
+test('a push_failed lead with no urn is reached through its stored profile URL', async () => {
+  env = setupEnv(mocks({ status: 'push_failed' }, { ...dncRow, aimfox_lead_urn: null, profile_url: 'https://www.linkedin.com/in/jane-doe/' }));
+  const aimfox = fakeAimfox();
+  await markDoNotContact(7, 'stop', { aimfox, campaignId: 'c' });
+  assert.deepEqual(aimfox.calls, [['remove', 'c', 'jane-doe'], ['blacklist', { profileUrl: 'https://www.linkedin.com/in/jane-doe/' }]]);
 });
 
 test('a never-pushed prospect needs no Aimfox call and no alert', async () => {

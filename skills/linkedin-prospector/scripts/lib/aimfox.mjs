@@ -1,8 +1,9 @@
 // Aimfox v2 client. One function per endpoint the prospector uses.
 // Read shapes (accounts, campaign, audience, lead) were observed 2026-10-03 against a live workspace
 // and are recorded in docs/aimfox-api.md: every body is {status: "ok", <name>: ...}. Write calls
-// (audience add and remove, custom variables, blacklist) were not exercised there; each one stays
-// marked UNVERIFIED in one place.
+// (audience add and remove, custom variables read-back, blacklist) follow the official docs
+// (docs.aimfox.com, 2026-10-03) and have not yet been exercised live; each says so where it is used.
+// Nothing here starts, pauses or edits a campaign: the user presses Start in Aimfox by hand.
 
 import { request, HttpError } from './http.mjs';
 
@@ -11,11 +12,6 @@ export const AIMFOX_BASE = 'https://api.aimfox.com/api/v2';
 // Observed 2026-10-03 (docs/aimfox-api.md): calls that normally answer in under a second can stall
 // for 30 to 120 seconds. A stall is "try again later", never an answer.
 export const AIMFOX_TIMEOUT_MS = 90000;
-
-// UNVERIFIED body shape — not exercised live. Whether POST /campaigns/:id/audience accepts the
-// custom variables in the same request. push reads them back either way, so a wrong guess here can
-// only produce a read-back mismatch (lead removed, push_failed), never a lead with an empty message.
-export const AUDIENCE_ADD_TAKES_VARIABLES = true;
 
 // The custom variable the campaign's one message step renders. Aimfox writes custom variables as
 // {{CUSTOM.NAME}} (docs/aimfox-api.md), so the message text is exactly WELCOME_TOKEN.
@@ -109,9 +105,10 @@ export async function getCampaign(campaignId) {
   return requireShape(await call('GET', `/campaigns/${encodeURIComponent(campaignId)}`), 'campaign', 'a campaign', false);
 }
 
-// Aimfox campaign state → the two states push works with. CREATED is built and never started, so
-// nothing sends: the same as paused. Anything else (DONE, ...) comes back as-is and push refuses it.
-const STATE_MAP = { ACTIVE: 'RUNNING', STARTED: 'RUNNING', CREATED: 'PAUSED', PAUSED: 'PAUSED' };
+// Aimfox campaign state → the two states push works with. CREATED (observed) and INIT (what the
+// docs' Create Campaign returns) are built and never started, so nothing sends: the same as paused.
+// Anything else (DONE, ...) comes back as-is and push refuses it.
+const STATE_MAP = { ACTIVE: 'RUNNING', STARTED: 'RUNNING', CREATED: 'PAUSED', INIT: 'PAUSED', PAUSED: 'PAUSED' };
 
 // Reads the facts push needs out of a campaign object. A field Aimfox does not expose comes back
 // null, meaning "the API cannot answer", which the checklist turns into "check it yourself".
@@ -172,7 +169,7 @@ function fnv1a(s) {
 // state, ...}. id is the lead id for GET /leads/:id, not the urn. state is the lead's current step:
 // init, view, like, endorse, message (accepted, in the message sequence), inmail, withdraw,
 // cancelled, done (sequence over, including every lead who replied).
-// The addToAudience response is read through this too; that shape is UNVERIFIED.
+// addToAudience's profiles[] entries have the same fields (documented, not yet exercised live).
 export function audienceEntry(raw) {
   const urn = raw?.urn ?? raw?.lead_urn ?? raw?.target_urn ?? null;
   const publicId = (raw?.public_identifier ?? raw?.public_id ?? publicIdFromProfileUrl(raw?.profile_url ?? raw?.linkedin_url))
@@ -192,37 +189,60 @@ export async function listAudience(campaignId) {
   return requireShape(body, 'audience', 'an audience', true).map(audienceEntry);
 }
 
-export async function addToAudience(campaignId, { profileUrl, customVariables }) {
-  // UNVERIFIED body shape — not exercised live. Assumed request: {profile_url, custom_variables?};
-  // assumed response: the created audience entry, or {data: entry}. urn may be absent, in which case
-  // push looks the lead up in listAudience by public id.
-  const body = { profile_url: profileUrl };
-  if (AUDIENCE_ADD_TAKES_VARIABLES && customVariables) body.custom_variables = customVariables;
-  const res = await call('POST', `/campaigns/${encodeURIComponent(campaignId)}/audience`, body);
-  return audienceEntry(unwrap(res, 'lead') ?? {});
+// Why Aimfox would not add a profile (documented codes): blocked, locked (in another campaign),
+// miningFailed (not found), noPFP, alreadyConnected, notLead, closed. push decides what each means.
+export class AimfoxAddRefused extends AimfoxError {
+  constructor(reason, profileUrl, body, status = 200) {
+    super(`Aimfox did not add ${profileUrl}: ${reason}`, status, body);
+    this.name = 'AimfoxAddRefused';
+    this.reason = reason;
+  }
 }
 
-export async function removeFromAudience(campaignId, urn) {
-  // UNVERIFIED body shape — not exercised live. Assumed: no body, any 2xx is success.
-  return call('DELETE', `/campaigns/${encodeURIComponent(campaignId)}/audience/${encodeURIComponent(urn)}`);
+// Adds one profile with its custom variables and returns its audience entry.
+// Documented (docs.aimfox.com, 2026-10-03), not yet exercised live: POST
+// /campaigns/:id/audience/multiple {type: 'profile_url', profiles: [{profile_url, custom_variables}]}
+// → {status, profiles: [entry], failed: [{profile_url, custom_variables}], failedReason: {<public id>: code}}.
+// A profile in failed throws AimfoxAddRefused with that code. A profile in neither list comes back as
+// an empty entry, and push then looks it up in listAudience by public id.
+export async function addToAudience(campaignId, { profileUrl, customVariables }) {
+  const path = `/campaigns/${encodeURIComponent(campaignId)}/audience/multiple`;
+  let res;
+  try {
+    res = await call('POST', path, { type: 'profile_url', profiles: [{ profile_url: profileUrl, custom_variables: customVariables ?? {} }] });
+  } catch (e) {
+    // The single-add route answers a refusal as HTTP 400 {error: {data: <code>}}; read it the same way.
+    const code = e instanceof AimfoxError && !e.auth && typeof e.body?.error?.data === 'string' ? e.body.error.data : null;
+    if (code) throw new AimfoxAddRefused(code, profileUrl, e.body, e.status);
+    throw e;
+  }
+  const publicId = publicIdFromProfileUrl(profileUrl);
+  const reasons = res?.failedReason && typeof res.failedReason === 'object' ? res.failedReason : {};
+  const reasonKey = Object.keys(reasons).find((k) => k.toLowerCase() === publicId);
+  const failed = (Array.isArray(res?.failed) ? res.failed : []).some((f) => publicIdFromProfileUrl(f?.profile_url) === publicId);
+  if (reasonKey !== undefined || failed) {
+    throw new AimfoxAddRefused(reasonKey !== undefined ? String(reasons[reasonKey]) : 'unknown', profileUrl, res);
+  }
+  const added = (Array.isArray(res?.profiles) ? res.profiles : []).map(audienceEntry).find((e) => e.publicId === publicId);
+  return added ?? audienceEntry({});
+}
+
+// Documented (docs.aimfox.com, 2026-10-03), not yet exercised live: DELETE
+// /campaigns/:id/audience/:urn, where the last part is the lead's urn OR its public identifier.
+export async function removeFromAudience(campaignId, urnOrPublicId) {
+  return call('DELETE', `/campaigns/${encodeURIComponent(campaignId)}/audience/${encodeURIComponent(urnOrPublicId)}`);
 }
 
 // ---- custom variables ---------------------------------------------------------------------------
 
-export async function setCustomVariables(campaignId, urn, variables) {
-  // UNVERIFIED body shape — not exercised live. Assumed: PUT {custom_variables: {name: value}}.
-  return call('PUT', `/campaigns/${encodeURIComponent(campaignId)}/custom-variables/${encodeURIComponent(urn)}`,
-    { custom_variables: variables });
-}
-
+// Returns the target's variables as a plain {NAME: value} object.
+// Documented (docs.aimfox.com, 2026-10-03), not yet exercised live: {status, custom_variable_keys,
+// custom_variables: {target_urn, variables: {NAME: value}}}. Any other shape throws (it is never
+// read as "no variables", which would remove a lead whose message is fine).
 export async function getCustomVariables(campaignId, urn) {
-  // UNVERIFIED body shape — not exercised live. Assumed: {custom_variables: {name: value}} or
-  // {data: {...}} or a list of {name, value}. Normalised to a plain {name: value} object.
   const body = await call('GET', `/campaigns/${encodeURIComponent(campaignId)}/custom-variables/${encodeURIComponent(urn)}`);
-  const v = unwrap(body, 'custom_variables');
-  if (Array.isArray(v)) return Object.fromEntries(v.map((x) => [x?.name ?? x?.key, x?.value]));
-  if (v && typeof v === 'object' && v.custom_variables && typeof v.custom_variables === 'object') return v.custom_variables;
-  return v && typeof v === 'object' ? v : {};
+  const cv = requireShape(body, 'custom_variables', 'custom variables', false);
+  return requireShape(cv, 'variables', 'custom variables', false);
 }
 
 // The welcome value out of getCustomVariables' result, matched on the name case-insensitively:
@@ -234,12 +254,14 @@ export function welcomeFrom(variables) {
 
 // ---- blacklist ----------------------------------------------------------------------------------
 
-// Takes a lead urn (string, as dnc.mjs passes it) or {urn} / {profileUrl}.
+// Takes a lead urn (string) or {urn} / {profileUrl}.
+// Documented (docs.aimfox.com, 2026-10-03), not yet exercised live: POST /blacklist/:urn with no
+// body, or POST /blacklist {urls: [profile url]}.
 export async function addToBlacklist(target) {
-  // UNVERIFIED body shape — not exercised live. Assumed: POST {urn} or {profile_url}.
   const { urn, profileUrl } = typeof target === 'string' ? { urn: target } : (target ?? {});
-  const body = urn ? { urn } : { profile_url: profileUrl };
-  return call('POST', '/blacklist', body);
+  if (urn) return call('POST', `/blacklist/${encodeURIComponent(urn)}`);
+  if (!profileUrl) throw new AimfoxError('addToBlacklist needs a urn or a profile URL', 0, null);
+  return call('POST', '/blacklist', { urls: [profileUrl] });
 }
 
 // ---- leads (sync) -------------------------------------------------------------------------------

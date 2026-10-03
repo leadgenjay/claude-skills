@@ -22,8 +22,19 @@ const approvedRows = (rows, extra = {}) => ({ method: 'GET', urlPattern: rx('/re
 const welcomes = (rows) => ({ method: 'GET', urlPattern: rx('/rest/v1/li_messages?', 'kind=eq.welcome'), body: rows });
 const claimOk = { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.approved'), body: [{ status: 'pushing' }] };
 const finishOk = { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'pushed' }] };
+// GET /campaigns/:id/custom-variables/:urn, as documented on docs.aimfox.com.
+const varsBody = (urn, variables) => ({ status: 'ok', custom_variable_keys: Object.keys(variables), custom_variables: { target_urn: urn, variables } });
 const customVars = (urn, value) => ({
-  method: 'GET', urlPattern: `${rx(`${C}/custom-variables/${urn}`)}$`, body: { custom_variables: { welcome_message: value } },
+  method: 'GET', urlPattern: `${rx(`${C}/custom-variables/${urn}`)}$`, body: varsBody(urn, { welcome_message: value }),
+});
+// POST /campaigns/:id/audience/multiple, as documented: added profiles, failed ones, and why.
+const addResult = ({ profiles = [], failed = [], failedReason = {} } = {}) => ({
+  method: 'POST', urlPattern: `${rx(`${C}/audience/multiple`)}$`, body: { status: 'ok', profiles, failed, failedReason },
+});
+const addOk = (id) => addResult({ profiles: [audienceRow(id)] });
+const addFailed = (id, reason) => addResult({
+  failed: [{ profile_url: `https://www.linkedin.com/in/p${id}`, custom_variables: { welcome_message: welcomeBody(id) } }],
+  failedReason: { [`p${id}`]: reason },
 });
 
 // Every PAUSED push ends by recording awaiting_start and printing one pushed lead's welcome.
@@ -47,7 +58,7 @@ test('batch push of 3 approved + 1 do_not_contact adds exactly the 3', () => {
     welcomes([1, 2, 3, 4].map((id) => welcomeRow(id))),
     claimOk,
     // add returns no urn, so push finds each lead in the audience by public id
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: {} },
+    addResult(),
     { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([1, 2, 3].map((id) => audienceRow(id))) },
     ...[1, 2, 3].map((id) => customVars(`u${id}`, welcomeBody(id))),
     finishOk,
@@ -55,8 +66,12 @@ test('batch push of 3 approved + 1 do_not_contact adds exactly the 3', () => {
   assert.equal(res.status, 0, res.stderr);
   const adds = audienceAdds(res.log).map(bodyOf);
   assert.equal(adds.length, 3);
-  assert.deepEqual(adds.map((b) => b.profile_url), [1, 2, 3].map((id) => `https://www.linkedin.com/in/p${id}`));
-  assert.deepEqual(adds.map((b) => b.custom_variables.welcome_message), [1, 2, 3].map(welcomeBody));
+  assert.deepEqual(adds, [1, 2, 3].map((id) => ({
+    type: 'profile_url',
+    profiles: [{ profile_url: `https://www.linkedin.com/in/p${id}`, custom_variables: { welcome_message: welcomeBody(id) } }],
+  })), 'the documented /audience/multiple body, the welcome riding along as a custom variable');
+  assert.ok(audienceAdds(res.log).every((e) => e.url === `${C}/audience/multiple`));
+  assert.equal(reqs(res.log, 'POST', `${C}/custom-variables`).length, 0, 'no separate variables write');
   assert.ok(!JSON.stringify(res.log).includes('/in/p4'), 'the do_not_contact row never reaches Aimfox');
   assert.equal(patchesTo(res.log, 'id=eq.4').length, 0);
   // the batch query itself restricts to approved
@@ -73,7 +88,7 @@ test('read-back mismatch: removed, push_failed, alerted, and not re-added on the
     approvedRows([prospect(1)]),
     welcomes([welcomeRow(1)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     customVars('u1', 'Something else entirely'),
     { method: 'DELETE', urlPattern: `${rx(`${C}/audience/u1`)}$`, body: null },
     finishOk,
@@ -97,7 +112,7 @@ test('read-back mismatch: removed, push_failed, alerted, and not re-added on the
     approvedRows([]),
     { method: 'GET', urlPattern: rx('/rest/v1/li_prospects?'), body: [prospect(1, { status: 'push_failed', push_attempts: 2 })] },
     welcomes([welcomeRow(1)]),
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
   ]);
   assert.equal(second.status, 0, second.stderr);
   assert.equal(audienceAdds(second.log).length, 0, 'push_failed is terminal');
@@ -112,7 +127,7 @@ test('crash between the audience add and the status write: reconcile leaves exac
     approvedRows([prospect(1)]),
     welcomes([welcomeRow(1)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     customVars('u1', welcomeBody(1)),
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), status: 503, body: { message: 'down' } },
   ]);
@@ -128,7 +143,7 @@ test('crash between the audience add and the status write: reconcile leaves exac
     customVars('u1', welcomeBody(1)),
     finishOk,
     approvedRows([]),
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
   ]);
   assert.equal(second.status, 0, second.stderr);
   assert.equal(audienceAdds(second.log).length, 0, 'reconcile does not add again');
@@ -187,7 +202,7 @@ test('running campaign: a later batch is added while the fingerprint is unchange
     approvedRows([prospect(5)]),
     welcomes([welcomeRow(5)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u5' } },
+    addOk(5),
     customVars('u5', welcomeBody(5)),
     finishOk,
   ]);
@@ -207,7 +222,7 @@ test('running campaign: a batch is refused after the campaign definition changes
     approvedRows([prospect(6)]),
     welcomes([welcomeRow(6)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u6' } },
+    addOk(6),
   ]);
   assert.notEqual(res.status, 0);
   assert.equal(audienceAdds(res.log).length, 0);
@@ -226,7 +241,7 @@ test('running campaign with no fingerprint available: every later batch waits wi
     approvedRows([prospect(7)]),
     welcomes([welcomeRow(7)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u7' } },
+    addOk(7),
   ];
   for (let pass = 0; pass < 2; pass++) {
     const res = runPush(home, ['push'], mocks);
@@ -255,7 +270,7 @@ test('first batch into a PAUSED campaign: enrolled, awaiting_start recorded, che
     approvedRows([prospect(1)]),
     welcomes([welcomeRow(1)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     customVars('u1', welcomeBody(1)),
     finishOk,
     { method: 'GET', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushed'), body: [{ id: 1, public_id: 'p1', name: 'P One' }] },
@@ -297,7 +312,7 @@ test('RUNNING after awaiting_start with an unchanged fingerprint: push records t
     approvedRows([prospect(2)]),
     welcomes([welcomeRow(2)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u2' } },
+    addOk(2),
     customVars('u2', welcomeBody(2)),
     finishOk,
   ]);
@@ -333,7 +348,7 @@ test('campaign edited between the batch and Start: the Start is not taken, nothi
     welcomes([welcomeRow(2)]),
     claimOk,
     { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([]) },
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u2' } },
+    addOk(2),
   ]);
   assert.notEqual(res.status, 0);
   assert.equal(stateUpdates(res.log).length, 0, 'not confirmed');
@@ -352,7 +367,7 @@ function neverRecordedRunningMocks(stateRows) {
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?'), body: [{ status: 'approved' }] },
     approvedRows([prospect(2)]),
     welcomes([welcomeRow(1), welcomeRow(2)]),
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u2' } },
+    addOk(2),
     customVars('u2', welcomeBody(2)),
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_campaign_state?'), body: [{}] },
   ];
@@ -388,7 +403,7 @@ test('no fingerprint: a later batch goes into the re-paused campaign and asks fo
     approvedRows([prospect(8)]),
     welcomes([welcomeRow(8)]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u8' } },
+    addOk(8),
     customVars('u8', welcomeBody(8)),
     finishOk,
   ]);
@@ -411,7 +426,7 @@ test('a stored welcome carrying a secret is refused right before enrolling', () 
     approvedRows([prospect(1)]),
     welcomes([welcomeRow(1, { body: leaky })]),
     claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
   ]);
   assert.equal(res.status, 0, res.stderr);
   assert.equal(audienceAdds(res.log).length, 0);
@@ -458,7 +473,7 @@ test('a CREATED (never started) campaign is treated as paused: batch enrolled, S
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(created), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     customVars('u1', welcomeBody(1)),
     finishOk,
   ]);
@@ -474,8 +489,8 @@ test('read-back finds the welcome under an uppercased variable name', () => {
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
-    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { custom_variables: { WELCOME_MESSAGE: welcomeBody(1) } } },
+    addOk(1),
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: varsBody('u1', { FIRST_NAME: 'P', WELCOME_MESSAGE: welcomeBody(1) }) },
     finishOk,
   ]);
   assert.equal(res.status, 0, res.stderr);
@@ -548,7 +563,7 @@ test('a read-back connection reset stops the run; the lead is not removed', () =
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
     { method: 'POST', urlPattern: rx(`${AIMFOX}/blacklist`), body: {} },
     finishOk,
@@ -565,7 +580,7 @@ test('a read-back answered with an HTTP error still counts as a mismatch', () =>
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, status: 404, body: { status: 'error' } },
     { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
     finishOk,
@@ -575,12 +590,107 @@ test('a read-back answered with an HTTP error still counts as a mismatch', () =>
   assert.equal(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing')[0].status, 'push_failed');
 });
 
+// ---- Aimfox refusing the add (failedReason), one outcome per documented code ----------------------
+
+const refusedPush = (addMock) => runPush(makeHome(), ['push'], [
+  stateRow([]), campaignGet(PAUSED), pushingRows([]),
+  approvedRows([prospect(1, { push_attempts: 0 })]), welcomes([welcomeRow(1)]), claimOk,
+  addMock,
+  { method: 'PATCH', urlPattern: rx('/rest/v1/li_messages?'), body: [{ id: 101 }] },
+  { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ id: 1 }] },
+]);
+const afterRefusal = (res) => ({
+  row: patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'),
+  readBacks: reqs(res.log, 'GET', `${C}/custom-variables/`).length,
+  alerts: reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).map((a) => a.kind),
+  drafts: reqs(res.log, 'PATCH', '/rest/v1/li_messages?').map(bodyOf),
+});
+
+test('add refused as alreadyConnected: the prospect is rejected as already a connection', () => {
+  const res = refusedPush(addFailed(1, 'alreadyConnected'));
+  assert.equal(res.status, 0, res.stderr);
+  const r = afterRefusal(res);
+  assert.deepEqual(r.row, [{ status: 'rejected', icp_reason: 'already a connection (Aimfox: alreadyConnected)' }]);
+  assert.equal(r.readBacks, 0);
+  assert.match(res.stdout, /Aimfox would not add 1 already connected \(rejected\), 0 in another campaign/);
+});
+
+test('add refused as locked: left approved with the attempt not counted, reported as in another campaign', () => {
+  const res = refusedPush(addFailed(1, 'locked'));
+  assert.equal(res.status, 0, res.stderr);
+  const r = afterRefusal(res);
+  assert.deepEqual(r.row, [{ status: 'approved', push_attempts: 0 }]);
+  assert.match(res.stdout, /p1: in another Aimfox campaign; left approved to retry later/);
+  assert.match(res.stdout, /1 in another campaign \(left approved\)/);
+  assert.ok(!r.alerts.includes('push_failed'));
+});
+
+test('add refused as blocked: do-not-contact, unsent welcome dropped', () => {
+  const res = refusedPush(addFailed(1, 'blocked'));
+  assert.equal(res.status, 0, res.stderr);
+  const r = afterRefusal(res);
+  assert.deepEqual(r.row, [{ status: 'do_not_contact', dnc_reason: 'blocked in Aimfox (blacklist)' }]);
+  assert.deepEqual(r.drafts, [{ status: 'dropped' }]);
+  assert.match(res.stdout, /1 blocked \(do-not-contact\)/);
+});
+
+test('add refused for any other reason: push_failed with the reason in the alert', () => {
+  for (const reason of ['miningFailed', 'noPFP', 'notLead', 'closed']) {
+    const res = refusedPush(addFailed(1, reason));
+    assert.equal(res.status, 0, res.stderr);
+    const r = afterRefusal(res);
+    assert.deepEqual(r.row, [{ status: 'push_failed' }], reason);
+    const a = reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).find((x) => x.kind === 'push_failed');
+    assert.match(a.body, new RegExp(`would not add this profile \\(${reason}\\)`));
+    assert.match(res.stdout, /1 other \(push_failed\)/);
+  }
+});
+
+test('a profile listed in failed with no failedReason is push_failed as unknown', () => {
+  const res = refusedPush(addResult({ failed: [{ profile_url: 'https://www.linkedin.com/in/p1/', custom_variables: {} }] }));
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(afterRefusal(res).row, [{ status: 'push_failed' }]);
+  assert.match(reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).find((x) => x.kind === 'push_failed').body, /\(unknown\)/);
+});
+
+test('an HTTP 400 refusal with an error code is handled like a failedReason', () => {
+  const res = refusedPush({
+    method: 'POST', urlPattern: `${rx(`${C}/audience/multiple`)}$`, status: 400,
+    body: { status: 'fail', error: { code: 400, message: 'The Target is Locked', type: 'Bad Request', data: 'locked' } },
+  });
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(afterRefusal(res).row, [{ status: 'approved', push_attempts: 0 }]);
+});
+
+test('read-back reads custom_variables.variables; a body without it stops the run', () => {
+  const ok = runPush(makeHome(), ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk, addOk(1),
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: varsBody('u1', { welcome_message: welcomeBody(1) }) },
+    finishOk,
+  ]);
+  assert.equal(ok.status, 0, ok.stderr);
+  assert.deepEqual(patchesTo(ok.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
+
+  // The variables flat under custom_variables (the old guess) is not the documented shape.
+  const bad = runPush(makeHome(), ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk, addOk(1),
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { custom_variables: { welcome_message: welcomeBody(1) } } },
+    { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
+    finishOk,
+  ]);
+  assert.notEqual(bad.status, 0);
+  assert.match(bad.stderr, /Aimfox returned custom variables in an unexpected shape/);
+  assert.equal(reqs(bad.log, 'DELETE', `${C}/audience/`).length, 0, 'not read as a mismatch');
+});
+
 test('a read-back that times out stops the run; it is not taken as a mismatch', () => {
   const home = makeHome();
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, timeout: true },
     { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
     finishOk,
@@ -596,14 +706,15 @@ test('read-back mismatch where the remove fails: the lead is blacklisted instead
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
-    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    addOk(1),
     customVars('u1', ''),
     { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), status: 500, body: { error: 'nope' } },
     { method: 'POST', urlPattern: rx(`${AIMFOX}/blacklist`), body: {} },
     finishOk,
   ]);
   assert.equal(res.status, 0, res.stderr);
-  assert.deepEqual(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).map(bodyOf), [{ urn: 'u1' }]);
+  const bl = reqs(res.log, 'POST', `${AIMFOX}/blacklist`);
+  assert.deepEqual(bl.map((e) => [e.url, e.body]), [[`${AIMFOX}/blacklist/u1`, undefined]], 'POST /blacklist/:urn, no body');
   assert.equal(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing')[0].status, 'push_failed');
   const a = reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).find((x) => x.kind === 'push_failed');
   assert.match(a.body, /blacklisted in Aimfox instead/);

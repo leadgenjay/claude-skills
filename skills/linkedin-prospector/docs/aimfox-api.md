@@ -5,7 +5,8 @@ calls. Base `https://api.aimfox.com/api/v2`, header `Authorization: Bearer <key>
 wrapped as `{status: "ok", <name>: ...}`.
 
 Write calls (adding to an audience, custom variables, blacklist, delete) were NOT exercised here.
-Their shapes are still assumptions and are marked `UNVERIFIED` in `scripts/lib/aimfox.mjs`.
+Their shapes come from the official docs (see "Write endpoints" below) and are marked "Documented,
+not yet exercised live" in `scripts/lib/aimfox.mjs`.
 
 The API was slow on the day: 3 of about 25 calls hung past 30 to 120 seconds, including endpoints
 that answered in under a second at other times. Treat a timeout as "try again later", never as an
@@ -94,3 +95,30 @@ and `labels`.
 ## GET /blacklist, GET /webhooks
 
 `{status, profiles: []}` and `{status, webhooks: []}` on this workspace.
+
+## Write endpoints (from the official docs)
+
+Extracted from docs.aimfox.com on 2026-10-03. None of these has been called by this skill yet.
+
+- **POST /campaigns/:id/audience/multiple** (what push uses). Body `{type: "profile_url", profiles:
+  [{profile_url, custom_variables: {name: value}}]}`. Answer `{status, profiles: [{id, urn,
+  public_identifier, state, ...}], failed: [{profile_url, custom_variables}], failedReason:
+  {<public id>: code}}`. Allowed while the campaign is `ACTIVE`, `PAUSED`, `DONE` or `CREATED`.
+- **POST /campaigns/:id/audience** (single add, not used). Body `{profile_url}`. A refusal is HTTP
+  400 `{status: "fail", error: {message, data: <code>}}`. Codes: `blocked` (target is blocked),
+  `locked` (in another campaign), `miningFailed` (not found), `noPFP` (no profile picture),
+  `alreadyConnected` (already a lead), `notLead`, `closed` (cannot receive free InMails). Push
+  reads the same codes from `failedReason`: `alreadyConnected` → rejected, `locked` → left
+  approved to retry, `blocked` → do-not-contact, anything else → push_failed.
+- **POST /campaigns/:id/custom-variables**. Body `{custom_variables: [{target_urn, variables:
+  {NAME: value}}]}`. Not used: the variables ride along on the audience add.
+- **GET /campaigns/:id/custom-variables/:urn**. `{status, custom_variable_keys: [...],
+  custom_variables: {target_urn, variables: {NAME: value}}}`. Push reads `variables` back and
+  matches the welcome's name case-insensitively (the docs show `CUSTOM_MESSAGE` and `first name`).
+- **DELETE /campaigns/:id/audience/:urn**. The last part is the urn OR the public identifier.
+- **POST /blacklist/:urn** (no body), or **POST /blacklist** `{urls: [profile url]}`.
+- **POST /campaigns** creates only the campaign shell. Per Aimfox's docs, the audience, schedule and
+  connection flows (invite note, messages) must be configured in the dashboard. A new campaign comes
+  back with state `INIT`, which the client reads as paused.
+- **PATCH /campaigns/:id** takes `state: ACTIVE | PAUSED`. This skill never calls it: the user
+  presses Start in Aimfox by hand, deliberately.
