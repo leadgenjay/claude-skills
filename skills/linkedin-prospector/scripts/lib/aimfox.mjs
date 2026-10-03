@@ -388,14 +388,40 @@ function safeCampaign(c, accounts, account) {
   return { ...scope, flow };
 }
 
-function repairSteps(c, workspaceId, flow) {
+// The body the Aimfox web app sends for a new message step. Live 2026-10-03 the endpoint answered
+// 422 for a missing `edited`, then for a non-string `original_id`: a step is always added from a
+// saved template, whose id goes in original_id. Delay is in hours (the app's default is 24).
+const WELCOME_TEMPLATE_NAME = 'LinkedIn Prospector welcome';
+const TEMPLATE_PLACEHOLDER = '<welcome template id>';
+const welcomeStepBody = (templateId) => ({
+  type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1,
+  edited: false, original_id: templateId, ai_descriptors: {}, attachments: [],
+});
+
+// Documented public endpoints (GET/POST /v2/templates). Reuses a saved message template whose text
+// is exactly the welcome token, else creates one. Returns { id, created }.
+async function welcomeTemplate() {
+  const list = await call('GET', '/templates');
+  if (!list || !Array.isArray(list.templates)) throw new AimfoxError('Aimfox returned templates in an unexpected shape', 0, null);
+  const found = list.templates.find((t) => t?.type === 'MESSAGE_TEMPLATE' && t?.message === WELCOME_TOKEN
+    && (!Array.isArray(t.attachments) || !t.attachments.length));
+  if (found) return { id: stableId(found.id, 'template ID'), created: false };
+  const made = checkedEnvelope(await call('POST', '/templates',
+    { name: WELCOME_TEMPLATE_NAME, type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, ai: false }), 'template');
+  if (made.type !== 'MESSAGE_TEMPLATE' || made.message !== WELCOME_TOKEN) {
+    throw new AimfoxError(`Template ${made.id} came back with different text; inspect it in Aimfox`, 0, null);
+  }
+  return { id: stableId(made.id, 'created template ID'), created: true };
+}
+
+function repairSteps(c, workspaceId, flow, templateId = TEMPLATE_PLACEHOLDER) {
   const base = `/workspaces/${workspaceId}/campaigns/${c.id}/flows/${flow.id}`;
   const steps = [];
   if (flow.template !== null) steps.push({ method: 'PATCH', path: base, body: { template: null } });
   for (let n = flow.flow_message_templates.length; n > 1; n--) {
     steps.push({ method: 'DELETE', path: `${base}/messages` });
   }
-  const desired = { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1 };
+  const desired = welcomeStepBody(templateId);
   const first = flow.flow_message_templates[0];
   if (!first) steps.push({ method: 'POST', path: `${base}/messages`, body: desired });
   else if (first.type !== desired.type || first.message !== desired.message || first.delay !== desired.delay
@@ -440,8 +466,10 @@ async function sessionToken() {
 }
 
 // Compare documented protocol fields, ignoring server IDs/metadata and normalizing absent attachments.
+// Sorted by flow id: Aimfox returns the flows in a different order on each read (observed live).
 function flowSnapshot(c) {
-  return JSON.stringify(c.flows.map((f) => [String(f.id), f.type, f.template,
+  const flows = [...c.flows].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return JSON.stringify(flows.map((f) => [String(f.id), f.type, f.template,
     Array.isArray(f.flow_message_templates) ? f.flow_message_templates.map((m) =>
       [m.type, m.message, m.delay, m.attachments ?? []]) : null]));
 }
@@ -506,7 +534,7 @@ export async function createWelcomeCampaign(options = {}, { apply = false } = {}
       status: 'preview', campaign_id: id ?? null, workspace_id: safety.workspaceId, account_ids: safety.accountIds,
       steps: c ? repairSteps(c, safety.workspaceId, safety.flow) : [{ method: 'POST', path: '/campaigns', body: shell },
         { method: 'POST', path: `/workspaces/${safety.workspaceId}/campaigns/<created-id>/flows/<readback-flow>/messages`,
-          body: { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1 } }],
+          body: welcomeStepBody(TEMPLATE_PLACEHOLDER) }],
       effects: 'Author inactive campaign configuration only; audience remains unchanged; Start is manual.',
       cost: 'Provider authoring cost is unmeasured; no audience or sends are requested.',
     };
@@ -527,10 +555,17 @@ export async function createWelcomeCampaign(options = {}, { apply = false } = {}
     safety = safeCampaign(c, accounts, account);
     if (JSON.stringify([safety.workspaceId, safety.accountIds]) !== selectedScope) throw new AimfoxRefusal('Campaign account/workspace changed before authoring');
     const originalScope = JSON.stringify([safety.workspaceId, safety.accountIds, String(safety.flow.id)]);
-    const steps = repairSteps(c, safety.workspaceId, safety.flow);
+    let steps = repairSteps(c, safety.workspaceId, safety.flow);
     if (steps.length) {
       auth = await probeSession(auth, `/workspaces/${safety.workspaceId}/campaigns/${campaignId}/flows/${safety.flow.id}`);
       route = auth.route;
+    }
+    // A saved template is a standalone, reusable object, not a campaign change, so creating one
+    // does not count as a campaign write; the result reports it.
+    let template = null;
+    if (steps.some((s) => s.method === 'POST')) {
+      template = await welcomeTemplate();
+      steps = repairSteps(c, safety.workspaceId, safety.flow, template.id);
     }
     let expectedFlows = flowSnapshot(c);
     for (const step of steps) {
@@ -556,6 +591,7 @@ export async function createWelcomeCampaign(options = {}, { apply = false } = {}
     return { status: 'verified', campaign_id: campaignId, workspace_id: safety.workspaceId,
       account_ids: safety.accountIds, auth_route: route, ...(auth.routeAFailure ? { route_a_failure: auth.routeAFailure } : {}),
       writes_attempted: writesAttempted, facts: exactResult(c, safety),
+      ...(template ? { welcome_template: { id: template.id, created: template.created } } : {}),
       config: { aimfox_campaign_id: campaignId }, instruction: 'Put campaign_id in config.json as aimfox_campaign_id. Start remains manual in Aimfox.' };
   } catch (e) {
     // Never serialize a provider body or a credential. Partial effects must remain distinguishable.

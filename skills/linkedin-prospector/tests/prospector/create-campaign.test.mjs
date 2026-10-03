@@ -16,6 +16,10 @@ const base = () => [
   // Live shape, 2026-10-03: this route answers status "OK" in capitals.
   { method: 'POST', urlPattern: '/api/v2/token$', body: { status: 'OK', token: 'PRIVATE-MINTED-TOKEN' } },
   { method: 'GET', urlPattern: '/api/v1/workspaces/ws1/campaigns/c1/flows/11$', body: { status: 'ok', flow: {} } },
+  { method: 'GET', urlPattern: '/api/v2/templates$', body: { status: 'ok', templates: [
+    { id: 'other', type: 'MESSAGE_TEMPLATE', message: 'Hi {{FIRST_NAME}}', attachments: [] }] } },
+  { method: 'POST', urlPattern: '/api/v2/templates$',
+    body: { status: 'ok', template: { id: 't1', type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN } } },
 ];
 function repairMocks(c, final = exact()) {
   const states = [get(c), get(c)];
@@ -63,7 +67,11 @@ test('prospector repairs note, removes extra messages and stores exact token/del
   assert.equal(out.config.aimfox_campaign_id, 'c1');
   assert.deepEqual(privateEffects(r).map((e) => e.method), ['PATCH', 'DELETE', 'DELETE', 'POST']);
   assert.deepEqual(bodyOf(privateEffects(r)[0]), { template: null });
-  assert.deepEqual(bodyOf(privateEffects(r).at(-1)), { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1 });
+  // The web app's body; live 2026-10-03 the endpoint answers 422 when `edited` is missing.
+  assert.deepEqual(bodyOf(privateEffects(r).at(-1)), { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1,
+    edited: false, original_id: 't1', ai_descriptors: {}, attachments: [] });
+  assert.deepEqual(bodyOf(effects(r).find((e) => e.url.endsWith('/api/v2/templates'))),
+    { name: 'LinkedIn Prospector welcome', type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, ai: false });
   assert.deepEqual(bodyOf(effects(r)[0]), {});
   assert.ok(!JSON.stringify(r).includes('PRIVATE-MINTED-TOKEN'));
   assert.ok(!r.log.some((e) => /audience|start/.test(e.url) || (e.method === 'PATCH' && /\/api\/v2\/campaigns/.test(e.url))));
@@ -75,6 +83,30 @@ test('exact first message is kept while extra tail messages are deleted', () => 
   const r = cli(['create-campaign', '--campaign', 'c1', '--apply'], repairMocks(c));
   assert.equal(r.status, 0, r.stderr);
   assert.deepEqual(privateEffects(r).map((e) => e.method), ['DELETE']);
+});
+
+test('an existing welcome template is reused, not duplicated', () => {
+  const c = target(); c.flows[0].flow_message_templates = [];
+  const mocks = repairMocks(c);
+  mocks.unshift({ method: 'GET', urlPattern: '/api/v2/templates$', body: { status: 'ok', templates: [
+    { id: 'saved7', type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, attachments: [] }] } });
+  const r = cli(['create-campaign', '--campaign', 'c1', '--apply'], mocks);
+  assert.equal(r.status, 0, r.stderr);
+  assert.ok(!effects(r).some((e) => e.url.endsWith('/api/v2/templates')), 'no template created');
+  assert.equal(bodyOf(privateEffects(r).at(-1)).original_id, 'saved7');
+});
+
+test('flows returned in a different order on each read are not mistaken for a change', () => {
+  // Observed live 2026-10-03: GET campaign returns the same flows in a shuffled order per call.
+  const c = target(); c.flows[0].flow_message_templates = [];
+  const mocks = repairMocks(c);
+  let n = 0;
+  for (const m of mocks) {
+    if (m.method === 'GET' && m.urlPattern === '/api/v2/campaigns/c1$' && n++ % 2) m.body.campaign.flows.reverse();
+  }
+  const r = cli(['create-campaign', '--campaign', 'c1', '--apply'], mocks);
+  assert.equal(r.status, 0, r.stderr);
+  assert.deepEqual(privateEffects(r).map((e) => e.method), ['POST']);
 });
 
 test('shell required fields, blank note and absent welcome are authored and read back', () => {
@@ -232,6 +264,9 @@ test('transport uses API key for v2 and minted/session bearer only for scoped pr
           if (route === 'B') { status = 401; body = { status: 'fail' }; }
           else body = { status: 'ok', token: 'test-minted-session' };
         } else if (url.endsWith('/api/v2/campaigns/c1')) body = { status: 'ok', campaign: c };
+        else if (url.endsWith('/api/v2/templates')) {
+          body = { status: 'ok', templates: [{ id: 'saved7', type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, attachments: [] }] };
+        }
         else if (opts.method === 'GET' && url.includes('/api/v1/')) body = { status: 'ok', flow: c.flows[0] };
         else if (opts.method === 'POST' && url.endsWith('/messages')) {
           c.flows[0].flow_message_templates = [{ type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1, attachments: [] }];

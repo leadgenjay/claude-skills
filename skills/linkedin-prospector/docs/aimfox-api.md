@@ -143,6 +143,18 @@ protocol provenance, not live verification of this command. Private endpoints ca
 | Replace message | `PATCH campaigns/<cid>/flows/<flowId>/messages/<n>` | `{type: "MESSAGE_TEMPLATE", message, delay}` | Web app source; edits the indexed step. |
 | Remove final message | `DELETE campaigns/<cid>/flows/<flowId>/messages` | No body | Web app source; deletes the last step, one call at a time. |
 
+Observed live 2026-10-03, adding the welcome step to a fresh campaign:
+
+- The append-message body must be the web app's full shape: `{type: "MESSAGE_TEMPLATE",
+  message, delay, edited: false, original_id: "<saved template id>", ai_descriptors: {},
+  attachments: []}`. A missing `edited` and a null `original_id` each answer 422. A step is
+  always added from a saved template, so the command first reuses, or creates through the
+  documented `POST /v2/templates`, a message template whose text is exactly the welcome token.
+- `delay` is in hours: the web app's default for a new step is 24.
+- `GET /v2/campaigns/:id` returns the same flows in a different order on each call, so any
+  comparison of two reads must sort the flows by id first.
+- The browser session token (`AIMFOX_SESSION`) is a Keycloak JWT that lasted 7 days.
+
 Writes require `Authorization: Bearer <session token>`. First the command calls public
 `POST /v2/token` with the API key and exactly `{}`. It never sends `account_id`: that optional
 field can re-login a LinkedIn account. The documented login token response is `{token}`.
