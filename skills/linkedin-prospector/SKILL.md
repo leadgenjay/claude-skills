@@ -56,8 +56,9 @@ alert; if the problem comes back, a fresh one appears.
    `~/.claude/skills/linkedin-prospector/schema.sql` into the Supabase SQL editor and runs it
    once. On macOS, `pbcopy < ~/.claude/skills/linkedin-prospector/schema.sql` puts it on the
    clipboard.
-5. Aimfox campaign: walk the user through `references/aimfox-campaign-setup.md`, then put the
-   campaign id in `aimfox_campaign_id`.
+5. Aimfox campaign: run `node "$P" create-campaign --name "LinkedIn Prospector"`, then put the
+   printed campaign id in `aimfox_campaign_id`. Use `references/aimfox-campaign-setup.md` for
+   the manual fallback if authentication or final settings checks fail.
 6. Unipile: the user connects the same LinkedIn account in Unipile and copies its account id
    into `unipile_account_id`.
 7. Explain `reply_scope` before the user picks it. `campaign_only` (the default) auto-replies
@@ -67,6 +68,36 @@ alert; if the problem comes back, a fresh one appears.
 8. Run `node $P setup-check`. It verifies each key with one cheap read call, checks the tables
    and functions exist, reads the Aimfox campaign, and refuses if `.env` would be committed to
    git. Fix each failing line and re-run until it passes.
+
+## Create or repair an Aimfox campaign
+
+```bash
+node "$P" create-campaign --name "LinkedIn Prospector"
+node "$P" create-campaign --campaign <id>
+```
+
+The first command creates an empty list/connect campaign using the sole account (or explicit
+`--account <id>`). The second repairs the specified inactive campaign; ACTIVE and RUNNING states are refused. These
+prospector setup commands write directly. They clear the primary connection note, keep exactly
+one message with complete text `{{CUSTOM.welcome_message}}` and delay `1`, then run the existing
+campaign checks on a fresh v2 read. Delay units are not confirmed. A failed final read or check
+is a failure, even when earlier writes succeeded; inspect the returned campaign id before retrying.
+
+No audience is added and campaign state is never changed. The user still presses Start in
+Aimfox. New shells turn off InMail optimization; existing incompatible settings may need the
+manual fallback. Authentication tries `POST /v2/token` with `{}` only, keeping its token in
+memory, then uses `AIMFOX_SESSION` if generation fails or a read-only authentication probe returns 401/403.
+Never print, persist, or request a session token in chat. Private v1 writes are based on supplied web app observations and need
+live proof before being called verified.
+
+For separate Aimfox inspection and preview, use `scripts/aimfox.mjs`: `accounts`, `campaigns`,
+`campaign --campaign <id>`, and `create-campaign [--name <name>] [--campaign <id>] [--account <id>]`. The standalone
+`create-campaign` is preview-only unless `--apply` is present; its output is JSON. It shares the
+client with the prospector and has no start, audience, or arbitrary-request command. `--json-file
+<private-file>` takes an object containing only `name`, `campaign`, and/or `account`; conflicting
+flags refuse. Existing campaign ownership must resolve to the selected workspace. Ambiguous
+accounts refuse. Standalone exits are 0 for read/preview/verified success, 1 for failure or an
+unproven outcome, and 2 for invalid input/refusal.
 
 ## A full manual pass, in order
 

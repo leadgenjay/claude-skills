@@ -98,7 +98,7 @@ and `labels`.
 
 ## Write endpoints (from the official docs)
 
-Extracted from docs.aimfox.com on 2026-10-03. None of these has been called by this skill yet.
+Extracted from docs.aimfox.com on 2026-10-03. Audience writes below were not exercised by the read-only probe. Campaign creation and private-flow shapes are supplied by the 2026-10-03 brief; the new command is not live verified by its offline tests.
 
 - **POST /campaigns/:id/audience/multiple** (what push uses). Body `{type: "profile_url", profiles:
   [{profile_url, custom_variables: {name: value}}]}`. Answer `{status, profiles: [{id, urn,
@@ -117,8 +117,54 @@ Extracted from docs.aimfox.com on 2026-10-03. None of these has been called by t
   matches the welcome's name case-insensitively (the docs show `CUSTOM_MESSAGE` and `first name`).
 - **DELETE /campaigns/:id/audience/:urn**. The last part is the urn OR the public identifier.
 - **POST /blacklist/:urn** (no body), or **POST /blacklist** `{urls: [profile url]}`.
-- **POST /campaigns** creates only the campaign shell. Per Aimfox's docs, the audience, schedule and
-  connection flows (invite note, messages) must be configured in the dashboard. A new campaign comes
-  back with state `INIT`, which the client reads as paused.
+- **POST /campaigns** creates the shell. The supplied live observation requires `name`,
+  `type: "list"`, `outreach_type: "connect"`, `account_ids: [account.id]`, and numeric
+  `audience_size` (the command uses 1000), plus `uses_connection_note: false`,
+  `inmail_optimization: false`, `exclude_active_targets: true`, and
+  `exclude_previous_targets: true`. Response: `{status, campaign: {id, state: "INIT", ...}}`.
+  Its PRIMARY_CONNECT note is initially null and message list empty. Public v2 does not
+  configure those steps; the command uses the private endpoints below.
 - **PATCH /campaigns/:id** takes `state: ACTIVE | PAUSED`. This skill never calls it: the user
   presses Start in Aimfox by hand, deliberately.
+
+
+## Private v1 endpoints (undocumented)
+
+Base: `https://api.aimfox.com/api/v1/workspaces/<workspace_id>`. The workspace comes from the
+selected account in `GET /v2/accounts`, and existing campaigns must belong to that account.
+The supplied brief records these routes from Aimfox's web app code on 2026-10-03. That is
+protocol provenance, not live verification of this command. Private endpoints can change.
+
+| Operation | Method and path after the workspace base | Request shape | Evidence and effects |
+|---|---|---|---|
+| Read flow | `GET campaigns/<cid>/flows/<flowId>` | No body | Supplied observation: API key accepted for reads. No mutation. |
+| Clear note | `PATCH campaigns/<cid>/flows/<flowId>` | `{template: null}` | Web app source; removes the connection note. |
+| Append message | `POST campaigns/<cid>/flows/<flowId>/messages` | `{type: "MESSAGE_TEMPLATE", message, delay}` | Web app source; appends one step. API-key write returned 401 in the supplied observation. |
+| Replace message | `PATCH campaigns/<cid>/flows/<flowId>/messages/<n>` | `{type: "MESSAGE_TEMPLATE", message, delay}` | Web app source; edits the indexed step. |
+| Remove final message | `DELETE campaigns/<cid>/flows/<flowId>/messages` | No body | Web app source; deletes the last step, one call at a time. |
+
+Writes require `Authorization: Bearer <session token>`. First the command calls public
+`POST /v2/token` with the API key and exactly `{}`. It never sends `account_id`: that optional
+field can re-login a LinkedIn account. The documented login token response is `{token}`;
+whether it authorizes private writes still needs the bounded live proof. If generation fails
+or its token receives 401/403 from a read-only private-flow authentication probe, the command can use `AIMFOX_SESSION`. The user supplies that fallback from the Aimfox web
+app's localStorage `auth` value through their private environment, never through chat. The
+CLI itself never opens a browser. Generated tokens stay in memory and are never printed or
+written to disk. A timed-out probe or an unexpected response refuses without flow writes;
+a rejected flow write stops immediately instead of trying another token. A new shell may
+already exist when its flow probe fails, so inspect the reported campaign id before retrying.
+The implemented repair avoids the unconfirmed message-index convention: if the first message
+is wrong, it removes messages from the end and appends the exact replacement.
+
+The configured primary flow has `template: null` and exactly one message whose complete text
+is `{{CUSTOM.welcome_message}}`, type `MESSAGE_TEMPLATE`, delay `1`. Delay units are unconfirmed;
+`1` is the value requested in the brief, not a verified number of hours or days. Extra messages
+are removed from the end. An existing campaign with InMail optimization or other incompatible
+flows must be fixed manually if the final checks refuse it: no campaign-state/settings PATCH
+is used to bypass those checks.
+
+The final public `GET /v2/campaigns/<cid>` must pass `campaignFacts()` before success. A 2xx
+write or saved shell alone is insufficient. No audience, sending, campaign activation,
+billing, invitation, account creation, or permanent campaign deletion is part of this CLI.
+No per-call price or balance has been measured; authoring must not be described as a measured
+zero-cost live operation.

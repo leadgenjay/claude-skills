@@ -3,7 +3,7 @@
 // and are recorded in docs/aimfox-api.md: every body is {status: "ok", <name>: ...}. Write calls
 // (audience add and remove, custom variables read-back, blacklist) follow the official docs
 // (docs.aimfox.com, 2026-10-03) and have not yet been exercised live; each says so where it is used.
-// Nothing here starts, pauses or edits a campaign: the user presses Start in Aimfox by hand.
+// Campaign authoring edits inactive flow steps only; the user presses Start in Aimfox by hand.
 
 import { request, HttpError } from './http.mjs';
 
@@ -275,4 +275,283 @@ export async function getLead(leadId) {
     ...audienceEntry(lead),
     labels: (Array.isArray(lead.labels) ? lead.labels : []).map((l) => String(l?.name ?? l).toLowerCase()),
   };
+}
+
+// ---- campaign authoring -------------------------------------------------------------------------
+
+export class AimfoxRefusal extends AimfoxError {
+  constructor(message) { super(message, 0, null); this.name = 'AimfoxRefusal'; }
+}
+
+export function stableId(value, label = 'ID') {
+  if (!['string', 'number'].includes(typeof value) || !/^[A-Za-z0-9_-]+$/.test(String(value))) {
+    throw new AimfoxRefusal(`${label} must be a stable ID (letters, digits, _ or -)`);
+  }
+  return String(value);
+}
+
+function checkedEnvelope(body, key, array = false) {
+  if (body?.status !== 'ok') throw new AimfoxError('Aimfox returned an unsuccessful or missing status envelope', 0, null);
+  if (body.next || body.next_page || body.has_more === true || body.pagination?.has_more === true) {
+    throw new AimfoxRefusal('Aimfox returned a partial list; complete pagination is not established');
+  }
+  return requireShape(body, key, key, array);
+}
+
+export async function authoringAccounts() {
+  const rows = checkedEnvelope(await call('GET', '/accounts'), 'accounts', true);
+  const ids = new Set();
+  for (const row of rows) {
+    const id = stableId(row?.id, 'account ID');
+    stableId(row?.workspace_id, 'account workspace ID');
+    if (ids.has(id)) throw new AimfoxRefusal('Aimfox returned duplicate account IDs');
+    ids.add(id);
+  }
+  return rows;
+}
+
+export async function listCampaigns() {
+  const rows = checkedEnvelope(await call('GET', '/campaigns'), 'campaigns', true);
+  const ids = new Set();
+  for (const row of rows) {
+    const id = stableId(row?.id, 'campaign ID');
+    if (ids.has(id)) throw new AimfoxRefusal('Aimfox returned duplicate campaign IDs');
+    ids.add(id);
+  }
+  return rows;
+}
+
+export async function readAuthoringCampaign(id) {
+  stableId(id, 'campaign ID');
+  const c = checkedEnvelope(await call('GET', `/campaigns/${id}`), 'campaign');
+  if (String(c.id) !== String(id)) throw new AimfoxRefusal('Aimfox returned a different campaign ID');
+  return c;
+}
+
+function accountScope(accounts, requestedAccount, campaign) {
+  let selected;
+  if (campaign?.owners !== undefined) {
+    if (!Array.isArray(campaign.owners) || campaign.owners.length === 0) throw new AimfoxRefusal('Campaign owner IDs are missing');
+    const ownerIds = campaign.owners.map((o) => stableId(typeof o === 'object' ? o?.id : o, 'owner account ID'));
+    selected = ownerIds.map((id) => accounts.find((a) => String(a.id) === id));
+    if (selected.some((a) => !a)) throw new AimfoxRefusal('Campaign owner is inaccessible with this API key');
+    if (new Set(ownerIds).size !== ownerIds.length) throw new AimfoxRefusal('Campaign owners are ambiguous');
+    if (requestedAccount && (selected.length !== 1 || String(selected[0].id) !== requestedAccount)) {
+      throw new AimfoxRefusal('Campaign does not belong exclusively to the requested account');
+    }
+  } else {
+    selected = requestedAccount ? accounts.filter((a) => String(a.id) === requestedAccount) : accounts;
+    // A missing owners field cannot prove ownership for a chosen account among several.
+    if (selected.length !== 1 || (campaign && accounts.length !== 1)) {
+      throw new AimfoxRefusal('Select an exact --account ID for creation; repair requires proven campaign ownership');
+    }
+  }
+  const workspaces = new Set(selected.map((a) => String(a.workspace_id)));
+  if (workspaces.size !== 1) throw new AimfoxRefusal('Campaign accounts span multiple workspaces');
+  const workspaceId = [...workspaces][0];
+  if (campaign?.workspace_id !== undefined && String(campaign.workspace_id) !== workspaceId) {
+    throw new AimfoxRefusal('Campaign workspace does not match the account workspace');
+  }
+  return { workspaceId, accountIds: selected.map((a) => String(a.id)) };
+}
+
+function safeCampaign(c, accounts, account) {
+  if (!['INIT', 'CREATED', 'PAUSED'].includes(c.state)) {
+    throw new AimfoxRefusal('Campaign must be INIT, CREATED or PAUSED; active, running and unknown states are refused');
+  }
+  if (c.type !== 'list' || c.outreach_type !== 'connect') throw new AimfoxRefusal('Campaign must be a list/connect campaign');
+  if (c.inmail_optimization !== false || c.uses_connection_note !== false) {
+    throw new AimfoxRefusal('Turn InMail optimization and uses_connection_note off in Aimfox first; changing campaign settings is outside this command');
+  }
+  const scope = accountScope(accounts, account, c);
+  if (!Array.isArray(c.flows)) throw new AimfoxRefusal('Campaign flows are missing');
+  const primary = c.flows.filter((f) => f?.type === 'PRIMARY_CONNECT');
+  if (primary.length !== 1) throw new AimfoxRefusal('Campaign must expose exactly one PRIMARY_CONNECT flow');
+  const flow = primary[0];
+  stableId(flow.id, 'flow ID');
+  if (!Object.hasOwn(flow, 'template') || !Array.isArray(flow.flow_message_templates)) {
+    throw new AimfoxRefusal('PRIMARY_CONNECT note or message list is missing');
+  }
+  if (flow.flow_message_templates.length > 100) throw new AimfoxRefusal('More than 100 message steps is outside the bounded repair scope');
+  const optimization = c.flows.filter((f) => f?.type === 'CONNECT_OPTIMIZATION');
+  if (optimization.length !== 1 || optimization[0].template !== null
+      || !Array.isArray(optimization[0].flow_message_templates) || optimization[0].flow_message_templates.length !== 0) {
+    throw new AimfoxRefusal('Connect optimization must be explicitly blank before authoring');
+  }
+  return { ...scope, flow };
+}
+
+function repairSteps(c, workspaceId, flow) {
+  const base = `/workspaces/${workspaceId}/campaigns/${c.id}/flows/${flow.id}`;
+  const steps = [];
+  if (flow.template !== null) steps.push({ method: 'PATCH', path: base, body: { template: null } });
+  for (let n = flow.flow_message_templates.length; n > 1; n--) {
+    steps.push({ method: 'DELETE', path: `${base}/messages` });
+  }
+  const desired = { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1 };
+  const first = flow.flow_message_templates[0];
+  if (!first) steps.push({ method: 'POST', path: `${base}/messages`, body: desired });
+  else if (first.type !== desired.type || first.message !== desired.message || first.delay !== desired.delay
+      || (first.attachments !== undefined && (!Array.isArray(first.attachments) || first.attachments.length))) {
+    steps.push({ method: 'DELETE', path: `${base}/messages` });
+    steps.push({ method: 'POST', path: `${base}/messages`, body: desired });
+  }
+  return steps;
+}
+
+// Undocumented private endpoint (web app), observed 2026-10-03.
+// The token never leaves this stack frame/its caller and is never written to disk or error bodies.
+async function privateCall(method, path, body, token, route) {
+  let res;
+  try {
+    res = await request(method, `https://api.aimfox.com/api/v1${path}`, {
+      headers: { Authorization: `Bearer ${token}` }, body, timeoutMs: AIMFOX_TIMEOUT_MS,
+    });
+  } catch {
+    throw new AimfoxError(`UNPROVEN private ${method} ${path} (${route}): no response; stop and inspect this campaign before retrying`, 0, null);
+  }
+  if (res.status < 200 || res.status >= 300 || res.body?.status !== 'ok') {
+    throw new AimfoxError(`UNPROVEN private ${method} ${path} (${route}): HTTP ${res.status}; stop and inspect this campaign before retrying`, res.status, null);
+  }
+}
+
+async function sessionToken() {
+  let failure;
+  try {
+    // Documented login token route. Empty body deliberately excludes account_id (re-login).
+    const body = await call('POST', '/token', {});
+    if (!body || (body.status !== undefined && body.status !== 'ok') || body.error || typeof body.token !== 'string' || !body.token.trim()) {
+      throw new AimfoxError('login token response missing status/token', 0, null);
+    }
+    return { token: body.token, route: 'A' };
+  } catch (e) {
+    failure = e instanceof AimfoxError && e.status ? `HTTP ${e.status}` : 'no valid login-token response';
+  }
+  if (process.env.AIMFOX_SESSION?.trim()) return { token: process.env.AIMFOX_SESSION, route: 'B', routeAFailure: failure };
+  throw new AimfoxRefusal(`Login-token route A failed (${failure}). Copy localStorage "auth" from your existing app.aimfox.com session into AIMFOX_SESSION, then rerun. No flow writes were attempted.`);
+}
+
+// Compare documented protocol fields, ignoring server IDs/metadata and normalizing absent attachments.
+function flowSnapshot(c) {
+  return JSON.stringify(c.flows.map((f) => [String(f.id), f.type, f.template,
+    Array.isArray(f.flow_message_templates) ? f.flow_message_templates.map((m) =>
+      [m.type, m.message, m.delay, m.attachments ?? []]) : null]));
+}
+
+// Undocumented private endpoint (web app), observed 2026-10-03. Read-only authorization probe.
+async function probeSession(auth, path) {
+  let res;
+  try {
+    res = await request('GET', `https://api.aimfox.com/api/v1${path}`, {
+      headers: { Authorization: `Bearer ${auth.token}` }, timeoutMs: AIMFOX_TIMEOUT_MS,
+    });
+  } catch { throw new AimfoxRefusal('Private session authorization probe did not answer; no flow writes attempted'); }
+  if ((res.status === 401 || res.status === 403) && auth.route === 'A' && process.env.AIMFOX_SESSION?.trim()) {
+    const fallback = { token: process.env.AIMFOX_SESSION, route: 'B', routeAFailure: `private GET HTTP ${res.status}` };
+    return probeSession(fallback, path);
+  }
+  if (res.status < 200 || res.status >= 300) {
+    throw new AimfoxRefusal(`Private session authorization probe (${auth.route}) returned HTTP ${res.status}. Set AIMFOX_SESSION from localStorage "auth" in your existing Aimfox session; no flow writes attempted.`);
+  }
+  if (!res.body || typeof res.body !== 'object' || Array.isArray(res.body) || res.body.status === 'fail' || res.body.error) {
+    throw new AimfoxRefusal('Private session authorization probe returned an unexpected body; no flow writes attempted');
+  }
+  return auth;
+}
+
+function exactResult(c, safety) {
+  const facts = campaignFacts(c);
+  const flow = safety.flow;
+  const messages = flow.flow_message_templates;
+  if (flow.template !== null || messages.length !== 1 || messages[0]?.type !== 'MESSAGE_TEMPLATE'
+      || messages[0]?.message !== WELCOME_TOKEN || messages[0]?.delay !== 1
+      || (messages[0]?.attachments !== undefined && (!Array.isArray(messages[0].attachments) || messages[0].attachments.length))
+      || facts.state !== 'PAUSED' || !facts.connectNoteBlank || !facts.welcomeTokenOk
+      || !facts.connectOptimizationBlank || facts.inmailOptimization !== false) {
+    throw new AimfoxError(`UNPROVEN campaign ${c.id}: final readback does not match the exact blank note, one welcome token and delay 1`, 0, null);
+  }
+  return facts;
+}
+
+export function authoringOptions({ name = 'LinkedIn Prospector', campaign, account } = {}) {
+  if (typeof name !== 'string' || !name.trim() || name.length > 200 || /[\x00-\x1f]/.test(name)
+      || /\{\{|<[^>]+>/.test(name)) throw new AimfoxRefusal('Campaign name must be a nonempty literal of at most 200 characters');
+  if (campaign !== undefined) stableId(campaign, 'campaign ID');
+  if (account !== undefined) stableId(account, 'account ID');
+  return { name, campaign, account };
+}
+
+// Authoring only: no campaign-state PATCH, audience endpoint, schedule or start call exists here.
+export async function createWelcomeCampaign(options = {}, { apply = false } = {}) {
+  const { name, campaign: id, account } = authoringOptions(options);
+  let campaignId = id;
+  let route = null;
+  let writesAttempted = 0;
+  try {
+    let accounts = await authoringAccounts();
+    let c = id ? await readAuthoringCampaign(id) : null;
+    let safety = c ? safeCampaign(c, accounts, account) : accountScope(accounts, account);
+    const shell = { name, type: 'list', outreach_type: 'connect', account_ids: safety.accountIds,
+      audience_size: 1000, uses_connection_note: false, inmail_optimization: false,
+      exclude_active_targets: true, exclude_previous_targets: true };
+    if (!apply) return {
+      status: 'preview', campaign_id: id ?? null, workspace_id: safety.workspaceId, account_ids: safety.accountIds,
+      steps: c ? repairSteps(c, safety.workspaceId, safety.flow) : [{ method: 'POST', path: '/campaigns', body: shell },
+        { method: 'POST', path: `/workspaces/${safety.workspaceId}/campaigns/<created-id>/flows/<readback-flow>/messages`,
+          body: { type: 'MESSAGE_TEMPLATE', message: WELCOME_TOKEN, delay: 1 } }],
+      effects: 'Author inactive campaign configuration only; audience remains unchanged; Start is manual.',
+      cost: 'Provider authoring cost is unmeasured; no audience or sends are requested.',
+    };
+    // Resolve private write auth before creating a shell, avoiding an orphan when no session exists.
+    let auth = await sessionToken();
+    route = auth.route;
+    const selectedScope = JSON.stringify([safety.workspaceId, safety.accountIds]);
+    accounts = await authoringAccounts();
+    if (!c) {
+      const freshScope = accountScope(accounts, account);
+      if (JSON.stringify(freshScope) !== JSON.stringify(safety)) throw new AimfoxRefusal('Account scope changed before shell creation');
+      writesAttempted++;
+      const created = checkedEnvelope(await call('POST', '/campaigns', shell), 'campaign');
+      campaignId = stableId(created.id, 'created campaign ID');
+      if (created.state !== 'INIT') throw new AimfoxRefusal(`New campaign ${campaignId} is not INIT; stop and inspect it`);
+    }
+    c = await readAuthoringCampaign(campaignId);
+    safety = safeCampaign(c, accounts, account);
+    if (JSON.stringify([safety.workspaceId, safety.accountIds]) !== selectedScope) throw new AimfoxRefusal('Campaign account/workspace changed before authoring');
+    const originalScope = JSON.stringify([safety.workspaceId, safety.accountIds, String(safety.flow.id)]);
+    const steps = repairSteps(c, safety.workspaceId, safety.flow);
+    if (steps.length) {
+      auth = await probeSession(auth, `/workspaces/${safety.workspaceId}/campaigns/${campaignId}/flows/${safety.flow.id}`);
+      route = auth.route;
+    }
+    let expectedFlows = flowSnapshot(c);
+    for (const step of steps) {
+      // Recheck the exact resource and inactive state immediately before EVERY private effect.
+      c = await readAuthoringCampaign(campaignId);
+      safety = safeCampaign(c, accounts, account);
+      if (JSON.stringify([safety.workspaceId, safety.accountIds, String(safety.flow.id)]) !== originalScope
+          || flowSnapshot(c) !== expectedFlows) throw new AimfoxRefusal('Campaign scope or flow changed before write; stop and inspect it');
+      writesAttempted++;
+      await privateCall(step.method, step.path, step.body, auth.token, route);
+      // Update the expected shape; the next preflight/final GET proves the previous effect.
+      if (step.method === 'DELETE') safety.flow.flow_message_templates.pop();
+      else if (step.path.endsWith('/messages')) safety.flow.flow_message_templates.push({ ...step.body });
+      else safety.flow.template = null;
+      // Server may attach an empty attachments property. Compare canonical protocol fields below.
+      expectedFlows = flowSnapshot(c);
+    }
+    c = await readAuthoringCampaign(campaignId);
+    safety = safeCampaign(c, accounts, account);
+    if (JSON.stringify([safety.workspaceId, safety.accountIds, String(safety.flow.id)]) !== originalScope) {
+      throw new AimfoxRefusal('Campaign scope changed during final readback');
+    }
+    return { status: 'verified', campaign_id: campaignId, workspace_id: safety.workspaceId,
+      account_ids: safety.accountIds, auth_route: route, ...(auth.routeAFailure ? { route_a_failure: auth.routeAFailure } : {}),
+      writes_attempted: writesAttempted, facts: exactResult(c, safety),
+      config: { aimfox_campaign_id: campaignId }, instruction: 'Put campaign_id in config.json as aimfox_campaign_id. Start remains manual in Aimfox.' };
+  } catch (e) {
+    // Never serialize a provider body or a credential. Partial effects must remain distinguishable.
+    if (writesAttempted) throw new AimfoxError(`UNPROVEN campaign ${campaignId ?? '(shell ID unknown)'}; ${writesAttempted} write(s) attempted; auth route ${route ?? 'none'}; ${e instanceof AimfoxError ? e.message : 'request failed without a proven result'}`, e.status ?? 0, null);
+    throw e;
+  }
 }

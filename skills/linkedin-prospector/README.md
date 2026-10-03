@@ -68,9 +68,23 @@ skill create tables over its API, so this one step is by hand.
 
 ## 5. Build the Aimfox campaign
 
-Follow `references/aimfox-campaign-setup.md`. In short: a Connect step with no note, exactly one
-message after acceptance whose text is exactly `{{CUSTOM.welcome_message}}`, InMail optimization
-off, stop on reply turned on if your campaign has the setting, and the campaign left paused. Paste its id into `config.json` as `aimfox_campaign_id`.
+Create the campaign with:
+
+```bash
+node "$HOME/.claude/skills/linkedin-prospector/scripts/prospector.mjs" create-campaign --name "LinkedIn Prospector"
+```
+
+This command writes the empty campaign and its steps directly. It creates a blank connection
+request and exactly one message after acceptance: `{{CUSTOM.welcome_message}}`. InMail
+optimization is off on a new campaign. It reads the settings back before reporting success,
+prints the campaign id, and tells you to put it in `config.json` as `aimfox_campaign_id`.
+It never adds people or presses Start. If multiple accounts are available, select the exact
+account with `--account <id>` after inspecting `aimfox.mjs accounts`.
+
+To repair an existing inactive campaign, add `--campaign <id>`. Active or running campaigns
+are refused. If authentication or a setting cannot be configured, use the manual fallback in
+`references/aimfox-campaign-setup.md`. Private API writes still need live verification; offline
+tests alone do not prove that Aimfox accepts them.
 
 Then put your Unipile account id into `unipile_account_id`.
 
@@ -208,3 +222,32 @@ Set `closer_mode` to `draft_only` and the closer writes every DM and comment rep
 none of them. Use it for your first week to read what it would have said, or on an account
 where someone else already answers your messages. The prospector side keeps running either
 way.
+
+
+## Standalone Aimfox CLI
+
+The thin Aimfox CLI shares the same client and requires `AIMFOX_API_KEY`. Read commands return
+JSON using a limited set of fields; diagnostics go to stderr.
+
+```bash
+node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" accounts
+node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" campaigns
+node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" campaign --campaign <id>
+node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" create-campaign --name "LinkedIn Prospector"
+node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" create-campaign --campaign <id> --apply
+```
+
+`create-campaign` previews by default in this standalone CLI. Add `--apply` to create or repair
+the campaign, then verify its saved steps. The prospector command above retains its direct-write
+setup behavior. Neither interface starts campaigns or adds an audience. Login-token generation
+uses `{}` and keeps the returned token in memory. `AIMFOX_SESSION` is the private fallback when
+generation fails or its read-only authentication probe returns 401/403; never paste it into chat. There is no installation or publication step in
+these commands.
+
+
+Creation selects the sole account, or an explicit `--account <id>` when more than one is
+available. A repair resolves the campaign owners to that same workspace and refuses ambiguous
+scope. Use `--json-file <private-file>` for a JSON object containing `name`, `campaign`, and/or
+`account`; the same values cannot also be passed as flags. Keep private inputs outside source.
+Exit codes for the standalone CLI: `0` read/preview/verified result, `1` failure or an unproven
+write outcome, `2` invalid input or refusal. A partial write is not automatically retried.

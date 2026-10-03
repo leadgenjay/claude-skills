@@ -17,8 +17,10 @@ files:
   - references/aimfox-campaign-setup.md
   - references/welcome-message-rules.md
   - schema.sql
+  - scripts/aimfox.mjs
   - scripts/apify.mjs
   - scripts/lib/aimfox.mjs
+  - scripts/lib/aimfox-command.mjs
   - scripts/lib/alerts.mjs
   - scripts/lib/config.mjs
   - scripts/lib/db.mjs
@@ -30,6 +32,7 @@ files:
   - scripts/lib/unipile.mjs
   - scripts/prospector.mjs
   - scripts/validate.mjs
+  - tests/TEST-PLAN.md
   - tests/lib/_env.mjs
   - tests/lib/aimfox.test.mjs
   - tests/lib/alerts.test.mjs
@@ -42,6 +45,7 @@ files:
   - tests/lib/spend.test.mjs
   - tests/prospector/apify-settle.test.mjs
   - tests/prospector/commands.test.mjs
+  - tests/prospector/create-campaign.test.mjs
   - tests/prospector/creators.test.mjs
   - tests/prospector/fixtures/post-search-items.json
   - tests/prospector/helpers.mjs

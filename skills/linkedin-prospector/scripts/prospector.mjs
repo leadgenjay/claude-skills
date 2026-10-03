@@ -26,6 +26,7 @@ import { alert, printOpenAlerts } from './lib/alerts.mjs';
 import { acquire, release } from './lib/lock.mjs';
 import { assertContactable, markDoNotContact } from './lib/dnc.mjs';
 import * as aimfox from './lib/aimfox.mjs';
+import { parseAuthoringArgs } from './lib/aimfox-command.mjs';
 import {
   runActor, apifyMe, formatEstimate, estimateCost, unitsThatFit,
   postSearchInput, postCommentsInput,
@@ -1139,6 +1140,13 @@ export async function main(argv) {
   const outFile = outIdx >= 0 ? rest[outIdx + 1] : undefined;
   const positional = rest.filter((a, i) => !a.startsWith('--') && !(outIdx >= 0 && i === outIdx + 1));
 
+  if (cmd === 'create-campaign') {
+    const { options } = parseAuthoringArgs(rest);
+    loadEnv();
+    const result = await aimfox.createWelcomeCampaign(options, { apply: true });
+    out(JSON.stringify(result, null, 2));
+    return 0;
+  }
   loadEnv();
   await printOpenAlerts();
 
@@ -1157,7 +1165,7 @@ export async function main(argv) {
     case 'status': return cmdStatus();
     case 'dnc': return cmdDnc(positional[0], positional.slice(1));
     default:
-      err('usage: node scripts/prospector.mjs <setup-check|find-creators|scrape-commenters|qualify-export|qualify-import|'
+      err('usage: node scripts/prospector.mjs <setup-check|create-campaign|find-creators|scrape-commenters|qualify-export|qualify-import|'
         + 'write-export|write-import|review|push|sync|status|dnc> [args]');
       return 1;
   }

@@ -4,8 +4,28 @@
      Button and menu labels below are descriptive; confirm them during the live Aimfox probe
      and replace this comment. -->
 
-You build this campaign once, by hand, in Aimfox. After that the skill adds people to it and
-Aimfox does the sending at its own safe pace. It takes about ten minutes.
+Use the command first. After that the skill adds people to the campaign and Aimfox sends at
+its own pace. The dashboard steps below are the fallback.
+
+```bash
+node "$HOME/.claude/skills/linkedin-prospector/scripts/prospector.mjs" create-campaign --name "LinkedIn Prospector"
+```
+
+It creates an empty campaign, configures the primary flow and verifies the saved settings.
+Copy the printed id into `config.json` as `aimfox_campaign_id`. To repair an existing inactive
+campaign, use `create-campaign --campaign <id>`. Active or running campaigns are refused.
+The command never adds prospects or starts a campaign. Its delay is `1`; the API's delay units
+are unconfirmed, so check the displayed wait before Start.
+
+Authentication first requests a login token with an empty `{}` body; the token stays in memory.
+If generation fails or the token's read-only authentication probe returns 401/403, set `AIMFOX_SESSION` privately from your Aimfox session's localStorage
+`auth` value. Never paste the token in chat. The command does not open Aimfox or log in through
+a browser. If you cannot provide a session or the campaign has incompatible settings, use the
+manual fallback. Private write routes are undocumented; offline tests do not prove live success.
+
+For a JSON preview before changing anything, run
+`node "$HOME/.claude/skills/linkedin-prospector/scripts/aimfox.mjs" create-campaign`; add `--apply`
+only when ready to write. The prospector setup command writes directly.
 
 Nothing sends until you press Start in Aimfox yourself, and before you do, the skill shows you a
 checklist of the four settings that matter. A mistake here costs you a WRONG line on that
@@ -17,6 +37,10 @@ In short, the finished campaign has:
 - exactly one message after the connection is accepted, whose whole text is
   `{{CUSTOM.welcome_message}}`;
 - InMail optimization turned off.
+
+## Manual fallback
+
+The following UI labels have not been checked live.
 
 ## 1. Connect your LinkedIn account
 
