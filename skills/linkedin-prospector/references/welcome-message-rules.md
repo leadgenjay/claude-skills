@@ -60,4 +60,4 @@ Comment: "🔥"  (fall back to headline: "Founder, 12-person bookkeeping firm")
 ## Placeholders
 
 Write the finished text. Do not leave `{first_name}` or any other placeholder in it: Aimfox
-inserts only `{{welcome_message}}`, and anything else would arrive as literal braces.
+inserts only `{{CUSTOM.welcome_message}}`, and anything else would arrive as literal braces.

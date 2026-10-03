@@ -68,9 +68,9 @@ skill create tables over its API, so this one step is by hand.
 
 ## 5. Build the Aimfox campaign
 
-Follow `references/aimfox-campaign-setup.md`. In short: a Connect step with no note, a message
-step after acceptance whose text is exactly `{{welcome_message}}`, stop-on-reply turned on, and
-the campaign left paused. Paste its id into `config.json` as `aimfox_campaign_id`.
+Follow `references/aimfox-campaign-setup.md`. In short: a Connect step with no note, exactly one
+message after acceptance whose text is exactly `{{CUSTOM.welcome_message}}`, InMail optimization
+off, stop on reply turned on if your campaign has the setting, and the campaign left paused. Paste its id into `config.json` as `aimfox_campaign_id`.
 
 Then put your Unipile account id into `unipile_account_id`.
 
@@ -97,8 +97,11 @@ Say "find LinkedIn prospects". Claude will:
 The skill never starts the campaign. You do, in Aimfox. Claude shows you a short checklist:
 
 1. the Connect step has no note;
-2. the message step is exactly `{{welcome_message}}`;
-3. "stop sequence on reply" is on.
+2. the connect optimization step has no note and no messages;
+3. there is exactly one message after acceptance, and it is exactly `{{CUSTOM.welcome_message}}`;
+4. InMail optimization is off.
+
+Aimfox does not report stop on reply. If your campaign has the setting, turn it on.
 
 Each line says "looks right", "WRONG", or "Aimfox does not say, check it". You also get one
 real prospect's welcome message, so you can compare it with the preview in Aimfox. Open the

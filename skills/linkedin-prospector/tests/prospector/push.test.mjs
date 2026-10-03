@@ -4,14 +4,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { campaignFacts } from '../../scripts/lib/aimfox.mjs';
 import {
-  makeHome, run, rx, reqs, bodyOf, AIMFOX, CAMPAIGN, steps, prospect, welcomeRow, welcomeBody,
+  makeHome, run, rx, reqs, bodyOf, AIMFOX, CAMPAIGN, flows, campaign, audienceRow, audienceBody, WELCOME_TOKEN,
+  prospect, welcomeRow, welcomeBody,
 } from './helpers.mjs';
 
 const C = `${AIMFOX}/campaigns/${CAMPAIGN}`;
-const PAUSED = { id: CAMPAIGN, state: 'PAUSED', steps: steps(), stop_on_reply: true };
-const RUNNING = { ...PAUSED, state: 'RUNNING' };
+const PAUSED = campaign('PAUSED');
+const RUNNING = campaign('ACTIVE');
+// The same campaign with its message delay changed: still set up right, but a different definition.
+const editedFlows = (c) => c.flows.map((f) => (f.type === 'PRIMARY_CONNECT'
+  ? { ...f, flow_message_templates: f.flow_message_templates.map((m) => ({ ...m, delay: m.delay + 7200 })) } : f));
 
-const campaignGet = (campaign, extra = {}) => ({ method: 'GET', urlPattern: `${rx(C)}$`, body: { campaign }, ...extra });
+const campaignGet = (c, extra = {}) => ({ method: 'GET', urlPattern: `${rx(C)}$`, body: { status: 'ok', campaign: c }, ...extra });
 const stateRow = (rows) => ({ method: 'GET', urlPattern: rx('/rest/v1/li_campaign_state?'), body: rows });
 const pushingRows = (rows) => ({ method: 'GET', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: rows });
 const approvedRows = (rows, extra = {}) => ({ method: 'GET', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.approved'), body: rows, ...extra });
@@ -44,7 +48,7 @@ test('batch push of 3 approved + 1 do_not_contact adds exactly the 3', () => {
     claimOk,
     // add returns no urn, so push finds each lead in the audience by public id
     { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: {} },
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: [1, 2, 3].map((id) => ({ urn: `u${id}`, public_identifier: `p${id}` })) },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([1, 2, 3].map((id) => audienceRow(id))) },
     ...[1, 2, 3].map((id) => customVars(`u${id}`, welcomeBody(id))),
     finishOk,
   ]);
@@ -119,7 +123,7 @@ test('crash between the audience add and the status write: reconcile leaves exac
     stateRow([]),
     campaignGet(PAUSED),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { data: [{ urn: 'u1', public_identifier: 'p1' }] } },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([audienceRow(1)]) },
     welcomes([welcomeRow(1)]),
     customVars('u1', welcomeBody(1)),
     finishOk,
@@ -146,7 +150,7 @@ test('crash after pushing, before the add: back to approved; a second time: push
   const second = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: [] },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([]) },
     welcomes([welcomeRow(1)]),
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'approved' }] },
     approvedRows([prospect(1, { push_attempts: 1 })]),
@@ -160,7 +164,7 @@ test('crash after pushing, before the add: back to approved; a second time: push
   const third = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 2 })]),
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: [] },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([]) },
     welcomes([welcomeRow(1)]),
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?', 'status=eq.pushing'), body: [{ status: 'push_failed' }] },
     approvedRows([]),
@@ -194,7 +198,7 @@ test('running campaign: a later batch is added while the fingerprint is unchange
 test('running campaign: a batch is refused after the campaign definition changes', () => {
   const home = makeHome();
   const fp = campaignFacts(RUNNING).fingerprint;
-  const edited = { ...RUNNING, steps: steps([{ type: 'message', message: 'Just following up!' }]) };
+  const edited = { ...RUNNING, flows: editedFlows(RUNNING) };
   assert.notEqual(campaignFacts(edited).fingerprint, fp);
   const res = runPush(home, ['push'], [
     stateRow([{ campaign_id: CAMPAIGN, fingerprint: fp, confirmed_at: '2026-10-01T00:00:00Z' }]),
@@ -213,7 +217,7 @@ test('running campaign: a batch is refused after the campaign definition changes
 
 test('running campaign with no fingerprint available: every later batch waits with an alert', () => {
   const home = makeHome();
-  const opaque = { id: CAMPAIGN, state: 'RUNNING' }; // no steps, no updated-at
+  const opaque = { id: CAMPAIGN, state: 'ACTIVE', inmail_optimization: false }; // no flows
   assert.equal(campaignFacts(opaque).fingerprint, null);
   const mocks = [
     stateRow([{ campaign_id: CAMPAIGN, fingerprint: null, confirmed_at: '2026-10-01T00:00:00Z' }]),
@@ -263,8 +267,11 @@ test('first batch into a PAUSED campaign: enrolled, awaiting_start recorded, che
   assert.ok(state.awaiting_start);
   assert.equal(state.confirmed_at, null);
   assert.match(res.stdout, /Connect step has no note/);
-  assert.match(res.stdout, /exactly \{\{welcome_message\}\}/);
-  assert.match(res.stdout, /Stop sequence on reply" is ON/);
+  assert.match(res.stdout, /exactly one message after acceptance, and its whole text is \{\{CUSTOM\.welcome_message\}\}: looks right/);
+  assert.match(res.stdout, /InMail optimization is OFF: looks right/);
+  assert.match(res.stdout, /connect optimization step has no note and no messages: looks right/);
+  assert.match(res.stdout, /Stop on reply: Aimfox does not report this\. If your campaign has the setting, turn it on\. \(Observed: leads who replied ended their sequence\.\)/);
+  assert.doesNotMatch(res.stdout, /Stop sequence on reply" is ON/);
   assert.match(res.stdout, /press Start yourself/);
   assert.ok(res.stdout.includes(welcomeBody(1)), 'shows one real welcome for the preview check');
   assert.equal(campaignWrites(res.log).length, 0, 'the script never starts the campaign');
@@ -317,7 +324,7 @@ test('RUNNING after awaiting_start: sync records the Start too', () => {
 
 test('campaign edited between the batch and Start: the Start is not taken, nothing is added', () => {
   const home = makeHome();
-  const edited = { ...RUNNING, steps: steps([{ type: 'message', message: 'Following up' }]) };
+  const edited = { ...RUNNING, flows: editedFlows(RUNNING) };
   const res = runPush(home, ['push'], [
     stateRow([awaiting(PAUSED)]),
     campaignGet(edited),
@@ -325,7 +332,7 @@ test('campaign edited between the batch and Start: the Start is not taken, nothi
     approvedRows([prospect(2)]),
     welcomes([welcomeRow(2)]),
     claimOk,
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: [] },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([]) },
     { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u2' } },
   ]);
   assert.notEqual(res.status, 0);
@@ -341,7 +348,7 @@ function neverRecordedRunningMocks(stateRows) {
     stateRow(stateRows),
     campaignGet(RUNNING),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
-    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: [] },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: audienceBody([]) },
     { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?'), body: [{ status: 'approved' }] },
     approvedRows([prospect(2)]),
     welcomes([welcomeRow(1), welcomeRow(2)]),
@@ -373,7 +380,7 @@ test('never-recorded RUNNING campaign: push and push --start refuse before any r
 
 test('no fingerprint: a later batch goes into the re-paused campaign and asks for Start again', () => {
   const home = makeHome();
-  const opaquePaused = { id: CAMPAIGN, state: 'PAUSED' };
+  const opaquePaused = { id: CAMPAIGN, state: 'PAUSED', inmail_optimization: false };
   const res = runPush(home, ['push'], [
     stateRow([{ campaign_id: CAMPAIGN, fingerprint: null, confirmed_at: '2026-10-01T00:00:00Z', awaiting_start: null }]),
     campaignGet(opaquePaused),
@@ -416,11 +423,172 @@ test('a stored welcome carrying a secret is refused right before enrolling', () 
 
 test('push refuses a campaign whose Connect step carries a note', () => {
   const home = makeHome();
-  const withNote = { ...PAUSED, steps: [{ type: 'connect', note: 'Hi {{first_name}}' }, { type: 'message', message: '{{welcome_message}}' }] };
+  const withNote = campaign('PAUSED', { flows: flows({ note: 'Hi {{FIRST_NAME}}' }) });
   const res = runPush(home, ['push'], [stateRow([]), campaignGet(withNote), approvedRows([prospect(1)])]);
   assert.notEqual(res.status, 0);
   assert.equal(audienceAdds(res.log).length, 0);
   assert.match(res.stderr, /Connect step has a note/);
+});
+
+test('push refuses a campaign with InMail optimization on', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(campaign('CREATED', { inmail_optimization: true })), approvedRows([prospect(1)]),
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.equal(audienceAdds(res.log).length, 0);
+  assert.match(res.stderr, /InMail optimization is on; it would message people who never accepted\. Turn it off\./);
+  assert.deepEqual(reqs(res.log, 'POST', '/rest/v1/li_alerts').map(bodyOf).map((a) => a.kind), ['push_refused']);
+});
+
+test('push refuses a campaign with a follow-up message after the welcome', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(campaign('CREATED', { flows: flows({ messages: [WELCOME_TOKEN, 'Just following up!'] }) })),
+    approvedRows([prospect(1)]),
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.equal(audienceAdds(res.log).length, 0);
+  assert.match(res.stderr, /exactly one message whose whole text is \{\{CUSTOM\.welcome_message\}\}/);
+});
+
+test('a CREATED (never started) campaign is treated as paused: batch enrolled, Start asked for', () => {
+  const home = makeHome();
+  const created = campaign('CREATED');
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(created), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    customVars('u1', welcomeBody(1)),
+    finishOk,
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.equal(audienceAdds(res.log).length, 1);
+  assert.equal(stateWrites(res.log)[0].fingerprint, fpOf(created));
+  assert.match(res.stdout, /is paused\. Before it sends anything/);
+  assert.equal(campaignWrites(res.log).length, 0);
+});
+
+test('read-back finds the welcome under an uppercased variable name', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { custom_variables: { WELCOME_MESSAGE: welcomeBody(1) } } },
+    finishOk,
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
+  assert.equal(reqs(res.log, 'DELETE', `${C}/audience/`).length, 0);
+});
+
+test('push refuses a campaign that reports uses_connection_note true, even with an empty template', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(campaign('CREATED', { uses_connection_note: true })), approvedRows([prospect(1)]),
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.equal(audienceAdds(res.log).length, 0);
+  assert.match(res.stderr, /Connect step has a note/);
+});
+
+test('push refuses a campaign whose connect optimization step carries a note or a message', () => {
+  const withConnectOpt = (over) => campaign('CREATED', {
+    flows: flows().map((f) => (f.type === 'CONNECT_OPTIMIZATION' ? { ...f, ...over } : f)),
+  });
+  for (const over of [
+    { template: { type: 'NOTE_TEMPLATE', message: 'Hi {{FIRST_NAME}}' } },
+    { flow_message_templates: [{ type: 'MESSAGE_TEMPLATE', message: 'Thanks for connecting', delay: 0 }] },
+  ]) {
+    const res = runPush(makeHome(), ['push'], [stateRow([]), campaignGet(withConnectOpt(over)), approvedRows([prospect(1)])]);
+    assert.notEqual(res.status, 0, JSON.stringify(over));
+    assert.equal(audienceAdds(res.log).length, 0);
+    assert.match(res.stderr, /connect optimization step has a note or messages; it must be empty/);
+  }
+});
+
+test('inert InMail text is not refused while InMail optimization is off', () => {
+  const home = makeHome();
+  const inert = campaign('CREATED', {
+    flows: flows().map((f) => (f.type === 'INMAIL_OPTIMIZATION' ? { ...f, template: { type: 'NOTE_TEMPLATE', message: 'Old InMail text' } } : f)),
+  });
+  const res = runPush(home, ['push'], [stateRow([]), campaignGet(inert), pushingRows([]), approvedRows([])]);
+  assert.equal(res.status, 0, res.stderr);
+});
+
+test('push refuses when Aimfox does not report InMail optimization', () => {
+  const home = makeHome();
+  const missing = campaign('CREATED');
+  delete missing.inmail_optimization;
+  const res = runPush(home, ['push'], [stateRow([]), campaignGet(missing), approvedRows([prospect(1)])]);
+  assert.notEqual(res.status, 0);
+  assert.equal(audienceAdds(res.log).length, 0);
+  assert.match(res.stderr, /Aimfox did not report InMail optimization; check it is off/);
+});
+
+test('an audience body without `audience` stops push; it is never read as empty', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(PAUSED),
+    pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}$`, body: { status: 'ok', leads: [] } },
+    welcomes([welcomeRow(1)]),
+    { method: 'PATCH', urlPattern: rx('/rest/v1/li_prospects?'), body: [{}] },
+    approvedRows([]),
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.match(res.stderr, /Aimfox returned an audience in an unexpected shape/);
+  assert.equal(reqs(res.log, 'PATCH', '/rest/v1/li_prospects').length, 0, 'the pushing row is not sent back to approved');
+});
+
+test('a read-back connection reset stops the run; the lead is not removed', () => {
+  const home = makeHome();
+  // No mock for the custom-variables read: http.mjs throws an HttpError, as a reset connection does.
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
+    { method: 'POST', urlPattern: rx(`${AIMFOX}/blacklist`), body: {} },
+    finishOk,
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.match(res.stderr, /no mock matched GET .*custom-variables\/u1/);
+  assert.equal(reqs(res.log, 'DELETE', `${C}/audience/`).length, 0, 'the lead is not removed');
+  assert.equal(reqs(res.log, 'POST', `${AIMFOX}/blacklist`).length, 0);
+  assert.equal(patchesTo(res.log, 'status=eq.pushing').length, 0, 'the row stays at pushing for the next reconcile');
+});
+
+test('a read-back answered with an HTTP error still counts as a mismatch', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, status: 404, body: { status: 'error' } },
+    { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
+    finishOk,
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  assert.equal(reqs(res.log, 'DELETE', `${C}/audience/u1`).length, 1);
+  assert.equal(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing')[0].status, 'push_failed');
+});
+
+test('a read-back that times out stops the run; it is not taken as a mismatch', () => {
+  const home = makeHome();
+  const res = runPush(home, ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk,
+    { method: 'POST', urlPattern: `${rx(`${C}/audience`)}(\\?.*)?$`, body: { urn: 'u1' } },
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, timeout: true },
+    { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
+    finishOk,
+  ]);
+  assert.notEqual(res.status, 0);
+  assert.match(res.stderr, /Aimfox did not answer within 90s; try again later/);
+  assert.equal(reqs(res.log, 'DELETE', `${C}/audience/`).length, 0, 'the lead is not removed');
+  assert.equal(patchesTo(res.log, 'status=eq.pushing').length, 0, 'the row stays at pushing for the next reconcile');
 });
 
 test('read-back mismatch where the remove fails: the lead is blacklisted instead, and alerted', () => {
@@ -441,27 +609,26 @@ test('read-back mismatch where the remove fails: the lead is blacklisted instead
   assert.match(a.body, /blacklisted in Aimfox instead/);
 });
 
-test('reconcile pages through the whole Aimfox audience', () => {
+test('reconcile reads the whole Aimfox audience in one call', () => {
   const home = makeHome();
-  const full = Array.from({ length: 100 }, (_, i) => ({ urn: `x${i}`, public_identifier: `x${i}` }));
+  const others = Array.from({ length: 250 }, (_, i) => audienceRow(100 + i, { urn: `x${i}`, public_identifier: `x${i}` }));
   const res = runPush(home, ['push'], [
     stateRow([]), campaignGet(PAUSED),
     pushingRows([prospect(1, { status: 'pushing', push_attempts: 1 })]),
-    { method: 'GET', urlPattern: rx(`${C}/audience?offset=0&`), body: full },
-    { method: 'GET', urlPattern: rx(`${C}/audience?offset=100&`), body: [{ urn: 'u1', public_identifier: 'p1' }] },
+    { method: 'GET', urlPattern: `${rx(`${C}/audience`)}$`, body: audienceBody([...others, audienceRow(1)]) },
     welcomes([welcomeRow(1)]),
     customVars('u1', welcomeBody(1)),
     finishOk,
     approvedRows([]),
   ]);
   assert.equal(res.status, 0, res.stderr);
-  assert.equal(reqs(res.log, 'GET', `${C}/audience?`).length, 2);
-  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }], 'found on page 2');
+  assert.deepEqual(reqs(res.log, 'GET', `${C}/audience`).map((e) => e.url), [`${C}/audience`], 'one GET, no paging parameters');
+  assert.deepEqual(patchesTo(res.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
 });
 
 test('batch_waiting is alerted once, not every hour', () => {
   const home = makeHome();
-  const opaque = { id: CAMPAIGN, state: 'RUNNING' };
+  const opaque = { id: CAMPAIGN, state: 'ACTIVE', inmail_optimization: false };
   const res = runPush(home, ['push'], [
     { method: 'GET', urlPattern: rx('/rest/v1/li_alerts?', 'kind=eq.batch_waiting'), body: [{ id: 5 }] },
     stateRow([{ campaign_id: CAMPAIGN, fingerprint: null, confirmed_at: '2026-10-01T00:00:00Z' }]),

@@ -4,8 +4,9 @@
 //   [{ "method": "GET", "urlPattern": "/rest/v1/li_alerts", "status": 200, "body": [...], "times": 1 }]
 //   urlPattern is a JavaScript regular expression tested against the full URL. method is optional
 //   (any method). The first matching entry wins; an entry with "times" stops matching after that
-//   many uses in this process. A request no entry matches throws: a mock never falls through to
-//   the network.
+//   many uses in this process. An entry with "timeout": true throws the same error a request that
+//   got no answer within timeoutMs throws. A request no entry matches throws: a mock never falls
+//   through to the network.
 // LINKEDIN_LEADGEN_OFFLINE=1         with no mock set, every request throws.
 // LINKEDIN_LEADGEN_HTTP_LOG=<file>   append one JSON line per request (secrets in the query
 //   string redacted, headers never written).
@@ -15,12 +16,18 @@ import fs from 'node:fs';
 export const USER_AGENT = 'linkedin-lead-system/1.0';
 
 export class HttpError extends Error {
-  constructor(message, { method, url, cause } = {}) {
+  constructor(message, { method, url, cause, timeout = false } = {}) {
     super(message, { cause });
     this.name = 'HttpError';
     this.method = method;
     this.url = url;
+    this.timeout = timeout; // no answer within timeoutMs
   }
+}
+
+function timeoutError(method, url, timeoutMs, cause) {
+  return new HttpError(`${method} ${redactUrl(url)} got no answer within ${timeoutMs / 1000}s`,
+    { method, url, cause, timeout: true });
 }
 
 const SECRET_PARAMS = /^(token|api_?key|apikey|key|access_token|secret)$/i;
@@ -121,6 +128,10 @@ export async function request(method, url, { headers = {}, body, timeoutMs = 300
       writeLog({ ...logBase, mocked: true, status: null, error: 'no mock matched' });
       throw new HttpError(`no mock matched ${method} ${redactUrl(url)}`, { method, url });
     }
+    if (mock.timeout) {
+      writeLog({ ...logBase, mocked: true, status: null, error: 'TimeoutError' });
+      throw timeoutError(method, url, timeoutMs);
+    }
     const status = mock.status ?? 200;
     writeLog({ ...logBase, mocked: true, status });
     return { status, body: mock.body ?? null, headers: mock.headers ?? {} };
@@ -131,7 +142,10 @@ export async function request(method, url, { headers = {}, body, timeoutMs = 300
     throw new HttpError(`offline mode: refused ${method} ${redactUrl(url)}`, { method, url });
   }
 
+  // The timeout covers the whole exchange, body included: a stall while reading the body is a
+  // timeout too, never a short or empty answer.
   let res;
+  let text;
   try {
     res = await fetch(url, {
       method,
@@ -139,11 +153,12 @@ export async function request(method, url, { headers = {}, body, timeoutMs = 300
       body: payload,
       signal: AbortSignal.timeout(timeoutMs),
     });
+    text = await res.text();
   } catch (err) {
-    writeLog({ ...logBase, mocked: false, status: null, error: err.name });
+    writeLog({ ...logBase, mocked: false, status: res?.status ?? null, error: err.name });
+    if (err.name === 'TimeoutError') throw timeoutError(method, url, timeoutMs, err);
     throw new HttpError(`${method} ${redactUrl(url)} failed: ${err.message}`, { method, url, cause: err });
   }
-  const text = await res.text();
   writeLog({ ...logBase, mocked: false, status: res.status });
   return {
     status: res.status,

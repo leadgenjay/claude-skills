@@ -64,6 +64,17 @@ test('a caller-set User-Agent is kept, not doubled', async () => {
   assert.equal(env.log()[0].ua, 'custom/2');
 });
 
+test('mock timeout: throws an HttpError marked timeout, with the limit in the message', async () => {
+  env = setupEnv([{ method: 'GET', urlPattern: '/slow$', timeout: true }]);
+  await assert.rejects(request('GET', 'https://example.test/slow', { timeoutMs: 5000 }), (err) => {
+    assert.ok(err instanceof HttpError);
+    assert.equal(err.timeout, true);
+    assert.match(err.message, /GET https:\/\/example\.test\/slow got no answer within 5s/);
+    return true;
+  });
+  assert.equal(env.log()[0].error, 'TimeoutError');
+});
+
 test('redactUrl leaves ordinary parameters alone', () => {
   assert.equal(redactUrl('https://x.test/a?limit=5&api_key=k'), 'https://x.test/a?limit=5&api_key=REDACTED');
   assert.equal(redactUrl('not a url'), 'not a url');

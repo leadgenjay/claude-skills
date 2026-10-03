@@ -13,6 +13,7 @@ files:
   - .gitignore
   - README.md
   - config.example.json
+  - docs/aimfox-api.md
   - references/aimfox-campaign-setup.md
   - references/welcome-message-rules.md
   - schema.sql
@@ -30,6 +31,7 @@ files:
   - scripts/prospector.mjs
   - scripts/validate.mjs
   - tests/lib/_env.mjs
+  - tests/lib/aimfox.test.mjs
   - tests/lib/alerts.test.mjs
   - tests/lib/config.test.mjs
   - tests/lib/db.test.mjs

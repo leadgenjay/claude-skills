@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
-import { makeHome, run, rx, reqs, bodyOf, AIMFOX, CAMPAIGN } from './helpers.mjs';
+import { makeHome, run, rx, reqs, bodyOf, AIMFOX, CAMPAIGN, campaign } from './helpers.mjs';
 
 test('dnc on a known prospect sets the flag and removes + blacklists them in Aimfox', () => {
   const home = makeHome();
@@ -65,8 +65,8 @@ test('setup-check on a home where .env is tracked by git says to run git rm --ca
     { method: 'GET', urlPattern: rx('/rest/v1/li_'), body: [] },
     { method: 'POST', urlPattern: rx('/rest/v1/rpc/'), body: 0 },
     { method: 'GET', urlPattern: rx('https://api.apify.com/v2/users/me'), body: { data: {} } },
-    { method: 'GET', urlPattern: rx(`${AIMFOX}/accounts`), body: [] },
-    { method: 'GET', urlPattern: rx(`${AIMFOX}/campaigns/${CAMPAIGN}`), body: { state: 'PAUSED' } },
+    { method: 'GET', urlPattern: rx(`${AIMFOX}/accounts`), body: { status: 'ok', accounts: [] } },
+    { method: 'GET', urlPattern: rx(`${AIMFOX}/campaigns/${CAMPAIGN}`), body: { status: 'ok', campaign: campaign('CREATED') } },
   ]);
   assert.notEqual(res.status, 0);
   assert.match(res.stdout, /FAIL \.env is git-ignored: .*tracked by git.*git rm --cached \.env/);
@@ -76,11 +76,13 @@ test('setup-check probes claim_send, and a schema without it fails at setup', ()
   const base = [
     { method: 'GET', urlPattern: rx('/rest/v1/li_'), body: [] },
     { method: 'GET', urlPattern: rx('https://api.apify.com/v2/users/me'), body: { data: {} } },
-    { method: 'GET', urlPattern: rx(`${AIMFOX}/accounts`), body: [] },
-    { method: 'GET', urlPattern: rx(`${AIMFOX}/campaigns/${CAMPAIGN}`), body: { state: 'PAUSED' } },
+    { method: 'GET', urlPattern: rx(`${AIMFOX}/accounts`), body: { status: 'ok', accounts: [{ id: '1', state: 'LoggedIn' }] } },
+    { method: 'GET', urlPattern: rx(`${AIMFOX}/campaigns/${CAMPAIGN}`), body: { status: 'ok', campaign: campaign('CREATED', { inmail_optimization: true }) } },
   ];
   const ok = run(makeHome(), ['setup-check'], [{ method: 'POST', urlPattern: rx('/rest/v1/rpc/'), body: 'busy' }, ...base]);
   assert.equal(ok.status, 0, ok.stdout + ok.stderr);
+  assert.match(ok.stdout, /ok +Aimfox key: 1 account\(s\)/);
+  assert.match(ok.stdout, /ok +Aimfox campaign: state PAUSED; one message step, exactly \{\{CUSTOM\.welcome_message\}\}: yes; connect note blank: yes; connect optimization empty: yes; InMail optimization off: NO; stop on reply: not reported by Aimfox; change detection: available/);
   assert.deepEqual(bodyOf(reqs(ok.log, 'POST', 'rpc/claim_send')[0]), { p_id: -1 });
   for (const fn of ['daily_count', 'claim_message', 'claim_send', 'finish_message', 'unanswered_streak']) {
     assert.match(ok.stdout, new RegExp(`ok +function ${fn}: exists`));

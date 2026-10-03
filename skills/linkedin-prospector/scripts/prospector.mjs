@@ -11,7 +11,7 @@
 //   write-import <file>              validate and store welcomes; passing → approved
 //   review                           print the latest batch
 //   push [--start]                   add approved prospects to the Aimfox campaign
-//   sync                             move statuses from Aimfox interactions
+//   sync                             move statuses from the Aimfox audience and the closer's replies
 //   status                           counts, spend, campaign state
 //   dnc <public_id> <reason>         mark do-not-contact (also removes + blacklists in Aimfox)
 
@@ -268,8 +268,10 @@ async function cmdSetupCheck() {
     await check('Aimfox campaign', async () => {
       const f = aimfox.campaignFacts(await aimfox.getCampaign(cfg.aimfox_campaign_id));
       const show = (v) => (v === null ? 'API does not say' : v ? 'yes' : 'NO');
-      return `state ${f.state ?? 'unknown'}; message step is {{welcome_message}}: ${show(f.welcomeTokenOk)}; `
-        + `connect note blank: ${show(f.connectNoteBlank)}; stop on reply: ${show(f.stopOnReply)}; `
+      return `state ${f.state ?? 'unknown'}; one message step, exactly ${aimfox.WELCOME_TOKEN}: ${show(f.welcomeTokenOk)}; `
+        + `connect note blank: ${show(f.connectNoteBlank)}; connect optimization empty: ${show(f.connectOptimizationBlank)}; `
+        + `InMail optimization off: ${show(f.inmailOptimization === null ? null : !f.inmailOptimization)}; `
+        + 'stop on reply: not reported by Aimfox; '
         + `change detection: ${f.fingerprint ? 'available' : 'not available'}`;
     });
   } else {
@@ -656,9 +658,15 @@ async function cmdReview() {
 
 function failedChecks(f) {
   const bad = [];
-  if (f.welcomeTokenOk === false) bad.push('the message step after acceptance is not exactly {{welcome_message}}');
-  if (f.connectNoteBlank === false) bad.push('the Connect step has a note; invites must be blank');
-  if (f.stopOnReply === false) bad.push('"stop sequence on reply" is off');
+  if (f.welcomeTokenOk === false) {
+    bad.push(`the steps after acceptance must be exactly one message whose whole text is ${aimfox.WELCOME_TOKEN}`);
+  }
+  if (f.connectNoteBlank === false) bad.push('the Connect step has a note (or Aimfox reports one in use); invites must be blank');
+  if (f.connectOptimizationBlank === false) {
+    bad.push('the connect optimization step has a note or messages; it must be empty, since the skill never wrote them');
+  }
+  if (f.inmailOptimization === true) bad.push('InMail optimization is on; it would message people who never accepted. Turn it off.');
+  if (f.inmailOptimization === null) bad.push('Aimfox did not report InMail optimization; check it is off');
   return bad;
 }
 
@@ -684,9 +692,11 @@ async function refuse(kind, message) {
 async function verifyAndFinish(campaignId, row, urn, body) {
   let got;
   try {
-    got = (await aimfox.getCustomVariables(campaignId, urn))?.[aimfox.WELCOME_VARIABLE];
+    got = aimfox.welcomeFrom(await aimfox.getCustomVariables(campaignId, urn));
   } catch (e) {
-    if (isAuthError(e)) throw e;
+    // Only a real HTTP answer from Aimfox counts as a mismatch. No answer (timeout, reset, a
+    // missing key) stops the run, as in pushOne, and the next push reconciles this row.
+    if (!(e instanceof aimfox.AimfoxError) || !e.status || isAuthError(e)) throw e;
     got = undefined;
   }
   if (typeof got === 'string' && got.trim() !== '' && got.trim() === String(body).trim()) {
@@ -842,8 +852,8 @@ async function cmdPush({ start }) {
       await printChecklist(campaignId, facts);
       if (batch.pushed > 0 || !wasWaiting) {
         await alert('awaiting_start', `Aimfox campaign ${campaignId} is paused with leads waiting. Open it in Aimfox, check the `
-          + 'Connect step has no note, the message step is exactly {{welcome_message}} and "stop sequence on reply" is on, '
-          + 'then press Start yourself.');
+          + 'Connect step has no note, the connect optimization step is empty, there is exactly one message after acceptance '
+          + `and it reads ${aimfox.WELCOME_TOKEN}, and InMail optimization is off, then press Start yourself. ${STOP_ON_REPLY_NOTE}`);
       }
       return 0;
     }
@@ -896,19 +906,25 @@ async function recordStartIfSeen(campaignId, state, facts) {
   return { ...state, confirmed_at: now, awaiting_start: null };
 }
 
+// Informational only: the API exposes no stop-on-reply setting, so nothing is refused on it.
+const STOP_ON_REPLY_NOTE = 'Stop on reply: Aimfox does not report this. If your campaign has the setting, turn it on. '
+  + '(Observed: leads who replied ended their sequence.)';
+
 async function printChecklist(campaignId, facts) {
   const show = (v) => (v === null ? 'Aimfox does not say, check it' : v ? 'looks right' : 'WRONG');
   out('');
-  out(`Aimfox campaign ${campaignId} is paused. Before it sends anything, check three things in Aimfox:`);
+  out(`Aimfox campaign ${campaignId} is paused. Before it sends anything, check four things in Aimfox:`);
   out(`  1. The Connect step has no note (a blank invite): ${show(facts.connectNoteBlank)}`);
-  out(`  2. The message step after acceptance is exactly {{welcome_message}}: ${show(facts.welcomeTokenOk)}`);
-  out(`  3. "Stop sequence on reply" is ON: ${show(facts.stopOnReply)}`);
+  out(`  2. The connect optimization step has no note and no messages: ${show(facts.connectOptimizationBlank)}`);
+  out(`  3. There is exactly one message after acceptance, and its whole text is ${aimfox.WELCOME_TOKEN}: ${show(facts.welcomeTokenOk)}`);
+  out(`  4. InMail optimization is OFF: ${show(facts.inmailOptimization === null ? null : !facts.inmailOptimization)}`);
+  out(`  ${STOP_ON_REPLY_NOTE}`);
   const [sample] = await select('li_prospects', 'status=eq.pushed&select=id,public_id,name&order=updated_at.desc&limit=1');
   if (sample) {
     const body = (await welcomeRows([sample.id])).get(sample.id)?.body;
     if (body) out(`  Open the preview for ${sample.name ?? sample.public_id}; the message after acceptance should read:\n    ${body}`);
   }
-  out('Now open Aimfox, check these three, and press Start yourself. The next push or sync records it.');
+  out('Now open Aimfox, check these four, and press Start yourself. The next push or sync records it.');
 }
 
 function printLoop(state) {
@@ -951,65 +967,93 @@ async function cmdSync() {
   }
 
   const prospects = await selectAll('li_prospects',
-    'status=in.(pushed,connect_sent,accepted,welcome_sent,replied)&select=id,public_id,status,aimfox_lead_urn&order=id');
+    'status=in.(pushed,connect_sent,accepted,welcome_sent,replied)&select=id,public_id,status,aimfox_lead_urn,last_inbound_at&order=id');
   if (!prospects.length) {
     out('No pushed prospects to sync.');
     return 0;
   }
-  const byUrn = new Map(prospects.filter((p) => p.aimfox_lead_urn).map((p) => [p.aimfox_lead_urn, p]));
-  const byPublicId = new Map(prospects.map((p) => [p.public_id, p]));
-  const find = (e) => (e.urn && byUrn.get(e.urn)) || (e.publicId && byPublicId.get(e.publicId)) || null;
 
-  const interactions = await aimfox.listInteractions({ campaignId });
-  const target = new Map(); // prospect id → { status, welcomeAt }
-  for (const it of interactions) {
-    if (!it.kind || (it.campaignId && String(it.campaignId) !== String(campaignId))) continue;
-    const p = find(it);
-    if (!p) continue;
-    const t = target.get(p.id) ?? { status: p.status, welcomeAt: null };
-    if (SYNC_RANK[it.kind] > SYNC_RANK[t.status]) t.status = it.kind;
-    if (it.kind === 'welcome_sent') t.welcomeAt = it.at ?? t.welcomeAt ?? new Date().toISOString();
-    target.set(p.id, t);
-  }
+  // One read of the whole audience (docs/aimfox-api.md). Each entry's state is the lead's current
+  // step: message = accepted and in the message sequence, done = sequence over (the one welcome went
+  // out, or they replied). init, view, like, endorse, inmail, withdraw and cancelled change nothing.
+  const audience = await aimfox.listAudience(campaignId);
+  const byUrn = new Map(audience.filter((e) => e.urn).map((e) => [e.urn, e]));
+  const byPublicId = new Map(audience.filter((e) => e.publicId).map((e) => [e.publicId, e]));
+  const entryOf = (p) => (p.aimfox_lead_urn && byUrn.get(p.aimfox_lead_urn)) || byPublicId.get(p.public_id) || null;
 
-  const tally = { moved: 0, welcomesSent: 0, removed: 0, dnc: 0 };
+  const tally = { moved: 0, welcomesSent: 0, removed: 0, labelChecks: 0, dnc: 0, absent: 0 };
   for (const p of prospects) {
-    const t = target.get(p.id);
-    if (!t) continue;
-    if (t.welcomeAt) {
+    const entry = entryOf(p);
+    if (!entry) tally.absent++;
+    let target = p.status;
+    const forward = (s) => { if (SYNC_RANK[s] > SYNC_RANK[target]) target = s; };
+    if (entry?.state === 'message') forward('accepted');
+    if (entry?.state === 'done') {
+      forward('welcome_sent');
       const sent = await update('li_messages', `prospect_id=eq.${p.id}&kind=eq.welcome&status=eq.draft`,
-        { status: 'sent', sent_at: t.welcomeAt, sent_via: 'aimfox' });
+        { status: 'sent', sent_at: new Date().toISOString(), sent_via: 'aimfox' });
       tally.welcomesSent += sent.length;
     }
-    if (SYNC_RANK[t.status] <= SYNC_RANK[p.status]) continue;
-    const moved = await update('li_prospects', `id=eq.${p.id}&status=eq.${p.status}`, { status: t.status });
-    if (!moved.length) continue;
-    tally.moved++;
-    if (t.status === 'replied' && p.aimfox_lead_urn) {
-      // Second guard on top of Aimfox's stop-on-reply: no further step can fire.
+    // The closer sets last_inbound_at from the LinkedIn inbox.
+    if (p.last_inbound_at) forward('replied');
+    if (target !== p.status) {
+      const moved = await update('li_prospects', `id=eq.${p.id}&status=eq.${p.status}`, { status: target });
+      if (moved.length) tally.moved++;
+    }
+    // Second guard on top of Aimfox's own stop on reply: anyone who replied and is still in the
+    // audience with steps left is removed, every run until it works (the remove is idempotent).
+    // Someone already out of the audience, or whose sequence is over, has nothing left to fire.
+    const urn = entry ? (p.aimfox_lead_urn ?? entry.urn) : null;
+    if (p.last_inbound_at && urn && entry.state !== 'done' && entry.state !== 'cancelled') {
       try {
-        await aimfox.removeFromAudience(campaignId, p.aimfox_lead_urn);
+        await aimfox.removeFromAudience(campaignId, urn);
         tally.removed++;
       } catch (e) {
         if (isAuthError(e)) throw e;
-        await alert('sync_remove_failed', `${p.public_id} replied but could not be removed from Aimfox campaign ${campaignId} `
-          + `(${e.message}). Remove them by hand so no further step fires.`, p.id);
+        await alertOnce('sync_remove_failed', `${p.public_id} replied but could not be removed from Aimfox campaign ${campaignId} `
+          + `(${e.message}). The next sync tries again; remove them by hand if this stays open.`, p.id);
       }
     }
   }
 
-  // A "not interested" label in Aimfox makes the prospect do-not-contact.
-  const leads = await aimfox.searchLeads({ campaign_id: campaignId });
-  for (const lead of leads) {
+  // A "not interested" label in Aimfox makes the prospect do-not-contact. Labels live only on the
+  // lead (GET /leads/:id), so this is one call per pushed prospect found in the audience. One
+  // failed read does not stop the others; a timeout does, since Aimfox has stopped answering and
+  // each further read would wait out the full 90s.
+  const labelFailures = [];
+  let labelsStopped = false;
+  for (const p of prospects) {
+    const entry = entryOf(p);
+    if (!entry?.leadId) continue;
+    if (labelsStopped) {
+      labelFailures.push(`${p.public_id}: not checked`);
+      continue;
+    }
+    let lead;
+    try {
+      lead = await aimfox.getLead(entry.leadId);
+    } catch (e) {
+      if (isAuthError(e)) throw e;
+      labelFailures.push(`${p.public_id}: ${e.message}`);
+      if (e?.timeout) labelsStopped = true;
+      continue;
+    }
+    tally.labelChecks++;
     if (!lead.labels.some((l) => /not\s*interested/.test(l))) continue;
-    const p = find(lead);
-    if (!p) continue;
+    // Matched by public id with no stored urn: store it first, so the lead can be removed and blacklisted.
+    if (!p.aimfox_lead_urn && entry.urn) await update('li_prospects', `id=eq.${p.id}`, { aimfox_lead_urn: entry.urn });
     await markDoNotContact(p.id, 'Aimfox label: not interested', { campaignId });
     tally.dnc++;
   }
+  if (labelFailures.length) {
+    await alertOnce('sync_label_check_failed', `${labelFailures.length} "not interested" label check(s) failed in Aimfox campaign `
+      + `${campaignId}, so those leads were not checked this run (first: ${labelFailures[0]}). The next sync tries again.`);
+  }
 
   out(`Sync: ${tally.moved} status change(s), ${tally.welcomesSent} welcome(s) marked sent, `
-    + `${tally.removed} replied lead(s) removed from the campaign, ${tally.dnc} marked do-not-contact.`);
+    + `${tally.removed} replied lead(s) removed from the campaign, ${tally.labelChecks} lead(s) checked for labels, `
+    + `${labelFailures.length} label check(s) failed, `
+    + `${tally.dnc} marked do-not-contact, ${tally.absent} pushed prospect(s) not in the Aimfox audience.`);
   return 0;
 }
 

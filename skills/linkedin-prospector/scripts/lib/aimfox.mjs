@@ -1,19 +1,27 @@
 // Aimfox v2 client. One function per endpoint the prospector uses.
-// Paths come from the Aimfox docs bundle (2026-10-03). Request and response BODIES are not verified:
-// every function marks its assumption in one place, and build step 5 (live probe on a paused test
-// campaign) replaces them with the recorded shapes in docs/aimfox-api.md.
+// Read shapes (accounts, campaign, audience, lead) were observed 2026-10-03 against a live workspace
+// and are recorded in docs/aimfox-api.md: every body is {status: "ok", <name>: ...}. Write calls
+// (audience add and remove, custom variables, blacklist) were not exercised there; each one stays
+// marked UNVERIFIED in one place.
 
-import { request } from './http.mjs';
+import { request, HttpError } from './http.mjs';
 
 export const AIMFOX_BASE = 'https://api.aimfox.com/api/v2';
 
-// UNVERIFIED body shape — build step 5 confirms. Whether POST /campaigns/:id/audience accepts the
+// Observed 2026-10-03 (docs/aimfox-api.md): calls that normally answer in under a second can stall
+// for 30 to 120 seconds. A stall is "try again later", never an answer.
+export const AIMFOX_TIMEOUT_MS = 90000;
+
+// UNVERIFIED body shape — not exercised live. Whether POST /campaigns/:id/audience accepts the
 // custom variables in the same request. push reads them back either way, so a wrong guess here can
 // only produce a read-back mismatch (lead removed, push_failed), never a lead with an empty message.
 export const AUDIENCE_ADD_TAKES_VARIABLES = true;
 
-// The custom variable the campaign's message step renders: its text is exactly {{welcome_message}}.
+// The custom variable the campaign's one message step renders. Aimfox writes custom variables as
+// {{CUSTOM.NAME}} (docs/aimfox-api.md), so the message text is exactly WELCOME_TOKEN.
 export const WELCOME_VARIABLE = 'welcome_message';
+export const WELCOME_TOKEN = '{{CUSTOM.welcome_message}}';
+const WELCOME_TOKEN_RE = /^\{\{\s*CUSTOM\.welcome_message\s*\}\}$/i;
 
 export class AimfoxError extends Error {
   constructor(message, status, body) {
@@ -32,10 +40,21 @@ function apiKey() {
 }
 
 async function call(method, path, body) {
-  const res = await request(method, `${AIMFOX_BASE}${path}`, {
-    headers: { Authorization: `Bearer ${apiKey()}`, 'Content-Type': 'application/json' },
-    body,
-  });
+  let res;
+  try {
+    res = await request(method, `${AIMFOX_BASE}${path}`, {
+      headers: { Authorization: `Bearer ${apiKey()}`, 'Content-Type': 'application/json' },
+      body,
+      timeoutMs: AIMFOX_TIMEOUT_MS,
+    });
+  } catch (e) {
+    // Still an HttpError (no answer), so callers stop rather than read it as a refusal or as data.
+    if (e instanceof HttpError && e.timeout) {
+      throw new HttpError(`Aimfox did not answer within ${AIMFOX_TIMEOUT_MS / 1000}s; try again later (${method} ${path})`,
+        { method, url: e.url, cause: e, timeout: true });
+    }
+    throw e;
+  }
   if (res.status < 200 || res.status >= 300) {
     const what = res.status === 401 || res.status === 403 ? 'Aimfox refused the API key' : 'Aimfox request failed';
     throw new AimfoxError(`${what}: ${method} ${path} -> HTTP ${res.status}`, res.status, res.body);
@@ -43,7 +62,7 @@ async function call(method, path, body) {
   return res.body;
 }
 
-// Unwraps the common envelope shapes ({data: ...}, {campaign: ...}) without guessing deeper.
+// Unwraps the {status, <key>: ...} envelope (and a {data: ...} one, for the unverified writes).
 function unwrap(body, key) {
   if (body && typeof body === 'object') {
     if (key && body[key] !== undefined) return body[key];
@@ -54,10 +73,7 @@ function unwrap(body, key) {
 
 function asList(body, key) {
   const v = unwrap(body, key);
-  if (Array.isArray(v)) return v;
-  if (v && Array.isArray(v.items)) return v.items;
-  if (v && Array.isArray(v.results)) return v.results;
-  return [];
+  return Array.isArray(v) ? v : [];
 }
 
 export function publicIdFromProfileUrl(url) {
@@ -74,61 +90,70 @@ export function publicIdFromProfileUrl(url) {
 // ---- accounts (setup-check) -------------------------------------------------------------------
 
 export async function listAccounts() {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: list or {data: [...]}.
+  // Observed 2026-10-03 (docs/aimfox-api.md): {status, accounts: [...]}.
   return asList(await call('GET', '/accounts'), 'accounts');
 }
 
 // ---- campaigns ----------------------------------------------------------------------------------
 
-export async function getCampaign(campaignId) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: {campaign: {...}} or {data: {...}} or bare.
-  return unwrap(await call('GET', `/campaigns/${encodeURIComponent(campaignId)}`), 'campaign');
+// The observed read shapes, enforced: anything else is an error, never an empty answer.
+function requireShape(body, key, what, isArray) {
+  const v = body && typeof body === 'object' ? body[key] : undefined;
+  const ok = isArray ? Array.isArray(v) : Boolean(v) && typeof v === 'object' && !Array.isArray(v);
+  if (!ok) throw new AimfoxError(`Aimfox returned ${what} in an unexpected shape`, 0, body);
+  return v;
 }
 
-// Reads the facts push needs out of a campaign object. Every field Aimfox may not expose comes back
-// null, meaning "the API cannot answer", which push turns into the one typed confirmation.
-// UNVERIFIED body shape — build step 5 confirms. Assumed fields, in order of preference:
-//   state:       campaign.state | campaign.status  (PAUSED / RUNNING / ACTIVE ...)
-//   steps:       campaign.steps | campaign.sequence | campaign.flow.steps, each {type, message|text|note|template}
-//   stop on reply: campaign.stop_on_reply | campaign.settings.stop_on_reply | campaign.stopOnReply
-//   updated-at:  campaign.updated_at | campaign.updatedAt
+export async function getCampaign(campaignId) {
+  // Observed 2026-10-03 (docs/aimfox-api.md): {status, campaign: {...}}.
+  return requireShape(await call('GET', `/campaigns/${encodeURIComponent(campaignId)}`), 'campaign', 'a campaign', false);
+}
+
+// Aimfox campaign state → the two states push works with. CREATED is built and never started, so
+// nothing sends: the same as paused. Anything else (DONE, ...) comes back as-is and push refuses it.
+const STATE_MAP = { ACTIVE: 'RUNNING', STARTED: 'RUNNING', CREATED: 'PAUSED', PAUSED: 'PAUSED' };
+
+// Reads the facts push needs out of a campaign object. A field Aimfox does not expose comes back
+// null, meaning "the API cannot answer", which the checklist turns into "check it yourself".
+// Observed 2026-10-03 (docs/aimfox-api.md): the steps live in campaign.flows. The flow with type
+// PRIMARY_CONNECT is the connection request: template is null for a blank invite or
+// {message: <note>}, and flow_message_templates are the messages sent after acceptance, in order.
+// uses_connection_note is true on a live campaign that has a note, so a blank invite needs it false
+// as well. The CONNECT_OPTIMIZATION flow sends its own invite and must stay empty. The
+// INMAIL_OPTIMIZATION flow's text is inert while inmail_optimization is false (live campaigns keep
+// text there), so only the switch is checked.
+// There is no stop-on-reply field and no updated_at.
 export function campaignFacts(campaign) {
   const c = campaign || {};
-  const rawState = String(c.state ?? c.status ?? '').toUpperCase();
-  const state = rawState === 'ACTIVE' || rawState === 'STARTED' ? 'RUNNING' : rawState || null;
+  const rawState = String(c.state ?? '').toUpperCase();
+  const state = STATE_MAP[rawState] ?? (rawState || null);
+  const inmailOptimization = typeof c.inmail_optimization === 'boolean' ? c.inmail_optimization : null;
+  const stopOnReply = null;
 
-  const steps = Array.isArray(c.steps) ? c.steps
-    : Array.isArray(c.sequence) ? c.sequence
-      : Array.isArray(c.flow?.steps) ? c.flow.steps : null;
-
-  const stepText = (s) => s?.message ?? s?.text ?? s?.template ?? s?.body ?? null;
-  const isConnect = (s) => /connect|invit/i.test(String(s?.type ?? s?.action ?? ''));
-  const isMessage = (s) => /message/i.test(String(s?.type ?? s?.action ?? '')) && !isConnect(s);
-
-  let welcomeTokenOk = null;
-  let connectNoteBlank = null;
-  if (steps) {
-    const msgs = steps.filter(isMessage).map(stepText).filter((t) => t !== null && t !== undefined);
-    if (msgs.length) welcomeTokenOk = String(msgs[0]).trim() === `{{${WELCOME_VARIABLE}}}`;
-    const connects = steps.filter(isConnect);
-    if (connects.length) {
-      connectNoteBlank = connects.every((s) => {
-        const note = s?.note ?? s?.message ?? s?.text ?? '';
-        return String(note ?? '').trim() === '';
-      });
-    }
+  const flows = Array.isArray(c.flows) ? c.flows : null;
+  if (!flows) {
+    return {
+      state, welcomeTokenOk: null, connectNoteBlank: null, connectOptimizationBlank: null, inmailOptimization, stopOnReply, fingerprint: null,
+    };
   }
 
-  const sor = c.stop_on_reply ?? c.settings?.stop_on_reply ?? c.stopOnReply ?? c.settings?.stopOnReply;
-  const stopOnReply = typeof sor === 'boolean' ? sor : null;
+  const messagesOf = (f) => (Array.isArray(f?.flow_message_templates) ? f.flow_message_templates : []);
+  const blankTemplate = (f) => String(f?.template?.message ?? '').trim() === '';
+  const connect = flows.find((f) => f?.type === 'PRIMARY_CONNECT');
+  const connectNoteBlank = Boolean(connect) && blankTemplate(connect) && c.uses_connection_note === false;
+  const connectOpt = flows.find((f) => f?.type === 'CONNECT_OPTIMIZATION');
+  const connectOptimizationBlank = !connectOpt || (blankTemplate(connectOpt) && messagesOf(connectOpt).length === 0);
+  // Exactly one message: a second one would be a follow-up the skill never wrote.
+  const messages = messagesOf(connect);
+  const welcomeTokenOk = messages.length === 1 && WELCOME_TOKEN_RE.test(String(messages[0]?.message ?? '').trim());
 
-  // Fingerprint: a hash of the step text when readable (it does not move when leads are added),
-  // else the campaign's updated-at, else null (no automatic later batches).
-  let fingerprint = null;
-  if (steps) fingerprint = `steps:${fnv1a(JSON.stringify(steps.map((s) => [s?.type ?? s?.action ?? '', stepText(s) ?? '', s?.note ?? ''])))}`;
-  else if (c.updated_at ?? c.updatedAt) fingerprint = `updated:${c.updated_at ?? c.updatedAt}`;
+  // A hash of every flow's text and delays plus the InMail switch. Adding leads does not move it.
+  const fingerprint = `flows:${fnv1a(JSON.stringify([
+    flows.map((f) => [f?.type ?? '', f?.template?.message ?? '', messagesOf(f).map((m) => [m?.message ?? '', m?.delay ?? null])]),
+    c.inmail_optimization ?? null,
+  ]))}`;
 
-  return { state, welcomeTokenOk, connectNoteBlank, stopOnReply, fingerprint };
+  return { state, welcomeTokenOk, connectNoteBlank, connectOptimizationBlank, inmailOptimization, stopOnReply, fingerprint };
 }
 
 function fnv1a(s) {
@@ -143,46 +168,32 @@ function fnv1a(s) {
 // ---- audience -----------------------------------------------------------------------------------
 
 // Shape of one audience entry, read in one place.
-// UNVERIFIED body shape — build step 5 confirms. Assumed: {urn | lead_urn | id, public_identifier | public_id, profile_url}.
+// Observed 2026-10-03 (docs/aimfox-api.md): {id (numeric lead id), urn (ACoAA...), public_identifier,
+// state, ...}. id is the lead id for GET /leads/:id, not the urn. state is the lead's current step:
+// init, view, like, endorse, message (accepted, in the message sequence), inmail, withdraw,
+// cancelled, done (sequence over, including every lead who replied).
+// The addToAudience response is read through this too; that shape is UNVERIFIED.
 export function audienceEntry(raw) {
-  const urn = raw?.urn ?? raw?.lead_urn ?? raw?.target_urn ?? raw?.id ?? null;
+  const urn = raw?.urn ?? raw?.lead_urn ?? raw?.target_urn ?? null;
   const publicId = (raw?.public_identifier ?? raw?.public_id ?? publicIdFromProfileUrl(raw?.profile_url ?? raw?.linkedin_url))
     ?.toString().toLowerCase() ?? null;
-  return { urn: urn === null ? null : String(urn), publicId };
-}
-
-export const PAGE_SIZE = 100;
-const MAX_PAGES = 500;
-
-// UNVERIFIED paging — build step 5 confirms. Assumed for every list endpoint: offset/limit; each page
-// a list or {data: [...]}, optionally with has_more / next. Paging stops on a short or empty page, an
-// explicit has_more:false, or a page that adds nothing new (an API that ignores offset).
-// fetchPage(offset, limit) returns the raw body; key(raw) dedupes across pages.
-async function pageAll(fetchPage, listKey, key) {
-  const seen = new Map();
-  for (let page = 0, offset = 0; page < MAX_PAGES; page++, offset += PAGE_SIZE) {
-    const body = await fetchPage(offset, PAGE_SIZE);
-    const items = asList(body, listKey);
-    const before = seen.size;
-    for (const raw of items) seen.set(key(raw), raw);
-    const hasMore = body?.has_more ?? body?.hasMore ?? (body?.next !== undefined ? Boolean(body.next) : undefined);
-    if (hasMore === false || items.length < PAGE_SIZE || seen.size === before) break;
-  }
-  return [...seen.values()];
+  return {
+    urn: urn === null ? null : String(urn),
+    publicId,
+    leadId: raw?.id === undefined || raw?.id === null ? null : String(raw.id),
+    state: typeof raw?.state === 'string' ? raw.state.toLowerCase() : null,
+  };
 }
 
 export async function listAudience(campaignId) {
-  // UNVERIFIED body shape — build step 5 confirms. Paged as pageAll assumes.
-  const raws = await pageAll(
-    (offset, limit) => call('GET', `/campaigns/${encodeURIComponent(campaignId)}/audience?offset=${offset}&limit=${limit}`),
-    'audience',
-    (raw) => { const e = audienceEntry(raw); return e.urn ?? `public:${e.publicId}`; },
-  );
-  return raws.map(audienceEntry);
+  // Observed 2026-10-03 (docs/aimfox-api.md): {status, audience: [...]}, the whole audience in one
+  // response. offset, limit and page are ignored, so there is nothing to page.
+  const body = await call('GET', `/campaigns/${encodeURIComponent(campaignId)}/audience`);
+  return requireShape(body, 'audience', 'an audience', true).map(audienceEntry);
 }
 
 export async function addToAudience(campaignId, { profileUrl, customVariables }) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed request: {profile_url, custom_variables?};
+  // UNVERIFIED body shape — not exercised live. Assumed request: {profile_url, custom_variables?};
   // assumed response: the created audience entry, or {data: entry}. urn may be absent, in which case
   // push looks the lead up in listAudience by public id.
   const body = { profile_url: profileUrl };
@@ -192,20 +203,20 @@ export async function addToAudience(campaignId, { profileUrl, customVariables })
 }
 
 export async function removeFromAudience(campaignId, urn) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: no body, any 2xx is success.
+  // UNVERIFIED body shape — not exercised live. Assumed: no body, any 2xx is success.
   return call('DELETE', `/campaigns/${encodeURIComponent(campaignId)}/audience/${encodeURIComponent(urn)}`);
 }
 
 // ---- custom variables ---------------------------------------------------------------------------
 
 export async function setCustomVariables(campaignId, urn, variables) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: PUT {custom_variables: {name: value}}.
+  // UNVERIFIED body shape — not exercised live. Assumed: PUT {custom_variables: {name: value}}.
   return call('PUT', `/campaigns/${encodeURIComponent(campaignId)}/custom-variables/${encodeURIComponent(urn)}`,
     { custom_variables: variables });
 }
 
 export async function getCustomVariables(campaignId, urn) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: {custom_variables: {name: value}} or
+  // UNVERIFIED body shape — not exercised live. Assumed: {custom_variables: {name: value}} or
   // {data: {...}} or a list of {name, value}. Normalised to a plain {name: value} object.
   const body = await call('GET', `/campaigns/${encodeURIComponent(campaignId)}/custom-variables/${encodeURIComponent(urn)}`);
   const v = unwrap(body, 'custom_variables');
@@ -214,66 +225,32 @@ export async function getCustomVariables(campaignId, urn) {
   return v && typeof v === 'object' ? v : {};
 }
 
+// The welcome value out of getCustomVariables' result, matched on the name case-insensitively:
+// the live workspace lists its custom variables uppercased (AUTHOR, POST_SUMMARY).
+export function welcomeFrom(variables) {
+  const key = Object.keys(variables ?? {}).find((k) => k.toLowerCase() === WELCOME_VARIABLE);
+  return key === undefined ? undefined : variables[key];
+}
+
 // ---- blacklist ----------------------------------------------------------------------------------
 
 // Takes a lead urn (string, as dnc.mjs passes it) or {urn} / {profileUrl}.
 export async function addToBlacklist(target) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: POST {urn} or {profile_url}.
+  // UNVERIFIED body shape — not exercised live. Assumed: POST {urn} or {profile_url}.
   const { urn, profileUrl } = typeof target === 'string' ? { urn: target } : (target ?? {});
   const body = urn ? { urn } : { profile_url: profileUrl };
   return call('POST', '/blacklist', body);
 }
 
-// ---- interactions and leads (sync) --------------------------------------------------------------
+// ---- leads (sync) -------------------------------------------------------------------------------
 
-// One interaction, read in one place.
-// UNVERIFIED body shape — build step 5 confirms. Assumed: {type | event, lead_urn | target_urn | urn,
-// public_identifier | profile_url, campaign_id, created_at | timestamp}. Types are matched loosely:
-// connect sent / connect accepted / message sent / reply.
-export function interactionEntry(raw) {
-  const type = String(raw?.type ?? raw?.event ?? raw?.interaction ?? '').toLowerCase();
-  let kind = null;
-  if (/accept/.test(type)) kind = 'accepted';
-  else if (/connect|invit/.test(type) && /sent|send/.test(type)) kind = 'connect_sent';
-  else if (/repl/.test(type)) kind = 'replied';
-  else if (/message/.test(type) && /sent|send/.test(type)) kind = 'welcome_sent';
-  const lead = raw?.lead ?? raw?.target ?? {};
-  const urn = raw?.lead_urn ?? raw?.target_urn ?? raw?.urn ?? lead?.urn ?? null;
-  const publicId = (raw?.public_identifier ?? lead?.public_identifier ?? publicIdFromProfileUrl(raw?.profile_url ?? lead?.profile_url))
-    ?.toString().toLowerCase() ?? null;
+// One lead by its numeric id (the audience entry's leadId), with its labels lowercased.
+// Observed 2026-10-03 (docs/aimfox-api.md): {status, lead: {..., labels}}. Labels are read as
+// [{name}] or plain strings.
+export async function getLead(leadId) {
+  const lead = requireShape(await call('GET', `/leads/${encodeURIComponent(leadId)}`), 'lead', 'a lead', false);
   return {
-    kind,
-    urn: urn === null ? null : String(urn),
-    publicId,
-    campaignId: raw?.campaign_id ?? raw?.campaign?.id ?? null,
-    at: raw?.created_at ?? raw?.timestamp ?? raw?.date ?? null,
+    ...audienceEntry(lead),
+    labels: (Array.isArray(lead.labels) ? lead.labels : []).map((l) => String(l?.name ?? l).toLowerCase()),
   };
-}
-
-export async function listInteractions({ campaignId } = {}) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed query: ?campaign_id=&offset=&limit=, paged
-  // as pageAll assumes; response: list or {data: [...]}. A missed page would leave a replied lead in
-  // the campaign, so every page is read.
-  const q = campaignId ? `campaign_id=${encodeURIComponent(campaignId)}&` : '';
-  const raws = await pageAll(
-    (offset, limit) => call('GET', `/analytics/interactions?${q}offset=${offset}&limit=${limit}`),
-    'interactions',
-    (raw) => String(raw?.id ?? JSON.stringify(raw)),
-  );
-  return raws.map(interactionEntry);
-}
-
-export async function searchLeads(query = {}) {
-  // UNVERIFIED body shape — build step 5 confirms. Assumed: POST body is the filter object plus
-  // offset/limit, paged as pageAll assumes; response list or {data: [...]} of leads with
-  // {urn, public_identifier, labels: [{name}] | [string]}.
-  const list = await pageAll(
-    (offset, limit) => call('POST', '/leads:search', { ...query, offset, limit }),
-    'leads',
-    (raw) => { const e = audienceEntry(raw); return e.urn ?? `public:${e.publicId}`; },
-  );
-  return list.map((raw) => ({
-    ...audienceEntry(raw),
-    labels: (Array.isArray(raw?.labels) ? raw.labels : []).map((l) => String(l?.name ?? l).toLowerCase()),
-  }));
 }

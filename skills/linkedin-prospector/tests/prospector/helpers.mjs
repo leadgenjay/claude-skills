@@ -87,11 +87,35 @@ export const reqs = (log, method, ...parts) => {
 };
 export const bodyOf = (entry) => (entry?.body ? JSON.parse(entry.body) : undefined);
 
-export const steps = (extra = []) => [
-  { type: 'connect', note: '' },
-  { type: 'message', message: '{{welcome_message}}' },
-  ...extra,
+export const WELCOME_TOKEN = '{{CUSTOM.welcome_message}}';
+
+// campaign.flows as GET /campaigns/:id returns them (docs/aimfox-api.md): the PRIMARY_CONNECT flow
+// carries the invite note (template null = blank) and the messages after acceptance; the two
+// optimization flows are always present.
+export const flows = ({ note = null, messages = [WELCOME_TOKEN] } = {}) => [
+  {
+    id: 11, type: 'PRIMARY_CONNECT', name: 'Connect',
+    template: note === null ? null : { type: 'NOTE_TEMPLATE', message: note },
+    flow_message_templates: messages.map((message, i) => ({ type: 'MESSAGE_TEMPLATE', message, delay: i ? 86400 : 3600, attachments: [] })),
+    withdraw_delay: 21, endorse_enabled: false, like_enabled: false,
+  },
+  { id: 12, type: 'INMAIL_OPTIMIZATION', name: 'InMail', template: null, flow_message_templates: [] },
+  { id: 13, type: 'CONNECT_OPTIMIZATION', name: 'Connect optimization', template: null, flow_message_templates: [] },
 ];
+
+// One campaign object (the `campaign` of {status, campaign}). state is the raw Aimfox state.
+export const campaign = (state, over = {}) => ({
+  id: CAMPAIGN, name: 'LinkedIn prospector', state, type: 'list', outreach_type: 'connect',
+  target_count: 0, audience_size: 0, completion: 0, uses_connection_note: false,
+  custom_variable_keys: [{ name: 'welcome_message', value: WELCOME_TOKEN }],
+  inmail_optimization: false, flows: flows(), ...over,
+});
+
+// One audience entry as GET /campaigns/:id/audience returns it.
+export const audienceRow = (id, over = {}) => ({
+  id: 5000 + id, urn: `u${id}`, public_identifier: `p${id}`, full_name: `P ${id}`, state: 'init', ...over,
+});
+export const audienceBody = (rows) => ({ status: 'ok', audience: rows });
 
 export function prospect(id, over = {}) {
   return {

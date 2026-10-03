@@ -8,8 +8,15 @@ You build this campaign once, by hand, in Aimfox. After that the skill adds peop
 Aimfox does the sending at its own safe pace. It takes about ten minutes.
 
 Nothing sends until you press Start in Aimfox yourself, and before you do, the skill shows you a
-checklist of the three settings that matter. A mistake here costs you a WRONG line on that
+checklist of the four settings that matter. A mistake here costs you a WRONG line on that
 checklist, not a bad send.
+
+In short, the finished campaign has:
+
+- a Connect step with no note, and an empty connect optimization step;
+- exactly one message after the connection is accepted, whose whole text is
+  `{{CUSTOM.welcome_message}}`;
+- InMail optimization turned off.
 
 ## 1. Connect your LinkedIn account
 
@@ -35,22 +42,26 @@ under 20%.
 day reads as natural). The message text is exactly this and nothing else:
 
 ```
-{{welcome_message}}
+{{CUSTOM.welcome_message}}
 ```
 
 No greeting before it, no sign-off after it, no space or line break around it. The skill
 already wrote a complete message for each person and stored it in that variable. Anything you
 add here would be sent to everyone on top of it.
 
-Do not add a third step. Follow-ups after the welcome message are the closer's job, and it only
-writes when the person has answered.
+Do not add a third step. There is exactly one message after acceptance. Follow-ups after the
+welcome message are the closer's job, and it only writes when the person has answered. The
+skill refuses to add anyone while a second message is there.
 
-## 4. Stop the sequence when someone replies
+**InMail optimization off.** Leave the campaign's InMail optimization setting turned off. When
+it is on, Aimfox sends an InMail to people who never accepted the invite, which the skill never
+wrote and never checked. The skill refuses to add anyone while it is on.
 
-Turn on the setting that stops the sequence for a lead once they reply. This is the main guard
-against Aimfox sending an automated step to someone who is already in a real conversation.
-The skill's `sync` also removes anyone who replied from the campaign, as a second guard, but it
-only runs once an hour.
+## 4. Stop on reply
+
+Aimfox does not report this. If your campaign has the setting, turn it on. (Observed: leads who
+replied ended their sequence.) The skill's `sync` also removes anyone who replied and still has
+steps left from the campaign, as a second guard, but it only runs once an hour.
 
 ## 5. Leave it paused
 
@@ -80,8 +91,10 @@ After the first batch is in, Claude shows you this checklist:
 | Check | Right when |
 |---|---|
 | Connect step | The note is empty. |
-| Message step | The text is exactly `{{welcome_message}}`. |
-| Stop on reply | Turned on. |
+| Connect optimization step | No note and no messages. |
+| Message step | Exactly one message after acceptance, whose text is exactly `{{CUSTOM.welcome_message}}`. |
+| InMail optimization | Turned off. |
+| Stop on reply (information only) | Aimfox does not report this. If your campaign has the setting, turn it on. (Observed: leads who replied ended their sequence.) |
 
 Each line reads "looks right", "WRONG", or "Aimfox does not say, check it". Below it is one
 real prospect's welcome message; open the campaign preview in Aimfox and make sure that lead's

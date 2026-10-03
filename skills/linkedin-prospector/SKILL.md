@@ -103,7 +103,7 @@ prospect whose first message was rejected.
 Exit codes: 0 done, 1 refused or failed (the message says why), 2 an account key was refused.
 
 Other commands: `node $P status` (counts by stage, spend so far), `node $P sync` (pull Aimfox
-progress: invite sent, accepted, welcome sent, replied), `node $P dnc <public_id> <reason>`
+progress from the campaign audience: accepted, welcome sent; replies come from the closer's inbox), `node $P dnc <public_id> <reason>`
 (never contact this person; also removes them from the campaign and adds them to the Aimfox
 blacklist).
 
@@ -176,10 +176,11 @@ Nothing in this skill starts the campaign. The user presses Start in Aimfox, and
 confirmation. `push --start` is an old alias that now does exactly what `push` does.
 
 **First batch.** The campaign must be paused. After adding the leads, `push` prints a
-three-item checklist (Connect step has no note, message step is exactly `{{welcome_message}}`,
-"stop sequence on reply" is on), marking each "looks right", "WRONG", or "Aimfox does not say,
-check it", plus one real prospect's welcome to compare with the Aimfox preview. It ends by
-asking the user to open Aimfox, check the three, and press Start themselves, and it puts an
+four-item checklist (Connect step has no note, the connect optimization step is empty, exactly
+one message after acceptance and it is exactly `{{CUSTOM.welcome_message}}`, InMail optimization
+is off) and a note that Aimfox does not report stop on reply, marking each "looks right", "WRONG", or "Aimfox does not say, check it", plus one real
+prospect's welcome to compare with the Aimfox preview. It ends by asking the user to open
+Aimfox, check the four, and press Start themselves, and it puts an
 `awaiting_start` line on the needs-you list. Read the checklist to the user as printed, call
 out any WRONG line first, and stop there. Never start the campaign through the API or any other
 way.
