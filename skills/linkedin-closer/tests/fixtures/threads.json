@@ -1,0 +1,198 @@
+{
+  "about": "16 labelled DM threads, 2 per class, for build step 9. Each thread lists the messages oldest first, the class Claude should assign, the expected handling, and sample drafts that the draft-import validator must accept (good_draft) or reject (bad_drafts). Handling: send = a normal reply is drafted and sent; price = a reply with the offer link and no number; escalate = no reply, goes to needs-you; dnc = do_not_contact, no reply; skip = no reply needed, thread closed quietly.",
+  "offer_link": "https://example.com/book",
+  "threads": [
+    {
+      "id": "t01",
+      "class": "interested",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Dana. Your comment on outbound for agencies stuck with me. How are you filling the pipeline right now?" },
+        { "from": "them", "text": "Mostly referrals honestly. Would love something more predictable, what do you do?" }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Referrals are great until they dry up. We set up outbound that books calls for agencies like yours. Want me to show you how it would look for your niche?",
+      "bad_drafts": [
+        { "body": "We help agencies book calls. Grab a time here https://example.com/book", "why": "ends on a bare link" },
+        { "body": "Our package is $1,500 per month and books 10 calls. Interested?", "why": "quotes a price" }
+      ]
+    },
+    {
+      "id": "t02",
+      "class": "interested",
+      "messages": [
+        { "from": "us", "text": "Hey Raj, saw your take on cold email deliverability. What's the biggest headache on your side right now?" },
+        { "from": "them", "text": "Yes! This is exactly what we need. Can we talk this week?" }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Love it. Easiest is to grab a slot here https://example.com/book and tell me the time you booked so I can confirm?",
+      "bad_drafts": [
+        { "body": "https://example.com/book", "why": "bare link only" },
+        { "body": "Great to hear, Raj. I'll map out the exact plan for your team on the call so you can see how the first month would look and what we'd need from your side, and after that we'd go through targeting, copy, domains, warmup and the reporting you'd get every single week. Sound good?", "why": "over 250 characters" }
+      ]
+    },
+    {
+      "id": "t03",
+      "class": "question",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Mel. How are you getting new clients these days?" },
+        { "from": "them", "text": "How much does it cost?" }
+      ],
+      "expected": { "handling": "price" },
+      "good_draft": "It depends on the setup you need, and the most up to date pricing is here https://example.com/book. Which part were you most curious about?",
+      "bad_drafts": [
+        { "body": "It's $497 to start. Want in?", "why": "quotes a price" },
+        { "body": "Most clients pay 2,000 per month. Does that fit your budget?", "why": "quotes a per-month figure" },
+        { "body": "Pricing is on this page https://example.com/book", "why": "ends on a bare link" }
+      ]
+    },
+    {
+      "id": "t04",
+      "class": "question",
+      "messages": [
+        { "from": "us", "text": "Hey Tom, your comment about LinkedIn automation was spot on. What tools are you using now?" },
+        { "from": "them", "text": "Wait, is this a bot?" }
+      ],
+      "expected": { "handling": "escalate", "reason": "bot question" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t05",
+      "class": "objection",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Ana. Curious how you handle outbound today?" },
+        { "from": "them", "text": "We tried outbound before and it didn't work for us." }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Fair, most outbound fails on targeting, not the idea. What did you send, and to whom?",
+      "bad_drafts": [
+        { "body": "That's because you didn't use us. We guarantee results for only $99 a month. Ready?", "why": "quotes a price" }
+      ]
+    },
+    {
+      "id": "t06",
+      "class": "objection",
+      "messages": [
+        { "from": "us", "text": "Hey Lee, how are you finding new customers right now?" },
+        { "from": "them", "text": "Not in the budget right now." },
+        { "from": "us", "text": "Totally get it. Would a free list of leads in your niche help in the meantime?" },
+        { "from": "them", "text": "Like I said, no budget. Maybe next year." }
+      ],
+      "expected": { "handling": "send", "note": "second objection: close gracefully, no push" },
+      "good_draft": "No problem at all, thanks for being straight with me. Mind if I check back in the new year?",
+      "bad_drafts": [
+        { "body": "Understood! Here's the link anyway in case you change your mind https://example.com/book", "why": "ends on a bare link" }
+      ]
+    },
+    {
+      "id": "t07",
+      "class": "not_interested",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Sam. How are you filling your calendar these days?" },
+        { "from": "them", "text": "Stop messaging me." }
+      ],
+      "expected": { "handling": "dnc" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t08",
+      "class": "not_interested",
+      "messages": [
+        { "from": "us", "text": "Hey Kim, saw your comment on scaling sales teams. How big is your team now?" },
+        { "from": "them", "text": "Wrong person, I'm not involved in any of that. Not interested." }
+      ],
+      "expected": { "handling": "dnc" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t09",
+      "class": "vendor_pitch",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Ivan. What does your team focus on?" },
+        { "from": "them", "text": "We build custom web apps for startups at a 40% discount this month. Want a free quote?" }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Appreciate it, we're set on dev for now. Out of curiosity, how do you find new clients for the agency?",
+      "bad_drafts": [
+        { "body": "Not for us. But if you need clients, we do outbound for agencies at 30% off, $800 a month. Want a quick call?", "why": "quotes a price" }
+      ]
+    },
+    {
+      "id": "t10",
+      "class": "vendor_pitch",
+      "messages": [
+        { "from": "us", "text": "Hey Priya, how are you getting leads these days?" },
+        { "from": "them", "text": "Hi! I run an SEO agency, we can get you to page one in 90 days. Open to a quick call?" }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Thanks Priya, not looking at SEO right now. How are you booking calls for the agency today, mostly referrals?",
+      "bad_drafts": []
+    },
+    {
+      "id": "t11",
+      "class": "referral",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Omar. How does your team handle outbound?" },
+        { "from": "them", "text": "That's handled by Jess on our sales team, you should talk to her." }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "Thanks Omar, appreciate that. Would you mind making a quick intro to Jess, or should I reach out to her directly?",
+      "bad_drafts": []
+    },
+    {
+      "id": "t12",
+      "class": "referral",
+      "messages": [
+        { "from": "us", "text": "Hey Chloe, curious how you're finding new clients right now?" },
+        { "from": "them", "text": "Not for me, but my friend Ben runs an agency and was just complaining about this. I can connect you." }
+      ],
+      "expected": { "handling": "send" },
+      "good_draft": "That's kind of you, thank you. A quick intro would be great. Anything I should know about what Ben is working on first?",
+      "bad_drafts": []
+    },
+    {
+      "id": "t13",
+      "class": "out_of_office",
+      "messages": [
+        { "from": "us", "text": "Thanks for connecting, Hans. How are you finding clients these days?" },
+        { "from": "them", "text": "I'm out of the office until 14 October with limited access to messages." }
+      ],
+      "expected": { "handling": "skip" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t14",
+      "class": "out_of_office",
+      "messages": [
+        { "from": "us", "text": "Hey Maria, saw your comment on the outbound post. What's working for you right now?" },
+        { "from": "them", "text": "Automatic reply: I am on parental leave and will respond when I return." }
+      ],
+      "expected": { "handling": "skip" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t15",
+      "class": "personal",
+      "messages": [
+        { "from": "them", "text": "Hey! Great seeing you at the wedding last weekend. Are we still on for dinner Friday?" }
+      ],
+      "expected": { "handling": "escalate", "reason": "personal contact, a human should answer" },
+      "good_draft": null,
+      "bad_drafts": []
+    },
+    {
+      "id": "t16",
+      "class": "personal",
+      "messages": [
+        { "from": "them", "text": "Congrats on the new baby!! How is everyone sleeping?" }
+      ],
+      "expected": { "handling": "escalate", "reason": "personal contact, a human should answer" },
+      "good_draft": null,
+      "bad_drafts": []
+    }
+  ]
+}

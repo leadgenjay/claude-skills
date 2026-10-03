@@ -1,0 +1,24 @@
+id: linkedin-closer
+type: skill
+name: "LinkedIn Closer"
+description: "Answer LinkedIn DMs and comments on your own posts through Unipile, moving each conversation toward a booked call with short replies, a three-step call ladder, no prices and no bare links. Escalates bot questions, complaints and legal matters to you, stops for good on 'not interested', and runs the hourly automatic pass. Needs linkedin-prospector installed beside it."
+categories: [lgj-exclusive, marketing, automation]
+tags: [linkedin, unipile, dm-replies, appointment-setting, lead-generation, sales, comment-replies]
+icon: MessageSquare
+path: skills/linkedin-closer
+files:
+  - SKILL.md
+  - manifest.yaml
+  - references/closer-playbook.md
+  - scripts/closer.mjs
+  - tests/cli.test.mjs
+  - tests/comments.test.mjs
+  - tests/fixtures/threads.json
+  - tests/harness.mjs
+  - tests/inbox.test.mjs
+  - tests/review.test.mjs
+  - tests/security.test.mjs
+  - tests/send.test.mjs
+  - tests/validation.test.mjs
+version: "1.0"
+composesWell: [linkedin-prospector]

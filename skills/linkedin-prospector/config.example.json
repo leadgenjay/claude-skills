@@ -1,0 +1,55 @@
+{
+  "_comment": "Copy this file to ~/.linkedin-lead-system/config.json and fill it in. Keys starting with an underscore are notes and are ignored. README.md explains every setting.",
+
+  "offer": "",
+  "offer_url": "",
+  "booking_link": "",
+  "icp_description": "",
+  "niche_keywords": [],
+  "disqualifiers": [],
+  "tone_samples": [],
+  "self_profile_url": "",
+
+  "creator_urls": [],
+  "creators_top_n": 10,
+  "posts_per_creator": 10,
+  "top_posts": 30,
+  "comments_per_post": 60,
+  "qualify_threshold": 60,
+
+  "per_run_cap_usd": 10,
+  "total_cap_usd": 25,
+
+  "aimfox_campaign_id": "",
+  "unipile_account_id": "",
+
+  "closer_mode": "send",
+  "reply_scope": "campaign_only",
+  "closer_replies_per_day": 50,
+  "comment_replies_per_day": 25,
+
+  "_help": {
+    "offer": "Two or three plain sentences: what you sell, who it is for, and the result. The closer answers questions only from this text.",
+    "offer_url": "Optional. A page with your current pricing. Price questions get pointed here, never a number. Leave empty to send price questions toward a call instead.",
+    "booking_link": "Your calendar booking page. Used only on the second rung of the call ladder.",
+    "icp_description": "Who you want to talk to: role, company size, industry, anything that matters. Prospects are scored 0 to 100 against this.",
+    "niche_keywords": "Search terms for finding creators in your niche, for example [\"cold email\", \"outbound sales\"].",
+    "disqualifiers": "People to reject outright, for example [\"recruiters\", \"students\", \"agencies selling the same service\"].",
+    "tone_samples": "Two to five messages you actually sent on LinkedIn. Messages are written to match them.",
+    "self_profile_url": "Your own LinkedIn profile URL, so you never show up as a creator or a prospect.",
+    "creator_urls": "Optional. Paste creator profile URLs here to skip discovery and use exactly these creators.",
+    "creators_top_n": "How many top creators discovery keeps.",
+    "posts_per_creator": "Recent posts pulled per creator when picking which posts to scrape.",
+    "top_posts": "How many posts, ranked by comment count, get their commenters scraped.",
+    "comments_per_post": "Most comments pulled from each of those posts.",
+    "qualify_threshold": "Prospects scored below this are rejected and never contacted.",
+    "per_run_cap_usd": "Most a single Apify run may cost. A bigger job is refused before it starts and offered in smaller batches.",
+    "total_cap_usd": "Most all Apify runs together may cost. Raise it on purpose when you want more prospects.",
+    "aimfox_campaign_id": "The id of the paused campaign you built by hand. See references/aimfox-campaign-setup.md.",
+    "unipile_account_id": "The id Unipile shows for your connected LinkedIn account. Must be the same LinkedIn account Aimfox sends from.",
+    "closer_mode": "send = replies go out automatically. draft_only = replies and comment replies are written and stored, never sent.",
+    "reply_scope": "campaign_only = only people the prospector contacted get automatic replies; everyone else is drafted and listed for you. all = everyone in your inbox gets automatic replies, including customers and friends.",
+    "closer_replies_per_day": "Most DM replies sent in any rolling 24 hours.",
+    "comment_replies_per_day": "Most replies to comments on your own posts in any rolling 24 hours."
+  }
+}

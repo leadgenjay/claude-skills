@@ -1,0 +1,60 @@
+id: linkedin-prospector
+type: skill
+name: "LinkedIn Prospector"
+description: "Find the LinkedIn creators your buyers follow, pull the people commenting on their posts, score each against your ideal customer, write a personal welcome message, and load them into an Aimfox campaign that sends a blank connection request and then that message. Stores everything in your own Supabase, with hard Apify spend caps."
+categories: [lgj-exclusive, marketing, automation]
+tags: [linkedin, aimfox, apify, supabase, prospecting, lead-generation, outbound, connection-requests]
+icon: UserSearch
+path: skills/linkedin-prospector
+files:
+  - SKILL.md
+  - manifest.yaml
+  - .env.example
+  - .gitignore
+  - README.md
+  - config.example.json
+  - references/aimfox-campaign-setup.md
+  - references/welcome-message-rules.md
+  - schema.sql
+  - scripts/apify.mjs
+  - scripts/lib/aimfox.mjs
+  - scripts/lib/alerts.mjs
+  - scripts/lib/config.mjs
+  - scripts/lib/db.mjs
+  - scripts/lib/dnc.mjs
+  - scripts/lib/http.mjs
+  - scripts/lib/lock.mjs
+  - scripts/lib/secrets.mjs
+  - scripts/lib/spend.mjs
+  - scripts/lib/unipile.mjs
+  - scripts/prospector.mjs
+  - scripts/validate.mjs
+  - tests/lib/_env.mjs
+  - tests/lib/alerts.test.mjs
+  - tests/lib/config.test.mjs
+  - tests/lib/db.test.mjs
+  - tests/lib/dnc.test.mjs
+  - tests/lib/http.test.mjs
+  - tests/lib/lock.test.mjs
+  - tests/lib/secrets.test.mjs
+  - tests/lib/spend.test.mjs
+  - tests/prospector/apify-settle.test.mjs
+  - tests/prospector/commands.test.mjs
+  - tests/prospector/creators.test.mjs
+  - tests/prospector/fixtures/post-search-items.json
+  - tests/prospector/helpers.mjs
+  - tests/prospector/pipeline.test.mjs
+  - tests/prospector/push.test.mjs
+  - tests/prospector/spend.test.mjs
+  - tests/prospector/sync.test.mjs
+  - tests/prospector/validate.test.mjs
+  - tests/run-tests.sh
+  - tests/sql/01_constraints.sql
+  - tests/sql/02_spend.sql
+  - tests/sql/03_messages.sql
+  - tests/sql/04_concurrent_claim.sh
+  - tests/sql/05_concurrent_spend.sh
+  - tests/sql/06_privileges.sql
+  - tests/sql/07_concurrent_cap.sh
+version: "1.0"
+composesWell: [linkedin-closer]
