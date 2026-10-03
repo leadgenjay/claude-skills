@@ -49,6 +49,7 @@ files:
   - tests/prospector/creators.test.mjs
   - tests/prospector/fixtures/post-search-items.json
   - tests/prospector/helpers.mjs
+  - tests/prospector/no-campaign-state-change.test.mjs
   - tests/prospector/pipeline.test.mjs
   - tests/prospector/push.test.mjs
   - tests/prospector/spend.test.mjs

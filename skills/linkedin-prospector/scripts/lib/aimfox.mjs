@@ -191,6 +191,8 @@ export async function listAudience(campaignId) {
 
 // Why Aimfox would not add a profile (documented codes): blocked, locked (in another campaign),
 // miningFailed (not found), noPFP, alreadyConnected, notLead, closed. push decides what each means.
+export const ADD_REFUSAL_CODES = ['blocked', 'locked', 'miningFailed', 'noPFP', 'alreadyConnected', 'notLead', 'closed'];
+
 export class AimfoxAddRefused extends AimfoxError {
   constructor(reason, profileUrl, body, status = 200) {
     super(`Aimfox did not add ${profileUrl}: ${reason}`, status, body);
@@ -205,25 +207,30 @@ export class AimfoxAddRefused extends AimfoxError {
 // → {status, profiles: [entry], failed: [{profile_url, custom_variables}], failedReason: {<public id>: code}}.
 // A profile in failed throws AimfoxAddRefused with that code. A profile in neither list comes back as
 // an empty entry, and push then looks it up in listAudience by public id.
+// One profile is sent per call, so a lone entry in the answer is that profile even when its public
+// identifier differs from the URL sent (a changed vanity URL).
 export async function addToAudience(campaignId, { profileUrl, customVariables }) {
   const path = `/campaigns/${encodeURIComponent(campaignId)}/audience/multiple`;
   let res;
   try {
     res = await call('POST', path, { type: 'profile_url', profiles: [{ profile_url: profileUrl, custom_variables: customVariables ?? {} }] });
   } catch (e) {
-    // The single-add route answers a refusal as HTTP 400 {error: {data: <code>}}; read it the same way.
-    const code = e instanceof AimfoxError && !e.auth && typeof e.body?.error?.data === 'string' ? e.body.error.data : null;
-    if (code) throw new AimfoxAddRefused(code, profileUrl, e.body, e.status);
+    // The single-add route answers a refusal as HTTP 400 {error: {data: <code>}}; read it the same way,
+    // but only for the documented codes. Any other HTTP error is not a per-profile refusal.
+    const code = e instanceof AimfoxError && !e.auth ? e.body?.error?.data : null;
+    if (ADD_REFUSAL_CODES.includes(code)) throw new AimfoxAddRefused(code, profileUrl, e.body, e.status);
     throw e;
   }
   const publicId = publicIdFromProfileUrl(profileUrl);
   const reasons = res?.failedReason && typeof res.failedReason === 'object' ? res.failedReason : {};
-  const reasonKey = Object.keys(reasons).find((k) => k.toLowerCase() === publicId);
+  const reasonKeys = Object.keys(reasons);
+  const reasonKey = reasonKeys.find((k) => publicIdFromProfileUrl(k) === publicId) ?? (reasonKeys.length === 1 ? reasonKeys[0] : undefined);
   const failed = (Array.isArray(res?.failed) ? res.failed : []).some((f) => publicIdFromProfileUrl(f?.profile_url) === publicId);
   if (reasonKey !== undefined || failed) {
     throw new AimfoxAddRefused(reasonKey !== undefined ? String(reasons[reasonKey]) : 'unknown', profileUrl, res);
   }
-  const added = (Array.isArray(res?.profiles) ? res.profiles : []).map(audienceEntry).find((e) => e.publicId === publicId);
+  const profiles = (Array.isArray(res?.profiles) ? res.profiles : []).map(audienceEntry);
+  const added = profiles.find((e) => e.publicId === publicId) ?? (profiles.length === 1 ? profiles[0] : undefined);
   return added ?? audienceEntry({});
 }
 

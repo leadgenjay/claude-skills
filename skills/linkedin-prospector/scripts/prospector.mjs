@@ -40,6 +40,8 @@ export const MIN_CREATOR_POSTS = 3;
 export const DISCOVERY_POSTS_PER_KEYWORD = 50;
 export const PUSH_BATCH_SIZE = 25;
 export const WELCOME_MAX_FAILURES = 2;
+// Pushes refused as "locked" (in another Aimfox campaign) before the prospect is rejected.
+export const LOCKED_MAX_ATTEMPTS = 3;
 
 const DEFAULT_POSTS_PER_CREATOR = 10;
 const DEFAULT_TOP_POSTS = 30;
@@ -690,28 +692,32 @@ async function refuse(kind, message) {
 }
 
 // (c)+(d): read the custom variable back; match → pushed, otherwise remove, push_failed, alert.
+// The lead is already in the campaign here, so a read-back that fails for any reason (an HTTP error,
+// an unexpected shape, no answer) is treated as a mismatch: the lead comes out and the row leaves
+// `pushing`, so a later reconcile never retries the same failing read forever. When Aimfox gave no
+// answer at all, the run then stops (the next prospect would wait out the same stall).
 async function verifyAndFinish(campaignId, row, urn, body) {
   let got;
+  let readError = null;
   try {
     got = aimfox.welcomeFrom(await aimfox.getCustomVariables(campaignId, urn));
   } catch (e) {
-    // Only a real HTTP answer from Aimfox counts as a mismatch. No answer (timeout, reset, a
-    // missing key) stops the run, as in pushOne, and the next push reconciles this row.
-    if (!(e instanceof aimfox.AimfoxError) || !e.status || isAuthError(e)) throw e;
-    got = undefined;
+    if (isAuthError(e)) throw e;
+    readError = e;
   }
-  if (typeof got === 'string' && got.trim() !== '' && got.trim() === String(body).trim()) {
+  if (!readError && typeof got === 'string' && got.trim() !== '' && got.trim() === String(body).trim()) {
     await update('li_prospects', `id=eq.${row.id}&status=eq.pushing`, { status: 'pushed', aimfox_lead_urn: urn });
     return 'pushed';
   }
   // Remove the lead; if that fails, blacklist it so no campaign step can reach it with a bad message.
+  const target = urn ?? row.public_id;
   let outcome = 'removed from the campaign';
   try {
-    await aimfox.removeFromAudience(campaignId, urn);
+    await aimfox.removeFromAudience(campaignId, target);
   } catch (e) {
     if (isAuthError(e)) throw e;
     try {
-      await aimfox.addToBlacklist(urn);
+      await aimfox.addToBlacklist(urn ?? { profileUrl: row.profile_url || canonicalProfileUrl(row.public_id) });
       outcome = 'could not be removed from the campaign, so it was blacklisted in Aimfox instead; remove it from the campaign by hand';
     } catch (e2) {
       if (isAuthError(e2)) throw e2;
@@ -720,9 +726,12 @@ async function verifyAndFinish(campaignId, row, urn, body) {
   }
   await update('li_prospects', `id=eq.${row.id}&status=eq.pushing`,
     { status: 'push_failed', push_attempts: (row.push_attempts ?? 0) + 1, aimfox_lead_urn: urn });
-  await alert('push_failed',
-    `${row.public_id}: the welcome message read back from Aimfox did not match what was stored, so the lead `
-    + `${outcome}. It will not be pushed again.`, row.id);
+  const what = readError
+    ? `the welcome message could not be read back from Aimfox (${readError.message})`
+    : 'the welcome message read back from Aimfox did not match what was stored';
+  await alert('push_failed', `${row.public_id}: ${what}, so the lead ${outcome}. It will not be pushed again.`, row.id);
+  // No answer at all (timeout, reset): this row is settled; stop before the next prospect.
+  if (readError && !(readError instanceof aimfox.AimfoxError)) throw readError;
   return 'push_failed';
 }
 
@@ -765,7 +774,7 @@ async function pushOne(campaignId, row, body) {
       customVariables: { [aimfox.WELCOME_VARIABLE]: body },
     });
   } catch (e) {
-    if (e instanceof aimfox.AimfoxAddRefused) return addRefused(row, e.reason);
+    if (e instanceof aimfox.AimfoxAddRefused) return addRefused(campaignId, current, e.reason);
     if (!(e instanceof aimfox.AimfoxError) || isAuthError(e)) throw e; // no answer: stop, the next run reconciles
     await alert('push_error', `${row.public_id}: Aimfox refused the audience add (${e.message}). The next push reconciles it.`, row.id);
     return 'error';
@@ -781,8 +790,18 @@ async function pushOne(campaignId, row, body) {
 }
 
 // Aimfox answered that it would not add this profile; the code says why. Returns the tally key.
-async function addRefused(row, reason) {
+// row carries push_attempts as claimed for this push (already counting it).
+async function addRefused(campaignId, row, reason) {
   const where = `id=eq.${row.id}&status=eq.pushing`;
+  // An earlier add may have gone in under a profile Aimfox no longer matches (a changed vanity URL),
+  // leaving the lead in this campaign while the refusal settles the row. Take it out first; a lead
+  // that is not there is no loss, so a non-auth failure here is reported, not fatal.
+  try {
+    await aimfox.removeFromAudience(campaignId, row.aimfox_lead_urn ?? row.public_id);
+  } catch (e) {
+    if (isAuthError(e)) throw e;
+    out(`${row.public_id}: could not make sure it is out of the campaign (${e.message})`);
+  }
   if (reason === 'alreadyConnected') {
     // A blank invite cannot go to an existing connection, so this prospect is out of the funnel.
     await update('li_prospects', where, { status: 'rejected', icp_reason: 'already a connection (Aimfox: alreadyConnected)' });
@@ -790,8 +809,14 @@ async function addRefused(row, reason) {
     return 'already_connected';
   }
   if (reason === 'locked') {
-    // In another Aimfox campaign right now: back to approved, with the attempt not counted, to retry later.
-    await update('li_prospects', where, { status: 'approved', push_attempts: row.push_attempts ?? 0 });
+    // In another Aimfox campaign right now. Each push is one attempt (a batch reads a row once per
+    // run); after LOCKED_MAX_ATTEMPTS the prospect is rejected so it stops taking a batch slot.
+    if ((row.push_attempts ?? 0) >= LOCKED_MAX_ATTEMPTS) {
+      await update('li_prospects', where, { status: 'rejected', icp_reason: 'in another Aimfox campaign' });
+      out(`${row.public_id}: still in another Aimfox campaign after ${row.push_attempts} pushes, rejected`);
+      return 'locked_rejected';
+    }
+    await update('li_prospects', where, { status: 'approved' });
     out(`${row.public_id}: in another Aimfox campaign; left approved to retry later`);
     return 'locked';
   }
@@ -812,7 +837,9 @@ async function pushBatch(campaignId) {
   const rows = await select('li_prospects',
     `status=eq.approved&select=id,public_id,profile_url,status,push_attempts,aimfox_lead_urn&order=id&limit=${PUSH_BATCH_SIZE}`);
   const welcomes = await welcomeRows(rows.map((r) => r.id));
-  const tally = { pushed: 0, push_failed: 0, skipped: 0, error: 0, already_connected: 0, locked: 0, blocked: 0, refused: 0 };
+  const tally = {
+    pushed: 0, push_failed: 0, skipped: 0, error: 0, already_connected: 0, locked: 0, locked_rejected: 0, blocked: 0, refused: 0,
+  };
   for (const row of rows) {
     try {
       assertContactable(row);
@@ -840,7 +867,8 @@ async function pushBatch(campaignId) {
   }
   out(`Batch: ${tally.pushed} pushed, ${tally.push_failed} failed read-back, ${tally.error} errors, ${tally.skipped} skipped; `
     + `Aimfox would not add ${tally.already_connected} already connected (rejected), ${tally.locked} in another campaign `
-    + `(left approved), ${tally.blocked} blocked (do-not-contact), ${tally.refused} other (push_failed).`);
+    + `(left approved), ${tally.locked_rejected} still in another campaign after ${LOCKED_MAX_ATTEMPTS} pushes (rejected), `
+    + `${tally.blocked} blocked (do-not-contact), ${tally.refused} other (push_failed).`);
   return { ...tally, selected: rows.length };
 }
 

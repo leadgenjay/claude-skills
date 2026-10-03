@@ -109,7 +109,7 @@ Extracted from docs.aimfox.com on 2026-10-03. Audience writes below were not exe
   `locked` (in another campaign), `miningFailed` (not found), `noPFP` (no profile picture),
   `alreadyConnected` (already a lead), `notLead`, `closed` (cannot receive free InMails). Push
   reads the same codes from `failedReason`: `alreadyConnected` → rejected, `locked` → left
-  approved to retry, `blocked` → do-not-contact, anything else → push_failed.
+  approved to retry (rejected after 3 pushes), `blocked` → do-not-contact, anything else → push_failed.
 - **POST /campaigns/:id/custom-variables**. Body `{custom_variables: [{target_urn, variables:
   {NAME: value}}]}`. Not used: the variables ride along on the audience add.
 - **GET /campaigns/:id/custom-variables/:urn**. `{status, custom_variable_keys: [...],

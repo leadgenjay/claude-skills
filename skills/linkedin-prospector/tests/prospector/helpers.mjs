@@ -78,7 +78,16 @@ export function run(home, args, mocks, { input, env = {} } = {}) {
   const log = fs.existsSync(logFile)
     ? fs.readFileSync(logFile, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l))
     : [];
+  assertNoCampaignStateChange(log);
   return { status: res.status, stdout: res.stdout, stderr: res.stderr, log };
+}
+
+// Campaign state (Start, Pause) is changed by the user in Aimfox, never by this skill. Every CLI run in
+// every test goes through this check: any PATCH to /api/v2/campaigns/:id fails the test that caused
+// it. (The private v1 flow PATCH in create-campaign is a different route and is allowed.)
+export function assertNoCampaignStateChange(log) {
+  const bad = log.filter((e) => e.method === 'PATCH' && /api\.aimfox\.com\/api\/v2\/campaigns(\/|$|\?)/.test(e.url));
+  if (bad.length) throw new Error(`PATCH to an Aimfox v2 campaign is forbidden: ${bad.map((e) => e.url).join(', ')}`);
 }
 
 export const reqs = (log, method, ...parts) => {
