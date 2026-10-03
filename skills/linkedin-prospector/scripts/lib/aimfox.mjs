@@ -420,7 +420,8 @@ async function sessionToken() {
   try {
     // Documented login token route. Empty body deliberately excludes account_id (re-login).
     const body = await call('POST', '/token', {});
-    if (!body || (body.status !== undefined && body.status !== 'ok') || body.error || typeof body.token !== 'string' || !body.token.trim()) {
+    // Observed live 2026-10-03: this route answers status "OK" in capitals, unlike the rest of v2.
+    if (!body || (body.status !== undefined && String(body.status).toLowerCase() !== 'ok') || body.error || typeof body.token !== 'string' || !body.token.trim()) {
       throw new AimfoxError('login token response missing status/token', 0, null);
     }
     return { token: body.token, route: 'A' };

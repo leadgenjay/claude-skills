@@ -145,8 +145,10 @@ protocol provenance, not live verification of this command. Private endpoints ca
 
 Writes require `Authorization: Bearer <session token>`. First the command calls public
 `POST /v2/token` with the API key and exactly `{}`. It never sends `account_id`: that optional
-field can re-login a LinkedIn account. The documented login token response is `{token}`;
-whether it authorizes private writes still needs the bounded live proof. If generation fails
+field can re-login a LinkedIn account. The documented login token response is `{token}`.
+Observed live 2026-10-03: the route answers HTTP 200 `{status: "OK", token}` (capital `OK`,
+unlike the rest of v2), but the private read-only flow probe rejects that token with 401, so
+in practice the session token must come from `AIMFOX_SESSION`. If generation fails
 or its token receives 401/403 from a read-only private-flow authentication probe, the command can use `AIMFOX_SESSION`. The user supplies that fallback from the Aimfox web
 app's localStorage `auth` value through their private environment, never through chat. The
 CLI itself never opens a browser. Generated tokens stay in memory and are never printed or

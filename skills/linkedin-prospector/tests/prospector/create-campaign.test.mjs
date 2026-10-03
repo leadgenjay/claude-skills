@@ -13,7 +13,8 @@ const exact = () => target({ flows: target().flows.map((f) => f.type === 'PRIMAR
 const get = (c) => ({ method: 'GET', urlPattern: '/api/v2/campaigns/c1$', times: 1, body: { status: 'ok', campaign: c } });
 const base = () => [
   { method: 'GET', urlPattern: '/api/v2/accounts$', body: { status: 'ok', accounts: [account] } },
-  { method: 'POST', urlPattern: '/api/v2/token$', body: { status: 'ok', token: 'PRIVATE-MINTED-TOKEN' } },
+  // Live shape, 2026-10-03: this route answers status "OK" in capitals.
+  { method: 'POST', urlPattern: '/api/v2/token$', body: { status: 'OK', token: 'PRIVATE-MINTED-TOKEN' } },
   { method: 'GET', urlPattern: '/api/v1/workspaces/ws1/campaigns/c1/flows/11$', body: { status: 'ok', flow: {} } },
 ];
 function repairMocks(c, final = exact()) {
