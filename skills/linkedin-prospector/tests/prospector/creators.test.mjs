@@ -69,8 +69,10 @@ test('find-creators stores the scored creators from a mocked Apify run', () => {
   assert.equal(reqs(res.log, 'GET', 'datasets/ds-run-harvestapi~linkedin-post-search/items').length, 1, 'items from this run');
 
   const creators = bodyOf(reqs(res.log, 'POST', '/rest/v1/li_creators')[0]);
+  // Discovery ranks authors on as few as one post (relevance results rarely repeat an author),
+  // so bob's single high-engagement post now counts.
   assert.deepEqual(creators.map((c) => [c.profile_url.split('/in/')[1], c.status]),
-    [['dave', 'approved'], ['alice', 'approved'], ['carol', 'candidate']]);
+    [['bob', 'approved'], ['dave', 'approved'], ['alice', 'candidate'], ['carol', 'candidate']]);
   assert.ok(!JSON.stringify(creators).includes('me-myself'));
 
   const settle = bodyOf(reqs(res.log, 'POST', 'rpc/settle_spend')[0]);

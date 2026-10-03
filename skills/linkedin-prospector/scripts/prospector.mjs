@@ -337,9 +337,11 @@ async function cmdFindCreators({ dryRun }) {
   }
 
   const posts = run.items.map(postFromItem).filter((p) => p.postUrl);
-  const scored = scoreCreators(posts, { selfProfileUrl: cfg.self_profile_url, topN: cfg.creators_top_n });
+  // Relevance-sorted results rarely repeat an author (live 2026-10-03: 250 posts, no author with
+  // 3), so discovery ranks on a single post; scrape-commenters then samples each creator's own posts.
+  const scored = scoreCreators(posts, { selfProfileUrl: cfg.self_profile_url, topN: cfg.creators_top_n, minPosts: 1 });
   if (!scored.length) {
-    out(`No creator had ${MIN_CREATOR_POSTS}+ posts in the results. Try broader niche_keywords.`);
+    out('No creator posts in the results. Try broader niche_keywords.');
     return 0;
   }
 
