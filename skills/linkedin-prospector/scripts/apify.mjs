@@ -174,8 +174,11 @@ export async function runActor({ step, actor, input, units, unitPriceUsd, deadli
 // UNVERIFIED input field values (postedLimit, sortBy, profileScraperMode enums) — build step 3
 // confirms against the actor's input schema. The field NAMES are from the store listing.
 
+// Keyword discovery sorts by relevance: live 2026-10-03, sortBy 'date' returned 250 posts minutes
+// old (median 0 likes, best 18), so every "top creator" was an account with no engagement.
+// A known creator's recent posts (authorUrls) keep 'date'.
 export function postSearchInput({ keywords, authorUrls, maxPosts }) {
-  const input = { maxPosts, postedLimit: 'month', sortBy: 'date' };
+  const input = { maxPosts, postedLimit: 'month', sortBy: keywords?.length ? 'relevance' : 'date' };
   if (keywords?.length) input.searchQueries = keywords;
   if (authorUrls?.length) input.authorUrls = authorUrls;
   return input;

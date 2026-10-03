@@ -9,6 +9,13 @@ import { makeHome, run, rx, reqs, bodyOf, apifyRunMocks } from './helpers.mjs';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ITEMS = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures/post-search-items.json'), 'utf8'));
 
+test('keyword discovery sorts by relevance; a known creator\'s posts sort by date', async () => {
+  // Live 2026-10-03: sortBy 'date' on keywords returned only brand-new, zero-engagement posts.
+  const { postSearchInput } = await import('../../scripts/apify.mjs');
+  assert.equal(postSearchInput({ keywords: ['cold email'], maxPosts: 50 }).sortBy, 'relevance');
+  assert.equal(postSearchInput({ authorUrls: ['https://www.linkedin.com/in/someone'], maxPosts: 5 }).sortBy, 'date');
+});
+
 test('median handles odd and even counts', () => {
   assert.equal(median([120, 60, 120]), 120);
   assert.equal(median([12, 20, 30, 40]), 25);
