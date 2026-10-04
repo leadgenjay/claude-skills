@@ -29,6 +29,7 @@ create table if not exists li_posts (
   posted_at   timestamptz,
   reactions   integer,
   comments    integer,
+  post_text   text,
   scraped_at  timestamptz not null default now()
 );
 
@@ -120,6 +121,7 @@ create table if not exists li_campaign_state (
 
 -- upgrades for installs made before these columns existed
 alter table li_campaign_state add column if not exists awaiting_start timestamptz;
+alter table li_posts add column if not exists post_text text;
 
 create index if not exists li_prospects_status_idx on li_prospects (status);
 create index if not exists li_messages_prospect_idx on li_messages (prospect_id);

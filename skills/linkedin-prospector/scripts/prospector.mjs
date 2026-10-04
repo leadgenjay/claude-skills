@@ -112,7 +112,14 @@ export function postFromItem(item) {
     postedAt: typeof postedAt === 'number' ? new Date(postedAt).toISOString() : postedAt,
     reactions,
     comments,
+    text: postText(item?.content ?? item?.text),
   };
+}
+
+// The post body as a string, or null. An actor that returns { text } keeps its text.
+function postText(v) {
+  const t = typeof v === 'string' ? v : v?.text;
+  return typeof t === 'string' && t ? t : null;
 }
 
 // One harvestapi/linkedin-post-comments item, read in one place.
@@ -369,6 +376,7 @@ async function cmdFindCreators({ dryRun }) {
     posted_at: p.postedAt,
     reactions: p.reactions,
     comments: p.comments,
+    post_text: p.text,
   })));
   const uniquePosts = [...new Map(postRows.map((r) => [r.post_url, r])).values()];
   if (uniquePosts.length) await insert('li_posts', uniquePosts, { onConflict: 'post_url' });
@@ -441,6 +449,7 @@ async function cmdScrapeCommenters({ dryRun }) {
     posted_at: p.postedAt,
     reactions: p.reactions,
     comments: p.comments,
+    post_text: p.text,
   })), { onConflict: 'post_url' });
   const postByUrl = new Map(storedPosts.map((r) => [r.post_url, r]));
 

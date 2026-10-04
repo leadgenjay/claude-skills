@@ -92,3 +92,32 @@ test('find-creators uses config creator_urls instead of discovery, with no Apify
   const rows = bodyOf(reqs(res.log, 'POST', '/rest/v1/li_creators')[0]);
   assert.deepEqual(rows, [{ profile_url: 'https://www.linkedin.com/in/zed', status: 'approved', discovered_via: 'config' }]);
 });
+
+test('postFromItem keeps the post body as text, or null', () => {
+  assert.equal(postFromItem({ linkedinUrl: 'u', content: 'the body' }).text, 'the body');
+  assert.equal(postFromItem({ linkedinUrl: 'u', text: 'fallback' }).text, 'fallback');
+  assert.equal(postFromItem({ linkedinUrl: 'u', content: { text: 'nested' } }).text, 'nested');
+  assert.equal(postFromItem({ linkedinUrl: 'u' }).text, null);
+});
+
+test('find-creators writes post_text to li_posts', () => {
+  const home = makeHome();
+  const items = ITEMS.map((it, i) => ({ ...it, content: `body ${i}` }));
+  const res = run(home, ['find-creators'], [
+    { method: 'POST', urlPattern: rx('/rest/v1/rpc/reserve_spend'), body: { ok: true, run_id: 7 } },
+    ...apifyRunMocks('harvestapi~linkedin-post-search', items, { cost: 0.03 }),
+    { method: 'POST', urlPattern: rx('/rest/v1/rpc/settle_spend'), body: null },
+    { method: 'GET', urlPattern: rx('/rest/v1/li_creators?'), body: [] },
+    { method: 'POST', urlPattern: rx('/rest/v1/li_creators'), body: [
+      { id: 1, profile_url: 'https://www.linkedin.com/in/dave' },
+      { id: 2, profile_url: 'https://www.linkedin.com/in/alice' },
+      { id: 3, profile_url: 'https://www.linkedin.com/in/carol' },
+      { id: 4, profile_url: 'https://www.linkedin.com/in/bob' },
+    ] },
+    { method: 'POST', urlPattern: rx('/rest/v1/li_posts'), body: [] },
+  ]);
+  assert.equal(res.status, 0, res.stderr);
+  const posts = bodyOf(reqs(res.log, 'POST', '/rest/v1/li_posts')[0]);
+  assert.ok(posts.length > 0);
+  assert.ok(posts.every((p) => /^body \d+$/.test(p.post_text)), 'every row carries its post text');
+});

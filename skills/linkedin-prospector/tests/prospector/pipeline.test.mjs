@@ -9,6 +9,7 @@ const post = (author, n, comments) => ({
   linkedinUrl: `https://www.linkedin.com/posts/${author}-${n}`,
   author: { publicIdentifier: author },
   engagement: { likes: 10, comments },
+  content: `text of ${author}-${n}`,
 });
 const comment = (postUrl, slug, text) => ({
   postUrl,
@@ -42,6 +43,7 @@ test('scrape-commenters upserts on normalized public_id, keeps the first source,
   const runs = reqs(res.log, 'POST', '/runs?').map(bodyOf);
   const postRows = bodyOf(reqs(res.log, 'POST', '/rest/v1/li_posts')[0]);
   assert.deepEqual(postRows.map((r) => r.post_url), [p1, 'https://www.linkedin.com/posts/alice-2'], 'posts deduped by post_url');
+  assert.deepEqual(postRows.map((r) => r.post_text), ['text of alice-1', 'text of alice-2'], 'post text stored');
   assert.deepEqual(runs[0].authorUrls, ['https://www.linkedin.com/in/alice']);
   assert.equal(runs[0].maxItems, 2);
   assert.deepEqual(runs[1].posts, [p1], 'top post by comments among the creator\'s own posts');
