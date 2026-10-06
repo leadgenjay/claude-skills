@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-23T21:35:20.247Z",
+  "generatedAt": "2026-10-06T20:13:05.718Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1155,6 +1155,36 @@
       "composesWell": [
         "improve"
       ]
+    },
+    {
+      "id": "whatsapp",
+      "type": "skill",
+      "name": "WhatsApp",
+      "description": "Read and reply on your WhatsApp from Claude Code: unread chats with real names, threads, and the screenshots people send. Replies go out only after you approve the exact text. Ships wa.mjs (zero-dependency Node) and its tests; you provide a Unipile account with WhatsApp connected.",
+      "categories": [
+        "productivity",
+        "automation"
+      ],
+      "tags": [
+        "whatsapp",
+        "unipile",
+        "messaging",
+        "inbox",
+        "replies",
+        "screenshots"
+      ],
+      "icon": "MessageCircle",
+      "path": "skills/whatsapp",
+      "files": [
+        "SKILL.md",
+        "manifest.yaml",
+        "scripts/wa.mjs",
+        "tests/config.test.mjs",
+        "tests/harness.mjs",
+        "tests/reads.test.mjs",
+        "tests/send.test.mjs"
+      ],
+      "version": "1.0"
     },
     {
       "id": "codex-bridge",
