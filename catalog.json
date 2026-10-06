@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-06T20:13:05.718Z",
+  "generatedAt": "2026-10-06T20:41:41.820Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -1184,7 +1184,7 @@
         "tests/reads.test.mjs",
         "tests/send.test.mjs"
       ],
-      "version": "1.0"
+      "version": "1.0.1"
     },
     {
       "id": "codex-bridge",
