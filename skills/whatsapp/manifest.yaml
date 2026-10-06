@@ -1,6 +1,6 @@
 id: whatsapp
 type: skill
-version: "1.0.1"
+version: "1.0"
 name: WhatsApp
 icon: MessageCircle
 description: >-
