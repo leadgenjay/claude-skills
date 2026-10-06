@@ -242,14 +242,16 @@ export async function removeFromAudience(campaignId, urnOrPublicId) {
 
 // ---- custom variables ---------------------------------------------------------------------------
 
-// Returns the target's variables as a plain {NAME: value} object.
-// Documented (docs.aimfox.com, 2026-10-03), not yet exercised live: {status, custom_variable_keys,
-// custom_variables: {target_urn, variables: {NAME: value}}}. Any other shape throws (it is never
-// read as "no variables", which would remove a lead whose message is fine).
+// Returns the target's variables as a plain {NAME: value} object. Two shapes are read:
+// documented (docs.aimfox.com, 2026-10-03): {status, custom_variable_keys,
+// custom_variables: {target_urn, variables: {NAME: value}}}; observed live 2026-10-06:
+// {status, custom_variables: {NAME: value}}. A documented wrapper without its variables object
+// throws (it is never read as "no variables", which would remove a lead whose message is fine).
 export async function getCustomVariables(campaignId, urn) {
   const body = await call('GET', `/campaigns/${encodeURIComponent(campaignId)}/custom-variables/${encodeURIComponent(urn)}`);
   const cv = requireShape(body, 'custom_variables', 'custom variables', false);
-  return requireShape(cv, 'variables', 'custom variables', false);
+  if ('variables' in cv || 'target_urn' in cv) return requireShape(cv, 'variables', 'custom variables', false);
+  return cv;
 }
 
 // The welcome value out of getCustomVariables' result, matched on the name case-insensitively:

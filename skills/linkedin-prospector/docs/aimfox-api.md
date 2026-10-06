@@ -113,7 +113,8 @@ Extracted from docs.aimfox.com on 2026-10-03. Audience writes below were not exe
 - **POST /campaigns/:id/custom-variables**. Body `{custom_variables: [{target_urn, variables:
   {NAME: value}}]}`. Not used: the variables ride along on the audience add.
 - **GET /campaigns/:id/custom-variables/:urn**. `{status, custom_variable_keys: [...],
-  custom_variables: {target_urn, variables: {NAME: value}}}`. Push reads `variables` back and
+  custom_variables: {target_urn, variables: {NAME: value}}}`. Live on 2026-10-06 it answered flat
+  instead: `{status, custom_variables: {WELCOME_MESSAGE: value}}`. Push reads either shape and
   matches the welcome's name case-insensitively (the docs show `CUSTOM_MESSAGE` and `first name`).
 - **DELETE /campaigns/:id/audience/:urn**. The last part is the urn OR the public identifier.
 - **POST /blacklist/:urn** (no body), or **POST /blacklist** `{urls: [profile url]}`.

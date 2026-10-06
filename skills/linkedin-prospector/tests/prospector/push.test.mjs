@@ -812,7 +812,7 @@ test('a failedReason keyed by a profile URL form still matches this profile', ()
   assert.deepEqual(afterRefusal(res).row, [{ status: 'do_not_contact', dnc_reason: 'blocked in Aimfox (blacklist)' }]);
 });
 
-test('read-back reads custom_variables.variables; a body without it counts as a failed read-back', () => {
+test('read-back reads custom_variables.variables, and the flat shape Aimfox returns live', () => {
   const ok = runPush(makeHome(), ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk, addOk(1),
@@ -822,11 +822,23 @@ test('read-back reads custom_variables.variables; a body without it counts as a 
   assert.equal(ok.status, 0, ok.stderr);
   assert.deepEqual(patchesTo(ok.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
 
-  // The variables flat under custom_variables (the old guess) is not the documented shape.
+  // Observed live 2026-10-06: the variables sit flat under custom_variables, not under .variables.
+  // Reading only the documented shape failed every push that day and blacklisted a good lead.
+  const flat = runPush(makeHome(), ['push'], [
+    stateRow([]), campaignGet(PAUSED), pushingRows([]),
+    approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk, addOk(1),
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { status: 'ok', custom_variables: { WELCOME_MESSAGE: welcomeBody(1) } } },
+    finishOk,
+  ]);
+  assert.equal(flat.status, 0, flat.stderr);
+  assert.equal(reqs(flat.log, 'DELETE', `${C}/audience/u1`).length, 0, 'the lead stays in');
+  assert.deepEqual(patchesTo(flat.log, 'id=eq.1', 'status=eq.pushing'), [{ status: 'pushed', aimfox_lead_urn: 'u1' }]);
+
+  // The documented wrapper without its variables object is still an unexpected shape.
   const bad = runPush(makeHome(), ['push'], [
     stateRow([]), campaignGet(PAUSED), pushingRows([]),
     approvedRows([prospect(1)]), welcomes([welcomeRow(1)]), claimOk, addOk(1),
-    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { custom_variables: { welcome_message: welcomeBody(1) } } },
+    { method: 'GET', urlPattern: `${rx(`${C}/custom-variables/u1`)}$`, body: { custom_variables: { target_urn: 'u1', variables: null } } },
     { method: 'DELETE', urlPattern: rx(`${C}/audience/u1`), body: null },
     finishOk,
   ]);

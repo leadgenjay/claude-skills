@@ -236,6 +236,16 @@ test('getCustomVariables returns custom_variables.variables; welcomeFrom then fi
   assert.equal(welcomeFrom(vars), 'Hi Jo');
 });
 
+test('getCustomVariables also reads the flat shape Aimfox returned live on 2026-10-06', async () => {
+  env = setupEnv([{ method: 'GET', urlPattern: '/campaigns/c1/custom-variables/ACoAAC$', body: {
+    status: 'ok', custom_variables: { WELCOME_MESSAGE: 'Hi Jo' },
+  } }]);
+  process.env.AIMFOX_API_KEY = 'k';
+  const vars = await getCustomVariables('c1', 'ACoAAC');
+  assert.deepEqual(vars, { WELCOME_MESSAGE: 'Hi Jo' });
+  assert.equal(welcomeFrom(vars), 'Hi Jo');
+});
+
 test('a call that gets no answer throws a clear timeout error, never data', async () => {
   env = setupEnv([{ method: 'GET', urlPattern: '/campaigns/c1/audience$', timeout: true }]);
   process.env.AIMFOX_API_KEY = 'k';
