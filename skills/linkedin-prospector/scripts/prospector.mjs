@@ -501,10 +501,20 @@ async function cmdScrapeCommenters({ dryRun }) {
   return 0;
 }
 
+// T9 moved to n8n on 2026-10-06: with config pipeline_owner "n8n", scoring, welcomes and the Aimfox
+// push run in the n8n workflows, and these three steps hand nothing to Claude and add nobody.
+function n8nOwned(cfg) {
+  return cfg?.pipeline_owner === 'n8n';
+}
+
 // ---- qualify -------------------------------------------------------------------------------------
 
 async function cmdQualifyExport({ outFile }) {
   const cfg = loadConfig();
+  if (n8nOwned(cfg)) {
+    writeJsonOut({ task: 'qualify', note: 'n8n owns scoring (pipeline_owner); nothing to score here.', prospects: [] }, outFile);
+    return 0;
+  }
   const rows = await select('li_prospects',
     `status=eq.new&select=id,public_id,profile_url,name,headline,company,location,comment_text,source_creator_id&order=id&limit=${EXPORT_LIMIT}`);
   const creatorIds = [...new Set(rows.map((r) => r.source_creator_id).filter(Boolean))];
@@ -571,6 +581,10 @@ async function cmdQualifyImport(file) {
 
 async function cmdWriteExport({ outFile }) {
   const cfg = loadConfig();
+  if (n8nOwned(cfg)) {
+    writeJsonOut({ task: 'write', note: 'n8n owns welcomes (pipeline_owner); nothing to write here.', prospects: [] }, outFile);
+    return 0;
+  }
   const rows = await select('li_prospects',
     `status=eq.qualified&select=id,public_id,profile_url,name,headline,company,location,comment_text,icp_reason&order=id&limit=${EXPORT_LIMIT}`);
   const welcomes = await welcomeRows(rows.map((r) => r.id));
@@ -946,6 +960,10 @@ async function pushBatch(campaignId) {
 async function cmdPush({ start }) {
   if (start) out('push --start is the same as push now: you start the campaign yourself, in Aimfox.');
   const cfg = loadConfig();
+  if (n8nOwned(cfg)) {
+    out('n8n owns the Aimfox push (pipeline_owner); nothing pushed here.');
+    return 0;
+  }
   const campaignId = cfg.aimfox_campaign_id;
   if (!campaignId) throw new Refusal('aimfox_campaign_id is not set in config.json');
   if (!(await acquire('push'))) throw new Refusal('another push is running (push.lock); try again when it finishes');
