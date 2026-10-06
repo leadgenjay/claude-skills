@@ -1,0 +1,28 @@
+id: whatsapp
+type: skill
+version: "1.0"
+name: WhatsApp
+icon: MessageCircle
+description: >-
+  Read and reply on your WhatsApp from Claude Code: unread chats with real names, threads,
+  and the screenshots people send. Replies go out only after you approve the exact text.
+  Ships wa.mjs (zero-dependency Node) and its tests; you provide a Unipile account with
+  WhatsApp connected.
+categories:
+  - productivity
+  - automation
+tags:
+  - whatsapp
+  - unipile
+  - messaging
+  - inbox
+  - replies
+  - screenshots
+files:
+  - SKILL.md
+  - manifest.yaml
+  - scripts/wa.mjs
+  - tests/config.test.mjs
+  - tests/harness.mjs
+  - tests/reads.test.mjs
+  - tests/send.test.mjs
