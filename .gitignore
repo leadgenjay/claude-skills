@@ -1,5 +1,8 @@
 node_modules/
 package.json
 package-lock.json
+
+# animated-carousels ships its own package.json (playwright, sharp, hyperframes for its renderer)
+!skills/animated-carousels/package.json
 skills/senior-frontend/.DS_Store
 skills/webapp-testing/.DS_Store

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../../tokens.css">
+<link rel="stylesheet" href="../../../../styles/product.css">
+<link rel="stylesheet" href="../../../../components/tui.css">
+<link rel="stylesheet" href="../../../../components/backgrounds.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; }
+  .h { font-size: 112px; }
+  .h .sel { margin-bottom: 20px; }
+  .body { margin-top: 30px; }
+
+  .stack { position: absolute; z-index: 1; left: 540px; top: 700px; width: 420px; height: 360px; }
+  .stack .card { position: absolute; left: 0; right: 0; height: 120px; padding: 26px 28px; display: flex; flex-direction: column; gap: 14px; }
+  .stack .card i { display: block; height: 16px; border-radius: 5px; background: #cbd5e1; }
+  .stack .c1 { top: 0; }
+  .stack .c2 { top: 120px; }
+  .stack .c3 { top: 240px; }
+
+  .tui { position: absolute; z-index: 2; left: 60px; width: 748px; top: 1124px; bottom: 60px; }
+  .tui-script { gap: 14px; padding: 24px 30px 0; }
+  .tui .lock { display: inline-block; width: 1.2em; text-indent: 0; }
+  .tui .lock svg { width: 20px; height: 22px; vertical-align: -3px; }
+</style>
+</head>
+<body>
+<div class="slide bg-rays">
+  <div class="top">
+    <h1 class="h" data-copy="0.headline">YOUR INBOX HAS NO <span class="sel" data-component="highlighter"><i class="knob a"></i>OFF<i class="knob b"></i></span> SWITCH</h1>
+    <p class="body" data-copy="0.body">New mail lands all day. So until now, the only way to keep up was to stop what you were doing and read every message yourself.</p>
+  </div>
+
+  <div class="stack" data-component="cards" data-box="stack">
+    <div class="card c1"><i style="width:70%"></i><i style="width:90%"></i></div>
+    <div class="card c2"><i style="width:60%"></i><i style="width:84%"></i></div>
+    <div class="card c3"><i style="width:76%"></i><i style="width:66%"></i></div>
+  </div>
+
+  <div class="tui" data-component="terminal" data-box="terminal">
+    <div class="tui-chrome"><i></i><i></i><i></i></div>
+    <div class="tui-tabs"><div class="tui-tab" data-ui><span class="star">✳</span> inbox</div></div>
+    <div class="tui-script" data-ui>
+      <div class="tui-prompt"><span class="ps">❯</span> check my inbox</div>
+      <div class="tui-text tui-prompt"><span class="lock"><svg viewBox="0 0 20 22" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-linecap="round"><rect x="2" y="9.5" width="16" height="11" rx="2.5"/><path d="M6 9.5V6.5a4 4 0 0 1 8 0v3"/></svg></span>I can't open that mailbox yet.<br>Connect it first, then ask again.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

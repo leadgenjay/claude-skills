@@ -1,0 +1,170 @@
+/* Base style: clean product UI. Light slate ground on a 60px hairline grid, so every
+   block snaps to the same lines as the 60px safe margin. */
+:root {
+  --ground: #f8fafc;
+  --card: #ffffff;
+  --rule: #e2e8f0;
+  --gridline: #eaeff5;
+  --term: #0b0d12;
+  --term-bar: #161a22;
+  --term-rule: #232834;
+  --term-text: #e6e9ef;
+  --term-dim: #7d8696;
+  --term-ok: #4ade80;
+  --radius: 20px;
+  --hair: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+body {
+  background-color: var(--ground);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M60 0V60M0 60H60' fill='none' stroke='%23eaeff5' stroke-width='1'/%3E%3C/svg%3E");
+  background-position: -0.5px -0.5px;
+}
+
+/* Headline: Big Shoulders 900, near-black, one accent word */
+.h {
+  font-family: var(--font-head);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  padding: 0.06em 0 0.18em;
+  margin-bottom: -0.1em;
+  text-wrap: balance;
+}
+.h .accent { color: var(--accent); }
+
+/* Highlighter: a text-selection range, the way an editor marks a phrase.
+ * --sel is how much of the phrase is selected (100% at rest, the still). motion.js's "select"
+ * move sweeps it from 0%, so the fill, the end caret and its knob travel left to right. */
+.sel {
+  position: relative;
+  display: inline-block;
+  line-height: 0.8;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 0.06em 0.07em 0.02em;
+  border-radius: 6px;
+}
+/* Only a video can sweep the fill. A solid fill on stills keeps their PNGs byte-identical (the
+ * gradient form antialiases 9 px differently). */
+html[data-animate] .sel { background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat 0 0 / var(--sel, 100%) 100%; }
+.sel::before, .sel::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  top: 0;
+  bottom: 0;
+}
+.sel::before { left: -2px; }
+.sel::after { right: calc(100% - var(--sel, 100%) - 2px); }
+.sel .knob {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.sel .knob.a { left: -9px; top: -14px; }
+.sel .knob.b { right: calc(100% - var(--sel, 100%) - 9px); bottom: -14px; }
+
+.body {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--ink-2);
+  font-size: 34px;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+}
+
+/* Pills and badges (21st.dev 539 Announcement, 3259 Chip, 28565 Stepper badge) */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 22px 0 8px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--hair);
+  font: 600 22px/1 var(--font-body);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.pill .tag {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  font: 800 17px/1 var(--font-body);
+  letter-spacing: 0.08em;
+}
+.pill.soft {
+  background: var(--accent-soft);
+  border-color: #bfdbfe;
+  color: var(--accent-deep);
+  padding: 0 24px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-size: 20px;
+}
+.badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 900 36px/1 var(--font-head);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--hair);
+}
+
+/* Terminal (21st.dev 28361 Terminal, resting state) */
+.term {
+  background: var(--term);
+  border: 1px solid #1e2330;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+}
+.term-bar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background: var(--term-bar);
+  border-bottom: 1px solid var(--term-rule);
+  position: relative;
+}
+.dots { display: flex; gap: 10px; }
+.dots i { width: 15px; height: 15px; border-radius: 50%; display: block; }
+.dots i:nth-child(1) { background: #ff5f57; }
+.dots i:nth-child(2) { background: #febc2e; }
+.dots i:nth-child(3) { background: #28c840; }
+.term-title {
+  position: absolute;
+  left: 0; right: 0;
+  text-align: center;
+  font: 500 20px/1 var(--font-mono);
+  color: var(--term-dim);
+}
+.term-body {
+  font-family: var(--font-mono);
+  color: var(--term-text);
+  white-space: pre;
+}

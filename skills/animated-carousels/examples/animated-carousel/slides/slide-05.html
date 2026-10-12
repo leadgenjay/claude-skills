@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/mod-window.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; }
+  .h { font-size: 108px; }
+  .h .sel { margin-bottom: 18px; }
+  .body { margin-top: 28px; }
+
+  /* The design library: a window holding the two pieces, drawn from library CSS */
+  .lib { position: absolute; z-index: 1; left: 60px; top: 620px; width: 470px; height: 620px; }
+  .lib .mw-main { padding: 14px 26px; display: flex; flex-direction: column; gap: 8px; }
+  .tile-name { font: 700 28px/1 var(--font-body); color: #111827; margin: 0 0 8px 4px; }
+  .piece { border-radius: 14px; background: #fff; border: 1.5px solid #e5e7eb; overflow: hidden; }
+  .piece .chrome { display: flex; gap: 8px; padding: 13px 16px; border-bottom: 1.5px solid #eef0f3; }
+  .piece .chrome i { width: 13px; height: 13px; border-radius: 50%; display: block; }
+  .piece .chrome i:nth-child(1) { background: #ff5f57; }
+  .piece .chrome i:nth-child(2) { background: #febc2e; }
+  .piece .chrome i:nth-child(3) { background: #28c840; }
+  .piece .lines { padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 18px; }
+  .piece .lines i { display: block; height: 13px; border-radius: 4px; background: #22c55e; }
+  .piece .lines i.cmd { background: #111827; }
+
+  /* The arrow from the pieces to the finished slide */
+  .arrow { position: absolute; z-index: 1; left: 568px; top: 985px; width: 52px; height: 44px; }
+
+  .mini-wrap { z-index: 2; left: 628px; top: 744px; }
+</style>
+<link rel="stylesheet" href="mini.css">
+<link rel="stylesheet" href="../../../library/components/next-teaser.css">
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+<link rel="stylesheet" href="../../../library/motion/next-teaser.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="4.headline">CLAUDE BUILDS THE SLIDES FROM <span class="sel" data-component="highlighter" data-motion="select" data-at="0.15"><i class="knob a"></i>READY-MADE<i class="knob b"></i></span> DESIGNS</h1>
+    <p class="body" data-copy="4.body">The skill ships a library of ready-made designs. Claude picks pieces like a code window or a chat bubble and fits your words around them.</p>
+  </div>
+
+  <div class="mw lib" data-component="browser-window" data-box="library">
+    <div class="mw-bar"><i></i><i></i><i></i><span data-ui>design library</span></div>
+    <div class="mw-main">
+      <div data-motion="rise" data-at="0.05">
+        <p class="tile-name" data-ui>Terminal</p>
+        <div class="piece"><div class="chrome"><i></i><i></i><i></i></div><div class="lines"><i class="cmd" style="width:70%"></i><i style="width:50%"></i><i style="width:82%"></i><i style="width:62%"></i><i style="width:74%"></i><i style="width:44%"></i></div></div>
+      </div>
+      <div data-motion="rise" data-at="0.5">
+        <p class="tile-name" data-ui>Message Bubble</p>
+        <div class="piece"><div class="chatpiece lg"><b class="av"></b><span class="bub"><i></i><i></i><i></i></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <svg class="arrow" data-motion="rise" data-at="0.8" viewBox="0 0 52 44" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h40M28 6l16 16-16 16"/></svg>
+
+  <div class="mini-wrap" data-box="mini" data-motion="rise" data-at="0.95">
+    <div class="mini" data-component="finished-slide">
+      <div class="m-head" data-motion="rise" data-at="1.8"><p class="m-h" data-ui>CLAUDE MAKES EVERY SLIDE MOVE</p><div class="bars"><i style="width:94%"></i><i style="width:80%"></i></div></div>
+      <div class="m-term" data-motion="rise" data-at="1.25"><div class="chrome"><i></i><i></i><i></i></div><div class="lines"><i class="cmd" style="width:72%"></i><i style="width:52%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:58%"></i></div></div>
+      <div class="m-chat" data-motion="rise" data-at="1.5"><div class="chatpiece"><b class="av"></b><span class="bub"><i></i><i></i><i></i></span></div></div>
+    </div>
+  </div>
+  <div class="next-teaser rehook at-br" data-component="next-teaser"><span data-copy="4.rehook">Now watch that slide come alive</span><span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span></div>
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>

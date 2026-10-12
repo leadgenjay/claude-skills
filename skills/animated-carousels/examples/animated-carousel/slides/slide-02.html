@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<link rel="stylesheet" href="mini.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; }
+  .h { font-size: 136px; }
+  .h .sel { margin-top: 14px; }
+  .body { margin-top: 30px; }
+
+  /* The same finished slide twice: the old flat one, and the one that builds itself */
+  .mini-wrap.old { left: 84px; top: 700px; transform: scale(1.08) rotate(-3deg); filter: grayscale(1); opacity: 0.42; }
+  .mini-wrap.live { left: 597px; top: 700px; transform: scale(1.08); }
+
+  .year { position: absolute; z-index: 3; padding: 12px 26px 10px; border-radius: 14px; font: 900 64px/1 var(--font-head); letter-spacing: 0.02em; }
+  .y-old { left: 150px; top: 940px; transform: rotate(-12deg); color: #4b5563; border: 5px solid #4b5563; background: rgba(255,255,255,.9); }
+  .y-new { right: 60px; top: 612px; color: #fff; background: var(--accent); border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+</style>
+<link rel="stylesheet" href="../../../library/components/next-teaser.css">
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+<link rel="stylesheet" href="../../../library/motion/next-teaser.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="1.headline">STATIC CAROUSELS ARE SO <span class="sel" data-component="highlighter" data-motion="select" data-at="0.15"><i class="knob a"></i>2026<i class="knob b"></i></span></h1>
+    <p class="body" data-copy="1.body">The old way of making carousels with Claude is dead. In 2027 you need to step it up with animated carousels, also called hyper carousels, where every slide moves.</p>
+  </div>
+
+  <div class="mini-wrap old" data-box="old">
+    <div class="mini" data-component="old-slide">
+      <div class="m-head"><p class="m-h" data-ui>CLAUDE MAKES EVERY SLIDE MOVE</p><div class="bars"><i style="width:94%"></i><i style="width:80%"></i></div></div>
+      <div class="m-term"><div class="chrome"><i></i><i></i><i></i></div><div class="lines"><i class="cmd" style="width:72%"></i><i style="width:52%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:58%"></i></div></div>
+      <div class="m-chat"><div class="chatpiece"><b class="av"></b><span class="bub"><i></i><i></i><i></i></span></div></div>
+    </div>
+  </div>
+  <div class="year y-old" data-ui>2026</div>
+
+  <div class="mini-wrap live" data-box="live">
+    <div class="mini" data-component="live-slide">
+      <div class="m-head"><p class="m-h" data-ui>CLAUDE MAKES EVERY SLIDE MOVE</p><div class="bars"><i style="width:94%"></i><i style="width:80%"></i></div></div>
+      <div class="m-term" data-motion="rise" data-at="0.4"><div class="chrome"><i></i><i></i><i></i></div><div class="lines"><i class="cmd" style="width:72%"></i><i style="width:52%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:58%"></i></div></div>
+      <div class="m-chat" data-motion="rise" data-at="0.8"><div class="chatpiece"><b class="av"></b><span class="bub"><i></i><i></i><i></i></span></div></div>
+    </div>
+  </div>
+  <div class="year y-new" data-ui data-motion="rise" data-at="1.3">2027</div>
+  <div class="next-teaser rehook at-br" data-component="next-teaser"><span data-copy="1.rehook">So how does Claude plan one?</span><span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span></div>
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>

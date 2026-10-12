@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../../tokens.css">
+<style>
+  /* Negative fixture: the platform font is allowed only inside [data-ui] chrome.
+     Copy set in it must fail; the identical chrome line below must not add a failure. */
+  .b { font-family: -apple-system, var(--font-body); font-weight: 600; font-size: 40px; }
+</style></head>
+<body><div class="slide"><div class="safe">
+  <div class="b" data-copy="0.body">Copy set in the system font</div>
+  <div class="b" data-ui>9:41</div>
+</div></div></body></html>

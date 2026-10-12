@@ -1,0 +1,37 @@
+/* Next-teaser: the swipe cue, as a pill with an accent arrow.
+ *
+ * Two uses, one look:
+ *   .next-teaser.swipe   on the cover, reading "Swipe".
+ *   .next-teaser.rehook  on every slide between the cover and the CTA, carrying the slide's rehook
+ *                        (references/copy-formula.md, rehooks), so the line that leads into the next slide
+ *                        and the cue to swipe are one element.
+ *
+ * Markup (the arrow span is what motion/next-teaser.css nudges on animated carousels):
+ *   <div class="next-teaser rehook at-br" data-component="next-teaser">
+ *     <span data-copy="3.rehook">Next: where the designs come from</span>
+ *     <span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4"
+ *       stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span>
+ *   </div>
+ * On the cover the word "Swipe" sits in the pill itself with data-ui.
+ *
+ * Place it inside the 60px safe margin and clear of every line of copy and any photo. The slide plan
+ * sets where; .at-br (bottom right, the swipe direction) is the default.
+ */
+.next-teaser {
+  position: absolute; z-index: 6;
+  display: inline-flex; align-items: center; gap: 12px;
+  /* One line, always: a rehook is 8 words or fewer, and a wrapped pill leaves a word alone on its
+     second line and grows up into the visual above it. */
+  max-width: 960px; white-space: nowrap;
+  padding: 12px 20px 12px 26px;
+  border: 3px solid #0b0b0b; border-radius: 999px;
+  background: #fff; box-shadow: 5px 5px 0 #0b0b0b;
+  font: 800 32px/1.3 var(--font-body); color: #0b0b0b; /* under 1.3 Manrope's glyphs overflow the line box */
+}
+/* The text is a block, not an inline span: render.mjs measures overflow with clientWidth, which is 0
+   on an inline element, so an inline data-copy span always reads as overflowing. */
+.next-teaser > [data-copy] { display: block; }
+.next-teaser .arw { display: inline-block; flex: none; }
+.next-teaser svg { display: block; width: 40px; height: 28px; stroke: var(--accent); }
+.next-teaser.at-br { right: 66px; bottom: 66px; }
+.next-teaser.at-bl { left: 60px; bottom: 66px; }

@@ -1,0 +1,12 @@
+{
+  "_doc": "animate.mjs limits. Calibrated by the 2026-10-10 spike (test/fixtures/animated-ok): a settled slide differed from its still by 6 pixels (0.0004%); the same slide with its first two typed letters clipped differed by 1912 (0.12%); two GPU renders of one slide differed by 0 pixels above pixelDelta. maxDiffPct sits 12x under the clipped-letters defect and 25x over the noise.",
+  "pixelDelta": 8,
+  "maxDiffPct": 0.01,
+  "settleBy": 2.5,
+  "fps": 30,
+  "defaultDuration": 6,
+  "minDuration": 3,
+  "maxDuration": 60,
+  "minBytes": 50000,
+  "renderAttempts": 3
+}

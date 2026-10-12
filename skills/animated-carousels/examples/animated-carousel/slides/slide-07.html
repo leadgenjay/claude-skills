@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<link rel="stylesheet" href="mini.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; z-index: 1; }
+  .h { font-size: 184px; line-height: 0.88; }
+  .h .sel { margin-top: 18px; }
+
+  .col { position: absolute; z-index: 2; left: 60px; top: 478px; bottom: 74px; width: 680px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; }
+  .body { font-size: 46px; line-height: 1.36; max-width: 600px; }
+
+  /* CTA button: accent fill, thick ink outline, hard shadow */
+  .btn { display: inline-flex; align-items: center; gap: 16px; padding: 24px 32px 22px 36px; background: var(--accent); color: #fff;
+    border: 4px solid var(--ink); border-radius: 22px; box-shadow: 10px 10px 0 var(--ink);
+    font-family: var(--font-head); font-weight: 900; font-size: 58px; letter-spacing: 0.02em; line-height: 1; white-space: nowrap; }
+
+  /* Comment composer, the action itself (after 21st.dev 34988 Message Bubble, input state) */
+  .composer { width: 440px; padding: 16px 16px 16px 18px; display: flex; align-items: center; gap: 16px; }
+  .composer .av { width: 56px; height: 56px; border-radius: 50%; background: var(--line); flex: none; display: grid; place-items: center; }
+  .composer .field { flex: 1; height: 60px; border: 1px solid var(--rule); border-radius: 999px; display: flex; align-items: center; padding: 0 22px; font: 700 28px/1 var(--font-body); color: var(--ink); letter-spacing: 0.02em; }
+  .composer .caret { width: 3px; height: 32px; background: var(--accent); margin-left: 3px; border-radius: 2px; }
+  .composer .post { font: 800 27px/1 var(--font-body); color: var(--accent); padding-right: 6px; }
+
+  /* The finished slide that carried through the deck, at rest beside the CTA */
+  .mini-wrap { z-index: 1; left: 690px; top: 760px; transform: scale(0.84); }
+</style>
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="6.headline">COMMENT <span class="sel" data-component="highlighter" data-motion="select" data-at="0.15"><i class="knob a"></i>"CAROUSEL"<i class="knob b"></i></span></h1>
+  </div>
+
+  <div class="col" data-box="cta-col">
+    <p class="body" data-copy="6.body">Comment CAROUSEL and get the free skill, so Claude Code can build and animate your next carousel.</p>
+    <div class="btn" data-component="cta-button" data-ui data-motion="rise" data-at="0.3">COMMENT CAROUSEL</div>
+    <div class="composer card" data-ui data-motion="rise" data-at="0.7">
+      <div class="av"><svg width="28" height="28" viewBox="0 0 24 24" fill="#94a3b8"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.8-4.4 4.2-7 8.5-7s7.7 2.6 8.5 7z"/></svg></div>
+      <div class="field"><span data-motion="type" data-at="1.1">CAROUSEL</span><span class="caret"></span></div>
+      <div class="post">Post</div>
+    </div>
+  </div>
+
+  <div class="mini-wrap" data-box="mini">
+    <div class="mini" data-component="finished-slide">
+      <div class="m-head"><p class="m-h" data-ui>CLAUDE MAKES EVERY SLIDE MOVE</p><div class="bars"><i style="width:94%"></i><i style="width:80%"></i></div></div>
+      <div class="m-term"><div class="chrome"><i></i><i></i><i></i></div><div class="lines"><i class="cmd" style="width:72%"></i><i style="width:52%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:58%"></i></div></div>
+      <div class="m-chat"><div class="chatpiece"><b class="av"></b><span class="bub"><i></i><i></i><i></i></span></div></div>
+    </div>
+  </div>
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>

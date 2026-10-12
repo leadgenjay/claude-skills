@@ -1,0 +1,71 @@
+{
+  "productName": "animated carousel skill",
+  "offer": "free skill",
+  "ctaKeyword": "CAROUSEL",
+  "animate": true,
+  "hookTemplateId": "T8",
+  "shape": "argument chain, 7 slides: promise, the old way is dead, how Claude does it in order, CTA",
+  "motion": {
+    "loop": "jump"
+  },
+  "slides": [
+    {
+      "position": 0,
+      "headline": "CLAUDE CODE NOW MAKES ANIMATED CAROUSELS",
+      "body": "And the results are insane. Here's how to do it.",
+      "visual": "a fan of slides; the front card swipes through this carousel's own slides",
+      "label": "ILLUSTRATION",
+      "motion": {
+        "loop": "seamless"
+      }
+    },
+    {
+      "position": 1,
+      "headline": "STATIC CAROUSELS ARE SO 2026",
+      "body": "The old way of making carousels with Claude is dead. In 2027 you need to step it up with animated carousels, also called hyper carousels, where every slide moves.",
+      "visual": "the same finished slide twice: a flat grey copy stamped 2026, and a live copy that builds itself, with a 2027 badge",
+      "label": "ILLUSTRATION",
+      "rehook": "So how does Claude plan one?"
+    },
+    {
+      "position": 2,
+      "headline": "CLAUDE PLANS ABOUT 8 SLIDES",
+      "body": "It follows a formula taken from more than a thousand slides of big creators' carousels. A typical one runs about 8 slides, so Claude plans that many and drops any slide that drags.",
+      "visual": "a row of 8 slide cards in front of a faded wall of tiny slides; a ninth card is crossed out",
+      "label": "ILLUSTRATION",
+      "source": "references/copy-formula.md: 1,058 slides from 134 carousels; median 8 slides across the 128 with text",
+      "rehook": "Then each slide gets one job"
+    },
+    {
+      "position": 3,
+      "headline": "CLAUDE WRITES IT LIKE A STORY",
+      "body": "Slide 1 makes a big promise. Slide 2 names the problem. The middle slides walk through the fix in order, and the last slide tells people exactly what to comment.",
+      "visual": "eight small cards, each labelled with its job: promise, problem, fix, comment",
+      "label": "ILLUSTRATION",
+      "rehook": "Next: where the designs come from"
+    },
+    {
+      "position": 4,
+      "headline": "CLAUDE BUILDS THE SLIDES FROM READY-MADE DESIGNS",
+      "body": "The skill ships a library of ready-made designs. Claude picks pieces like a code window or a chat bubble and fits your words around them.",
+      "visual": "a library window with a code window piece and a chat bubble piece, assembling into one finished slide",
+      "label": "ILLUSTRATION",
+      "rehook": "Now watch that slide come alive"
+    },
+    {
+      "position": 5,
+      "headline": "CLAUDE MAKES EVERY SLIDE MOVE",
+      "body": "Claude adds the motion, lines typing out and cards sliding up, then HyperFrames turns every slide into a short video, ready to post.",
+      "visual": "the finished slide building itself beside a terminal that lists one video per slide",
+      "label": "ILLUSTRATION",
+      "rehook": "Your next carousel could move like this"
+    },
+    {
+      "position": 6,
+      "headline": "COMMENT \"CAROUSEL\"",
+      "body": "Comment CAROUSEL and get the free skill, so Claude Code can build and animate your next carousel.",
+      "visual": "the CTA button and a comment box typing the keyword, beside the finished slide",
+      "label": "ILLUSTRATION"
+    }
+  ]
+}

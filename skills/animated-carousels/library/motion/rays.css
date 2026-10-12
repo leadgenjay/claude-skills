@@ -1,0 +1,15 @@
+/* Light Rays, moving (magicui light-rays.tsx, MIT): the beams sway sideways and breathe, the motion
+ * components/backgrounds.css froze. Link it after backgrounds.css on an animated slide only.
+ *
+ * Rest state: the 0% and 100% keyframes are the frozen still, so the settled frame matches the
+ * approved PNG and the loop has no seam. One finite pass over the slide's length (--motion-dur,
+ * set by motion.js from the composition), because HyperFrames seeks finite CSS animations only.
+ */
+.slide.bg-rays::before {
+  animation: mo-rays var(--motion-dur, 6s) cubic-bezier(0.45, 0, 0.55, 1) 1 both;
+}
+
+@keyframes mo-rays {
+  0%, 100% { transform: none; opacity: 1; }
+  50% { transform: translateX(-40px) rotate(1.4deg); opacity: 0.7; }
+}

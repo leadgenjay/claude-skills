@@ -1,0 +1,13 @@
+{
+  "slides": [
+    {
+      "position": 0,
+      "headline": "YOUR INBOX HAS NO OFF SWITCH",
+      "body": "New mail lands all day. So until now, the only way to keep up was to stop what you were doing and read every message yourself.",
+      "visual": "a stack of message cards beside a terminal that cannot open the mailbox yet (illustration)"
+    }
+  ],
+  "motion": {
+    "loop": "jump"
+  }
+}

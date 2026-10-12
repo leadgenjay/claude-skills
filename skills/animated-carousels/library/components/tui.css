@@ -1,0 +1,142 @@
+/* Terminal, light: a Claude Code session in a light terminal window, for carousel slides.
+   Structure from the 21st.dev Terminal (id 28361); a light palette, fewer elements than a real
+   session (no project sidebar, no status line) so it reads at a glance.
+   The default mono size is 22px; set it to 27px or more on the slide so it reads on a phone.
+   Needs tokens.css first (Geist Mono is vendored in fonts/).
+
+   <div class="tui" data-box="terminal">
+     <div class="tui-chrome"><i></i><i></i><i></i></div>
+     <div class="tui-tabs"><div class="tui-tab" data-ui><span class="star">✳</span> inbox</div></div>
+     <div class="tui-script" data-ui>
+       <div class="tui-prompt"><span class="ps">❯</span> what did I miss?</div>
+       <div class="tui-tool"><span class="dot">●</span> <b>Bash</b>(mail unread)</div>
+       <div class="tui-res">└ 4 chats, 8 messages</div>
+       <div class="tui-text">...</div>
+     </div>
+     <div class="tui-input" data-ui><span class="ps">❯</span> <span class="cur"></span></div>
+   </div>
+*/
+:root {
+  --tui-bg: #ffffff;
+  --tui-chrome: #ececec;
+  --tui-chrome-border: #d8d8d8;
+  --tui-tab-rail: #f4f4f5;
+  --tui-tab-border: #e4e4e6;
+  --tui-fg: #1c1c1e;
+  --tui-muted: #6b6b70;
+  --tui-faint: #9a9aa0;
+  --tui-dim: #b0b0b6;
+  --tui-rule: #d8d8dc;
+  --tui-green: #2d9c4a;
+  --tui-blue: #2f7ce0;
+  --tui-accent: #2563EB;
+  --tui-magenta: #d4468a;
+  --tui-cursor: #c8c8cc;
+}
+
+.tui {
+  display: flex;
+  flex-direction: column;
+  background: var(--tui-bg);
+  border: 1px solid var(--tui-chrome-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 18px 40px -22px rgba(15, 23, 42, 0.28);
+  font-family: var(--font-mono);
+  color: var(--tui-fg);
+}
+
+.tui-chrome {
+  flex: none;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 20px;
+  background: var(--tui-chrome);
+  border-bottom: 1px solid var(--tui-chrome-border);
+}
+.tui-chrome i { display: block; width: 17px; height: 17px; border-radius: 50%; }
+.tui-chrome i:nth-child(1) { background: #ff5f57; }
+.tui-chrome i:nth-child(2) { background: #febc2e; }
+.tui-chrome i:nth-child(3) { background: #28c840; }
+
+.tui-tabs {
+  flex: none;
+  height: 44px;
+  display: flex;
+  background: var(--tui-tab-rail);
+  border-bottom: 1px solid var(--tui-tab-border);
+}
+.tui-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  background: var(--tui-bg);
+  border-right: 1px solid var(--tui-tab-border);
+  font-size: 18px;
+  color: var(--tui-fg);
+}
+.tui-tab .star { color: var(--tui-accent); }
+
+.tui-script {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px 30px 0;
+  font-size: 22px;
+  line-height: 1.45;
+}
+.tui-script:last-child { padding-bottom: 30px; }
+.tui-script b { font-weight: 600; }
+.tui .ps { color: var(--tui-accent); font-weight: 600; }
+
+/* Prompt: pink chevron, wrapped lines hang under the text */
+.tui-prompt { padding-left: 1.2em; text-indent: -1.2em; }
+
+/* Tool call: green dot, bold tool name(args), muted result under it */
+.tui-tool { padding-left: 1.2em; text-indent: -1.2em; }
+.tui-tool .dot { color: var(--tui-green); }
+.tui-res { color: var(--tui-muted); padding-left: 2.3em; text-indent: -1.1em; margin-top: -14px; }
+
+/* Claude's answer */
+.tui-text { color: var(--tui-fg); }
+.tui-text.muted { color: var(--tui-muted); }
+.tui-list { display: flex; flex-direction: column; gap: 10px; margin-top: -6px; }
+.tui-list > div { padding-left: 1.2em; text-indent: -1.2em; }
+.tui-list > div::before { content: "- "; color: var(--tui-dim); white-space: pre; }
+
+/* Question block (AskUserQuestion): a rule above, the question, options with a cursor */
+.tui-q { border-top: 1px solid var(--tui-rule); padding-top: 18px; display: flex; flex-direction: column; gap: 6px; }
+.tui-q .qt { font-weight: 600; margin-bottom: 4px; }
+.tui-q .quote { color: var(--tui-fg); padding: 2px 0 10px 18px; border-left: 3px solid var(--tui-rule); margin: 4px 0 8px; }
+.tui-q .opt { padding: 3px 12px; margin: 0 -12px; border-radius: 6px; color: var(--tui-muted); }
+.tui-q .opt .c { display: inline-block; width: 1.2em; color: transparent; }
+.tui-q .opt.on { background: var(--tui-tab-rail); color: var(--tui-fg); font-weight: 600; }
+.tui-q .opt.on .c { color: var(--tui-accent); }
+
+/* Plain shell transcript (no Claude session): keep every character and space */
+.tui-shell { display: block; white-space: pre; }
+.tui-shell .cmd { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 1.2em; text-indent: -1.2em; }
+.tui-shell .mg { color: var(--tui-magenta); }
+.tui-shell .bl { color: var(--tui-blue); }
+.tui-shell .gr { color: var(--tui-green); }
+
+/* Input box at the foot of a Claude Code session */
+.tui-input {
+  flex: none;
+  margin: 22px 30px 26px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  border: 1px solid var(--tui-rule);
+  border-radius: 7px;
+  font-size: 20px;
+}
+.tui-input .ps { color: var(--tui-muted); font-weight: 400; }
+.tui .cur { display: inline-block; width: 11px; height: 22px; background: var(--tui-cursor); vertical-align: -4px; }

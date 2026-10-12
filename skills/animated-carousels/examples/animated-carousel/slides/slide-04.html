@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; }
+  .h { font-size: 136px; }
+  .h .sel { margin-top: 14px; }
+  .body { margin-top: 30px; }
+
+  /* The story: eight small slides in reading order, each named by its job */
+  .story { position: absolute; left: 60px; right: 60px; top: 680px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 46px 22px; }
+  .beat { position: relative; height: 270px; border-radius: 18px; background: #fff; border: 2px solid #e2e8f0;
+    box-shadow: 0 18px 40px -24px rgba(15, 23, 42, .35); display: flex; flex-direction: column; justify-content: space-between; padding: 20px 18px 18px; }
+  .beat .bars { display: flex; flex-direction: column; gap: 9px; }
+  .beat .bars i { display: block; height: 12px; border-radius: 4px; background: #cbd5e1; }
+  .beat .bars i:first-child { height: 18px; background: #94a3b8; }
+  .word { font: 900 50px/1 var(--font-head); letter-spacing: 0.01em; color: #0b0b0b; text-transform: uppercase; }
+  .beat.fix .word { color: #374151; }
+  .beat.first { border-color: #0b0b0b; box-shadow: 6px 6px 0 #0b0b0b; }
+  .beat.end { border-color: #0b0b0b; box-shadow: 6px 6px 0 #0b0b0b; }
+  .beat.end .word { color: #0b0b0b; }
+  /* reading order: a short arrow between neighbours */
+  .beat:not(:nth-child(4n)):not(:last-child)::after { content: ''; position: absolute; right: -19px; top: 50%; width: 16px; height: 4px; background: #94a3b8; border-radius: 2px; }
+</style>
+<link rel="stylesheet" href="../../../library/components/next-teaser.css">
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+<link rel="stylesheet" href="../../../library/motion/next-teaser.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="3.headline">CLAUDE WRITES IT LIKE A <span class="sel" data-component="highlighter" data-motion="select" data-at="0.15"><i class="knob a"></i>STORY<i class="knob b"></i></span></h1>
+    <p class="body" data-copy="3.body">Slide 1 makes a big promise. Slide 2 names the problem. The middle slides walk through the fix in order, and the last slide tells people exactly what to comment.</p>
+  </div>
+
+  <div class="story" data-component="story-beats" data-box="story" data-ui>
+    <div class="beat"><div class="bars"><i style="width:90%"></i><i style="width:70%"></i></div><span class="word" data-motion="rise" data-at="0.2">Promise</span></div>
+    <div class="beat"><div class="bars"><i style="width:80%"></i><i style="width:60%"></i></div><span class="word" data-motion="rise" data-at="0.4">Problem</span></div>
+    <div class="beat fix first"><div class="bars"><i style="width:85%"></i><i style="width:65%"></i></div><span class="word" data-motion="rise" data-at="0.6">Fix</span></div>
+    <div class="beat fix"><div class="bars"><i style="width:75%"></i><i style="width:55%"></i></div><span class="word" data-motion="rise" data-at="0.8">Fix</span></div>
+    <div class="beat fix"><div class="bars"><i style="width:88%"></i><i style="width:62%"></i></div><span class="word" data-motion="rise" data-at="1.0">Fix</span></div>
+    <div class="beat fix"><div class="bars"><i style="width:78%"></i><i style="width:58%"></i></div><span class="word" data-motion="rise" data-at="1.2">Fix</span></div>
+    <div class="beat fix"><div class="bars"><i style="width:84%"></i><i style="width:66%"></i></div><span class="word" data-motion="rise" data-at="1.4">Fix</span></div>
+    <div class="beat end"><div class="bars"><i style="width:80%"></i><i style="width:50%"></i></div><span class="word" data-motion="rise" data-at="1.6">Comment</span></div>
+  </div>
+  <div class="next-teaser rehook at-br" data-component="next-teaser"><span data-copy="3.rehook">Next: where the designs come from</span><span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span></div>
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>
