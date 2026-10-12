@@ -284,7 +284,7 @@ test('animate: a slide-local stylesheet and a select sweep both settle on the st
   assert.equal(status, 0, out)
   assert.equal(report.complete, true)
   assert.ok(report.slides[0].checks.settledDiffPct <= 0.01, String(report.slides[0].checks.settledDiffPct))
-  assert.match(readFileSync(join(d, '.settle', 'slide-01.html'), 'utf8'), /href="\.\.\/slides\/tui-terminal\.css"/)
+  assert.match(readFileSync(join(d, '.settle', 'slide-01.html'), 'utf8'), /href="\.\.\/slides\/tui\.css"/)
 })
 
 // The same slide fails the seam when it builds in (the seamless test above); with only a reselect
