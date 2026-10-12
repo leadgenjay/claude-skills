@@ -102,6 +102,26 @@ function listFilesRecursive(dir, base = "") {
   return files;
 }
 
+// jsDelivr, not raw.githubusercontent.com: raw serves mp4 as
+// application/octet-stream, which Safari refuses to play.
+const GALLERY_CDN = "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main";
+
+/**
+ * The manifest's optional `gallery:` list, with each path turned into an
+ * absolute CDN URL for the marketplace page. validate-skills.js has already
+ * checked that every path sits under the item's gallery/ folder.
+ */
+function toGallery(entries, itemPath) {
+  if (!Array.isArray(entries) || entries.length === 0) return undefined;
+  const url = (rel) => `${GALLERY_CDN}/${path.posix.join(itemPath, rel)}`;
+  return entries.map((g) => {
+    const out = { type: g.type, src: url(g.src) };
+    if (g.poster) out.poster = url(g.poster);
+    if (g.caption) out.caption = g.caption;
+    return out;
+  });
+}
+
 function processDirectory(type) {
   const dirName = DIRECTORIES[type];
   const baseDir = path.join(ROOT_DIR, dirName);
@@ -136,7 +156,12 @@ function processDirectory(type) {
     // GitHub returns plain-text "404: Not Found", and that body lands on
     // disk as a corrupt file). Components were always recursive; this aligns
     // skills/commands/agents with the same behavior.
-    const files = listFilesRecursive(itemDir);
+    //
+    // gallery/ is display-only marketplace media. It stays out of files[]
+    // because install.sh downloads every entry there to the member's machine.
+    const files = listFilesRecursive(itemDir).filter(
+      (f) => !f.startsWith("gallery/"),
+    );
 
     const item = {
       id: entry.name,
@@ -157,6 +182,7 @@ function processDirectory(type) {
       // route downloads this item's files (e.g. CLI bootstrap for `notes`).
       // Honored by Web-Designer's install.sh generator. Failure is non-fatal.
       postInstall: manifest.postInstall || undefined,
+      gallery: toGallery(manifest.gallery, `${dirName}/${entry.name}`),
     };
 
     // Remove undefined values

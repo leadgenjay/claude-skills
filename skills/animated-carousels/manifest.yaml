@@ -20,6 +20,36 @@ tags:
   - social-media
 postInstall: |
   command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo "  install ffmpeg manually (apt, yum or choco); animated decks need ffmpeg and ffprobe"; }
+# Display-only media for the marketplace page. Never installed, never in files:.
+gallery:
+  - type: video
+    src: gallery/01.mp4
+    poster: gallery/01.jpg
+    caption: "Claude Code now makes animated carousels"
+  - type: video
+    src: gallery/02.mp4
+    poster: gallery/02.jpg
+    caption: "Static carousels are so 2026"
+  - type: video
+    src: gallery/03.mp4
+    poster: gallery/03.jpg
+    caption: "Claude plans about 8 slides"
+  - type: video
+    src: gallery/04.mp4
+    poster: gallery/04.jpg
+    caption: "Claude writes it like a story"
+  - type: video
+    src: gallery/05.mp4
+    poster: gallery/05.jpg
+    caption: "Claude builds the slides from 21st.dev designs"
+  - type: video
+    src: gallery/06.mp4
+    poster: gallery/06.jpg
+    caption: "Claude makes every slide move"
+  - type: video
+    src: gallery/07.mp4
+    poster: gallery/07.jpg
+    caption: "Comment \"ANIMATE\""
 path: skills/animated-carousels
 files:
   - LICENSES.md
