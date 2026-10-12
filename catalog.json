@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-12T02:22:34.784Z",
+  "generatedAt": "2026-10-12T14:46:29.815Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -408,7 +408,51 @@
       ],
       "version": "1.0",
       "kind": "package",
-      "postInstall": "command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo \"  install ffmpeg manually (apt, yum or choco); animated decks need ffmpeg and ffprobe\"; }\n"
+      "postInstall": "command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo \"  install ffmpeg manually (apt, yum or choco); animated decks need ffmpeg and ffprobe\"; }\n",
+      "gallery": [
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/01.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/01.jpg",
+          "caption": "Claude Code now makes animated carousels"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/02.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/02.jpg",
+          "caption": "Static carousels are so 2026"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/03.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/03.jpg",
+          "caption": "Claude plans about 8 slides"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/04.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/04.jpg",
+          "caption": "Claude writes it like a story"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/05.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/05.jpg",
+          "caption": "Claude builds the slides from 21st.dev designs"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/06.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/06.jpg",
+          "caption": "Claude makes every slide move"
+        },
+        {
+          "type": "video",
+          "src": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/07.mp4",
+          "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/07.jpg",
+          "caption": "Comment \"ANIMATE\""
+        }
+      ]
     },
     {
       "id": "animation-designer",
