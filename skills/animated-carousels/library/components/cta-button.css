@@ -1,0 +1,24 @@
+/* CTA button, the bold one: accent fill, thick ink outline, hard offset shadow. Pair it with
+   the product style. Mark it data-ui and keep the keyword itself in data-copy.
+
+   <div class="cta-btn" data-component="cta-button" data-ui>
+     <span data-copy="6.cta">COMMENT KEYWORD</span> <svg>...</svg>
+   </div> */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 28px 22px 36px;
+  background: var(--accent);
+  color: #fff;
+  border: 4px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 10px 10px 0 var(--ink);
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 58px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.cta-btn svg { width: 48px; height: 48px; flex: none; }

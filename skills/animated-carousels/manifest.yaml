@@ -1,0 +1,80 @@
+id: animated-carousels
+type: skill
+kind: package
+version: "1.0"
+name: "Animated Carousels"
+icon: Layers
+description: >-
+  Instagram carousels built as HTML slides from a bundled design library, checked word for word,
+  passed through a blind review, then turned into silent 1080x1440 MP4s with HyperFrames. Ships
+  render.mjs, animate.mjs, the library, OFL fonts and a seven-slide example deck.
+categories:
+  - content
+  - design
+tags:
+  - instagram
+  - carousel
+  - animation
+  - hyperframes
+  - playwright
+  - social-media
+postInstall: |
+  command -v ffmpeg >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install ffmpeg || echo "  install ffmpeg manually (apt, yum or choco); animated decks need ffmpeg and ffprobe"; }
+path: skills/animated-carousels
+files:
+  - LICENSES.md
+  - SKILL.md
+  - examples/animated-carousel/assets/reel/slide-01.png
+  - examples/animated-carousel/assets/reel/slide-02.png
+  - examples/animated-carousel/assets/reel/slide-03.png
+  - examples/animated-carousel/assets/reel/slide-04.png
+  - examples/animated-carousel/assets/reel/slide-05.png
+  - examples/animated-carousel/assets/reel/slide-06.png
+  - examples/animated-carousel/assets/reel/slide-07.png
+  - examples/animated-carousel/copy.json
+  - examples/animated-carousel/slides/mini.css
+  - examples/animated-carousel/slides/slide-01.html
+  - examples/animated-carousel/slides/slide-02.html
+  - examples/animated-carousel/slides/slide-03.html
+  - examples/animated-carousel/slides/slide-04.html
+  - examples/animated-carousel/slides/slide-05.html
+  - examples/animated-carousel/slides/slide-06.html
+  - examples/animated-carousel/slides/slide-07.html
+  - library/animate.mjs
+  - library/components/backgrounds.css
+  - library/components/cta-button.css
+  - library/components/kbd.css
+  - library/components/mod-window.css
+  - library/components/next-teaser.css
+  - library/components/orbit.css
+  - library/components/tui.css
+  - library/fonts/BigShouldersDisplay.woff2
+  - library/fonts/GeistMono.woff2
+  - library/fonts/Manrope.woff2
+  - library/fonts/OFL.txt
+  - library/fonts/fonts.css
+  - library/motion/glowgrid.css
+  - library/motion/gridsq.css
+  - library/motion/motion.js
+  - library/motion/next-teaser.css
+  - library/motion/rays.css
+  - library/motion/thresholds.json
+  - library/motion/vendor/gsap.min.js
+  - library/render.mjs
+  - library/styles/product.css
+  - library/test/animate.test.mjs
+  - library/test/fixtures/animated-ok/copy.json
+  - library/test/fixtures/animated-ok/slides/slide-01.html
+  - library/test/fixtures/animated-ok/still/slide-01.html
+  - library/test/fixtures/font-ok/slide-01.html
+  - library/test/fixtures/font-unshipped/slide-01.html
+  - library/test/fixtures/font-weight-unshipped/slide-01.html
+  - library/test/fixtures/no-text/slide-01.html
+  - library/test/fixtures/system-font-on-copy/slide-01.html
+  - library/test/library.test.mjs
+  - library/tokens.css
+  - manifest.yaml
+  - package.json
+  - references/copy-formula.md
+  - references/library.md
+  - references/review-checklist.md

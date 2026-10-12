@@ -1,0 +1,18 @@
+{
+  "name": "animated-carousels-skill",
+  "private": true,
+  "type": "module",
+  "description": "Renderer and checks for the animated-carousels skill: HTML slides to 1080x1440 PNGs and silent MP4s.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test library/test/library.test.mjs",
+    "test:animate": "node --test library/test/animate.test.mjs"
+  },
+  "dependencies": {
+    "hyperframes": "0.8.97",
+    "playwright": "1.62.1",
+    "sharp": "0.35.3"
+  }
+}

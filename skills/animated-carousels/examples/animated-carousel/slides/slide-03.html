@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; z-index: 2; }
+  .h { font-size: 136px; }
+  .h .sel { margin-top: 14px; }
+  .body { margin-top: 30px; }
+
+  /* The corpus behind the formula: a faded wall of small slides */
+  .wall { position: absolute; z-index: 0; left: 60px; right: 60px; top: 600px; bottom: 60px; border-radius: 24px; overflow: hidden; background: #fff;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 55%, #000 30%, transparent 78%);
+            mask-image: radial-gradient(ellipse at 50% 55%, #000 30%, transparent 78%); }
+  .wall svg { display: block; width: 100%; height: 100%; opacity: 0.5; }
+  /* The row rises; the chip is centred by layout, not by a transform, so the moving layer never
+   * sits at a half pixel (a translateX(-50%) chip failed the determinism check) */
+  .count-row { position: absolute; z-index: 3; left: 0; right: 0; top: 680px; display: flex; justify-content: center; }
+  .count { padding: 14px 30px 13px; border-radius: 999px;
+    background: #fff; border: 2px solid var(--line-strong, #cbd5e1); font: 800 40px/1 var(--font-body); color: var(--ink); white-space: nowrap;
+    box-shadow: 0 16px 36px -18px rgba(15, 23, 42, .35); }
+
+  /* The plan: eight slides in a row, a ninth dropped */
+  .row { position: absolute; z-index: 2; left: 60px; right: 60px; top: 880px; display: flex; gap: 10px; }
+  .s { flex: none; width: 96px; height: 128px; border-radius: 12px; background: #fff; border: 2px solid #0b0b0b;
+    box-shadow: 4px 4px 0 #0b0b0b; display: grid; place-items: center; font: 900 58px/1 var(--font-head); color: #0b0b0b; }
+  .s.cut { background: transparent; border: 2px dashed #9ca3af; box-shadow: none; color: #9ca3af; position: relative; }
+  /* dropped: a small pink cross badge on the corner, clear of the numeral */
+  .x { position: absolute; z-index: 3; right: 60px; top: 856px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); border: 3px solid #0b0b0b; display: grid; place-items: center; }
+  .x svg { width: 20px; height: 20px; }
+</style>
+<link rel="stylesheet" href="../../../library/components/next-teaser.css">
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+<link rel="stylesheet" href="../../../library/motion/next-teaser.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="2.headline">CLAUDE PLANS ABOUT <span class="sel" data-component="highlighter" data-motion="select" data-at="0.15"><i class="knob a"></i>8 SLIDES<i class="knob b"></i></span></h1>
+    <p class="body" data-copy="2.body">It follows a formula taken from more than a thousand slides of big creators' carousels. A typical one runs about 8 slides, so Claude plans that many and drops any slide that drags.</p>
+  </div>
+
+  <div class="wall" data-component="corpus" data-bleed>
+    <svg xmlns="http://www.w3.org/2000/svg"><defs><pattern id="p" width="46" height="60" patternUnits="userSpaceOnUse"><rect x="4" y="4" width="38" height="52" rx="5" fill="#cbd5e1"/><rect x="10" y="12" width="24" height="5" rx="2" fill="#94a3b8"/><rect x="10" y="22" width="18" height="4" rx="2" fill="#b6c2d2"/></pattern></defs><rect width="100%" height="100%" fill="url(#p)"/></svg>
+  </div>
+  <div class="count-row" data-motion="rise" data-at="0.2"><div class="count" data-ui>1,058 slides</div></div>
+
+  <div class="row" data-component="slide-plan" data-box="plan" data-ui>
+    <div class="s" data-motion="rise" data-at="0.5">1</div>
+    <div class="s" data-motion="rise" data-at="0.62">2</div>
+    <div class="s" data-motion="rise" data-at="0.74">3</div>
+    <div class="s" data-motion="rise" data-at="0.86">4</div>
+    <div class="s" data-motion="rise" data-at="0.98">5</div>
+    <div class="s" data-motion="rise" data-at="1.1">6</div>
+    <div class="s" data-motion="rise" data-at="1.22">7</div>
+    <div class="s" data-motion="rise" data-at="1.34">8</div>
+    <div class="s cut" data-motion="rise" data-at="1.45">9</div>
+  </div>
+  <div class="x" data-motion="rise" data-at="1.85"><svg viewBox="0 0 20 20" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg></div>
+  <div class="next-teaser rehook at-br" data-component="next-teaser"><span data-copy="2.rehook">Then each slide gets one job</span><span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span></div>
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>

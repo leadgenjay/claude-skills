@@ -1,0 +1,105 @@
+/* Orbit: planets on circular paths around a centre, frozen at rest.
+ * Source: Magic UI Orbiting Circles (21st.dev/@dillionverma/components/orbiting-circles, MIT),
+ * ported from magicuidesign/magicui apps/www/registry/magicui/orbiting-circles.tsx. Same model:
+ * each body sits at --angle on a ring of --radius, the ring drawn as a thin circle. The animation
+ * (rotate, translate, counter-rotate) is frozen at the body's angle. Set it on a dark pane for a
+ * night-sky look; give an active body its own colour and a glow.
+ *
+ *   <div class="orbit" style="--orbit-size:520px">
+ *     <i class="orbit-ring" style="--radius:120"></i>
+ *     <i class="orbit-sun"></i>
+ *     <i class="orbit-body lit" style="--radius:120;--angle:200;--size:26;--c:#22d3ee"></i>
+ *   </div>
+ */
+/* --tilt squashes the plane (1 = flat circles, 0.45 = seen from the side, for wide orbits); bodies and the sun are counter-scaled so they stay round. */
+.orbit {
+  position: relative;
+  width: var(--orbit-size, 520px);
+  height: var(--orbit-size, 520px);
+  transform: scaleY(var(--tilt, 1));
+}
+.orbit-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--radius) * 2px); height: calc(var(--radius) * 2px);
+  transform: translate(-50%, -50%);
+  border: 1.5px dashed rgba(148, 163, 184, .28);
+  border-radius: 50%;
+}
+.orbit-sun {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--sun, 150px); height: var(--sun, 150px);
+  transform: translate(-50%, -50%) scaleY(calc(1 / var(--tilt, 1)));
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7d6 0%, #fbbf24 42%, rgba(180, 83, 9, 0) 72%);
+}
+.orbit-body {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--size) * 1px); height: calc(var(--size) * 1px);
+  margin: calc(var(--size) * -.5px) 0 0 calc(var(--size) * -.5px);
+  border-radius: 50%;
+  /* Idle planets keep the faint white core scene.ts still draws (0.25 strength). */
+  background: radial-gradient(circle, rgba(255, 255, 255, .55) 0 14%, var(--c) 42%);
+  opacity: .85;
+  transform: rotate(calc(var(--angle) * 1deg)) translateX(calc(var(--radius) * 1px))
+             rotate(calc(var(--angle) * -1deg)) scaleY(calc(1 / var(--tilt, 1)));
+}
+/* An active body glows in its own colour (--c) with a white core, and a white moon circles it. */
+.orbit-body.lit {
+  opacity: 1;
+  background: radial-gradient(circle, #fff 0 16%, var(--c) 46%);
+  box-shadow: 0 0 calc(var(--size) * .5px) calc(var(--size) * .2px) color-mix(in srgb, var(--c) 90%, transparent),
+              0 0 calc(var(--size) * 1.6px) calc(var(--size) * .55px) color-mix(in srgb, var(--c) 50%, transparent),
+              0 0 calc(var(--size) * 3px) calc(var(--size) * .9px) color-mix(in srgb, var(--c) 18%, transparent);
+}
+.orbit-body.lit::after {
+  content: "";
+  position: absolute;
+  width: 10px; height: 10px;
+  left: calc(var(--size) * 1.05px + var(--moon-x, 0px));
+  top: calc(var(--size) * -.35px + var(--moon-y, 0px));
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, .55);
+}
+/* Sparks: a burst in the tool's colour (--t) around a planet that just switched tools
+ * (scene.ts burst). Same position model as .orbit-body, so give it the planet's --radius,
+ * --angle and --size. */
+.orbit-sparks {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  transform: rotate(calc(var(--angle) * 1deg)) translateX(calc(var(--radius) * 1px))
+             rotate(calc(var(--angle) * -1deg)) scaleY(calc(1 / var(--tilt, 1)));
+  --s: calc(var(--size) * 1px);
+  box-shadow:
+    calc(var(--s) * -1.25) calc(var(--s) * -.55) 2px 1px var(--t),
+    calc(var(--s) * -1.0) calc(var(--s) * .85) 2px 0 var(--t),
+    calc(var(--s) * .2) calc(var(--s) * -1.35) 2px 1px var(--t),
+    calc(var(--s) * 1.45) calc(var(--s) * .5) 2px 0 var(--t),
+    calc(var(--s) * .6) calc(var(--s) * 1.3) 2px 1px var(--t),
+    calc(var(--s) * -1.75) calc(var(--s) * .15) 1px 0 var(--t),
+    calc(var(--s) * 1.1) calc(var(--s) * -1.05) 1px 0 var(--t);
+}
+/* Comet: a mote in the tool's colour flying from the planet into the sun (scene.ts comet). Drawn
+ * in the orbit plane along the planet's radius: bright head nearest the sun, tail toward the
+ * planet. --from and --len are distances from the centre in px. */
+.orbit-comet {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--len) * 1px); height: 9px; margin-top: -4.5px;
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--angle) * 1deg)) translateX(calc(var(--from) * 1px));
+  border-radius: 9px;
+  background: linear-gradient(90deg, #fff 0, var(--t) 7%, color-mix(in srgb, var(--t) 45%, transparent) 40%, transparent);
+  filter: drop-shadow(0 0 6px var(--t));
+}
+.orbit-star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: #94a3b8;
+  transform: scaleY(calc(1 / var(--tilt, 1)));
+}

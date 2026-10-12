@@ -1,0 +1,9 @@
+/* Background snippets (21st.dev 6678), moving. Link it after backgrounds.css on an animated slide only.
+ * Rest state: the 0% and 100% keyframes are the frozen still, so the settled frame matches the
+ * approved PNG and the loop has no seam. One finite pass over --motion-dur (set by motion.js).
+ */
+.slide.bg-glowgrid::before { animation: mo-glowgrid var(--motion-dur, 6s) ease-in-out 1 both; }
+@keyframes mo-glowgrid {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-160px, 140px); }
+}

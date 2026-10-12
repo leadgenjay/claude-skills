@@ -1,0 +1,11 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../../tokens.css">
+<style>
+  /* Negative fixture: Manrope ships 400-800, never 300. The browser would synthesise or fall
+     back silently, so render.mjs must fail on the weight even though the family is shipped. */
+  .b { font-family: var(--font-body); font-weight: 300; font-size: 40px; }
+</style></head>
+<body><div class="slide"><div class="safe">
+  <div class="b" data-copy="0.body">Manrope at a weight we never shipped</div>
+</div></div></body></html>

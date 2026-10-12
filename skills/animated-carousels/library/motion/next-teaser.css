@@ -1,0 +1,16 @@
+/* Motion for components/next-teaser.css: the arrow nudges right twice during the hold.
+ *
+ * It rests until 45% of the clip, so at the default 6s it starts moving at 2.7s, after every build
+ * has finished (settleBy, 2.5s), and peaks at 55% and 80% (3.3s and 4.8s). The keyframes are
+ * fractions of the clip, so animate.mjs refuses a slide linking this file when the clip is too
+ * short for that (duration x 0.45 under 2.5s, so under about 5.6s).
+ * translateX on a small span is the move that reproduced render to render in testing.
+ * 10px, not 16: at 16 the tip came within 7px of the pill's outline at the peak, which reads as
+ * touching at phone size (blind motion review).
+ */
+.next-teaser .arw { animation: teaser-nudge var(--motion-dur, 6s) ease-in-out 1 both; }
+@keyframes teaser-nudge {
+  0%, 100% { transform: none; }
+  45%, 65%, 70%, 90% { transform: none; }
+  55%, 80% { transform: translateX(10px); }
+}

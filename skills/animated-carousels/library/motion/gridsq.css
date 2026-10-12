@@ -1,0 +1,14 @@
+/* Grid Pattern (21st.dev 1412), moving. Link it after backgrounds.css on an animated slide only.
+ * Rest state: the 0% and 100% keyframes are the frozen still, so the settled frame matches the
+ * approved PNG and the loop has no seam. One finite pass over --motion-dur (set by motion.js).
+ */
+.slide.bg-gridsq::after { animation: mo-gridsq var(--motion-dur, 6s) ease-in-out 1 both; }
+.slide.bg-gridsq::before { animation: mo-gridsq-a var(--motion-dur, 6s) ease-in-out 1 both; }
+@keyframes mo-gridsq {
+  0%, 100% { opacity: 0; }
+  35%, 65% { opacity: 1; }
+}
+@keyframes mo-gridsq-a {
+  0%, 100% { opacity: 1; }
+  45%, 55% { opacity: .55; }
+}

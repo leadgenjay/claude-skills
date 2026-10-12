@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../library/tokens.css">
+<link rel="stylesheet" href="../../../library/styles/product.css">
+<link rel="stylesheet" href="../../../library/components/backgrounds.css">
+<link rel="stylesheet" href="mini.css">
+<style>
+  .top { position: absolute; left: 60px; top: 60px; right: 60px; z-index: 1; }
+  .h { font-size: 128px; }
+  .h .sel { margin-top: 14px; }
+  .body { margin-top: 36px; max-width: 560px; font-size: 40px; line-height: 1.36; color: var(--ink-2); }
+
+  /* A carousel as a fan of slides; the front one is the finished slide that carries into slide 2 */
+  .fan { position: absolute; z-index: 2; left: 330px; top: 780px; width: 440px; height: 560px; }
+  .ghost { position: absolute; width: 300px; height: 400px; border-radius: 18px; background: #fff; border: 2px solid #cbd5e1;
+    box-shadow: 0 18px 40px -24px rgba(15, 23, 42, .3); display: flex; flex-direction: column; gap: 12px; padding: 26px 22px; }
+  .ghost i { display: block; height: 22px; border-radius: 5px; background: #cbd5e1; }
+  .ghost i.t { height: 12px; background: #e2e8f0; }
+  .g1 { left: 0; top: 60px; transform: rotate(-9deg); }
+  .g2 { left: 30px; top: 30px; transform: rotate(-4deg); }
+  .mini-wrap { left: 80px; top: 30px; transform: scale(0.88) rotate(3deg); }
+
+  /* The card is this carousel: it rests on slide 1 (the still, and frame 0), swipes through 2 to 7
+   * and lands on a copy of slide 1 by 96%. Whole 386px steps. Inside the rotated card the copy
+   * resamples a little differently from the original, and a strip that jumps back is not fully
+   * painted on the frame it lands, so a fixed slide 1 (.cap) covers the card before the swipe
+   * starts and after it lands; the strip snaps back under it. Only its opacity changes. */
+  .reel .cap { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    animation: cover-cap var(--motion-dur, 6s) linear 1 both; }
+  @keyframes cover-cap {
+    0%, 6.8% { opacity: 1; }
+    6.857%, 96% { opacity: 0; }
+    96.06%, 100% { opacity: 1; }
+  }
+  .reel { position: absolute; inset: 0; overflow: hidden; }
+  .reel-strip { display: flex; width: 800%; height: 100%;
+    animation: cover-reel var(--motion-dur, 6s) cubic-bezier(.65, 0, .35, 1) 1 both; }
+  .reel-strip img { display: block; width: 12.5%; height: 100%; object-fit: cover; }
+  @keyframes cover-reel {
+    0%, 6.857% { transform: translateX(0); }
+    13.714%, 20.571% { transform: translateX(-12.5%); }
+    27.429%, 34.286% { transform: translateX(-25%); }
+    41.143%, 48% { transform: translateX(-37.5%); }
+    54.857%, 61.714% { transform: translateX(-50%); }
+    68.571%, 75.429% { transform: translateX(-62.5%); }
+    82.286%, 89.143% { transform: translateX(-75%); }
+    96%, 99% { transform: translateX(-87.5%); }
+    99.2%, 100% { transform: translateX(0); }
+  }
+
+  /* Swipe cue: the shared next-teaser, under the subtitle */
+  .next-teaser.swipe { left: 60px; top: 650px; z-index: 3; }
+
+</style>
+<link rel="stylesheet" href="../../../library/components/next-teaser.css">
+<link rel="stylesheet" href="../../../library/motion/gridsq.css">
+<link rel="stylesheet" href="../../../library/motion/next-teaser.css">
+</head>
+<body>
+<div class="slide bg-gridsq">
+  <div class="top">
+    <h1 class="h" data-copy="0.headline">CLAUDE CODE NOW MAKES <span class="sel" data-component="highlighter" data-motion="reselect" data-at="0.6"><i class="knob a"></i>ANIMATED<i class="knob b"></i></span> CAROUSELS</h1>
+    <p class="body" data-copy="0.body">And the results are insane. Here's how to do it.</p>
+  </div>
+
+  <div class="fan" data-component="carousel-fan" data-box="fan">
+    <div class="ghost g1"><i style="width:80%"></i><i style="width:60%"></i><i class="t" style="width:90%"></i><i class="t" style="width:70%"></i></div>
+    <div class="ghost g2"><i style="width:85%"></i><i style="width:55%"></i><i class="t" style="width:88%"></i><i class="t" style="width:64%"></i></div>
+    <div class="mini-wrap">
+      <div class="mini" data-component="carousel-reel">
+        <div class="reel"><div class="reel-strip">
+          <img src="../assets/reel/slide-01.png" alt=""><img src="../assets/reel/slide-02.png" alt=""><img src="../assets/reel/slide-03.png" alt=""><img src="../assets/reel/slide-04.png" alt=""><img src="../assets/reel/slide-05.png" alt=""><img src="../assets/reel/slide-06.png" alt=""><img src="../assets/reel/slide-07.png" alt=""><img src="../assets/reel/slide-01.png" alt="">
+        </div><img class="cap" src="../assets/reel/slide-01.png" alt=""></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="next-teaser swipe" data-ui data-component="next-teaser">Swipe<span class="arw"><svg viewBox="0 0 40 28" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h32M23 3l12 11-12 11"/></svg></span></div>
+
+</div>
+<script src="../../../library/motion/vendor/gsap.min.js"></script>
+<script src="../../../library/motion/motion.js"></script>
+</body>
+</html>

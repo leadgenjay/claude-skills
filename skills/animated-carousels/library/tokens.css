@@ -1,0 +1,33 @@
+/* Carousel design library tokens. This is the brand file: set your accent colours and faces here.
+   The defaults are neutral. The faces load from fonts/ (vendored, SIL OFL 1.1, see fonts/OFL.txt).
+   To use another face, add its woff2 to fonts/ with an @font-face in fonts/fonts.css (render.mjs
+   only allows faces listed there), then point --font-head, --font-body or --font-mono at it. */
+@import url('fonts/fonts.css');
+
+:root {
+  --accent: #2563EB;
+  --accent-deep: #1d4ed8;
+  --accent-soft: #dbeafe;
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --paper: #ffffff;
+  --paper-2: #f8fafc;
+  --grid: #F0F0F0;
+
+  --font-head: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+
+  --slide-w: 1080px;
+  --slide-h: 1440px;
+  --safe: 60px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: var(--slide-w); height: var(--slide-h); overflow: hidden; background: var(--paper); }
+body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { position: relative; width: var(--slide-w); height: var(--slide-h); overflow: hidden; }
+.safe { position: absolute; inset: var(--safe); display: flex; flex-direction: column; }
