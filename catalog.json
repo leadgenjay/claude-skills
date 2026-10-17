@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-12T14:46:29.815Z",
+  "generatedAt": "2026-10-17T20:21:14.251Z",
   "items": [
     {
       "id": "LGJ-graphics",
@@ -33,7 +33,8 @@
         "frontend-design",
         "design-motion-principles",
         "motion-graphics"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "LGJ-n8n-code-javascript",
@@ -67,7 +68,8 @@
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-workflow-patterns",
         "LGJ-n8n-validation-expert"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-code-python",
@@ -100,7 +102,8 @@
         "LGJ-n8n-code-javascript",
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-workflow-patterns"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-expression-syntax",
@@ -131,7 +134,8 @@
         "LGJ-n8n-code-javascript",
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-validation-expert"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-mcp-tools-expert",
@@ -163,7 +167,8 @@
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-validation-expert",
         "LGJ-n8n-workflow-patterns"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-node-configuration",
@@ -197,7 +202,8 @@
         "LGJ-n8n-mcp-tools-expert",
         "LGJ-n8n-validation-expert",
         "LGJ-n8n-expression-syntax"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-safety",
@@ -225,7 +231,8 @@
       "composesWell": [
         "LGJ-n8n-mcp-tools-expert",
         "LGJ-n8n-validation-expert"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-validation-expert",
@@ -256,7 +263,8 @@
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-mcp-tools-expert",
         "LGJ-n8n-expression-syntax"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "LGJ-n8n-workflow-patterns",
@@ -291,7 +299,8 @@
         "LGJ-n8n-node-configuration",
         "LGJ-n8n-code-javascript",
         "LGJ-n8n-validation-expert"
-      ]
+      ],
+      "added": "2026-03-06"
     },
     {
       "id": "agent-control",
@@ -327,7 +336,8 @@
       "version": "1.1",
       "composesWell": [
         "hetzner-vps"
-      ]
+      ],
+      "added": "2026-09-23"
     },
     {
       "id": "animated-carousels",
@@ -452,7 +462,8 @@
           "poster": "https://cdn.jsdelivr.net/gh/leadgenjay/claude-skills@main/skills/animated-carousels/gallery/07.jpg",
           "caption": "Comment \"ANIMATE\""
         }
-      ]
+      ],
+      "added": "2026-10-11"
     },
     {
       "id": "animation-designer",
@@ -480,7 +491,8 @@
       "composesWell": [
         "frontend-design",
         "react-performance"
-      ]
+      ],
+      "added": "2026-01-30"
     },
     {
       "id": "brainstorming",
@@ -503,7 +515,8 @@
         "SKILL.md",
         "manifest.yaml"
       ],
-      "version": "1.0"
+      "version": "1.0",
+      "added": "2026-01-30"
     },
     {
       "id": "brand-image-generator",
@@ -534,7 +547,8 @@
         "icon-set-creator",
         "frontend-design",
         "hero-section-designer"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "cleanup",
@@ -562,7 +576,8 @@
         "references/protected-paths.md"
       ],
       "version": "1.0",
-      "composesWell": []
+      "composesWell": [],
+      "added": "2026-03-27"
     },
     {
       "id": "conversion-copywriting",
@@ -593,7 +608,8 @@
         "dan-kennedy-copywriter",
         "hero-section-designer",
         "landing-page-auditor"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "dan-kennedy-copywriter",
@@ -626,7 +642,8 @@
         "hero-section-designer",
         "social-proof-builder",
         "landing-page-auditor"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "design-motion-principles",
@@ -666,7 +683,8 @@
         "frontend-design",
         "LGJ-graphics",
         "motion-graphics"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "easy-api-doppler",
@@ -702,7 +720,8 @@
         "scripts/vercel-sync-check.sh"
       ],
       "version": "1.1",
-      "postInstall": "command -v doppler >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install dopplerhq/cli/doppler || echo \"  install the Doppler CLI: https://docs.doppler.com/docs/install-cli\"; }\n"
+      "postInstall": "command -v doppler >/dev/null 2>&1 || { command -v brew >/dev/null 2>&1 && brew install dopplerhq/cli/doppler || echo \"  install the Doppler CLI: https://docs.doppler.com/docs/install-cli\"; }\n",
+      "added": "2026-09-23"
     },
     {
       "id": "frontend-design",
@@ -731,7 +750,8 @@
       "composesWell": [
         "animation-designer",
         "senior-frontend"
-      ]
+      ],
+      "added": "2026-01-30"
     },
     {
       "id": "google-tracking",
@@ -761,7 +781,8 @@
       "composesWell": [
         "hyros-integration",
         "landing-page-auditor"
-      ]
+      ],
+      "added": "2026-03-14"
     },
     {
       "id": "hero-section-designer",
@@ -793,7 +814,8 @@
         "conversion-copywriting",
         "frontend-design",
         "LGJ-graphics"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "hetzner-vps",
@@ -829,7 +851,8 @@
       "version": "1.1",
       "composesWell": [
         "n8n-self-hosting"
-      ]
+      ],
+      "added": "2026-09-23"
     },
     {
       "id": "hyros-integration",
@@ -859,7 +882,8 @@
         "landing-page-auditor",
         "dan-kennedy-copywriter",
         "hero-section-designer"
-      ]
+      ],
+      "added": "2026-03-14"
     },
     {
       "id": "icon-set-creator",
@@ -890,7 +914,8 @@
         "brand-image-generator",
         "frontend-design",
         "LGJ-graphics"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "image-enhancer",
@@ -918,7 +943,8 @@
       "version": "1.0",
       "composesWell": [
         "brand-image-generator"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "landing-page-auditor",
@@ -950,7 +976,8 @@
         "conversion-copywriting",
         "hero-section-designer",
         "social-proof-builder"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "live-test",
@@ -981,7 +1008,8 @@
         "test-improve",
         "mobile-test",
         "webapp-testing"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "mobile-test",
@@ -1013,7 +1041,8 @@
         "mobile-ux-auditor",
         "live-test",
         "webapp-testing"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "motion-graphics",
@@ -1045,7 +1074,8 @@
         "design-motion-principles",
         "LGJ-graphics",
         "frontend-design"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "reeper",
@@ -1102,7 +1132,8 @@
       "composesWell": [
         "brainstorming",
         "skill-creator"
-      ]
+      ],
+      "added": "2026-07-24"
     },
     {
       "id": "senior-frontend",
@@ -1138,7 +1169,8 @@
       "composesWell": [
         "frontend-design",
         "taste"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "social-proof-builder",
@@ -1169,7 +1201,8 @@
         "dan-kennedy-copywriter",
         "hero-section-designer",
         "landing-page-auditor"
-      ]
+      ],
+      "added": "2026-03-04"
     },
     {
       "id": "taste",
@@ -1205,7 +1238,8 @@
         "frontend-design",
         "test-improve",
         "design-motion-principles"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "testimonial-edit",
@@ -1235,7 +1269,8 @@
       "version": "1.1",
       "composesWell": [
         "social-proof-builder"
-      ]
+      ],
+      "added": "2026-03-27"
     },
     {
       "id": "ultraskill",
@@ -1279,7 +1314,8 @@
       "version": "2.0",
       "composesWell": [
         "improve"
-      ]
+      ],
+      "added": "2026-09-18"
     },
     {
       "id": "whatsapp",
@@ -1309,7 +1345,8 @@
         "tests/reads.test.mjs",
         "tests/send.test.mjs"
       ],
-      "version": "1.0"
+      "version": "1.0",
+      "added": "2026-10-06"
     },
     {
       "id": "codex-bridge",
@@ -1342,7 +1379,8 @@
       ],
       "version": "2.1",
       "kind": "package",
-      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex@latest || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }\nchmod +x \"$HOME\"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true\n"
+      "postInstall": "command -v codex >/dev/null 2>&1 || { command -v npm >/dev/null 2>&1 && npm install -g @openai/codex@latest || echo \"  ⚠  install the Codex CLI manually with npm install -g @openai/codex\"; }\nchmod +x \"$HOME\"/.claude/commands/codex-bridge/scripts/*.sh 2>/dev/null || true\n",
+      "added": "2026-09-08"
     },
     {
       "id": "commit",
@@ -1364,7 +1402,8 @@
         "command.md",
         "manifest.yaml"
       ],
-      "version": "1.0"
+      "version": "1.0",
+      "added": "2026-01-30"
     },
     {
       "id": "notes",
@@ -1393,7 +1432,8 @@
       ],
       "version": "1.2",
       "kind": "package",
-      "postInstall": "command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh"
+      "postInstall": "command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh",
+      "added": "2026-04-24"
     },
     {
       "id": "pr",
@@ -1419,7 +1459,8 @@
       "version": "1.0",
       "composesWell": [
         "commit"
-      ]
+      ],
+      "added": "2026-01-30"
     },
     {
       "id": "ship",
@@ -1448,7 +1489,8 @@
       "composesWell": [
         "commit",
         "test"
-      ]
+      ],
+      "added": "2026-01-30"
     },
     {
       "id": "code-reviewer",
@@ -1475,7 +1517,8 @@
       "composesWell": [
         "commit",
         "pr"
-      ]
+      ],
+      "added": "2026-01-30"
     },
     {
       "id": "illustrations",
@@ -1561,7 +1604,8 @@
         "LGJ-graphics",
         "frontend-design",
         "animation-designer"
-      ]
+      ],
+      "added": "2026-03-04"
     }
   ]
 }

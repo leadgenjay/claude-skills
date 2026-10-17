@@ -122,6 +122,19 @@ function toGallery(entries, itemPath) {
   });
 }
 
+/**
+ * The manifest's optional `added:` date. js-yaml parses an unquoted date into
+ * a Date, so accept that and emit YYYY-MM-DD; anything else is dropped.
+ */
+function toAdded(value, id) {
+  if (value === undefined || value === null) return undefined;
+  const text =
+    value instanceof Date ? value.toISOString().slice(0, 10) : String(value);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  console.warn(`  ! ${id}: ignoring invalid added "${text}" (want YYYY-MM-DD)`);
+  return undefined;
+}
+
 function processDirectory(type) {
   const dirName = DIRECTORIES[type];
   const baseDir = path.join(ROOT_DIR, dirName);
@@ -183,6 +196,8 @@ function processDirectory(type) {
       // Honored by Web-Designer's install.sh generator. Failure is non-fatal.
       postInstall: manifest.postInstall || undefined,
       gallery: toGallery(manifest.gallery, `${dirName}/${entry.name}`),
+      featured: manifest.featured === true ? true : undefined,
+      added: toAdded(manifest.added, entry.name),
     };
 
     // Remove undefined values

@@ -5,3 +5,4 @@ tags: [playwright, mobile, safari, webkit, responsive, ios, android, screenshots
 icon: Smartphone
 version: "1.0"
 composesWell: [mobile-ux-auditor, live-test, webapp-testing]
+added: 2026-03-27
