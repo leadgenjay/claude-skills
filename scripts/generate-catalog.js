@@ -129,8 +129,17 @@ function toGallery(entries, itemPath) {
 function toAdded(value, id) {
   if (value === undefined || value === null) return undefined;
   const text =
-    value instanceof Date ? value.toISOString().slice(0, 10) : String(value);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+    value instanceof Date
+      ? Number.isNaN(value.getTime())
+        ? "Invalid Date"
+        : value.toISOString().slice(0, 10)
+      : String(value);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    const d = new Date(`${text}T00:00:00Z`);
+    if (!Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === text) {
+      return text;
+    }
+  }
   console.warn(`  ! ${id}: ignoring invalid added "${text}" (want YYYY-MM-DD)`);
   return undefined;
 }
