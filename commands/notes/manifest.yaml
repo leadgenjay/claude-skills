@@ -17,3 +17,4 @@ kind: package
 # the skill files still land on disk and the customer can re-run the installer
 # from https://leadgenjay.com/install/claude-review later.
 postInstall: command -v claude-review >/dev/null 2>&1 || curl -sSL https://leadgenjay.com/install/claude-review | sh
+added: 2026-04-24

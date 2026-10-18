@@ -5,3 +5,4 @@ tags: [cleanup, audit, temp-files, dead-code, dependencies, git-hygiene, securit
 icon: Trash2
 version: "1.0"
 composesWell: []
+added: 2026-03-27

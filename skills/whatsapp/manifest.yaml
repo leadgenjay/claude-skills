@@ -26,3 +26,4 @@ files:
   - tests/harness.mjs
   - tests/reads.test.mjs
   - tests/send.test.mjs
+added: 2026-10-06

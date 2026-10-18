@@ -5,3 +5,4 @@ tags: [playwright, browser, visual-testing, responsive, debugging, ui, functiona
 icon: MonitorCheck
 version: "1.0"
 composesWell: [test-improve, mobile-test, webapp-testing]
+added: 2026-03-27

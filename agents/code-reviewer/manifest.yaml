@@ -13,3 +13,4 @@ version: "1.0"
 composesWell:
   - commit
   - pr
+added: 2026-01-30
